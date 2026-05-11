@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 09/03/2026 by @author Tsukini
+##  @date 27/04/2026 by @author Tsukini
 
 File Name:
 ##  @file Attribute-c++17.hpp
@@ -23,8 +23,12 @@ File Description:
     #define hidden          [[gnu::visibility("hidden")]]   // Change the visibility on a shared lib
     #define ctor            [[gnu::constructor]]            // Execute before the main
     #define dtor            [[gnu::destructor]]             // Execute after the main
-    #define outdated(info)  [[deprecated(info)]]            // Signal a deprecated function
     #define fallthrough     [[fallthrough]]                 // Ingore warn for no break in switch
+    #ifndef _NoWarning
+        #define outdated(info)  [[deprecated(info)]]        // Signal a deprecated function
+    #else
+        #define outdated(info)                              // Not defined with this flag
+    #endif
 
     /* branch prediction */
     #define likely          // Not defined in this version

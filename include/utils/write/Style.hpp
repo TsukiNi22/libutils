@@ -8,14 +8,13 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 03/03/2026 by @author Tsukini
+##  @date 11/05/2026 by @author Tsukini
 
 File Name:
 ##  @file Style.hpp
 
 File Description:
-##  You know, I don t think there are good or bad descriptions,
-##  for me, life is all about functions...
+##  Define of the different style used in ANSI
 \**************************************************************/
 
 #ifndef STYLE_H

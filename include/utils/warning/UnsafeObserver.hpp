@@ -3,20 +3,20 @@ Edition:
 ##  @date 27/04/2026 by @author Tsukini
 
 File Name:
-##  @file Observer.hpp
+##  @file UnsafeObserver.hpp
 
 File Description:
-##  Observer used for the different warning
+##  UnsafeObserver used for the different warning
 \**************************************************************/
 
-#ifndef OBSERVER_H
-    #define OBSERVER_H
+#ifndef UNSAFEOBSERVER_H
+    #define UNSAFEOBSERVER_H
 
     //----------------------------------------------------------------//
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"   // nodiscard
+    #include "../attribute/Attribute.hpp"   // nodiscard, outdated
     #include "SharedObject.hpp"             // utils::warning::WarningInstance::SharedObject
     #include <cstdint>                      // std::uint32_t
     #include <string>                       // std::string
@@ -25,7 +25,7 @@ namespace utils::warning { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-class Observer {
+class outdated("Thread unsafe observer used") UnsafeObserver {
     private:
         std::uint32_t _id = 0;
 
@@ -38,17 +38,17 @@ class Observer {
 
     public:
         // ------------ Operator ---------- //
-        Observer& operator=(const Observer& other);
-        Observer& operator=(Observer&& other);
+        UnsafeObserver& operator=(const UnsafeObserver& other);
+        UnsafeObserver& operator=(UnsafeObserver&& other);
 
         // ---------- Constructor --------- //
-        explicit Observer();
-        Observer(const Observer& other);
-        Observer(Observer&& other);
+        explicit UnsafeObserver();
+        UnsafeObserver(const UnsafeObserver& other);
+        UnsafeObserver(UnsafeObserver&& other);
 
         // ----------- Destructor --------- //
-        ~Observer();
+        ~UnsafeObserver();
 };
 
 } // namespace end
-#endif /* OBSERVER_H */
+#endif /* UNSAFEOBSERVER_H */

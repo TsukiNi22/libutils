@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 27/04/2026 by @author Tsukini
+##  @date 29/04/2026 by @author Tsukini
 
 File Name:
 ##  @file OVector2.hpp
@@ -73,7 +73,7 @@ class outdated("OVector2 dosen't have any concepts safty (Be careful!!!)") OVect
         OVector2 normalize() const
         {
             T len = length();
-            return OVector2(x / len, y / len);
+            return {x / len, y / len};
         }
 
         // ------------ Operator ---------- //

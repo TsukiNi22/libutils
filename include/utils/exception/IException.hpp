@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 26/04/2026 by @author Tsukini
+##  @date 27/04/2026 by @author Tsukini
 
 File Name:
 ##  @file IException.hpp
@@ -16,18 +16,18 @@ File Description:
     /* INCLUDE */
 
     /* type/class */
-    #include "../warning/Observer.hpp"  // utils::warning::Observer
-    #include "ExceptionDefine.hpp"      // utils::exception::Code, utils::exception::type
-    #include <source_location>          // std::source_location
-    #include <exception>                // std::exception
-    #include <string>                   // std::string
+    #include "../warning/UnsafeObserver.hpp"    // utils::warning::UnsafeObserver
+    #include "ExceptionDefine.hpp"              // utils::exception::Code, utils::exception::type
+    #include <source_location>                  // std::source_location
+    #include <exception>                        // std::exception
+    #include <string>                           // std::string
 
 namespace utils::exception { // namespace start
 
 //----------------------------------------------------------------//
 /* CLASS */
 
-class IException: public std::exception, private utils::warning::Observer {
+class IException: public std::exception, private utils::warning::UnsafeObserver {
     public:
         // --------- Pre-Function --------- //
         virtual utils::exception::Type getType() const noexcept = 0;

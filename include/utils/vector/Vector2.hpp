@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 27/04/2026 by @author Tsukini
+##  @date 29/04/2026 by @author Tsukini
 
 File Name:
 ##  @file Vector2.hpp
@@ -73,7 +73,7 @@ class Vector2: public utils::vector::IVector<T> {
         requires utils::concepts::Divisible<T>
         {
             T len = length();
-            return Vector2(x / len, y / len);
+            return {x / len, y / len};
         }
 
         // ------------ Operator ---------- //
@@ -262,7 +262,7 @@ class Vector2: public utils::vector::IVector<T> {
 
         // ------------ Unary ------------- //
         Vector2 operator-() const
-        requires utils::concepts::Negatable<T> {return Vector2(-x, -y);}
+        requires utils::concepts::Negatable<T> {return {-x, -y};}
 
         // ---------- Constructor --------- //
         Vector2() = default;

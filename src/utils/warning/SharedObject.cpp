@@ -6,8 +6,7 @@ File Name:
 ##  @file SharedObject.cpp
 
 File Description:
-##  You know, I don t think there are good or bad descriptions,
-##  for me, life is all about functions...
+##  SharedObject methods and static declaration to intercept dl*
 \**************************************************************/
 
 #include "utils/attribute/Attribute.hpp"
@@ -53,10 +52,12 @@ nodiscard bool utils::warning::SharedObject::isSharedObject(void)
     return path.ends_with(".so");
 }
 
-void utils::warning::SharedObject::link(const std::string& InstanceName, std::uint32_t& id)
+void utils::warning::SharedObject::link(const std::string& InstanceName, std::uint32_t& id, bool safe)
 {
     if (!this->_isSharedObject) return;
-    std::lock_guard<std::mutex> lock(this->_mutex);
+    std::unique_lock<std::mutex> lock(this->_mutex, std::defer_lock);
+    if (safe) lock.lock();
+    else (void)lock.try_lock();
 
     // If id where free
     if (this->_availableId.size() > 0) {
@@ -80,10 +81,12 @@ void utils::warning::SharedObject::link(const std::string& InstanceName, std::ui
         throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::UnknowId, "Can't attribute the id: 0");
 }
 
-void utils::warning::SharedObject::unlink(std::uint32_t id)
+void utils::warning::SharedObject::unlink(std::uint32_t id, bool safe)
 {
     if (!this->_isSharedObject) return;
-    std::lock_guard<std::mutex> lock(this->_mutex);
+    std::unique_lock<std::mutex> lock(this->_mutex, std::defer_lock);
+    if (safe) lock.lock();
+    else (void)lock.try_lock();
 
     // Basic check for the id validity
     if (id == 0)
@@ -91,7 +94,7 @@ void utils::warning::SharedObject::unlink(std::uint32_t id)
 
     // Check the id existance
     if (!this->_links.contains(id)) unlikely {
-        utils::exception::CustomException e(utils::exception::Type::Error, utils::exception::Code::UnknowId, std::to_string(id));
+        utils::exception::CustomException e(utils::exception::Type::Warning, utils::exception::Code::UnknowId, std::to_string(id));
         std::cerr << e.formated() << std::endl;
         return;
     }

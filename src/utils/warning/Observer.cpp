@@ -6,8 +6,7 @@ File Name:
 ##  @file Observer.cpp
 
 File Description:
-##  You know, I don t think there are good or bad descriptions,
-##  for me, life is all about functions...
+##  Warning observer methods
 \**************************************************************/
 
 #include "utils/attribute/Attribute.hpp"

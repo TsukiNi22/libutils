@@ -23,8 +23,12 @@ File Description:
     #define hidden          __attribute__((visibility("hidden")))   // Change the visibility on a shared lib
     #define ctor            __attribute__((constructor))            // Execute before the main
     #define dtor            __attribute__((destructor))             // Execute after the main
-    #define outdated(info)  [[deprecated(info)]]                    // Signal a deprecated function
     #define fallthrough     __attribute__((fallthrough))            // Ingore warn for no break in switch
+    #ifndef _NoWarning
+        #define outdated(info)  [[deprecated(info)]]                // Signal a deprecated function
+    #else
+        #define outdated(info)                                      // Not defined with this flag
+    #endif
 
     /* branch prediction */
     #define likely          // Not defined in this version

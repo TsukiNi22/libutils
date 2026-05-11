@@ -12,16 +12,18 @@ File Description:
 //----------------------------------------------------------------//
 /* DEFINE */
 
-/* Desactivate all automatic warning */
+/* Desactivate all automatic warning & outdated message */
 #ifdef _NoWarning
-    #define NO_SHARED_OBJECT_WARNING // shared other
+    //#define NO_SHARED_OBJECT_WARNING // shared other
 #endif
 
 // Disabling of the auto warning for shared other
+/*
 #if defined(NO_SHARED_OBJECT_WARNING) && !defined(_WARNING_NO_SHARED_OBJECT_WARNING)
     #define _WARNING_NO_SHARED_OBJECT_WARNING
     #warning "Automatic shared object warnings from 'utils/utils.hpp' are disable"
 #endif
+*/
 
 /* Activate all include */
 #ifdef _Utils

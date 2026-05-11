@@ -1,13 +1,12 @@
 /**************************************************************\
 Edition:
-##  @date 26/04/2026 by @author Tsukini
+##  @date 27/04/2026 by @author Tsukini
 
 File Name:
 ##  @file SharedObject.hpp
 
 File Description:
-##  You know, I don t think there are good or bad descriptions,
-##  for me, life is all about functions...
+##  Class used to handl warning for shared object
 \**************************************************************/
 
 #ifndef SHAREDOBJECT_H
@@ -40,8 +39,8 @@ class SharedObject {
         // ---------- Pre-Function -------- //
         std::string getOrigin(void);
         bool isSharedObject(void);
-        void link(const std::string& InstanceName, std::uint32_t& id);
-        void unlink(std::uint32_t id);
+        void link(const std::string& InstanceName, std::uint32_t& id, bool safe = true);
+        void unlink(std::uint32_t id, bool safe = true);
 
         // ------------ Operator ---------- //
         SharedObject& operator=(const SharedObject& other) = delete;
