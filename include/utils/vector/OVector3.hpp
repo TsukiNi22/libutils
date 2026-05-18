@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 29/04/2026 by @author Tsukini
+##  @date 18/05/2026 by @author Tsukini
 
 File Name:
 ##  @file OVector3.hpp
@@ -57,6 +57,10 @@ class outdated("OVector3 dosen't have any concepts safty (Be careful!!!)") OVect
                 throw utils::exception::ErrorException(utils::exception::Code::VectorInvalidIndex);
             return (index == 0 ? x : (index == 1 ? y : z));
         }
+        inline OVector3 min(const OVector3& min) const
+        {return {std::min(x, min.x), std::min(y, min.y), std::min(z, min.z)};}
+        inline OVector3 max(const OVector3& max) const
+        {return {std::max(x, max.x), std::max(y, max.y), std::max(z, max.z)};}
         inline OVector3 clamp(const OVector3& min, const OVector3& max) const
         {return {std::clamp(x, min.x, max.x), std::clamp(y, min.y, max.y), std::clamp(z, min.z, max.z)};}
 
@@ -77,6 +81,8 @@ class outdated("OVector3 dosen't have any concepts safty (Be careful!!!)") OVect
         {return std::sqrt(x * x + y * y + z * z);}
         inline T lengthSquared() const
         {return x * x + y * y + z * z;}
+        inline OVector3 sign() const
+        {return {(x > 0) - (x < 0), (y > 0) - (y < 0), (z > 0) - (z < 0)};}
         OVector3 normalize() const
         {
             T len = length();
@@ -120,6 +126,24 @@ class outdated("OVector3 dosen't have any concepts safty (Be careful!!!)") OVect
         template<typename U>
         inline OVector3 operator/(const OVector3<U>& v) const
         {return {x / v.x, y / v.y, z / v.z};}
+
+        // -------- Special-Operator -------- //
+        inline OVector3& operator++()
+        {++x; ++y; ++z; return *this;}
+        inline OVector3 operator++(int)
+        {
+            OVector3 tmp = *this;
+            ++(*this);
+            return tmp;
+        }
+        inline OVector3& operator--()
+        {--x; --y; --z; return *this;}
+        inline OVector3 operator--(int)
+        {
+            OVector3 tmp = *this;
+            --(*this);
+            return tmp;
+        }
 
         // ----- Assignment-Operator ----- //
         template<typename U>

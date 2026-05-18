@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 29/04/2026 by @author Tsukini
+##  @date 18/05/2026 by @author Tsukini
 
 File Name:
 ##  @file Vector3.hpp
@@ -56,7 +56,14 @@ class Vector3: public utils::vector::IVector<T> {
                 throw utils::exception::ErrorException(utils::exception::Code::VectorInvalidIndex);
             return (index == 0 ? x : (index == 1 ? y : z));
         }
+        Vector3 min(const Vector3& min) const
+        requires utils::concepts::Comparable<T>
+        {return {std::min(x, min.x), std::min(y, min.y), std::min(z, min.z)};}
+        Vector3 max(const Vector3& max) const
+        requires utils::concepts::Comparable<T>
+        {return {std::max(x, max.x), std::max(y, max.y), std::max(z, max.z)};}
         Vector3 clamp(const Vector3& min, const Vector3& max) const
+        requires utils::concepts::Comparable<T>
         {return {std::clamp(x, min.x, max.x), std::clamp(y, min.y, max.y), std::clamp(z, min.z, max.z)};}
 
         // ------- Special-Function ------- //
@@ -77,6 +84,9 @@ class Vector3: public utils::vector::IVector<T> {
         requires utils::concepts::Multipliable<T> {return std::sqrt(x * x + y * y + z * z);}
         T lengthSquared() const
         requires utils::concepts::Multipliable<T> && utils::concepts::Addable<T> {return x * x + y * y + z * z;}
+        Vector3 sign() const
+        requires utils::concepts::ComparableWith<T, int>
+        {return {(x > 0) - (x < 0), (y > 0) - (y < 0), (z > 0) - (z < 0)};}
         Vector3 normalize() const
         requires utils::concepts::Divisible<T>
         {
@@ -159,6 +169,37 @@ class Vector3: public utils::vector::IVector<T> {
         {
             using R = std::common_type_t<T, U>;
             return Vector3<R>(x / v.x, y / v.y, z / v.z);
+        }
+
+        // -------- Special-Operator -------- //
+        Vector3& operator++()
+        requires utils::concepts::Incrementable<T>
+        {
+            ++x; ++y; ++z;
+            return *this;
+        }
+
+        Vector3 operator++(int)
+        requires utils::concepts::Incrementable<T>
+        {
+            Vector3 tmp = *this;
+            ++(*this);
+            return tmp;
+        }
+
+        Vector3& operator--()
+        requires utils::concepts::Decrementable<T>
+        {
+            --x; --y; --z;
+            return *this;
+        }
+
+        Vector3 operator--(int)
+        requires utils::concepts::Decrementable<T>
+        {
+            Vector3 tmp = *this;
+            --(*this);
+            return tmp;
         }
 
         // ----- Assignment-Operator ----- //

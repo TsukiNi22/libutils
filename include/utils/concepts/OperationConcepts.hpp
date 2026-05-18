@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 20/04/2026 by @author Tsukini
+##  @date 18/05/2026 by @author Tsukini
 
 File Name:
 ##  @file OperationConcepts.hpp
@@ -62,9 +62,17 @@ template<typename T, typename U>
 concept ArithmeticWith = AddableWith<T, U> && SubtractableWith<T, U> && MultipliableWith<T, U> && DivisibleWith<T, U>;
 
 template<typename T>
-concept Incrementable = requires(T a) {++a; a++;};
+concept Incrementable = requires(T& a)
+{
+    {++a} -> std::same_as<T&>;
+    {a++} -> std::same_as<T>;
+};
 template<typename T>
-concept Decrementable = requires(T a) {--a; a--;};
+concept Decrementable = requires(T& a)
+{
+    {--a} -> std::same_as<T&>;
+    {a--} -> std::same_as<T>;
+};
 
 // ------- Bitwise ------- //
 template<typename T>

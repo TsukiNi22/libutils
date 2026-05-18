@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 29/04/2026 by @author Tsukini
+##  @date 18/05/2026 by @author Tsukini
 
 File Name:
 ##  @file Vector2.hpp
@@ -55,7 +55,14 @@ class Vector2: public utils::vector::IVector<T> {
                 throw utils::exception::ErrorException(utils::exception::Code::VectorInvalidIndex);
             return (index == 0 ? this->x : this->y);
         }
+        Vector2 min(const Vector2& min) const
+        requires utils::concepts::Comparable<T>
+        {return {std::min(x, min.x), std::min(y, min.y)};}
+        Vector2 max(const Vector2& max) const
+        requires utils::concepts::Comparable<T>
+        {return {std::max(x, max.x), std::max(y, max.y)};}
         Vector2 clamp(const Vector2& min, const Vector2& max) const
+        requires utils::concepts::Comparable<T>
         {return {std::clamp(x, min.x, max.x), std::clamp(y, min.y, max.y)};}
 
         // ------- Special-Function ------- //
@@ -69,6 +76,9 @@ class Vector2: public utils::vector::IVector<T> {
         requires utils::concepts::Multipliable<T> {return std::sqrt(x * x + y * y);}
         T lengthSquared() const
         requires utils::concepts::Multipliable<T> && utils::concepts::Addable<T> {return x * x + y * y;}
+        Vector2 sign() const
+        requires utils::concepts::ComparableWith<T, int>
+        {return {(x > 0) - (x < 0), (y > 0) - (y < 0)};}
         Vector2 normalize() const
         requires utils::concepts::Divisible<T>
         {
@@ -151,6 +161,37 @@ class Vector2: public utils::vector::IVector<T> {
         {
             using R = std::common_type_t<T, U>;
             return Vector2<R>(x / v.x, y / v.y);
+        }
+
+        // -------- Special-Operator -------- //
+        Vector2& operator++()
+        requires utils::concepts::Incrementable<T>
+        {
+            ++x; ++y;
+            return *this;
+        }
+
+        Vector2 operator++(int)
+        requires utils::concepts::Incrementable<T>
+        {
+            Vector2 tmp = *this;
+            ++(*this);
+            return tmp;
+        }
+
+        Vector2& operator--()
+        requires utils::concepts::Decrementable<T>
+        {
+            --x; --y;
+            return *this;
+        }
+
+        Vector2 operator--(int)
+        requires utils::concepts::Decrementable<T>
+        {
+            Vector2 tmp = *this;
+            --(*this);
+            return tmp;
         }
 
         // -------- Bitwise-Operator -------- //

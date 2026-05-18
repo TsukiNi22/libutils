@@ -56,6 +56,10 @@ class outdated("OVector2 dosen't have any concepts safty (Be careful!!!)") OVect
                 throw utils::exception::ErrorException(utils::exception::Code::VectorInvalidIndex);
             return (index == 0 ? this->x : this->y);
         }
+        inline OVector2 min(const OVector2& min) const
+        {return {std::min(x, min.x), std::min(y, min.y)};}
+        inline OVector2 max(const OVector2& max) const
+        {return {std::max(x, max.x), std::max(y, max.y)};}
         inline OVector2 clamp(const OVector2& min, const OVector2& max) const
         {return {std::clamp(x, min.x, max.x), std::clamp(y, min.y, max.y)};}
 
@@ -70,6 +74,8 @@ class outdated("OVector2 dosen't have any concepts safty (Be careful!!!)") OVect
         {return std::sqrt(x * x + y * y);}
         inline T lengthSquared() const
         {return x * x + y * y;}
+        inline OVector2 sign() const
+        {return {(x > 0) - (x < 0), (y > 0) - (y < 0)};}
         OVector2 normalize() const
         {
             T len = length();
@@ -113,6 +119,24 @@ class outdated("OVector2 dosen't have any concepts safty (Be careful!!!)") OVect
         template<typename U>
         inline OVector2 operator/(const OVector2<U>& v) const
         {return {x / v.x, y / v.y};}
+
+        // -------- Special-Operator -------- //
+        inline OVector2& operator++()
+        {++x; ++y; return *this;}
+        inline OVector2 operator++(int)
+        {
+            OVector2 tmp = *this;
+            ++(*this);
+            return tmp;
+        }
+        inline OVector2& operator--()
+        {--x; --y; return *this;}
+        inline OVector2 operator--(int)
+        {
+            OVector2 tmp = *this;
+            --(*this);
+            return tmp;
+        }
 
         // -------- Bitwise-Operator -------- //
         template<typename U>
