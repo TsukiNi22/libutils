@@ -9,6 +9,7 @@
  - [Attribute](#attribute)
  - [Concepts](#concepts)
  - [Algorithms](#algorithms)
+ - [Middleware](#middleware)
  - [Cli](#cli)
 
 ### Usage
@@ -24,9 +25,10 @@
 | Exception | `_Exception` | customized exception |
 | Write | `_Write` | different handling for writing edition |
 | Command line interface | `_Cli` | customizable command line interface |
-| Tools | `_Tools` | vector, concepts and algorithms |
+| Tools | `_Tools` | vector, concepts, middleware and algorithms |
 | Vector | `_Vector` | definition of vector2<T> and vector3<T> |
 | Concepts | `_Concepts` | definition of different concepts |
+| Middleware | `_Middleware` | definition of middlwares |
 | Algorithms | `_Algorithms` | definition of home made algorithms such as the c2dmp-hsm |
 | Attribute | `_Attribute` | auto select of attribute definition for `fallback`, `c++14`, `c++17` and `c++20` |
 
@@ -103,7 +105,7 @@ ResetStyle
 
 ## Vector
 > [!NOTE]
-> Definition of vector2<T> and vector3<T>
+> Definition of vector2 and vector3
 
 Included from:
 ```cpp
@@ -116,6 +118,11 @@ IVector<T>
 /* vectorX */
 Vector2<T>
 Vector3<T>
+
+/* optimized vectorX */
+// Unsafe~ vector, no type check
+OVector2<T>
+OVector3<T>
 ```
 
 ## Attribute
@@ -125,6 +132,28 @@ Vector3<T>
 ## Concepts
 > [!NOTE]
 > Different concept global, operation, ...
+
+## Middleware
+> [!NOTE]
+> Definition of middlwares
+
+Included from:
+```cpp
+// Namespace used
+using utils::middleware
+
+/* type */
+// Store a function
+Middleware<T>
+Middleware<void>
+
+/* class */
+// Store Middleware (before & after)
+Middlewares<T, U>
+Middlewares<T, void>
+Middlewares<void, T>
+Middlewares<void, void>
+```
 
 ## Algorithms
 > [!NOTE]
@@ -155,11 +184,10 @@ ParsedData
 
 /* class */
 Cli
-Middlewares
 
 /* flag */
 enum Flag {
-    DEBUG           = 1 << 0, // Active verbose for internal action
+    DEBUG           = 1 << 0, // Active verbose for internal action (Nothing for now)
     NOECHO          = 1 << 1, // Disable echo of the input
     CATCH           = 1 << 2, // Enable error catching on execution
     EMPTY_INPUT     = 1 << 3, // Ingore empty input (default: error)
@@ -171,16 +199,28 @@ enum Flag {
     HISTORY         = 1 << 9, // Activate history, up and down arrow
     HINT            = 1 << 10, // Display hint when a command fail
     AUTO_COMPLETION = 1 << 11, // Active auto completion with `\t` (only work on the first command for now)
+    MANUAL          = 1 << 12, // Enable manual call for each new input handling
+    THREAD          = 1 << 13, // Run in a thread
+    DETACHED        = 1 << 14, // Detach the thread execution (by default return the thread at start)
 };
 
 // Namespace used
 using utils::cli::Flags
 
 /* flags */
+constexpr std::uint32_t ALL     = DEBUG | CATCH | NOECHO | TRIM | EMPTY_INPUT | PARSED | PROMPT | LOGIC | ARROW | HISTORY | HINT | AUTO_COMPLETION | MANUAL | THREAD | DETACHED;
 constexpr std::uint32_t DEFAULT = CATCH | EMPTY_INPUT | TRIM | PROMPT | ARROW;
 constexpr std::uint32_t DUMB    = 0;
-constexpr std::uint32_t ALL     = DEBUG | CATCH | NOECHO | TRIM | EMPTY_INPUT | PARSED | PROMPT | LOGIC | ARROW | HISTORY | HINT | AUTO_COMPLETION;
 constexpr std::uint32_t TERM1   = CATCH | EMPTY_INPUT | TRIM | PARSED | PROMPT | EMPTY_INPUT | LOGIC | ARROW | HISTORY;
 constexpr std::uint32_t TERM2   = TERM1 | HINT | AUTO_COMPLETION;
+constexpr std::uint32_t TERM3   = TERM2 | THREAD;
 constexpr std::uint32_t DEV     = TERM2 | DEBUG;
+constexpr std::uint32_t SPECIAL = MANUAL | THREAD | DETACHED;
+constexpr std::uint32_t MULTI_THREADING = THREAD | DETACHED;
+/*
+ * DEFAULT -> Basic term
+ * TERM1   -> Advenced term
+ * TERM2   -> Completion on advenced term
+ * TERM3   -> Multi threading advenced term
+*/
 ```
