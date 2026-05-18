@@ -41,9 +41,9 @@ File Description:
 
 /* Activate all tool include */
 #ifdef _Tools
-    #define _Middleware
     #define _Vector
     #define _Concepts
+    #define _Middleware
     #define _Algorithms
 #endif
 
@@ -85,19 +85,6 @@ File Description:
     #include "attribute/Attribute.hpp"  // different define/macro for optimisation & other
 #endif
 
-/* Middleware */
-#ifdef _Middleware
-    // -> Middlewares handling
-    #include "middleware/Middlewares.hpp"   // utils::middleware::Middleware<...>, utils::middleware::Middlewares<...>
-    /*
-    #include "middleware/MiddlewaresType.hpp"       // utils::middleware::Middleware<...>
-    #include "middleware/Middlewares_t-t.hpp"       // utils::middleware::Middlewares<T, U>
-    #include "middleware/Middlewares_t-void.hpp"    // utils::middleware::Middlewares<T, void>
-    #include "middleware/Middlewares_void-t.hpp"    // utils::middleware::Middlewares<void, T>
-    #include "middleware/Middlewares_void-void.hpp" // utils::middleware::Middlewares<void, void>
-    */
-#endif
-
 /* VectorX */
 #ifdef _Vector
     // -> Customized vector2 & vector3 for respectively 2 & 3 value of undefined type
@@ -113,6 +100,19 @@ File Description:
     // -> Definition of different concepts
     #include "concepts/GlobalConcepts.hpp"      // Global concepts
     #include "concepts/OperationConcepts.hpp"   // Operation concepts
+#endif
+
+/* Middleware */
+#ifdef _Middleware
+    // -> Middlewares handling
+    #include "middleware/Middlewares.hpp"   // utils::middleware::Middleware<...>, utils::middleware::Middlewares<...>
+    /*
+    #include "middleware/MiddlewaresType.hpp"       // utils::middleware::Middleware<...>
+    #include "middleware/Middlewares_t-t.hpp"       // utils::middleware::Middlewares<T, U>
+    #include "middleware/Middlewares_t-void.hpp"    // utils::middleware::Middlewares<T, void>
+    #include "middleware/Middlewares_void-t.hpp"    // utils::middleware::Middlewares<void, T>
+    #include "middleware/Middlewares_void-void.hpp" // utils::middleware::Middlewares<void, void>
+    */
 #endif
 
 /* Algorithms */
