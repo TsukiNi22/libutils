@@ -11,6 +11,7 @@
  - [Algorithms](#algorithms)
  - [Middleware](#middleware)
  - [Cli](#cli)
+ - [Warning](#warning)
 
 ### Usage
 > [!NOTE]
@@ -223,4 +224,28 @@ constexpr std::uint32_t MULTI_THREADING = THREAD | DETACHED;
  * TERM2   -> Completion on advenced term
  * TERM3   -> Multi threading advenced term
 */
+```
+
+## Warning
+> [!NOTE]
+> Used for internal automatic warning
+
+> [!CAUTION]
+> Not mean to be used with external class (should probably work)
+> 
+> Can be hard included with `utils/warning/Observer.hpp` & `utils/warning/UnsafeObserver.hpp`
+
+Included from:
+```cpp
+// Namespace used
+using utils::warning
+
+/* class */
+// Used as a parent for a class to be observed, ex: class Cli: private utils::warning::Observer
+Observer // Thread-safe
+UnsafeObserver // NOT Thread-safe
+
+/* class */
+// DO NOT USE IT MANUALY!!!
+SharedObject // Auto warning for unfreed class (mostly used for shared object)
 ```
