@@ -43,6 +43,10 @@ set(SRC
     src/utils/write/ANSI.cpp
     src/utils/write/format.cpp
 
+    ## Math (sub-part: geometry)
+    src/utils/math/geometry/Point.cpp
+    src/utils/math/geometry/Angle.cpp
+
     ## Cli
     src/utils/cli/Cli.cpp
     src/utils/cli/Setup.cpp
