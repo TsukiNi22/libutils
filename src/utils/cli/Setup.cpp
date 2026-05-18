@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 13/04/2026 by @author Tsukini
+##  @date 18/05/2026 by @author Tsukini
 
 File Name:
 ##  @file Setup.cpp
@@ -33,7 +33,8 @@ File Description:
 #include <string>
 #include <tuple>
 
-utils::cli::Cli::Cli()
+utils::cli::Cli::Cli(bool sig)
+: _sig{sig}
 {
     // Setup initial values
     this->resetCommands();
@@ -49,8 +50,10 @@ utils::cli::Cli::Cli()
     }
 
     // Signal handling
-    std::signal(SIGINT, SIG_IGN); // ctrl+c
-    std::signal(SIGTSTP, SIG_IGN); // ctrl+z
+    if (this->_sig) {
+        std::signal(SIGINT, SIG_IGN); // ctrl+c
+        std::signal(SIGTSTP, SIG_IGN); // ctrl+z
+    }
 }
 
 utils::cli::Cli::~Cli()
@@ -60,8 +63,10 @@ utils::cli::Cli::~Cli()
         tcsetattr(STDIN_FILENO, TCSAFLUSH, &this->_orig);
 
     // Reset signal
-    std::signal(SIGINT, SIG_DFL); // ctrl+c
-    std::signal(SIGTSTP, SIG_DFL); // ctrl+z
+    if (this->_sig) {
+        std::signal(SIGINT, SIG_DFL); // ctrl+c
+        std::signal(SIGTSTP, SIG_DFL); // ctrl+z
+    }
 }
 
 /* Default commands
@@ -90,16 +95,17 @@ static void displayCode(const utils::cli::Cli& cli)
 {
     std::uint8_t code = cli.getCode();
     std::cout << utils::write::strong();
-    if (code != 0) std::cout << utils::write::color_rgb(255, 0, 0) << "$";
-    else std::cout << utils::write::color_rgb(0, 255, 0) << "$";
+    if (code == 0) std::cout << utils::write::color_rgb(0, 255, 0) << "✔ ";
+    else std::cout << utils::write::color_rgb(255, 80, 80) << "✖ ";
     std::cout << utils::write::format(std::format("<><strong>[{:03}]<>", code));
-    std::cout << utils::write::format("<strong>➤ <>");
+    std::cout << utils::write::format("<strong>➤ ");
     std::cout << utils::write::color_rgb(0, 200, 200) << cli.strcode(code) << utils::write::reset();
     std::cout << std::endl << std::flush;
 }
 
 void utils::cli::Cli::resetCommands()
 {
+    std::unique_lock lock(this->_commandsLock);
     this->_parsedCommands.clear();
     this->_rawCommands.clear();
 

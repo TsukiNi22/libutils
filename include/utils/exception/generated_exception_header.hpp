@@ -38,10 +38,11 @@ enum class Code: std::size_t {
     SharedObject,
     CliInternal,
     CliHook,
-    CliMiddleware,
     CliParser,
     CliExecution,
     CliUndefined,
+    CliAlreadyRunning,
+    MiddlewareCall,
     CODE_SENTINEL // sentinel used for verification
 };
 
@@ -57,10 +58,11 @@ constexpr inline const char *Message[] = {
     /* SharedObject */ "An object created with dynamic code that was free is still alive",
     /* CliInternal */ "Internal error from the cli",
     /* CliHook */ "Error during a hook call",
-    /* CliMiddleware */ "Error during a middleware call",
     /* CliParser */ "Error during the parsing",
     /* CliExecution */ "Error during the command execution",
     /* CliUndefined */ "An undefined error has append",
+    /* CliAlreadyRunning */ "Can't start a cli that is already running",
+    /* MiddlewareCall */ "Error during a middleware call",
 };
 
 /* Potential default info: nullptr same as "[None]" */
@@ -75,10 +77,11 @@ constexpr inline const char *Info[] = {
     /* SharedObject */ nullptr,
     /* CliInternal */ nullptr,
     /* CliHook */ nullptr,
-    /* CliMiddleware */ nullptr,
     /* CliParser */ nullptr,
     /* CliExecution */ nullptr,
     /* CliUndefined */ nullptr,
+    /* CliAlreadyRunning */ nullptr,
+    /* MiddlewareCall */ nullptr,
 };
 
 /* Potential restriction on exception code */
@@ -98,10 +101,11 @@ constexpr inline const std::uint8_t Restriction[] = {
     /* SharedObject */ 0b1110, // allow: Fatal, Error, Warning
     /* CliInternal */ 0b0110, // allow: Fatal, Error
     /* CliHook */ 0b1110, // allow: Fatal, Error, Warning
-    /* CliMiddleware */ 0b1110, // allow: Fatal, Error, Warning
     /* CliParser */ 0b0000, // allow: All
     /* CliExecution */ 0b0110, // allow: Fatal, Error
     /* CliUndefined */ 0b0110, // allow: Fatal, Error
+    /* CliAlreadyRunning */ 0b1110, // allow: Fatal, Error, Warning
+    /* MiddlewareCall */ 0b1110, // allow: Fatal, Error, Warning
 };
 
 // Check at the compile time the correspondece between the message & code

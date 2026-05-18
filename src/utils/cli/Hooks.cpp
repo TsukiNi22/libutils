@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 13/04/2026 by @author Tsukini
+##  @date 18/05/2026 by @author Tsukini
 
 File Name:
 ##  @file Hooks.cpp
@@ -20,6 +20,7 @@ File Description:
 #include "utils/attribute/Attribute.hpp"
 #include "utils/cli/Cli.hpp"
 #include <unistd.h>
+#include <poll.h>
 #include <stdexcept>
 #include <iostream>
 #include <sstream>
@@ -156,10 +157,20 @@ hot utils::cli::ParsedData utils::cli::defaultParserHook(const std::string& inpu
     return parsedInput;
 }
 
-hot nodiscard char utils::cli::defaultGetCHook()
+hot nodiscard bool utils::cli::defaultGetCHook(char& c)
 {
-    char c = '\0';
+    // poll config
+    pollfd pfd;
+    pfd.fd = STDIN_FILENO;
+    pfd.events = POLLIN;
+
+    // poll call
+    int res = poll(&pfd, 1, 0);
+    if (res == 0) return false;
+    if (res < 0) throw std::runtime_error(strerror(errno));
+
+    // poll -> thing to read
     if (read(STDIN_FILENO, &c, 1) != 1)
         throw std::runtime_error(strerror(errno));
-    return c;
+    return true;
 }

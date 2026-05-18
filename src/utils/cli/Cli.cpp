@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 26/04/2026 by @author Tsukini
+##  @date 18/05/2026 by @author Tsukini
 
 File Name:
 ##  @file Cli.cpp
@@ -19,19 +19,23 @@ File Description:
 
 #include "utils/attribute/Attribute.hpp"
 #include "utils/exception/ExceptionDefine.hpp"
+#include "utils/exception/basic/WarningException.hpp"
 #include "utils/exception/basic/NoneException.hpp"
 #include "utils/exception/custom/CustomException.hpp"
 #include "utils/algorithms/c2dmp-hsm/c2dmp-hsm.hpp"
 #include "utils/write/ANSI.hpp"
 #include "utils/cli/Cli.hpp"
 #include "utils/cli/Flags.hpp"
+#include <unistd.h>
 #include <unordered_map>
 #include <functional>
 #include <exception>
 #include <algorithm>
+#include <optional>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
+#include <thread>
 #include <vector>
 #include <string>
 #include <tuple>
@@ -51,15 +55,16 @@ static void deleteChars(std::size_t n)
     std::cout << std::flush;
 }
 
-void utils::cli::Cli::start()
+void utils::cli::Cli::launch(std::size_t call)
 {
+    this->_running = true;
     try {this->cliMiddlewares.callBefore();}
     catch (const utils::exception::CustomException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
     std::string input;
 
     // Main loop
     try {
-        while (true) {
+        for (std::size_t i = 0; (!(this->_flags & utils::cli::Flag::MANUAL) || i < call) && !this->_interrupted; ++i) {
             // Display prompt
             if (this->_flags & utils::cli::Flag::PROMPT) {
                 try {
@@ -81,12 +86,13 @@ void utils::cli::Cli::start()
             // Get input & Check if it's empty
             try {
                 input = this->getInput();
+                if (this->_interrupted) return; // Check for interrupt
                 this->_history.push_back(input);
             } catch (const utils::exception::CustomException& e) {
                 utils::exception::Code code = e.getCode();
                 if (code == utils::exception::Code::CliInternal) this->_code = 1;
                 else if (code == utils::exception::Code::CliHook) this->_code = 2;
-                else if (code == utils::exception::Code::CliMiddleware) this->_code = 3;
+                else if (code == utils::exception::Code::MiddlewareCall) this->_code = 3;
                 else unlikely {this->_code = 255;}
                 try {this->errorMiddlewares.callBefore(this->_code);}
                 catch (const utils::exception::CustomException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
@@ -112,7 +118,7 @@ void utils::cli::Cli::start()
             } catch (const utils::exception::CustomException& e) {
                 utils::exception::Code code = e.getCode();
                 if (code == utils::exception::Code::CliHook) this->_code = 2;
-                else if (code == utils::exception::Code::CliMiddleware) this->_code = 3;
+                else if (code == utils::exception::Code::MiddlewareCall) this->_code = 3;
                 else if (code == utils::exception::Code::CliParser) {
                     std::string info = e.info();
                     if (info == "Not enough arguments") this->_code = 124;
@@ -123,7 +129,10 @@ void utils::cli::Cli::start()
                     if (info == "Unknow command") this->_code = 128;
                     else if (info == "Command not implemented") this->_code = 129;
                     else if (info.starts_with("Callback exception: ")) {
-                        if (!(this->_flags & utils::cli::Flag::CATCH)) throw;
+                        if (!(this->_flags & utils::cli::Flag::CATCH)) {
+                            this->_running = false;
+                            throw;
+                        }
                         this->_code = 130;
                     }
                 } else unlikely {this->_code = 255;}
@@ -137,24 +146,57 @@ void utils::cli::Cli::start()
             }
         }
     } catch (const utils::exception::NoneException& e) { // Catch exit throw
-        if (e.getCode() != utils::exception::Code::Exit) throw;
+        if (e.getCode() != utils::exception::Code::Exit) {
+            this->_running = false;
+            throw;
+        }
     }
 
     try {this->cliMiddlewares.callAfter();}
     catch (const utils::exception::CustomException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
+    this->_running = false;
 }
 
-void utils::cli::Cli::start(const std::string& input)
+std::optional<std::thread> utils::cli::Cli::start(std::size_t call)
+{
+    // Check status
+    if (this->_running)
+        throw utils::exception::WarningException(utils::exception::Code::CliAlreadyRunning);
+    this->_interrupted = false; // Reset interrupt status
+
+    // Launch in a thread
+    if (this->_flags & utils::cli::Flag::THREAD) {
+        // Create the thread
+        std::thread t([this, call] {
+            this->launch(call);
+        });
+
+        // Detach the thread if needed
+        if (this->_flags & utils::cli::Flag::DETACHED) {
+            t.detach();
+            return std::nullopt;
+        }
+
+        // Return the thread for non detached thread (let the user handle it)
+        return t;
+    }
+
+    // Default linear launch
+    this->launch(call);
+    return std::nullopt;
+}
+
+std::optional<std::thread> utils::cli::Cli::start(const std::string& input, std::size_t call)
 {
     this->_initInput.push(input);
-    this->start();
+    return this->start(call);
 }
 
-void utils::cli::Cli::start(const std::vector<std::string>& inputs)
+std::optional<std::thread> utils::cli::Cli::start(const std::vector<std::string>& inputs, std::size_t call)
 {
     for (const std::string& input: inputs)
         this->_initInput.push(input);
-    this->start();
+    return this->start(call);
 }
 
 hot void utils::cli::Cli::prompt()
@@ -162,14 +204,17 @@ hot void utils::cli::Cli::prompt()
     this->promptMiddlewares.callBefore();
 
     // Call the hook
-    if (this->_promptHook) likely {
-        try {
-            this->_promptHook(*this, this->_code);
-        } catch (const std::exception& e) {
-            throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::CliHook, e.what());
+    if (isatty(STDOUT_FILENO)) {
+        if (this->_promptHook) likely {
+            try {
+                std::lock_guard lock(this->_hooksLock);
+                this->_promptHook(*this, this->_code);
+            } catch (const std::exception& e) {
+                throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::CliHook, e.what());
+            }
+        } else unlikely {
+            throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::CliHook, "Missing hook for prompting");
         }
-    } else unlikely {
-        throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::CliHook, "Missing hook for prompting");
     }
 
     this->promptMiddlewares.callAfter();
@@ -213,29 +258,35 @@ hot nodiscard std::string utils::cli::Cli::getInput()
     }
 
     // Loop to get full input
-    while (true) {
+    while (true && !this->_interrupted) {
         // Get the char
         if (this->_getcHook) likely {
             try {
                 this->inputMiddlewares.callBefore();
-                c = this->_getcHook();
+                std::lock_guard lock(this->_hooksLock);
+                while (!this->_getcHook(c) && !this->_interrupted)
+                    std::this_thread::yield();
                 this->inputMiddlewares.callAfter(c);
             } catch (const std::exception& e) {
-                throw utils::exception::NoneException(utils::exception::Code::Exit);
-                //throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::CliHook, e.what());
+                //throw utils::exception::NoneException(utils::exception::Code::Exit);
+                throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::CliHook, e.what());
             }
         } else unlikely {
             throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::CliHook, "Missing hook for char getter");
         }
+        if (this->_interrupted) break; // Check for interrupt
 
         // Ctrl+D handling
         if (c == 4) {
-            std::cout << std::endl << "Detected Ctrl+D, exiting..." << std::endl;
+            if (isatty(STDOUT_FILENO))
+                std::cout << std::endl << "Detected Ctrl+D, exiting..." << std::endl;
             throw utils::exception::NoneException(utils::exception::Code::Exit);
         }
 
         // Auto completion
         else if (this->_flags & utils::cli::Flag::AUTO_COMPLETION && c == '\t' && trim(input).find(" ", 0) == std::string::npos) {
+            std::shared_lock lock(this->_commandsLock);
+
             // Setup the commands
             commands.clear();
             if (this->_flags & utils::cli::Flag::PARSED) {
@@ -289,7 +340,7 @@ hot nodiscard std::string utils::cli::Cli::getInput()
 
         // End of input
         else if (c == this->_inputDelimitor) {
-            std::cout << std::endl;
+            if (isatty(STDOUT_FILENO)) std::cout << std::endl;
             break;
         }
 
@@ -305,7 +356,7 @@ hot nodiscard std::string utils::cli::Cli::getInput()
             escape = false;
         }
 
-        if (echo) {
+        if (echo && isatty(STDOUT_FILENO)) {
             // Reset the cursor place
             if (lastInputSize - lastIndexBuffer > 0)
                 std::cout << utils::write::right(lastInputSize - lastIndexBuffer);
@@ -320,9 +371,15 @@ hot nodiscard std::string utils::cli::Cli::getInput()
             if (input.size() - indexBuffer > 0)
                 std::cout << utils::write::left(input.size() - indexBuffer);
         }
+
+        // Update output
         std::cout << std::flush;
     }
 
+    if (this->_interrupted) {
+        if (isatty(STDOUT_FILENO)) std::cout << std::endl;
+        return "";
+    }
     if (this->_flags & utils::cli::Flag::TRIM) return trim(input);
     else return input;
 }
@@ -335,6 +392,7 @@ hot utils::cli::ParsedData utils::cli::Cli::parse(const std::string& input)
     // Call the hook
     if (this->_parserHook) likely {
         try {
+            std::lock_guard lock(this->_hooksLock);
             parsedInput = this->_parserHook(input,
                 this->_flags & utils::cli::Flag::TRIM,
                 this->_flags & utils::cli::Flag::LOGIC,
@@ -367,6 +425,8 @@ hot void utils::cli::Cli::exec(const utils::cli::ParsedData& parsedInput)
         // Try to exec the command
         status = 0;
         try {
+            std::shared_lock lock(this->_commandsLock);
+
             // Try to find the command
             itParsed = this->_parsedCommands.find(command.front());
             itRaw = this->_rawCommands.find(command.front());
@@ -469,12 +529,12 @@ hot void utils::cli::Cli::exec(const utils::cli::ParsedData& parsedInput)
 std::string utils::cli::Cli::strcode(std::uint8_t code) const
 {
     switch (code) {
-        case 0: return "OK";
-        case 1: return "Internal error";
-        case 2: return "Hook internal error or missing";
-        case 3: return "Middleware internal error";
-        case 34: return "There is allways a r34";
-        case 42: return "case 42";
+        case 0:   return "OK";
+        case 1:   return "Internal error";
+        case 2:   return "Hook internal error or missing";
+        case 3:   return "Middleware internal error";
+        case 34:  return "There is allways a r34";
+        case 42:  return "case 42";
         case 124: return "Not enough arguments";
         case 125: return "Too many arguments";
         case 126: return "Unclosed escape sequence";
@@ -483,7 +543,7 @@ std::string utils::cli::Cli::strcode(std::uint8_t code) const
         case 129: return "Command not implemented";
         case 130: return "Callback exception";
         case 255: return "Undefined error";
-        default: return "No errors are associated with this code";
+        default:  return "No errors are associated with this code";
     }
 
     // Uuhhhhh?????????????

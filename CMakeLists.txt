@@ -12,7 +12,12 @@ set(CMAKE_CXX_COMPILER clang++)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON) # Moderne compilation -fPIE
 add_definitions(-DFORCED_CXX_STANDARD=14) # Used for the attribute definition
 add_definitions(-D_NoWarning) # Remove warnings from utils
-find_package(Python3 REQUIRED) # Try to find python for the dependencies
+
+# =========================
+# Requirement
+# =========================
+find_package(PkgConfig REQUIRED)
+find_package(Python3 REQUIRED) # Used for the special dependencie
 
 # =========================
 # Warnings
@@ -71,7 +76,7 @@ target_include_directories(${TARGET} PUBLIC include)
 # =========================
 target_compile_options(${TARGET} PRIVATE
     $<$<CONFIG:Debug>:-g -ggdb3>
-    $<$<CONFIG:Release>:-O1>
+    $<$<CONFIG:Optimized>:-O3 -ffast-math -funroll-loops -pipe -DNDEBUG>
 )
 
 # =========================

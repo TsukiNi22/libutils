@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 12/04/2026 by @author Tsukini
+##  @date 18/05/2026 by @author Tsukini
 
 File Name:
 ##  @file Flags.hpp
@@ -31,7 +31,7 @@ namespace utils::cli { // namespace
 /* CLASS */
 
 enum Flag {
-    DEBUG           = 1 << 0, // Active verbose for internal action
+    DEBUG           = 1 << 0, // Active verbose for internal action (Nothing for now)
     NOECHO          = 1 << 1, // Disable echo of the input
     CATCH           = 1 << 2, // Enable error catching on execution
     EMPTY_INPUT     = 1 << 3, // Ingore empty input (default: error)
@@ -43,6 +43,9 @@ enum Flag {
     HISTORY         = 1 << 9, // Activate history, up and down arrow
     HINT            = 1 << 10, // Display hint when a command fail
     AUTO_COMPLETION = 1 << 11, // Active auto completion with `\t` (only work on the first command for now)
+    MANUAL          = 1 << 12, // Enable manual call for each new input handling
+    THREAD          = 1 << 13, // Run in a thread
+    DETACHED        = 1 << 14, // Detach the thread execution (by default return the thread at start)
 };
 
 /*
@@ -67,12 +70,21 @@ namespace utils::cli::Flags { // namespace
 /* MACRO */
 
 /* flags preset */
+constexpr std::uint32_t ALL     = DEBUG | CATCH | NOECHO | TRIM | EMPTY_INPUT | PARSED | PROMPT | LOGIC | ARROW | HISTORY | HINT | AUTO_COMPLETION | MANUAL | THREAD | DETACHED;
 constexpr std::uint32_t DEFAULT = CATCH | EMPTY_INPUT | TRIM | PROMPT | ARROW;
 constexpr std::uint32_t DUMB    = 0;
-constexpr std::uint32_t ALL     = DEBUG | CATCH | NOECHO | TRIM | EMPTY_INPUT | PARSED | PROMPT | LOGIC | ARROW | HISTORY | HINT | AUTO_COMPLETION;
 constexpr std::uint32_t TERM1   = CATCH | EMPTY_INPUT | TRIM | PARSED | PROMPT | EMPTY_INPUT | LOGIC | ARROW | HISTORY;
 constexpr std::uint32_t TERM2   = TERM1 | HINT | AUTO_COMPLETION;
+constexpr std::uint32_t TERM3   = TERM2 | THREAD;
 constexpr std::uint32_t DEV     = TERM2 | DEBUG;
+constexpr std::uint32_t SPECIAL = MANUAL | THREAD | DETACHED;
+constexpr std::uint32_t MULTI_THREADING = THREAD | DETACHED;
+/*
+ * DEFAULT -> Basic term
+ * TERM1   -> Advenced term
+ * TERM2   -> Completion on advenced term
+ * TERM3   -> Multi threading advenced term
+*/
 
 } // namespace end
 #endif /* CLIFLAGS_H */

@@ -11,11 +11,6 @@
             "restrictions": ["Fatal", "Error", "Warning"]
         },
         {
-            "code": "CliMiddleware",
-            "message": "Error during a middleware call",
-            "restrictions": ["Fatal", "Error", "Warning"]
-        },
-        {
             "code": "CliParser",
             "message": "Error during the parsing"
         },
@@ -28,6 +23,11 @@
             "code": "CliUndefined",
             "message": "An undefined error has append",
             "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "CliAlreadyRunning",
+            "message": "Can't start a cli that is already running",
+            "restrictions": ["Fatal", "Error", "Warning"]
         }
     ]
 }

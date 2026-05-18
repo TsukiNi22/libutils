@@ -1,0 +1,9 @@
+{
+    "errors": [
+        {
+            "code": "MiddlewareCall",
+            "message": "Error during a middleware call",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        }
+    ]
+}

@@ -11,69 +11,37 @@ Edition:
 ##  @date 18/05/2026 by @author Tsukini
 
 File Name:
-##  @file Format.hpp
+##  @file Middlewares.hpp
 
 File Description:
-##  Definition of the utils::write::format & explication
+##  Declaration of the Middleware type for void & non void function
 \**************************************************************/
 
-#ifndef FORMAT_H
-    #define FORMAT_H
-    
+#ifndef MIDDLEWARESTYPE_H
+    #define MIDDLEWARESTYPE_H
+
     //----------------------------------------------------------------//
     /* INCLUDE */
 
     /* type */
-    #include <string>   // std::string
+    #include <functional>   // std::function
 
-namespace utils::write { // namespace start
+namespace utils::middleware { // namespace
 //----------------------------------------------------------------//
-/* PROTOTYPE */
+/* CLASS */
 
-/* format */
-std::string format(const std::string& s);
+template<typename T>
+struct MiddlewareType {
+    using type = std::function<void(T)>;
+};
 
-//----------------------------------------------------------------//
-/* DESCRIPTION */
-/*
-Only edit style for now, other sequence style require manual call
+template<>
+struct MiddlewareType<void> {
+    using type = std::function<void()>;
+};
 
-Delimitor: <...>
-Empty content: <>
-    - reset style
-Content: <DATA1|DATA2|...|DATAX>
-    - setup the given style
-    - ignore the unknow ones
-
-Data (case insensitive):
-    reset
-    strong
-    dark
-    italic
-    underlined
-    flashing_fast
-    flashing_slow
-    reversed
-    hide
-    bar
-    monospace
-    framed
-    encircled
-    overlined
-    exposant
-    indice
-
-not for now:
-    color(name)
-    b_color(name)
-    id_color(id)
-    id_b_color(id)
-    id_ucolor(id)
-    color(r, g, b)
-    b_color(r, g, b)
-    u_color(r, g, b)
-
-*/
+template<typename T>
+using Middleware = typename MiddlewareType<T>::type;
 
 } // namespace end
-#endif /* FORMAT_H */
+#endif /* MIDDLEWARESTYPE_H */

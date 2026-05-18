@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 27/04/2026 by @author Tsukini
+##  @date 18/05/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -41,6 +41,7 @@ File Description:
 
 /* Activate all tool include */
 #ifdef _Tools
+    #define _Middleware
     #define _Vector
     #define _Concepts
     #define _Algorithms
@@ -76,13 +77,25 @@ File Description:
     // -> Handling of a customizable command line interface
     #include "cli/Cli.hpp"          // utils::cli::Cli, utils::cli::ParsedData
     #include "cli/Flags.hpp"        // utils::cli::Flag, utils::cli::Flags
-    #include "cli/Middlewares.hpp"  // utils::cli::Middlewares
 #endif
 
 /* Macro */
 #ifdef _Attribute
     // -> Define/Macro of attribute & keyword for optimisation & other
     #include "attribute/Attribute.hpp"  // different define/macro for optimisation & other
+#endif
+
+/* Middleware */
+#ifdef _Middleware
+    // -> Middlewares handling
+    #include "middleware/Middlewares.hpp"   // utils::middleware::Middleware<...>, utils::middleware::Middlewares<...>
+    /*
+    #include "middleware/MiddlewaresType.hpp"       // utils::middleware::Middleware<...>
+    #include "middleware/Middlewares_t-t.hpp"       // utils::middleware::Middlewares<T, U>
+    #include "middleware/Middlewares_t-void.hpp"    // utils::middleware::Middlewares<T, void>
+    #include "middleware/Middlewares_void-t.hpp"    // utils::middleware::Middlewares<void, T>
+    #include "middleware/Middlewares_void-void.hpp" // utils::middleware::Middlewares<void, void>
+    */
 #endif
 
 /* VectorX */
