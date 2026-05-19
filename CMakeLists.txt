@@ -61,12 +61,18 @@ add_library(${TARGET} STATIC ${SRC})
 #add_library(${TARGET} SHARED ${SRC})
 
 # =========================
-# Dependencies
+# Special Targets
 # =========================
 add_custom_target(generated_exception_header ALL
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/cmake/scripts/generate_exception_header.py
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Generating exception header"
+    VERBATIM
 )
+
+# =========================
+# Dependencies
+# =========================
 add_dependencies(${TARGET} generated_exception_header)
 
 # =========================
