@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 18/05/2026 by @author Tsukini
+##  @date 19/05/2026 by @author Tsukini
 
 File Name:
 ##  @file OVector2.hpp

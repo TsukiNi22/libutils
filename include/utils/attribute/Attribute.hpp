@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 02/03/2026 by @author Tsukini
+##  @date 19/05/2026 by @author Tsukini
 
 File Name:
 ##  @file Attribute.hpp

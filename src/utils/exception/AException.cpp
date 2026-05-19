@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 26/04/2026 by @author Tsukini
+##  @date 19/05/2026 by @author Tsukini
 
 File Name:
 ##  @file AException.cpp
@@ -9,13 +9,14 @@ File Description:
 ##  Definition of the function used in the abstract for exception
 \**************************************************************/
 
+#define NO_OUTDATED_WARNING
+#include "utils/attribute/Attribute.hpp"
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/AException.hpp"
 #include "utils/exception/basic/ErrorException.hpp"
 #include "utils/write/Color.hpp"
 #include "utils/write/ANSI.hpp"
 #include "utils/write/Style.hpp"
-#include "utils/attribute/Attribute.hpp"
 #include <source_location>
 #include <sstream>
 #include <cstddef>

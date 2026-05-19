@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 27/04/2026 by @author Tsukini
+##  @date 19/05/2026 by @author Tsukini
 
 File Name:
 ##  @file SharedObject.cpp
@@ -9,6 +9,7 @@ File Description:
 ##  SharedObject methods and static declaration to intercept dl*
 \**************************************************************/
 
+#define NO_OUTDATED_WARNING
 #include "utils/attribute/Attribute.hpp"
 #include "utils/warning/SharedObject.hpp"
 #include "utils/exception/ExceptionDefine.hpp"

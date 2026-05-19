@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 18/05/2026 by @author Tsukini
+##  @date 19/05/2026 by @author Tsukini
 
 File Name:
 ##  @file ANSI.cpp
@@ -17,6 +17,7 @@ File Description:
 ##  Different ANSI method definition
 \**************************************************************/
 
+#define NO_OUTDATED_WARNING
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/custom/CustomException.hpp"
 #include "utils/write/ANSI.hpp"

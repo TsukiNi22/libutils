@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 27/04/2026 by @author Tsukini
+##  @date 19/05/2026 by @author Tsukini
 
 File Name:
 ##  @file UnsafeObserver.hpp
@@ -25,7 +25,7 @@ namespace utils::warning { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-class outdated("Thread unsafe observer used") UnsafeObserver {
+class outdated("UnsafeObserver dosen't have any memory safty (Be careful!!!)") UnsafeObserver {
     private:
         std::uint32_t _id = 0;
 

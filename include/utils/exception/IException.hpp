@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 27/04/2026 by @author Tsukini
+##  @date 19/05/2026 by @author Tsukini
 
 File Name:
 ##  @file IException.hpp
@@ -23,7 +23,6 @@ File Description:
     #include <string>                           // std::string
 
 namespace utils::exception { // namespace start
-
 //----------------------------------------------------------------//
 /* CLASS */
 

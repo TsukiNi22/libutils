@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 27/04/2026 by @author Tsukini
+##  @date 19/05/2026 by @author Tsukini
 
 File Name:
 ##  @file Attribute-c++14.hpp
@@ -24,7 +24,7 @@ File Description:
     #define ctor            __attribute__((constructor))            // Execute before the main
     #define dtor            __attribute__((destructor))             // Execute after the main
     #define fallthrough     __attribute__((fallthrough))            // Ingore warn for no break in switch
-    #ifndef _NoWarning
+    #ifndef NO_OUTDATED_WARNING
         #define outdated(info)  [[deprecated(info)]]                // Signal a deprecated function
     #else
         #define outdated(info)                                      // Not defined with this flag

@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 18/05/2026 by @author Tsukini
+##  @date 19/05/2026 by @author Tsukini
 
 File Name:
 ##  @file Point.cpp
@@ -9,6 +9,7 @@ File Description:
 ##  Geometry point handling
 \**************************************************************/
 
+#define NO_OUTDATED_WARNING
 #include "utils/attribute/Attribute.hpp"
 #include "utils/math/geometry/Point.hpp"
 #include "utils/math/trigo/Convertion.hpp"
