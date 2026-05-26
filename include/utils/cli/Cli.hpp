@@ -79,6 +79,7 @@ class Cli: private utils::warning::Observer {
         std::queue<std::string> _initInput; // Only at start
 
         /* storage */
+        std::string _input; // Internal storage for input buffer used on interrupt & restart
         mutable std::shared_mutex _commandsLock;
         std::unordered_map<std::string, std::tuple<std::function<void(const utils::cli::Cli&, const std::vector<std::string>&)>, std::int16_t, std::int16_t>> _parsedCommands;
         std::unordered_map<std::string, std::function<void(const utils::cli::Cli&, const std::string&)>> _rawCommands;

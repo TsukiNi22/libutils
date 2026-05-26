@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 19/05/2026 by @author Tsukini
+##  @date 26/05/2026 by @author Tsukini
 
 File Name:
 ##  @file Cli.cpp
@@ -87,7 +87,10 @@ void utils::cli::Cli::launch(std::size_t call)
             // Get input & Check if it's empty
             try {
                 input = this->getInput();
-                if (this->_interrupted) return; // Check for interrupt
+                if (this->_interrupted) { // Check for interrupt
+                    this->_running = false;
+                    return;
+                }
                 this->_history.push_back(input);
             } catch (const utils::exception::CustomException& e) {
                 utils::exception::Code code = e.getCode();
@@ -244,9 +247,9 @@ static std::string getHint(const std::vector<std::string>& list, const std::stri
 hot nodiscard std::string utils::cli::Cli::getInput()
 {
     std::vector<std::string> commands;
-    bool echo = !(this->_flags & utils::cli::Flag:: NOECHO);
+    bool echo = !(this->_flags & utils::cli::Flag::NOECHO);
     std::size_t indexBuffer = 0, indexHistory = this->_history.size();
-    std::size_t lastInputSize = 0, lastIndexBuffer = indexBuffer;
+    std::size_t lastInputSize = indexBuffer, lastIndexBuffer = indexBuffer;
     bool escape = false, onInput = false;
     std::string input, inputBuff;
     char c = '\0';
@@ -255,7 +258,18 @@ hot nodiscard std::string utils::cli::Cli::getInput()
     if (this->_initInput.size() > 0) {
         input = this->_initInput.front();
         this->_initInput.pop();
+        if (echo && isatty(STDOUT_FILENO)) std::cout << input << std::flush;
         return input;
+    }
+
+    // Use of internal input buffer stored (input was previously interrupted)
+    else if (!this->_input.empty()) {
+        input = this->_input;
+        this->_input.clear();
+        indexBuffer = input.size();
+        lastInputSize = indexBuffer;
+        lastIndexBuffer = indexBuffer;
+        if (echo && isatty(STDOUT_FILENO)) std::cout << input << std::flush;
     }
 
     // Loop to get full input
@@ -379,6 +393,7 @@ hot nodiscard std::string utils::cli::Cli::getInput()
 
     if (this->_interrupted) {
         if (isatty(STDOUT_FILENO)) std::cout << std::endl;
+        this->_input = input;
         return "";
     }
     if (this->_flags & utils::cli::Flag::TRIM) return trim(input);
