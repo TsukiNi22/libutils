@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 19/05/2026 by @author Tsukini
+##  @date 29/05/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -121,4 +121,6 @@ File Description:
     #include "algorithms/c2dmp-hsm/c2dmp-hsm.hpp"               // utils::algorithms::c2dmp::c2dmp
     #include "algorithms/c2dmp-hsm/algorithm/optimized.hpp"     // utils::algorithms::c2dmp::c2dmp_optimized
     #include "algorithms/c2dmp-hsm/algorithm/simplified.hpp"    // utils::algorithms::c2dmp::c2dmp_simplified
+    #include "algorithms/c2dmp-hsm/algorithm/foptimized.hpp"    // utils::algorithms::c2dmp::c2dmp_foptimized
+    #include "algorithms/c2dmp-hsm/algorithm/fsimplified.hpp"   // utils::algorithms::c2dmp::c2dmp_fsimplified
 #endif

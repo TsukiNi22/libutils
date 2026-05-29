@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 09/04/2026 by @author Tsukini
+##  @date 29/05/2026 by @author Tsukini
 
 File Name:
 ##  @file optimized.cpp
@@ -21,9 +21,9 @@ File Description:
 ##  k = sizeof(UINT) → can be 1, 2, 4 or 8
 ##
 ##  Time:
-##      bast → O(m + min(n , m))
-##      moy  → O(m + min(n , m))
-##      wort → O(m + min(n , m))
+##      bast → O(m + min(n, m))
+##      moy  → O(m + min(n, m))
+##      wort → O(m + min(n, m))
 ##
 ##  Memory:
 ##      best → O(1) → const (637)
