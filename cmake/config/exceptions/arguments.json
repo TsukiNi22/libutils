@@ -1,0 +1,84 @@
+{
+    "errors": [
+        {
+            "code": "Override",
+            "message": "The override is desactivated",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "UnknowFlag",
+            "message": "Unknow flag",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "NoValidUsage",
+            "message": "No valid usage found, use '-h' for more information",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "InvalidUsageOrder",
+            "message": "Invalid order of options/flags, use '-h' for more information",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "InvalidUsageCombinaison",
+            "message": "Invalid combinaison of options/flags, use '-h' for more information",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "ArgumentHook",
+            "message": "Error during an execution of hook",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "ArgumentsNumber",
+            "message": "Invalid number of argument(s) given, use '-h' for more information",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "OptionsNumber",
+            "message": "Invalid number of option(s) given, use '-h' for more information",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "FlagOption",
+            "message": "Invalid flag option, the parsing hook has failed",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "FlagCombinaison",
+            "message": "Invalid flag combinaison",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "OptionIngored",
+            "message": "Option ignored, can't determine it's ownership",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "DuplicatedFlag",
+            "message": "A flag was redefined, only the first will be used",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "InvalidNumber",
+            "message": "Invalid number",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "InvalidFile",
+            "message": "Invalid file",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "InvalidFileExtension",
+            "message": "The file extension is different than expected",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "InssuficientPermission",
+            "message": "Inssuficient permission",
+            "restrictions": ["Fatal", "Error"]
+        }
+    ]
+}

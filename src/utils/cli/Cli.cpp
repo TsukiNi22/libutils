@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 26/05/2026 by @author Tsukini
+##  @date 31/05/2026 by @author Tsukini
 
 File Name:
 ##  @file Cli.cpp
@@ -58,7 +58,6 @@ static void deleteChars(std::size_t n)
 
 void utils::cli::Cli::launch(std::size_t call)
 {
-    this->_running = true;
     try {this->cliMiddlewares.callBefore();}
     catch (const utils::exception::CustomException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
     std::string input;
@@ -167,6 +166,7 @@ std::optional<std::thread> utils::cli::Cli::start(std::size_t call)
     if (this->_running)
         throw utils::exception::WarningException(utils::exception::Code::CliAlreadyRunning);
     this->_interrupted = false; // Reset interrupt status
+    this->_running = true;
 
     // Launch in a thread
     if (this->_flags & utils::cli::Flag::THREAD) {
@@ -290,6 +290,13 @@ hot nodiscard std::string utils::cli::Cli::getInput()
             throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::CliHook, "Missing hook for char getter");
         }
         if (this->_interrupted) break; // Check for interrupt
+
+        // EOF handling
+        if (c == 0) {
+            if (isatty(STDOUT_FILENO))
+                std::cout << std::endl << "Detected EOF, exiting..." << std::endl;
+            throw utils::exception::NoneException(utils::exception::Code::Exit);
+        }
 
         // Ctrl+D handling
         if (c == 4) {

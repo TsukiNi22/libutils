@@ -6,11 +6,6 @@
             "restrictions": ["Fatal", "Error"]
         },
         {
-            "code": "UnknowId",
-            "message": "Try to edit an unknow id",
-            "restrictions": ["Fatal", "Error"]
-        },
-        {
             "code": "SharedObject",
             "message": "An object created with dynamic code that was free is still alive",
             "restrictions": ["Fatal", "Error", "Warning"]

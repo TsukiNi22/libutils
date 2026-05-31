@@ -52,6 +52,10 @@ set(SRC
     src/utils/cli/Setup.cpp
     src/utils/cli/Hooks.cpp
 
+    ## Arguments
+    src/utils/arguments/ArgParser.cpp
+    src/utils/arguments/Hooks.cpp
+
     ## Warning
     src/utils/warning/Observer.cpp
     src/utils/warning/UnsafeObserver.cpp

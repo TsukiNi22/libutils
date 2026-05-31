@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 19/05/2026 by @author Tsukini
+##  @date 31/05/2026 by @author Tsukini
 
 File Name:
 ##  @file Setup.cpp
@@ -111,7 +111,7 @@ void utils::cli::Cli::resetCommands()
     this->_rawCommands.clear();
 
     // Parsed commands
-    using FnVec = std::function<void(const utils::cli::Cli& cli, const std::vector<std::string>&)>;
+    using FnVec = std::function<void(const utils::cli::Cli&, const std::vector<std::string>&)>;
     this->_parsedCommands["help"] = std::make_tuple(FnVec([](unused const utils::cli::Cli& cli, unused const std::vector<std::string>& inputs){help();}), 0, 0);
     this->_parsedCommands["bye"]  = std::make_tuple(FnVec([](unused const utils::cli::Cli& cli, unused const std::vector<std::string>& inputs){bye();}), 0, 0);
     this->_parsedCommands["quit"] = std::make_tuple(FnVec([](unused const utils::cli::Cli& cli, unused const std::vector<std::string>& inputs){quit();}), 0, 0);
@@ -119,7 +119,7 @@ void utils::cli::Cli::resetCommands()
     this->_parsedCommands["?"] = std::make_tuple(FnVec([](const utils::cli::Cli& cli, unused const std::vector<std::string>& inputs){displayCode(cli);}), 0, 0);
 
     // Raw commands
-    using FnStr = std::function<void(const utils::cli::Cli& cli, const std::string&)>;
+    using FnStr = std::function<void(const utils::cli::Cli&, const std::string&)>;
     this->_rawCommands["help"] = FnStr([](unused const utils::cli::Cli& cli, unused const std::string& input){help();});
     this->_rawCommands["bye"]  = FnStr([](unused const utils::cli::Cli& cli, unused const std::string& input){bye();});
     this->_rawCommands["quit"] = FnStr([](unused const utils::cli::Cli& cli, unused const std::string& input){quit();});

@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 19/05/2026 by @author Tsukini
+##  @date 31/05/2026 by @author Tsukini
 
 File Name:
 ##  @file Hooks.cpp
@@ -137,6 +137,7 @@ hot utils::cli::ParsedData utils::cli::defaultParserHook(const std::string& inpu
     for (const std::string& rawCommand: commands) {
         command = (trim ? trimString(rawCommand) : rawCommand);
         splited = splitCommand(command);
+        if (splited.size() == 0) continue;
         if (parse) {
             data.clear();
             data.push_back(splited.front());
@@ -171,7 +172,8 @@ hot nodiscard bool utils::cli::defaultGetCHook(char& c)
     if (res < 0) throw std::runtime_error(strerror(errno));
 
     // poll -> thing to read
-    if (read(STDIN_FILENO, &c, 1) != 1)
+    res = read(STDIN_FILENO, &c, 1);
+    if (res != 1 && res != 0)
         throw std::runtime_error(strerror(errno));
     return true;
 }

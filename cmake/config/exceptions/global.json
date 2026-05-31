@@ -5,6 +5,15 @@
             "message": "Exit",
             "info": "Exit",
             "restrictions": ["None"]
+        },
+        {
+            "code": "Empty",
+            "message": "Empty"
+        },
+        {
+            "code": "UnknowId",
+            "message": "Try to do thing with an unknow id",
+            "restrictions": ["Fatal", "Error"]
         }
     ]
 }

@@ -32,9 +32,10 @@ enum class Code: std::size_t {
     VectorInvalidIndex,
     ExceptionCodeRestriction,
     Exit,
+    Empty,
+    UnknowId,
     ANSIMouseEvent,
     IdOverflow,
-    UnknowId,
     SharedObject,
     CliInternal,
     CliHook,
@@ -42,6 +43,22 @@ enum class Code: std::size_t {
     CliExecution,
     CliUndefined,
     CliAlreadyRunning,
+    Override,
+    UnknowFlag,
+    NoValidUsage,
+    InvalidUsageOrder,
+    InvalidUsageCombinaison,
+    ArgumentHook,
+    ArgumentsNumber,
+    OptionsNumber,
+    FlagOption,
+    FlagCombinaison,
+    OptionIngored,
+    DuplicatedFlag,
+    InvalidNumber,
+    InvalidFile,
+    InvalidFileExtension,
+    InssuficientPermission,
     MiddlewareCall,
     CODE_SENTINEL // sentinel used for verification
 };
@@ -52,9 +69,10 @@ constexpr inline const char *Message[] = {
     /* VectorInvalidIndex */ "Invalid index on a vector",
     /* ExceptionCodeRestriction */ "Error during the setup of an exception",
     /* Exit */ "Exit",
+    /* Empty */ "Empty",
+    /* UnknowId */ "Try to do thing with an unknow id",
     /* ANSIMouseEvent */ "Error during the read of the mouse event",
     /* IdOverflow */ "Can't distribute an id, uint32_t limits are reach",
-    /* UnknowId */ "Try to edit an unknow id",
     /* SharedObject */ "An object created with dynamic code that was free is still alive",
     /* CliInternal */ "Internal error from the cli",
     /* CliHook */ "Error during a hook call",
@@ -62,6 +80,22 @@ constexpr inline const char *Message[] = {
     /* CliExecution */ "Error during the command execution",
     /* CliUndefined */ "An undefined error has append",
     /* CliAlreadyRunning */ "Can't start a cli that is already running",
+    /* Override */ "The override is desactivated",
+    /* UnknowFlag */ "Unknow flag",
+    /* NoValidUsage */ "No valid usage found, use '-h' for more information",
+    /* InvalidUsageOrder */ "Invalid order of options/flags, use '-h' for more information",
+    /* InvalidUsageCombinaison */ "Invalid combinaison of options/flags, use '-h' for more information",
+    /* ArgumentHook */ "Error during an execution of hook",
+    /* ArgumentsNumber */ "Invalid number of argument(s) given, use '-h' for more information",
+    /* OptionsNumber */ "Invalid number of option(s) given, use '-h' for more information",
+    /* FlagOption */ "Invalid flag option, the parsing hook has failed",
+    /* FlagCombinaison */ "Invalid flag combinaison",
+    /* OptionIngored */ "Option ignored, can't determine it's ownership",
+    /* DuplicatedFlag */ "A flag was redefined, only the first will be used",
+    /* InvalidNumber */ "Invalid number",
+    /* InvalidFile */ "Invalid file",
+    /* InvalidFileExtension */ "The file extension is different than expected",
+    /* InssuficientPermission */ "Inssuficient permission",
     /* MiddlewareCall */ "Error during a middleware call",
 };
 
@@ -71,9 +105,10 @@ constexpr inline const char *Info[] = {
     /* VectorInvalidIndex */ "Can't retrieve the value, the VectorX dosen't have this index",
     /* ExceptionCodeRestriction */ "Restriction trigerred on a code & type combination",
     /* Exit */ "Exit",
+    /* Empty */ nullptr,
+    /* UnknowId */ nullptr,
     /* ANSIMouseEvent */ nullptr,
     /* IdOverflow */ nullptr,
-    /* UnknowId */ nullptr,
     /* SharedObject */ nullptr,
     /* CliInternal */ nullptr,
     /* CliHook */ nullptr,
@@ -81,6 +116,22 @@ constexpr inline const char *Info[] = {
     /* CliExecution */ nullptr,
     /* CliUndefined */ nullptr,
     /* CliAlreadyRunning */ nullptr,
+    /* Override */ nullptr,
+    /* UnknowFlag */ nullptr,
+    /* NoValidUsage */ nullptr,
+    /* InvalidUsageOrder */ nullptr,
+    /* InvalidUsageCombinaison */ nullptr,
+    /* ArgumentHook */ nullptr,
+    /* ArgumentsNumber */ nullptr,
+    /* OptionsNumber */ nullptr,
+    /* FlagOption */ nullptr,
+    /* FlagCombinaison */ nullptr,
+    /* OptionIngored */ nullptr,
+    /* DuplicatedFlag */ nullptr,
+    /* InvalidNumber */ nullptr,
+    /* InvalidFile */ nullptr,
+    /* InvalidFileExtension */ nullptr,
+    /* InssuficientPermission */ nullptr,
     /* MiddlewareCall */ nullptr,
 };
 
@@ -95,9 +146,10 @@ constexpr inline const std::uint8_t Restriction[] = {
     /* VectorInvalidIndex */ 0b1110, // allow: Fatal, Error, Warning
     /* ExceptionCodeRestriction */ 0b0110, // allow: Fatal, Error
     /* Exit */ 0b0001, // allow: None
+    /* Empty */ 0b0000, // allow: All
+    /* UnknowId */ 0b0110, // allow: Fatal, Error
     /* ANSIMouseEvent */ 0b0110, // allow: Fatal, Error
     /* IdOverflow */ 0b0110, // allow: Fatal, Error
-    /* UnknowId */ 0b0110, // allow: Fatal, Error
     /* SharedObject */ 0b1110, // allow: Fatal, Error, Warning
     /* CliInternal */ 0b0110, // allow: Fatal, Error
     /* CliHook */ 0b1110, // allow: Fatal, Error, Warning
@@ -105,6 +157,22 @@ constexpr inline const std::uint8_t Restriction[] = {
     /* CliExecution */ 0b0110, // allow: Fatal, Error
     /* CliUndefined */ 0b0110, // allow: Fatal, Error
     /* CliAlreadyRunning */ 0b1110, // allow: Fatal, Error, Warning
+    /* Override */ 0b1110, // allow: Fatal, Error, Warning
+    /* UnknowFlag */ 0b1110, // allow: Fatal, Error, Warning
+    /* NoValidUsage */ 0b0110, // allow: Fatal, Error
+    /* InvalidUsageOrder */ 0b0110, // allow: Fatal, Error
+    /* InvalidUsageCombinaison */ 0b0110, // allow: Fatal, Error
+    /* ArgumentHook */ 0b0110, // allow: Fatal, Error
+    /* ArgumentsNumber */ 0b0110, // allow: Fatal, Error
+    /* OptionsNumber */ 0b0110, // allow: Fatal, Error
+    /* FlagOption */ 0b0110, // allow: Fatal, Error
+    /* FlagCombinaison */ 0b0110, // allow: Fatal, Error
+    /* OptionIngored */ 0b0110, // allow: Fatal, Error
+    /* DuplicatedFlag */ 0b1110, // allow: Fatal, Error, Warning
+    /* InvalidNumber */ 0b0110, // allow: Fatal, Error
+    /* InvalidFile */ 0b0110, // allow: Fatal, Error
+    /* InvalidFileExtension */ 0b1110, // allow: Fatal, Error, Warning
+    /* InssuficientPermission */ 0b0110, // allow: Fatal, Error
     /* MiddlewareCall */ 0b1110, // allow: Fatal, Error, Warning
 };
 

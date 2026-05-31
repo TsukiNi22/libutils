@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  04/03/2026 by Tsukini
+##  29/05/2026 by Tsukini
 
 File Name:
 ##  generate_exception_header.py
@@ -54,7 +54,7 @@ for json_file in Path(File.CONFIG_EXCEPTION).glob("*.json"):
         json_content = json.load(f)
         for error in json_content.get("errors", []):
             if data.__contains__(error["code"]):
-                print("Duplicated error code encoutered in data extraction")
+                print(f"Duplicated error code encoutered in data extraction '{error["code"]}'")
                 print(f"Auto generated header '{File.GENERATED_EXCEPTION_HEADER}': FAIL")
                 exit(Return.KO)
             data[error["code"]] = [error["message"], error["info"] if error.__contains__("info") else "[None]", error["restrictions"] if error.__contains__("restrictions") else []]
