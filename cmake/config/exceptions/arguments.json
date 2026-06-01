@@ -1,11 +1,6 @@
 {
     "errors": [
         {
-            "code": "Override",
-            "message": "The override is desactivated",
-            "restrictions": ["Fatal", "Error", "Warning"]
-        },
-        {
             "code": "UnknowFlag",
             "message": "Unknow flag",
             "restrictions": ["Fatal", "Error", "Warning"]

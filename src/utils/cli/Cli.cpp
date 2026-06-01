@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 31/05/2026 by @author Tsukini
+##  @date 01/06/2026 by @author Tsukini
 
 File Name:
 ##  @file Cli.cpp
@@ -90,7 +90,8 @@ void utils::cli::Cli::launch(std::size_t call)
                     this->_running = false;
                     return;
                 }
-                this->_history.push_back(input);
+                if (this->_history.size() == 0 || this->_history.back() != input)
+                    this->_history.push_back(input);
             } catch (const utils::exception::CustomException& e) {
                 utils::exception::Code code = e.getCode();
                 if (code == utils::exception::Code::CliInternal) this->_code = 1;
@@ -160,11 +161,19 @@ void utils::cli::Cli::launch(std::size_t call)
     this->_running = false;
 }
 
-std::optional<std::thread> utils::cli::Cli::start(std::size_t call)
+void utils::cli::Cli::join()
+{
+    while (this->_running)
+        std::this_thread::yield();
+}
+
+std::optional<std::thread> utils::cli::Cli::start(std::size_t call, const bool failsafe)
 {
     // Check status
-    if (this->_running)
+    if (this->_running) {
+        if (failsafe) return std::nullopt;
         throw utils::exception::WarningException(utils::exception::Code::CliAlreadyRunning);
+    }
     this->_interrupted = false; // Reset interrupt status
     this->_running = true;
 
@@ -190,17 +199,17 @@ std::optional<std::thread> utils::cli::Cli::start(std::size_t call)
     return std::nullopt;
 }
 
-std::optional<std::thread> utils::cli::Cli::start(const std::string& input, std::size_t call)
+std::optional<std::thread> utils::cli::Cli::start(const std::string& input, std::size_t call, const bool failsafe)
 {
     this->_initInput.push(input);
-    return this->start(call);
+    return this->start(call, failsafe);
 }
 
-std::optional<std::thread> utils::cli::Cli::start(const std::vector<std::string>& inputs, std::size_t call)
+std::optional<std::thread> utils::cli::Cli::start(const std::vector<std::string>& inputs, std::size_t call, const bool failsafe)
 {
     for (const std::string& input: inputs)
         this->_initInput.push(input);
-    return this->start(call);
+    return this->start(call, failsafe);
 }
 
 hot void utils::cli::Cli::prompt()
@@ -241,7 +250,7 @@ static std::string getHint(const std::vector<std::string>& list, const std::stri
         }
     }
 
-    return hint;
+    return first ? "[None]" : hint;
 }
 
 hot nodiscard std::string utils::cli::Cli::getInput()

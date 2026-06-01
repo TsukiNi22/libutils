@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 31/05/2026 by @author Tsukini
+##  @date 01/06/2026 by @author Tsukini
 
 File Name:
 ##  @file Setup.cpp
@@ -143,4 +143,27 @@ void utils::cli::Cli::resetMiddlewares()
     this->parserMiddlewares.clear();
     this->execMiddlewares.clear();
     this->commandMiddlewares.clear();
+}
+
+void utils::cli::Cli::clearCommands()
+{
+    std::unique_lock lock(this->_commandsLock);
+    this->_parsedCommands.clear();
+    this->_rawCommands.clear();
+}
+
+void utils::cli::Cli::delCommand(const std::string& command)
+{
+    std::unique_lock lock(this->_commandsLock);
+    this->_parsedCommands.erase(command);
+    this->_rawCommands.erase(command);
+}
+
+void utils::cli::Cli::delCommands(const std::vector<std::string>& commands)
+{
+    std::unique_lock lock(this->_commandsLock);
+    for (const std::string& command: commands) {
+        this->_parsedCommands.erase(command);
+        this->_rawCommands.erase(command);
+    }
 }

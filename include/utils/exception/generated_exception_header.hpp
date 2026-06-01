@@ -34,6 +34,7 @@ enum class Code: std::size_t {
     Exit,
     Empty,
     UnknowId,
+    Override,
     ANSIMouseEvent,
     IdOverflow,
     SharedObject,
@@ -43,7 +44,6 @@ enum class Code: std::size_t {
     CliExecution,
     CliUndefined,
     CliAlreadyRunning,
-    Override,
     UnknowFlag,
     NoValidUsage,
     InvalidUsageOrder,
@@ -71,6 +71,7 @@ constexpr inline const char *Message[] = {
     /* Exit */ "Exit",
     /* Empty */ "Empty",
     /* UnknowId */ "Try to do thing with an unknow id",
+    /* Override */ "The override is desactivated",
     /* ANSIMouseEvent */ "Error during the read of the mouse event",
     /* IdOverflow */ "Can't distribute an id, uint32_t limits are reach",
     /* SharedObject */ "An object created with dynamic code that was free is still alive",
@@ -80,7 +81,6 @@ constexpr inline const char *Message[] = {
     /* CliExecution */ "Error during the command execution",
     /* CliUndefined */ "An undefined error has append",
     /* CliAlreadyRunning */ "Can't start a cli that is already running",
-    /* Override */ "The override is desactivated",
     /* UnknowFlag */ "Unknow flag",
     /* NoValidUsage */ "No valid usage found, use '-h' for more information",
     /* InvalidUsageOrder */ "Invalid order of options/flags, use '-h' for more information",
@@ -107,6 +107,7 @@ constexpr inline const char *Info[] = {
     /* Exit */ "Exit",
     /* Empty */ nullptr,
     /* UnknowId */ nullptr,
+    /* Override */ nullptr,
     /* ANSIMouseEvent */ nullptr,
     /* IdOverflow */ nullptr,
     /* SharedObject */ nullptr,
@@ -116,7 +117,6 @@ constexpr inline const char *Info[] = {
     /* CliExecution */ nullptr,
     /* CliUndefined */ nullptr,
     /* CliAlreadyRunning */ nullptr,
-    /* Override */ nullptr,
     /* UnknowFlag */ nullptr,
     /* NoValidUsage */ nullptr,
     /* InvalidUsageOrder */ nullptr,
@@ -148,6 +148,7 @@ constexpr inline const std::uint8_t Restriction[] = {
     /* Exit */ 0b0001, // allow: None
     /* Empty */ 0b0000, // allow: All
     /* UnknowId */ 0b0110, // allow: Fatal, Error
+    /* Override */ 0b1110, // allow: Fatal, Error, Warning
     /* ANSIMouseEvent */ 0b0110, // allow: Fatal, Error
     /* IdOverflow */ 0b0110, // allow: Fatal, Error
     /* SharedObject */ 0b1110, // allow: Fatal, Error, Warning
@@ -157,7 +158,6 @@ constexpr inline const std::uint8_t Restriction[] = {
     /* CliExecution */ 0b0110, // allow: Fatal, Error
     /* CliUndefined */ 0b0110, // allow: Fatal, Error
     /* CliAlreadyRunning */ 0b1110, // allow: Fatal, Error, Warning
-    /* Override */ 0b1110, // allow: Fatal, Error, Warning
     /* UnknowFlag */ 0b1110, // allow: Fatal, Error, Warning
     /* NoValidUsage */ 0b0110, // allow: Fatal, Error
     /* InvalidUsageOrder */ 0b0110, // allow: Fatal, Error

@@ -14,6 +14,11 @@
             "code": "UnknowId",
             "message": "Try to do thing with an unknow id",
             "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "Override",
+            "message": "The override is desactivated",
+            "restrictions": ["Fatal", "Error", "Warning"]
         }
     ]
 }

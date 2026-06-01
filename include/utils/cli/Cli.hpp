@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 29/05/2026 by @author Tsukini
+##  @date 01/06/2026 by @author Tsukini
 
 File Name:
 ##  @file Cli.hpp
@@ -110,12 +110,16 @@ class Cli: private utils::warning::Observer {
         utils::middleware::Middlewares<const std::string&, const std::string&> commandMiddlewares; // When a command is executed
 
         // ---------- Pre-Function -------- //
-        std::optional<std::thread> start(std::size_t call = 1);
-        std::optional<std::thread> start(const std::string& input, std::size_t call = 1); // Execute an input on start
-        std::optional<std::thread> start(const std::vector<std::string>& inputs, std::size_t call = 1); // Execute multiple input on start
+        void join(); // Yield until the cli stop running
+        std::optional<std::thread> start(std::size_t call = 1, const bool failsafe = false);
+        std::optional<std::thread> start(const std::string& input, std::size_t call = 1, const bool failsafe = false); // Execute an input on start
+        std::optional<std::thread> start(const std::vector<std::string>& inputs, std::size_t call = 1, const bool failsafe = false); // Execute multiple input on start
 
         /* commands */
         void resetCommands();
+        void clearCommands();
+        void delCommand(const std::string& command);
+        void delCommands(const std::vector<std::string>& commands);
 
         /* hooks */
         void resetHooks(); // Reset all hooks
@@ -130,6 +134,8 @@ class Cli: private utils::warning::Observer {
         void setInputDelimitor(char c) {this->_inputDelimitor = c;};
         void interrupt() {this->_interrupted = true;};
         bool isRunning() const {return this->_running;};
+        bool wasInterrupt() const {return (!this->_running && this->_interrupted);};
+        bool wasKilled() const {return (!this->_running && !this->_interrupted);};
 
         /* flag */
         void resetFlags() {this->_flags = utils::cli::Flags::DEFAULT;};
@@ -138,8 +144,50 @@ class Cli: private utils::warning::Observer {
         void setFlags(std::uint32_t flags) {this->_flags = flags;};
 
         /* commands */
-        void setCommands(const std::unordered_map<std::string, std::tuple<std::function<void(const utils::cli::Cli&, const std::vector<std::string>&)>, std::int16_t, std::int16_t>>& commands) {std::unique_lock lock(this->_commandsLock); this->_parsedCommands = commands;}; // Set commands with min & max argument number (-1 = no limit)
-        void setCommands(const std::unordered_map<std::string, std::function<void(const utils::cli::Cli&, const std::string&)>>& commands) {std::unique_lock lock(this->_commandsLock); this->_rawCommands = commands;};
+        template<bool force = false> // Can't override an exiting one by default, throw of error
+        void setCommand(const std::string& command, const std::tuple<std::function<void(const utils::cli::Cli&, const std::vector<std::string>&)>, std::int16_t, std::int16_t>& tup)
+        {
+            std::unique_lock lock(this->_commandsLock);
+            if constexpr (!force) {
+                if (this->_parsedCommands.contains(command))
+                    throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::Override, std::string("This command is already defined (parsed): ") + command);
+            }
+            this->_parsedCommands[command] = tup;
+        };
+        template<bool force = false> // Can't override an exiting one by default, throw of error
+        void setCommand(const std::string& command, const std::function<void(const utils::cli::Cli&, const std::string&)>& fn)
+        {
+            std::unique_lock lock(this->_commandsLock);
+            if constexpr (!force) {
+                if (this->_rawCommands.contains(command))
+                    throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::Override, std::string("This command is already defined (raw): ") + command);
+            }
+            this->_rawCommands[command] = fn;
+        };
+        template<bool force = false> // Can't override an exiting one by default, throw of error
+        void setCommands(const std::unordered_map<std::string, std::tuple<std::function<void(const utils::cli::Cli&, const std::vector<std::string>&)>, std::int16_t, std::int16_t>>& commands)
+        {
+            std::unique_lock lock(this->_commandsLock);
+            for (const auto&[command, tup]: commands) {
+                if constexpr (!force) {
+                    if (this->_parsedCommands.contains(command))
+                        throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::Override, std::string("This command is already defined (parsed): ") + command);
+                }
+                this->_parsedCommands[command] = tup;
+            }
+        };
+        template<bool force = false> // Can't override an exiting one by default, throw of error
+        void setCommands(const std::unordered_map<std::string, std::function<void(const utils::cli::Cli&, const std::string&)>>& commands)
+        {
+            std::unique_lock lock(this->_commandsLock);
+            for (const auto&[command, fn]: commands) {
+                if constexpr (!force) {
+                    if (this->_rawCommands.contains(command))
+                        throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::Override, std::string("This command is already defined (raw): ") + command);
+                }
+                this->_rawCommands[command] = fn;
+            }
+        };
 
         /* hooks */
         void resetPromptHook() {std::lock_guard lock(this->_hooksLock); this->_promptHook = defaultPromptHook;};

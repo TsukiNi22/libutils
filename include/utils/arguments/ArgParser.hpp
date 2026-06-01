@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 29/05/2026 by @author Tsukini
+##  @date 01/06/2026 by @author Tsukini
 
 File Name:
 ##  @file ArgParser.hpp
@@ -102,30 +102,30 @@ class ArgParser {
         void resetHelpHook(void) {this->_helpHook = defaultHelpHook;};
 
         /* setup */
-        template<bool overwrite = false> // Can't override an exiting one by default, throw of error
+        template<bool force = false> // Can't override an exiting one by default, throw of error
         void setUsage(const std::string& id, const std::string& name, const bool ordered, const std::vector<std::pair<std::string, bool>>& ids, const std::string& description = "[None]")
         {
-            if constexpr (!overwrite) {
+            if constexpr (!force) {
                 if (this->_usages.contains(id))
                     throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::Override, std::string("An option with this id is already defined: ") + id);
             }
             this->_usages[id] = utils::arguments::Usage{name, ordered, ids, description};
         };
         void resetUsages(void) {this->_usages.clear();};
-        template<bool overwrite = false> // Can't override an exiting one by default, throw of error
+        template<bool force = false> // Can't override an exiting one by default, throw of error
         void setOption(const std::string& id, const std::string& name, std::function<bool(const std::string&)> check, const std::string& description = "[None]")
         {
-            if constexpr (!overwrite) {
+            if constexpr (!force) {
                 if (this->_options.contains(id))
                     throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::Override, std::string("An option with this id is already defined: ") + id);
             }
             this->_options[id] = utils::arguments::Option{name, check, description};
         };
         void resetOptions(void) {this->_options.clear();};
-        template<bool overwrite = false> // Can't override an exiting one by default, throw of error
+        template<bool force = false> // Can't override an exiting one by default, throw of error
         void setFlag(const std::string& id, const std::tuple<std::string>& flag, const std::vector<std::function<bool(const std::string&)>>& checks, const std::string& description = "[None]")
         {
-            if constexpr (!overwrite) {
+            if constexpr (!force) {
                 if (this->_flags.contains(id))
                     throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::Override, std::string("An flag with this id is already defined: ") + id);
             }
