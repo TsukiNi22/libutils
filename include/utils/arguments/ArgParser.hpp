@@ -18,7 +18,7 @@ File Description:
 
     /* type */
     #define NO_OUTDATED_WARNING
-    #include "../attribute/Attribute.hpp"               // nodicard
+    #include "../attribute/Attribute.hpp"               // nodicard, unused
     #include "../warning/Observer.hpp"                  // utils::warning::Observer
     #include "../exception/custom/CustomException.hpp"  // utils::exception::CustomException
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::* (Type)
@@ -43,18 +43,19 @@ bool defaultSizetParsingHook(const std::string& option);    // Parse std::size_t
 bool defaultDoubleParsingHook(const std::string& option);   // Parse double
 bool defaultFileParsingHook(const std::string& option);     // Check for file reading (only!)
 bool defaultWritableParsingHook(const std::string& option); // Check if the path/file is readable & writable (only!)
+inline bool defaultTrueParsingHook(unused const std::string&) {return true;};
 
 //----------------------------------------------------------------//
 /* CLASS */
 
 class ArgParser: private utils::warning::Observer {
     private:
+        std::string _binary = "[None]";
+        std::string _description = "...";
         std::unordered_map<std::string, utils::arguments::Usage> _usages;
         std::unordered_map<std::string, utils::arguments::Option> _options;
         std::unordered_map<std::string, utils::arguments::Flag> _flags;
         std::function<void(const utils::arguments::ArgParser& parser)> _helpHook;
-        std::string _binary = "[None]";
-        std::string _description = "...";
 
     public:
         // ---------- Pre-Function -------- //
@@ -76,6 +77,7 @@ class ArgParser: private utils::warning::Observer {
 
         // ------------ Function ---------- //
         /* setup */
+        void setDefaultUsage(void) {this->_usages["default"] = utils::arguments::Usage{"default", false, {}, "Default usage with all flag(s) & option(s)"};};
         template<bool force = false> // Can't override an exiting one by default, throw of error
         void setUsage(const std::string& id, const std::string& name, const bool ordered, const std::vector<std::pair<std::string, bool>>& ids, const std::string& description = "[None]")
         {
@@ -97,13 +99,13 @@ class ArgParser: private utils::warning::Observer {
         };
         void resetOptions(void) {this->_options.clear();};
         template<bool force = false> // Can't override an exiting one by default, throw of error
-        void setFlag(const std::string& id, const std::tuple<std::string, std::string, std::string>& flag, const std::vector<std::function<bool(const std::string&)>>& checks, const std::string& description = "[None]")
+        void setFlag(const std::string& id, const std::tuple<std::string, std::string, std::string>& flag, const std::vector<std::pair<std::string, bool>>& names, const std::vector<std::function<bool(const std::string&)>>& checks, const std::string& description = "[None]")
         {
             if constexpr (!force) {
                 if (this->_flags.contains(id))
                     throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::Override, std::string("An flag with this id is already defined: ") + id);
             }
-            this->_flags[id] = utils::arguments::Flag{flag, checks, description};
+            this->_flags[id] = utils::arguments::Flag{flag, names, checks, description};
         };
         void resetFlags(void) {this->_flags.clear();};
 

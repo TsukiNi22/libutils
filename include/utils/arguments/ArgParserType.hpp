@@ -41,7 +41,7 @@ using ParsedData = std::unordered_map<
 >;
 
 struct Usage {
-    std::string name;
+    std::string name; // special name: default -> allow all flag (like no usage defined)
     bool ordered = false; // The order of the option is mandatory, Raw option will be forced in mandatory
     std::vector<std::pair<std::string, bool>> ids; // List of ids allowed by this usage <id, mandatory>
     std::string description = "[None]";
@@ -55,6 +55,7 @@ struct Option {
 
 struct Flag {
     std::tuple<std::string, std::string, std::string> flag; // <short, flag, long>
+    std::vector<std::pair<std::string, bool>> names; // <name, mandatory>
     std::vector<std::function<bool(const std::string&)>> checks;
     std::string description = "[None]";
 };
