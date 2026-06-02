@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 29/05/2026 by @author Tsukini
+##  @date 02/06/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -43,6 +43,7 @@ File Description:
     #define _Vector
     #define _Concepts
     #define _Middleware
+    #define _Arguments
     #define _Algorithms
 #endif
 
@@ -112,6 +113,14 @@ File Description:
     #include "middleware/Middlewares_void-t.hpp"    // utils::middleware::Middlewares<void, T>
     #include "middleware/Middlewares_void-void.hpp" // utils::middleware::Middlewares<void, void>
     */
+#endif
+
+/* Arguments */
+#ifdef _Arguments
+    // -> Definition of different thing to handle arguments
+    // -> ArgParser: basic check & parsing of arguments
+    #include "arguments/ArgParser.hpp"      // utils::arguments::ArgParser
+    #include "arguments/ArgParserType.hpp"  // utils::arguments::* (Type)
 #endif
 
 /* Algorithms */

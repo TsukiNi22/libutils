@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 01/06/2026 by @author Tsukini
+##  @date 02/06/2026 by @author Tsukini
 
 File Name:
 ##  @file ArgParser.cpp
@@ -14,11 +14,13 @@ File Description:
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/custom/CustomException.hpp"
 #include "utils/arguments/ArgParser.hpp"
+#include "utils/arguments/ArgParserType.hpp"
 #include <iostream>
 #include <vector>
 #include <string>
 
-utils::arguments::ArgParser::ArgParser()
+utils::arguments::ArgParser::ArgParser(const std::string& binary, const std::string& description)
+: _binary{binary}, _description{description}
 {
     // Setup initial values
     this->resetHelpHook();
@@ -72,8 +74,13 @@ void utils::arguments::ArgParser::delFlags(const std::vector<std::string>& ids)
         this->delFlag(id);
 }
 
-void utils::arguments::ArgParser::help()
+void utils::arguments::ArgParser::help(void)
 {
+    try {
+        this->_helpHook(*this);
+    } catch (const std::exception& e) {
+        throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::ArgParserHook, e.what());
+    }
 }
 
 utils::arguments::ParsedData utils::arguments::ArgParser::parse(const int argc, const char *const argv[], bool failsafe)

@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 01/06/2026 by @author Tsukini
+##  @date 02/06/2026 by @author Tsukini
 
 File Name:
 ##  @file ArgParser.hpp
@@ -17,8 +17,12 @@ File Description:
     /* INCLUDE */
 
     /* type */
+    #define NO_OUTDATED_WARNING
+    #include "../attribute/Attribute.hpp"               // nodicard
+    #include "../warning/Observer.hpp"                  // utils::warning::Observer
     #include "../exception/custom/CustomException.hpp"  // utils::exception::CustomException
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::* (Type)
+    #include "ArgParserType.hpp"                        // utils::arguments::* (Type)
     #include <unordered_map>                            // std::unordered_map
     #include <functional>                               // std::function
     #include <vector>                                   // std::vector
@@ -28,31 +32,6 @@ File Description:
 namespace utils::arguments { // namespace start
 //----------------------------------------------------------------//
 /* PROTOTYPE */
-
-// Return of the parser
-using ParsedData = std::unordered_map<
-    std::string, // id
-    std::vector<std::string> // options
->;
-
-struct Usage {
-    std::string name;
-    bool ordered = false; // The order of the option is mandatory
-    std::vector<std::pair<std::string, bool>> ids; // List of ids allowed by this usage <id, mandatory>
-    std::string description = "[None]";
-};
-
-struct Option {
-    std::string name;
-    std::function<bool(const std::string&)> check;
-    std::string description = "[None]";
-};
-
-struct Flag {
-    std::tuple<std::string> flag; // <short, flag, long>
-    std::vector<std::function<bool(const std::string&)>> checks;
-    std::string description = "[None]";
-};
 
 class ArgParser;
 
@@ -68,12 +47,14 @@ bool defaultWritableParsingHook(const std::string& option); // Check if the path
 //----------------------------------------------------------------//
 /* CLASS */
 
-class ArgParser {
+class ArgParser: private utils::warning::Observer {
     private:
         std::unordered_map<std::string, utils::arguments::Usage> _usages;
-        std::unordered_map<std::string, utils::arguments::Flag> _flags;
         std::unordered_map<std::string, utils::arguments::Option> _options;
+        std::unordered_map<std::string, utils::arguments::Flag> _flags;
         std::function<void(const utils::arguments::ArgParser& parser)> _helpHook;
+        std::string _binary = "[None]";
+        std::string _description = "...";
 
     public:
         // ---------- Pre-Function -------- //
@@ -93,14 +74,7 @@ class ArgParser {
         void delFlag(const std::string& id);
         void delFlags(const std::vector<std::string>& ids);
 
-        /* getter */
-        std::string getDescription(const std::string& id);
-
         // ------------ Function ---------- //
-         /* hook handling */
-        void setHelpHook(std::function<void(const utils::arguments::ArgParser& parser)> hook) {this->_helpHook = hook;};
-        void resetHelpHook(void) {this->_helpHook = defaultHelpHook;};
-
         /* setup */
         template<bool force = false> // Can't override an exiting one by default, throw of error
         void setUsage(const std::string& id, const std::string& name, const bool ordered, const std::vector<std::pair<std::string, bool>>& ids, const std::string& description = "[None]")
@@ -123,7 +97,7 @@ class ArgParser {
         };
         void resetOptions(void) {this->_options.clear();};
         template<bool force = false> // Can't override an exiting one by default, throw of error
-        void setFlag(const std::string& id, const std::tuple<std::string>& flag, const std::vector<std::function<bool(const std::string&)>>& checks, const std::string& description = "[None]")
+        void setFlag(const std::string& id, const std::tuple<std::string, std::string, std::string>& flag, const std::vector<std::function<bool(const std::string&)>>& checks, const std::string& description = "[None]")
         {
             if constexpr (!force) {
                 if (this->_flags.contains(id))
@@ -133,12 +107,27 @@ class ArgParser {
         };
         void resetFlags(void) {this->_flags.clear();};
 
+        /* hook handling */
+        void setHelpHook(std::function<void(const utils::arguments::ArgParser& parser)> hook) {this->_helpHook = hook;};
+        void resetHelpHook(void) {this->_helpHook = defaultHelpHook;};
+
+        /* setter */
+        void setBinary(const std::string& binary) {this->_binary = binary;};
+        void setDescription(const std::string& description) {this->_description = description;};
+
+        /* getter */
+        nodiscard const std::string& getBinary(void) const {return this->_binary;};
+        nodiscard const std::string& getDescription(void) const {return this->_description;};
+        nodiscard const std::unordered_map<std::string, utils::arguments::Usage>& getUsages(void) const {return this->_usages;};
+        nodiscard const std::unordered_map<std::string, utils::arguments::Option>& getOptions(void) const {return this->_options;};
+        nodiscard const std::unordered_map<std::string, utils::arguments::Flag>& getFlags(void) const {return this->_flags;};
+
         // ------------ Operator ---------- //
         ArgParser& operator=(const ArgParser& other) = delete;
         ArgParser& operator=(ArgParser&& other) = delete;
 
         // ---------- Constructor --------- //
-        ArgParser();
+        ArgParser(const std::string& binary = "[None]", const std::string& description = "...");
         ArgParser(const ArgParser& other) = delete;
         ArgParser(ArgParser&& other) = delete;
 

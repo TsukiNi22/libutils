@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 01/06/2026 by @author Tsukini
+##  @date 02/06/2026 by @author Tsukini
 
 File Name:
 ##  @file Cli.hpp

@@ -21,7 +21,7 @@
             "restrictions": ["Fatal", "Error"]
         },
         {
-            "code": "ArgumentHook",
+            "code": "ArgParserHook",
             "message": "Error during an execution of hook",
             "restrictions": ["Fatal", "Error"]
         },

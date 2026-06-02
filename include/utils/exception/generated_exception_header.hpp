@@ -48,7 +48,7 @@ enum class Code: std::size_t {
     NoValidUsage,
     InvalidUsageOrder,
     InvalidUsageCombinaison,
-    ArgumentHook,
+    ArgParserHook,
     ArgumentsNumber,
     OptionsNumber,
     FlagOption,
@@ -85,7 +85,7 @@ constexpr inline const char *Message[] = {
     /* NoValidUsage */ "No valid usage found, use '-h' for more information",
     /* InvalidUsageOrder */ "Invalid order of options/flags, use '-h' for more information",
     /* InvalidUsageCombinaison */ "Invalid combinaison of options/flags, use '-h' for more information",
-    /* ArgumentHook */ "Error during an execution of hook",
+    /* ArgParserHook */ "Error during an execution of hook",
     /* ArgumentsNumber */ "Invalid number of argument(s) given, use '-h' for more information",
     /* OptionsNumber */ "Invalid number of option(s) given, use '-h' for more information",
     /* FlagOption */ "Invalid flag option, the parsing hook has failed",
@@ -121,7 +121,7 @@ constexpr inline const char *Info[] = {
     /* NoValidUsage */ nullptr,
     /* InvalidUsageOrder */ nullptr,
     /* InvalidUsageCombinaison */ nullptr,
-    /* ArgumentHook */ nullptr,
+    /* ArgParserHook */ nullptr,
     /* ArgumentsNumber */ nullptr,
     /* OptionsNumber */ nullptr,
     /* FlagOption */ nullptr,
@@ -162,7 +162,7 @@ constexpr inline const std::uint8_t Restriction[] = {
     /* NoValidUsage */ 0b0110, // allow: Fatal, Error
     /* InvalidUsageOrder */ 0b0110, // allow: Fatal, Error
     /* InvalidUsageCombinaison */ 0b0110, // allow: Fatal, Error
-    /* ArgumentHook */ 0b0110, // allow: Fatal, Error
+    /* ArgParserHook */ 0b0110, // allow: Fatal, Error
     /* ArgumentsNumber */ 0b0110, // allow: Fatal, Error
     /* OptionsNumber */ 0b0110, // allow: Fatal, Error
     /* FlagOption */ 0b0110, // allow: Fatal, Error
