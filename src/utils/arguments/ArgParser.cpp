@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 02/06/2026 by @author Tsukini
+##  @date 03/06/2026 by @author Tsukini
 
 File Name:
 ##  @file ArgParser.cpp
@@ -83,19 +83,40 @@ void utils::arguments::ArgParser::help(void)
     }
 }
 
-utils::arguments::ParsedData utils::arguments::ArgParser::parse(const int argc, const char *const argv[], bool failsafe)
+utils::arguments::ParsedData utils::arguments::ArgParser::parse(const int argc, const char *const argv[], const bool failsafe)
 {
     std::vector<std::string> args(argv, argv + argc);
     return this->parse(args, failsafe);
 }
 
-static std::vector<std::string> parseFlag(const std::vector<std::string>& argv, std::size_t index, bool failsafe)
+void utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedData& data, const std::vector<std::string>& argv, std::size_t& i, const bool failsafe)
 {
 }
 
-utils::arguments::ParsedData utils::arguments::ArgParser::parse(const std::vector<std::string>& argv, bool failsafe)
+void utils::arguments::ArgParser::parseOption(utils::arguments::ParsedData& data, const std::vector<std::string>& argv, std::size_t& i, const bool failsafe)
 {
+}
+
+utils::arguments::ParsedData utils::arguments::ArgParser::parse(const std::vector<std::string>& argv, const bool failsafe)
+{
+    utils::arguments::ParsedData data;
+
+    // Minimalist check
+    if (arguments.size() == 0)
+        throw utils::exception::CustomException(utils::Type::Error, utils::Code::ArgumentsNumber, "The arguments should start with the binary name, with a size of 1 at least, got: 0");
+
     // For each arguments
-    for (std::size_t i = 1; i < ; ++i) {
+    for (std::size_t i = 1; i < arguments; ++i) {
+        const std::string& argument = arguments[i];
+
+        // Flag dectection
+        if (argument.size() > 1 && argument.front() == "-") {
+            this->parseFlags(data, arguments, i, failsafe);
+        }
+
+        // Option
+        else {
+            this->parseOption(data, arguments, i, failsafe);
+        }
     }
 }

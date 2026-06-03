@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 31/05/2026 by @author Tsukini
+##  @date 03/06/2026 by @author Tsukini
 
 File Name:
 ##  @file Flags.hpp
@@ -84,7 +84,6 @@ constexpr std::uint32_t TERM1   = CATCH | EMPTY_INPUT | TRIM | PARSED | PROMPT |
 constexpr std::uint32_t TERM2   = TERM1 | HINT | AUTO_COMPLETION;
 constexpr std::uint32_t TERM3   = TERM2 | THREAD;
 constexpr std::uint32_t DEV     = TERM2 | DEBUG;
-constexpr std::uint32_t SPECIAL = MANUAL | THREAD | DETACHED;
 constexpr std::uint32_t MULTI_THREADING = THREAD | DETACHED;
 /*
  * DEFAULT -> Basic term

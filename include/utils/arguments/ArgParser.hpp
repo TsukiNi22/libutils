@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 02/06/2026 by @author Tsukini
+##  @date 03/06/2026 by @author Tsukini
 
 File Name:
 ##  @file ArgParser.hpp
@@ -57,6 +57,11 @@ class ArgParser: private utils::warning::Observer {
         std::unordered_map<std::string, utils::arguments::Flag> _flags;
         std::function<void(const utils::arguments::ArgParser& parser)> _helpHook;
 
+        // ---------- Pre-Function -------- //
+        /* sub parsing */
+        void parseFlags(utils::arguments::ParsedData& data, const std::vector<std::string>& argv, std::size_t& i, const bool failsafe = false);
+        void parseOption(utils::arguments::ParsedData& data, const std::vector<std::string>& argv, std::size_t& i, const bool failsafe = false);
+
     public:
         // ---------- Pre-Function -------- //
         void help(void); // Help display (using hook)
@@ -64,8 +69,8 @@ class ArgParser: private utils::warning::Observer {
         /* parsing */
         // Allways ignore the first argument, return a list of flag's found
         // Check only the option & dosn't
-        utils::arguments::ParsedData parse(const int argc, const char *const argv[], bool failsafe = false);
-        utils::arguments::ParsedData parse(const std::vector<std::string>& argv, bool failsafe = false);
+        utils::arguments::ParsedData parse(const int argc, const char *const argv[], const bool failsafe = false);
+        utils::arguments::ParsedData parse(const std::vector<std::string>& argv, const bool failsafe = false);
 
         /* setup */
         void delUsage(const std::string& id);
@@ -99,13 +104,13 @@ class ArgParser: private utils::warning::Observer {
         };
         void resetOptions(void) {this->_options.clear();};
         template<bool force = false> // Can't override an exiting one by default, throw of error
-        void setFlag(const std::string& id, const std::tuple<std::string, std::string, std::string>& flag, const std::vector<std::pair<std::string, bool>>& names, const std::vector<std::function<bool(const std::string&)>>& checks, const std::string& description = "[None]")
+        void setFlag(const std::string& id, const std::tuple<std::string, std::string, std::string>& flag, const std::vector<std::tuple<std::string, bool, std::function<bool(const std::string&)>>>& options, const std::string& description = "[None]")
         {
             if constexpr (!force) {
                 if (this->_flags.contains(id))
                     throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::Override, std::string("An flag with this id is already defined: ") + id);
             }
-            this->_flags[id] = utils::arguments::Flag{flag, names, checks, description};
+            this->_flags[id] = utils::arguments::Flag{flag, options, description};
         };
         void resetFlags(void) {this->_flags.clear();};
 

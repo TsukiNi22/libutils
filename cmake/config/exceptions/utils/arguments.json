@@ -54,26 +54,6 @@
             "code": "DuplicatedFlag",
             "message": "A flag was redefined, only the first will be used",
             "restrictions": ["Fatal", "Error", "Warning"]
-        },
-        {
-            "code": "InvalidNumber",
-            "message": "Invalid number",
-            "restrictions": ["Fatal", "Error"]
-        },
-        {
-            "code": "InvalidFile",
-            "message": "Invalid file",
-            "restrictions": ["Fatal", "Error"]
-        },
-        {
-            "code": "InvalidFileExtension",
-            "message": "The file extension is different than expected",
-            "restrictions": ["Fatal", "Error", "Warning"]
-        },
-        {
-            "code": "InssuficientPermission",
-            "message": "Inssuficient permission",
-            "restrictions": ["Fatal", "Error"]
         }
     ]
 }

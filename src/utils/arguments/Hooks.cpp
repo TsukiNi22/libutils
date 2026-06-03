@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 02/06/2026 by @author Tsukini
+##  @date 03/06/2026 by @author Tsukini
 
 File Name:
 ##  @file Hooks.cpp
@@ -83,7 +83,7 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
                 if (fshort.empty() && fflag.empty() && flong.empty()) continue;
                 if (!mandatory) std::cout << "[";
                 std::cout << " " << ((fshort.empty() && fflag.empty()) ? "--" : "-") << (fshort.empty() ? (fflag.empty() ? flong : fflag) : fshort);
-                for (const auto& [name, fmandatory]: it->second.names)
+                for (const auto& [name, fmandatory, _]: it->second.options)
                     std::cout << (fmandatory ? "" : "[") << " <" << name << ">" << (fmandatory ? "" : "]");
                 if (!mandatory) std::cout << "]";
             }
@@ -101,7 +101,7 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
             const auto& [fshort, fflag, flong] = flag.flag;
             if (fshort.empty() && fflag.empty() && flong.empty()) continue;
             std::cout << " " << ((fshort.empty() && fflag.empty()) ? "--" : "-") << (fshort.empty() ? (fflag.empty() ? flong : fflag) : fshort);
-            for (const auto& [name, mandatory]: flag.names)
+            for (const auto& [name, mandatory, _]: flag.options)
                 std::cout << (mandatory ? "" : "[") << " <" << name << ">" << (mandatory ? "" : "]");
         }
         std::cout << std::endl;
@@ -124,7 +124,7 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
         if (!fflag.empty())  std::cout << (fshort.empty() ? "" : ", ") << "-" << fflag;
         if (!flong.empty())  std::cout << ((fshort.empty() && fflag.empty()) ? "" : ", ") << "--" << flong;
         std::cout << utils::write::reset();
-        for (const auto& [name, mandatory]: flag.names)
+        for (const auto& [name, mandatory, _]: flag.options)
             std::cout << (mandatory ? "" : "[") << " <" << utils::write::color(utils::write::Color::Red) << name << utils::write::reset() << ">" << (mandatory ? "" : "]");
         std::cout << utils::write::reset() << std::endl;
         std::cout << "\t\t" << flag.description << std::endl;
