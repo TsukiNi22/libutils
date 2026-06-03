@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  29/05/2026 by Tsukini
+##  03/06/2026 by Tsukini
 
 File Name:
 ##  generate_exception_header.py
@@ -49,7 +49,7 @@ if __name__ != "__main__":
 
 # Recuperation of the data
 data = {} # {code: [message, info, restriction], ...}
-for json_file in Path(File.CONFIG_EXCEPTION).glob("*.json"):
+for json_file in Path(File.CONFIG_EXCEPTION).rglob("*.json"):
     with json_file.open("r", encoding="utf-8") as f:
         json_content = json.load(f)
         for error in json_content.get("errors", []):

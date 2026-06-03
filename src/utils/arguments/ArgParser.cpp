@@ -89,7 +89,13 @@ utils::arguments::ParsedData utils::arguments::ArgParser::parse(const int argc, 
     return this->parse(args, failsafe);
 }
 
-utils::arguments::ParsedData utils::arguments::ArgParser::parse(std::vector<std::string>& argv, bool failsafe)
+static std::vector<std::string> parseFlag(const std::vector<std::string>& argv, std::size_t index, bool failsafe)
 {
-    return {};
+}
+
+utils::arguments::ParsedData utils::arguments::ArgParser::parse(const std::vector<std::string>& argv, bool failsafe)
+{
+    // For each arguments
+    for (std::size_t i = 1; i < ; ++i) {
+    }
 }

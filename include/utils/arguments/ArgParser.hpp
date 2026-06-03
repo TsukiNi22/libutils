@@ -65,7 +65,7 @@ class ArgParser: private utils::warning::Observer {
         // Allways ignore the first argument, return a list of flag's found
         // Check only the option & dosn't
         utils::arguments::ParsedData parse(const int argc, const char *const argv[], bool failsafe = false);
-        utils::arguments::ParsedData parse(std::vector<std::string>& argv, bool failsafe = false);
+        utils::arguments::ParsedData parse(const std::vector<std::string>& argv, bool failsafe = false);
 
         /* setup */
         void delUsage(const std::string& id);
