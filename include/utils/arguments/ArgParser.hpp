@@ -1,6 +1,14 @@
 /**************************************************************\
+
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
+  ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
+  ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
+ ██╔╝ ██╗██║  ██║██║  ██║   ██║   ██║  ██║██║ ╚████║██║██║  ██║
+ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
+
 Edition:
-##  @date 03/06/2026 by @author Tsukini
+##  @date 04/06/2026 by @author Tsukini
 
 File Name:
 ##  @file ArgParser.hpp
@@ -73,12 +81,12 @@ class ArgParser: private utils::warning::Observer {
         utils::arguments::ParsedData parse(const std::vector<std::string>& argv, const bool failsafe = false);
 
         /* setup */
-        void delUsage(const std::string& id);
-        void delUsages(const std::vector<std::string>& ids);
-        void delOption(const std::string& id);
-        void delOptions(const std::vector<std::string>& ids);
-        void delFlag(const std::string& id);
-        void delFlags(const std::vector<std::string>& ids);
+        void removeUsage(const std::string& id);
+        void removeUsages(const std::vector<std::string>& ids);
+        void removeOption(const std::string& id);
+        void removeOptions(const std::vector<std::string>& ids);
+        void removeFlag(const std::string& id);
+        void removeFlags(const std::vector<std::string>& ids);
 
         // ------------ Function ---------- //
         /* setup */

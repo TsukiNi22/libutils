@@ -29,12 +29,14 @@ namespace utils::exception { // namespace start
 /* Definition of the different exception code */
 enum class Code: std::size_t {
     Undefined = 0,
-    VectorInvalidIndex,
-    ExceptionCodeRestriction,
     Exit,
     Empty,
     UnknowId,
+    UnknowKey,
     Override,
+    Freezed,
+    VectorInvalidIndex,
+    ExceptionCodeRestriction,
     ANSIMouseEvent,
     IdOverflow,
     SharedObject,
@@ -55,10 +57,6 @@ enum class Code: std::size_t {
     FlagCombinaison,
     OptionIngored,
     DuplicatedFlag,
-    InvalidNumber,
-    InvalidFile,
-    InvalidFileExtension,
-    InssuficientPermission,
     MiddlewareCall,
     CODE_SENTINEL // sentinel used for verification
 };
@@ -66,12 +64,14 @@ enum class Code: std::size_t {
 /* Corresponding exception message for each code */
 constexpr inline const char *Message[] = {
     /* Undefined */ "An undefined error has occured",
-    /* VectorInvalidIndex */ "Invalid index on a vector",
-    /* ExceptionCodeRestriction */ "Error during the setup of an exception",
     /* Exit */ "Exit",
     /* Empty */ "Empty",
     /* UnknowId */ "Try to do thing with an unknow id",
+    /* UnknowKey */ "Try to do thing with an unknow key",
     /* Override */ "The override is desactivated",
+    /* Freezed */ "Can't edit a freezed things",
+    /* VectorInvalidIndex */ "Invalid index on a vector",
+    /* ExceptionCodeRestriction */ "Error during the setup of an exception",
     /* ANSIMouseEvent */ "Error during the read of the mouse event",
     /* IdOverflow */ "Can't distribute an id, uint32_t limits are reach",
     /* SharedObject */ "An object created with dynamic code that was free is still alive",
@@ -92,22 +92,20 @@ constexpr inline const char *Message[] = {
     /* FlagCombinaison */ "Invalid flag combinaison",
     /* OptionIngored */ "Option ignored, can't determine it's ownership",
     /* DuplicatedFlag */ "A flag was redefined, only the first will be used",
-    /* InvalidNumber */ "Invalid number",
-    /* InvalidFile */ "Invalid file",
-    /* InvalidFileExtension */ "The file extension is different than expected",
-    /* InssuficientPermission */ "Inssuficient permission",
     /* MiddlewareCall */ "Error during a middleware call",
 };
 
 /* Potential default info: nullptr same as "[None]" */
 constexpr inline const char *Info[] = {
     /* Undefined */ nullptr,
-    /* VectorInvalidIndex */ "Can't retrieve the value, the VectorX dosen't have this index",
-    /* ExceptionCodeRestriction */ "Restriction trigerred on a code & type combination",
     /* Exit */ "Exit",
     /* Empty */ nullptr,
     /* UnknowId */ nullptr,
+    /* UnknowKey */ nullptr,
     /* Override */ nullptr,
+    /* Freezed */ nullptr,
+    /* VectorInvalidIndex */ "Can't retrieve the value, the VectorX dosen't have this index",
+    /* ExceptionCodeRestriction */ "Restriction trigerred on a code & type combination",
     /* ANSIMouseEvent */ nullptr,
     /* IdOverflow */ nullptr,
     /* SharedObject */ nullptr,
@@ -128,10 +126,6 @@ constexpr inline const char *Info[] = {
     /* FlagCombinaison */ nullptr,
     /* OptionIngored */ nullptr,
     /* DuplicatedFlag */ nullptr,
-    /* InvalidNumber */ nullptr,
-    /* InvalidFile */ nullptr,
-    /* InvalidFileExtension */ nullptr,
-    /* InssuficientPermission */ nullptr,
     /* MiddlewareCall */ nullptr,
 };
 
@@ -143,12 +137,14 @@ constexpr inline const char *Info[] = {
 // 0b1000 = Warning			(allow Warning)
 constexpr inline const std::uint8_t Restriction[] = {
     /* Undefined */ 0b0000, // allow: All
-    /* VectorInvalidIndex */ 0b1110, // allow: Fatal, Error, Warning
-    /* ExceptionCodeRestriction */ 0b0110, // allow: Fatal, Error
     /* Exit */ 0b0001, // allow: None
     /* Empty */ 0b0000, // allow: All
-    /* UnknowId */ 0b0110, // allow: Fatal, Error
+    /* UnknowId */ 0b1110, // allow: Fatal, Error, Warning
+    /* UnknowKey */ 0b1110, // allow: Fatal, Error, Warning
     /* Override */ 0b1110, // allow: Fatal, Error, Warning
+    /* Freezed */ 0b1110, // allow: Fatal, Error, Warning
+    /* VectorInvalidIndex */ 0b1110, // allow: Fatal, Error, Warning
+    /* ExceptionCodeRestriction */ 0b0110, // allow: Fatal, Error
     /* ANSIMouseEvent */ 0b0110, // allow: Fatal, Error
     /* IdOverflow */ 0b0110, // allow: Fatal, Error
     /* SharedObject */ 0b1110, // allow: Fatal, Error, Warning
@@ -169,10 +165,6 @@ constexpr inline const std::uint8_t Restriction[] = {
     /* FlagCombinaison */ 0b0110, // allow: Fatal, Error
     /* OptionIngored */ 0b0110, // allow: Fatal, Error
     /* DuplicatedFlag */ 0b1110, // allow: Fatal, Error, Warning
-    /* InvalidNumber */ 0b0110, // allow: Fatal, Error
-    /* InvalidFile */ 0b0110, // allow: Fatal, Error
-    /* InvalidFileExtension */ 0b1110, // allow: Fatal, Error, Warning
-    /* InssuficientPermission */ 0b0110, // allow: Fatal, Error
     /* MiddlewareCall */ 0b1110, // allow: Fatal, Error, Warning
 };
 

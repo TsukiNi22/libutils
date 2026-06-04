@@ -11,23 +11,20 @@ Edition:
 ##  @date 04/06/2026 by @author Tsukini
 
 File Name:
-##  @file Middlewares.hpp
+##  @file BidirectionalLookupTable.hpp
 
 File Description:
-##  Global middlewares include
+##  Global bidirectional lookup table include
 \**************************************************************/
 
-#ifndef MIDDLEWARES_H
-    #define MIDDLEWARES_H
+#ifndef BIDIRECTIONALLOOKUPTABLE_H
+    #define BIDIRECTIONALLOOKUPTABLE_H
 
     //----------------------------------------------------------------//
     /* INCLUDE */
 
     /* type */
-    #include "MiddlewaresType.hpp"          // utils::middleware::Middleware<...>
-    #include "Middlewares_t-t.hpp"          // utils::middleware::Middlewares<T, U>
-    #include "Middlewares_t-void.hpp"       // utils::middleware::Middlewares<T, void>
-    #include "Middlewares_void-t.hpp"       // utils::middleware::Middlewares<void, T>
-    #include "Middlewares_void-void.hpp"    // utils::middleware::Middlewares<void, void>
+    #include "BidirectionalLookupTable_t-t.hpp" // utils::btl::BidirectionalLookupTable<L, R, ...>
+    #include "BidirectionalLookupTable_t.hpp"   // utils::btl::BidirectionalLookupTable<T, ...>
 
-#endif /* MIDDLEWARES_H */
+#endif /* BIDIRECTIONALLOOKUPTABLE_H */

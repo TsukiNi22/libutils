@@ -1,6 +1,14 @@
 /**************************************************************\
+
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
+  ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
+  ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
+ ██╔╝ ██╗██║  ██║██║  ██║   ██║   ██║  ██║██║ ╚████║██║██║  ██║
+ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
+
 Edition:
-##  @date 03/06/2026 by @author Tsukini
+##  @date 04/06/2026 by @author Tsukini
 
 File Name:
 ##  @file ArgParser.cpp
@@ -26,7 +34,7 @@ utils::arguments::ArgParser::ArgParser(const std::string& binary, const std::str
     this->resetHelpHook();
 }
 
-void utils::arguments::ArgParser::delUsage(const std::string& id)
+void utils::arguments::ArgParser::removeUsage(const std::string& id)
 {
     if (this->_usages.contains(id)) {
         utils::exception::CustomException e(utils::exception::Type::Warning, utils::exception::Code::UnknowId, id);
@@ -36,13 +44,13 @@ void utils::arguments::ArgParser::delUsage(const std::string& id)
     this->_usages.erase(id);
 }
 
-void utils::arguments::ArgParser::delUsages(const std::vector<std::string>& ids)
+void utils::arguments::ArgParser::removeUsages(const std::vector<std::string>& ids)
 {
     for (const std::string& id: ids)
-        this->delUsage(id);
+        this->removeUsage(id);
 }
 
-void utils::arguments::ArgParser::delOption(const std::string& id)
+void utils::arguments::ArgParser::removeOption(const std::string& id)
 {
     if (this->_options.contains(id)) {
         utils::exception::CustomException e(utils::exception::Type::Warning, utils::exception::Code::UnknowId, id);
@@ -52,13 +60,13 @@ void utils::arguments::ArgParser::delOption(const std::string& id)
     this->_options.erase(id);
 }
 
-void utils::arguments::ArgParser::delOptions(const std::vector<std::string>& ids)
+void utils::arguments::ArgParser::removeOptions(const std::vector<std::string>& ids)
 {
     for (const std::string& id: ids)
-        this->delOption(id);
+        this->removeOption(id);
 }
 
-void utils::arguments::ArgParser::delFlag(const std::string& id)
+void utils::arguments::ArgParser::removeFlag(const std::string& id)
 {
     if (this->_flags.contains(id)) {
         utils::exception::CustomException e(utils::exception::Type::Warning, utils::exception::Code::UnknowId, id);
@@ -68,10 +76,10 @@ void utils::arguments::ArgParser::delFlag(const std::string& id)
     this->_flags.erase(id);
 }
 
-void utils::arguments::ArgParser::delFlags(const std::vector<std::string>& ids)
+void utils::arguments::ArgParser::removeFlags(const std::vector<std::string>& ids)
 {
     for (const std::string& id: ids)
-        this->delFlag(id);
+        this->removeFlag(id);
 }
 
 void utils::arguments::ArgParser::help(void)
@@ -102,21 +110,21 @@ utils::arguments::ParsedData utils::arguments::ArgParser::parse(const std::vecto
     utils::arguments::ParsedData data;
 
     // Minimalist check
-    if (arguments.size() == 0)
-        throw utils::exception::CustomException(utils::Type::Error, utils::Code::ArgumentsNumber, "The arguments should start with the binary name, with a size of 1 at least, got: 0");
+    if (argv.size() == 0)
+        throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::ArgumentsNumber, "The arguments should start with the binary name, with a size of 1 at least, got: 0");
 
     // For each arguments
-    for (std::size_t i = 1; i < arguments; ++i) {
-        const std::string& argument = arguments[i];
+    for (std::size_t i = 1; i < argv.size(); ++i) {
+        const std::string& arg = argv[i];
 
         // Flag dectection
-        if (argument.size() > 1 && argument.front() == "-") {
-            this->parseFlags(data, arguments, i, failsafe);
+        if (arg.size() > 1 && arg.front() == '-') {
+            this->parseFlags(data, argv, i, failsafe);
         }
 
         // Option
         else {
-            this->parseOption(data, arguments, i, failsafe);
+            this->parseOption(data, argv, i, failsafe);
         }
     }
 }

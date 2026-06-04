@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 02/06/2026 by @author Tsukini
+##  @date 04/06/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -40,6 +40,7 @@ File Description:
 
 /* Activate all tool include */
 #ifdef _Tools
+    #define _BLT // Bidirectional Lookup Table
     #define _Vector
     #define _Concepts
     #define _Middleware
@@ -83,6 +84,16 @@ File Description:
 #ifdef _Attribute
     // -> Define/Macro of attribute & keyword for optimisation & other
     #include "attribute/Attribute.hpp"  // different define/macro for optimisation & other
+#endif
+
+/* Bidirectional Lookup Table */
+#ifdef _BLT
+    // -> Bidirectional lookup table (const)
+    #include "blt/BidirectionalLookupTable.hpp" // utils::blt::BidirectionalLookupTable<L, R, ...>, utils::blt::BidirectionalLookupTable<T, ...>
+    /*
+    #include "blt/BidirectionalLookupTable_t-t.hpp" // utils::blt::BidirectionalLookupTable<L, R, ...>
+    #include "blt/BidirectionalLookupTable_t.hpp"   // utils::blt::BidirectionalLookupTable<T, ...>
+    */
 #endif
 
 /* VectorX */
