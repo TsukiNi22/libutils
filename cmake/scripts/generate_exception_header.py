@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  03/06/2026 by Tsukini
+##  04/06/2026 by Tsukini
 
 File Name:
 ##  generate_exception_header.py
@@ -19,54 +19,52 @@ File Description:
 
 ##### Import #####
 # Import that can't be in the try
-from const import Return, Error, Value, File, Name
-from sys import exit, executable
-from subprocess import check_call
+from const import RETURN, ERROR, VALUES, FILES, NAMES
+from sys import exit, std
 
-# Try to install dependencies
+# Try to install dependencies (failsafe)
 try:
+    from sys import executable
+    from subprocess import check_call
     check_call([executable, "-m", "ensurepip", "--upgrade"])
-    check_call([executable, "-m", "pip", "install", "-r", File.REQUIREMENTS])
+    check_call([executable, "-m", "pip", "install", "-r", FILES.REQUIREMENTS])
 except Exception as e:
     pass
 
 # Import that can be checked
 try:
-    import re # Used for pattern matching
-    import json # Used to get the json data
     from pathlib import Path # Used to create & edit files and to get the file name
+    import json # Used to get the json data
+    import re # Used for pattern matching
 except ImportError as e:
-    print(f"Import Error: {e}")
-    print(f"Auto generated header '{File.GENERATED_EXCEPTION_HEADER}': FAIL")
-    exit(Error.FATAL)
+    stderr.write(f"Import Error ({__file__}): {e}\n")
+    stderr.write(f"Auto generated header '{FILES.GENERATED_EXCEPTION_HEADER}': FAIL\n")
+    exit(ERROR.FATAL)
 
-##### Program #####
 # Check if the program is call and not imported
 if __name__ != "__main__":
-    print("The script of the cmake can only be executed and not imported!")
-    print(f"Auto generated header '{File.GENERATED_EXCEPTION_HEADER}': FAIL")
-    exit(Error.FATAL)
+    stderr.write(f"The {__file__} can only be executed and not imported!\n")
+    stderr.write(f"Auto generated header '{FILES.GENERATED_EXCEPTION_HEADER}': FAIL\n")
+    exit(ERROR.FATAL)
 
+##### Program #####
 # Recuperation of the data
 data = {} # {code: [message, info, restriction], ...}
-for json_file in Path(File.CONFIG_EXCEPTION).rglob("*.json"):
+for json_file in Path(FILES.CONFIG_EXCEPTION).rglob("*.json"):
     with json_file.open("r", encoding="utf-8") as f:
         json_content = json.load(f)
         for error in json_content.get("errors", []):
             if data.__contains__(error["code"]):
-                print(f"Duplicated error code encoutered in data extraction '{error["code"]}'")
-                print(f"Auto generated header '{File.GENERATED_EXCEPTION_HEADER}': FAIL")
-                exit(Return.KO)
+                stderr.write(f"Duplicated error code encoutered in data extraction '{error["code"]}'\n")
+                stderr.write(f"Auto generated header '{FILES.GENERATED_EXCEPTION_HEADER}': FAIL\n")
+                exit(RETURN.KO)
             data[error["code"]] = [error["message"], error["info"] if error.__contains__("info") else "[None]", error["restrictions"] if error.__contains__("restrictions") else []]
-
-# fichier à parser
-cpp_file = ""
 
 # Patern to find enum value
 enum_pattern = re.compile(r'^\s*(\w+)\s*=\s*(0b[01]+)\s*,?')
 
 # Extract the enum values
-with open(File.EXCEPTION_DEFINE_HEADER, "r", encoding="utf-8") as f:
+with open(FILES.EXCEPTION_DEFINE_HEADER, "r", encoding="utf-8") as f:
     inside_enum = False
     for line in f:
         # Detect the start of the enum
@@ -82,7 +80,7 @@ with open(File.EXCEPTION_DEFINE_HEADER, "r", encoding="utf-8") as f:
             match = enum_pattern.match(line)
             if match:
                 name, value = match.groups()
-                Value.EXCEPTION_TYPE[name] = int(value, 2)
+                VALUES.EXCEPTION_TYPE[name] = int(value, 2)
 
 # Format the data
 code_str = ""
@@ -104,8 +102,8 @@ for i, (code, [message, info, restriction]) in enumerate(data_list):
     types = ""
     for j in range(len(restriction)):
         t = restriction[j]
-        value |= Value.EXCEPTION_TYPE.get(t, 0)
-        if Value.EXCEPTION_TYPE.get(t, 0) != 0: types += t + (", " if j != len(restriction) - 1 else "")
+        value |= VALUES.EXCEPTION_TYPE.get(t, 0)
+        if VALUES.EXCEPTION_TYPE.get(t, 0) != 0: types += t + (", " if j != len(restriction) - 1 else "")
     restriction_str += f"    /* {code} */ {value:#06b}, // allow: {'All' if types == '' else types}"
     # End of line
     if i != len(data_list) - 1:
@@ -118,12 +116,12 @@ for i, (code, [message, info, restriction]) in enumerate(data_list):
 restriction_lines = [
     "// 0b0000 = no restriction\t(allow all)",
 ]
-for name in Value.EXCEPTION_TYPE:
-    restriction_lines.append(f"// {Value.EXCEPTION_TYPE[name]:#06b} = {name}\t\t\t(allow {name})")
+for name in VALUES.EXCEPTION_TYPE:
+    restriction_lines.append(f"// {VALUES.EXCEPTION_TYPE[name]:#06b} = {name}\t\t\t(allow {name})")
 restriction_str_comment = "\n".join(restriction_lines)
 
 # Create the file
-header = Path(File.GENERATED_EXCEPTION_HEADER)
+header = Path(FILES.GENERATED_EXCEPTION_HEADER)
 
 # Build of the content
 content = f"""
@@ -136,12 +134,12 @@ File Name:
 
 File Description:
 ##  Header auto generated by the python script at compilation
-##  Generated from the files in '{File.CONFIG_EXCEPTION}'
+##  Generated from the files in '{FILES.CONFIG_EXCEPTION}'
 ##  Used for exception code & message definition
 \\**************************************************************/
 
-#ifndef {Path(File.GENERATED_EXCEPTION_HEADER).stem.upper()}_H
-    #define {Path(File.GENERATED_EXCEPTION_HEADER).stem.upper()}_H
+#ifndef {Path(FILES.GENERATED_EXCEPTION_HEADER).stem.upper()}_H
+    #define {Path(FILES.GENERATED_EXCEPTION_HEADER).stem.upper()}_H
 
     //----------------------------------------------------------------//
     /* INCLUDE */
@@ -186,12 +184,12 @@ static_assert(std::size(Info) == static_cast<std::size_t>(utils::exception::Code
 static_assert(std::size(Restriction) == static_cast<std::size_t>(utils::exception::Code::CODE_SENTINEL), "The restriction array doesn't correspond to the available exception codes");
 
 }} // namespace end
-#endif /* {Path(File.GENERATED_EXCEPTION_HEADER).stem.upper()}_H */
+#endif /* {Path(FILES.GENERATED_EXCEPTION_HEADER).stem.upper()}_H */
 """
 
 # Write the file content
 header.write_text(content)
 
 # Success
-print(f"Auto generated header '{File.GENERATED_EXCEPTION_HEADER}': SUCCESS")
-exit(Return.OK)
+print(f"Auto generated header '{FILES.GENERATED_EXCEPTION_HEADER}': SUCCESS")
+exit(RETURN.OK)

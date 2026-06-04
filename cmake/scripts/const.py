@@ -8,55 +8,84 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  20/04/2026 by Tsukini
+##  04/06/2026 by Tsukini
 
 File Name:
 ##  const.py
 
 File Description:
-##  Different const used in python scripts
+##  Different const used in the python scripts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+##### Import #####
+# Import that can't be in the try
+from sys import exit, stderr
+
+# Import that can be checked
+try:
+    from dataclasses import dataclass
+except ImportError as e:
+    stderr.write(f"Import Error ({__file__}): {e}\n")
+    exit(255) # Special exit code (only place used)
+
+# Check if the program is imported and not call
+if __name__ == "__main__":
+    stderr.write(f"The {__file__} can only be imported and not executed!\n")
+    exit(255) # Special exit code (only place used)
+
 ##### Const #####
-class Return:
+@dataclass(frozen=True)
+class Return():
     """
         Return values
     """
-    OK = 0 # Return value upon success on a call function
-    KO = 1 # Return value upon fail on a call function
+    OK: int = 0 # Return value upon success on a call function
+    KO: int = 1 # Return value upon fail on a call function
+    ERR: int = 84 # Epitech return upon fail
 
-class Error:
+@dataclass(frozen=True)
+class Error():
     """
         Error values
     """
-    FATAL   = 0b1000    # Global error, the program whole execution won't be able to run after this        (100% execution stop)
-    LOCAL   = 0b100     # Local error, the program local execution won't probably be able to run after this (some chance of execution stop)
-    ACTION  = 0b10      # Same~~ as Return.KO, a program action execution won't be able to run after this   (low chance of execution stop)
+    FATAL: bin  = 0b1000    # Global error, the program whole execution won't be able to run after this        (100% execution stop)
+    LOCAL: bin  = 0b100     # Local error, the program local execution won't probably be able to run after this (some chance of execution stop)
+    ACTION: bin = 0b10      # Same~~ as Return.KO, a program action execution won't be able to run after this   (low chance of execution stop)
 
-class Value:
+@dataclass(frozen=True)
+class Values:
     """
         Different values wihtout a precise category
     """
     # Default values
-    EXCEPTION_TYPE = {
+    EXCEPTION_TYPE: dict[str, bin] = {
         "None":    0b0001, # Forced to exist
         "Fatal":   0b0010,
         "Error":   0b0100,
         "Warning": 0b1000,
     }
 
-class File:
+@dataclass(frozen=True)
+class Files:
     """
         Different files path
     """
-    REQUIREMENTS = "cmake/scripts/requirements.txt"
-    CONFIG_EXCEPTION = "cmake/config/exceptions/"
-    EXCEPTION_DEFINE_HEADER = "include/utils/exception/ExceptionDefine.hpp"
-    GENERATED_EXCEPTION_HEADER = "include/utils/exception/generated_exception_header.hpp"
+    REQUIREMENTS: str = "cmake/scripts/requirements.txt"
+    CONFIG_EXCEPTION: str = "cmake/config/exceptions/"
+    EXCEPTION_DEFINE_HEADER: str = "include/utils/exception/ExceptionDefine.hpp"
+    GENERATED_EXCEPTION_HEADER: str = "include/utils/exception/generated_exception_header.hpp"
 
-class Name:
+@dataclass(frozen=True)
+class Names:
     """
         Different names
     """
-    EXCEPTION_CODE_ENUM = "Code"
-    EXCEPTION_MESSAGE_VAR = "Message"
+    EXCEPTION_CODE_ENUM: str = "Code"
+    EXCEPTION_MESSAGE_VAR: str = "Message"
+
+##### Declaration #####
+RETURN  = Return()
+ERROR   = Error()
+VALUES  = Values()
+FILES   = Files()
+NAMES   = Names()
