@@ -20,7 +20,7 @@ File Description:
 ##### Import #####
 # Import that can't be in the try
 from const import RETURN, ERROR, VALUES, FILES, NAMES
-from sys import exit, std
+from sys import exit, stderr
 
 # Try to install dependencies (failsafe)
 try:

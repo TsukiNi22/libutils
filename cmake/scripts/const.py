@@ -24,6 +24,7 @@ from sys import exit, stderr
 # Import that can be checked
 try:
     from dataclasses import dataclass
+    from typing import ClassVar
 except ImportError as e:
     stderr.write(f"Import Error ({__file__}): {e}\n")
     exit(255) # Special exit code (only place used)
@@ -58,7 +59,7 @@ class Values:
         Different values wihtout a precise category
     """
     # Default values
-    EXCEPTION_TYPE: dict[str, bin] = {
+    EXCEPTION_TYPE: ClassVar[dict[str, int]] = {
         "None":    0b0001, # Forced to exist
         "Fatal":   0b0010,
         "Error":   0b0100,
