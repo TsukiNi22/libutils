@@ -46,16 +46,16 @@ enum class Code: std::size_t {
     CliExecution,
     CliUndefined,
     CliAlreadyRunning,
-    UnknowFlag,
-    NoValidUsage,
-    InvalidUsageOrder,
-    InvalidUsageCombinaison,
-    ArgParserHook,
     ArgumentsNumber,
+    OptionIngored,
+    UnknowFlag,
+    NoCompliantUsage,
+    ArgParserHook,
     OptionsNumber,
+    FlagOptionsNumber,
+    Option,
     FlagOption,
     FlagCombinaison,
-    OptionIngored,
     DuplicatedFlag,
     MiddlewareCall,
     CODE_SENTINEL // sentinel used for verification
@@ -81,16 +81,16 @@ constexpr inline const char *Message[] = {
     /* CliExecution */ "Error during the command execution",
     /* CliUndefined */ "An undefined error has append",
     /* CliAlreadyRunning */ "Can't start a cli that is already running",
-    /* UnknowFlag */ "Unknow flag",
-    /* NoValidUsage */ "No valid usage found, use '-h' for more information",
-    /* InvalidUsageOrder */ "Invalid order of options/flags, use '-h' for more information",
-    /* InvalidUsageCombinaison */ "Invalid combinaison of options/flags, use '-h' for more information",
-    /* ArgParserHook */ "Error during an execution of hook",
     /* ArgumentsNumber */ "Invalid number of argument(s) given, use '-h' for more information",
+    /* OptionIngored */ "Option ignored, can't determine it's ownership",
+    /* UnknowFlag */ "Unknow flag",
+    /* NoCompliantUsage */ "No compliant usage where found, use '-h' for more information",
+    /* ArgParserHook */ "Error during an execution of hook",
     /* OptionsNumber */ "Invalid number of option(s) given, use '-h' for more information",
+    /* FlagOptionsNumber */ "Invalid number of option(s) for the flag",
+    /* Option */ "Invalid option, the parsing hook has failed",
     /* FlagOption */ "Invalid flag option, the parsing hook has failed",
     /* FlagCombinaison */ "Invalid flag combinaison",
-    /* OptionIngored */ "Option ignored, can't determine it's ownership",
     /* DuplicatedFlag */ "A flag was redefined, only the first will be used",
     /* MiddlewareCall */ "Error during a middleware call",
 };
@@ -115,16 +115,16 @@ constexpr inline const char *Info[] = {
     /* CliExecution */ nullptr,
     /* CliUndefined */ nullptr,
     /* CliAlreadyRunning */ nullptr,
-    /* UnknowFlag */ nullptr,
-    /* NoValidUsage */ nullptr,
-    /* InvalidUsageOrder */ nullptr,
-    /* InvalidUsageCombinaison */ nullptr,
-    /* ArgParserHook */ nullptr,
     /* ArgumentsNumber */ nullptr,
+    /* OptionIngored */ nullptr,
+    /* UnknowFlag */ nullptr,
+    /* NoCompliantUsage */ nullptr,
+    /* ArgParserHook */ nullptr,
     /* OptionsNumber */ nullptr,
+    /* FlagOptionsNumber */ nullptr,
+    /* Option */ nullptr,
     /* FlagOption */ nullptr,
     /* FlagCombinaison */ nullptr,
-    /* OptionIngored */ nullptr,
     /* DuplicatedFlag */ nullptr,
     /* MiddlewareCall */ nullptr,
 };
@@ -154,16 +154,16 @@ constexpr inline const std::uint8_t Restriction[] = {
     /* CliExecution */ 0b0110, // allow: Fatal, Error
     /* CliUndefined */ 0b0110, // allow: Fatal, Error
     /* CliAlreadyRunning */ 0b1110, // allow: Fatal, Error, Warning
-    /* UnknowFlag */ 0b1110, // allow: Fatal, Error, Warning
-    /* NoValidUsage */ 0b0110, // allow: Fatal, Error
-    /* InvalidUsageOrder */ 0b0110, // allow: Fatal, Error
-    /* InvalidUsageCombinaison */ 0b0110, // allow: Fatal, Error
-    /* ArgParserHook */ 0b0110, // allow: Fatal, Error
     /* ArgumentsNumber */ 0b0110, // allow: Fatal, Error
+    /* OptionIngored */ 0b1110, // allow: Fatal, Error, Warning
+    /* UnknowFlag */ 0b1110, // allow: Fatal, Error, Warning
+    /* NoCompliantUsage */ 0b0110, // allow: Fatal, Error
+    /* ArgParserHook */ 0b0110, // allow: Fatal, Error
     /* OptionsNumber */ 0b0110, // allow: Fatal, Error
-    /* FlagOption */ 0b0110, // allow: Fatal, Error
-    /* FlagCombinaison */ 0b0110, // allow: Fatal, Error
-    /* OptionIngored */ 0b0110, // allow: Fatal, Error
+    /* FlagOptionsNumber */ 0b0110, // allow: Fatal, Error
+    /* Option */ 0b1110, // allow: Fatal, Error, Warning
+    /* FlagOption */ 0b1110, // allow: Fatal, Error, Warning
+    /* FlagCombinaison */ 0b1110, // allow: Fatal, Error, Warning
     /* DuplicatedFlag */ 0b1110, // allow: Fatal, Error, Warning
     /* MiddlewareCall */ 0b1110, // allow: Fatal, Error, Warning
 };

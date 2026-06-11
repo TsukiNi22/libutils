@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 04/06/2026 by @author Tsukini
+##  @date 11/06/2026 by @author Tsukini
 
 File Name:
 ##  @file ArgParser.hpp
@@ -61,24 +61,25 @@ class ArgParser: private utils::warning::Observer {
         std::string _binary = "[None]";
         std::string _description = "...";
         std::unordered_map<std::string, utils::arguments::Usage> _usages;
-        std::unordered_map<std::string, utils::arguments::Option> _options;
+        std::unordered_map<std::string, utils::arguments::Option> _options; // 2 Different options with a valid check for a same condition might became inverted
         std::unordered_map<std::string, utils::arguments::Flag> _flags;
         std::function<void(const utils::arguments::ArgParser& parser)> _helpHook;
 
         // ---------- Pre-Function -------- //
         /* sub parsing */
-        void parseFlags(utils::arguments::ParsedData& data, const std::vector<std::string>& argv, std::size_t& i, const bool failsafe = false);
-        void parseOption(utils::arguments::ParsedData& data, const std::vector<std::string>& argv, std::size_t& i, const bool failsafe = false);
+        void parseFlags(utils::arguments::ParsedData& data, const std::vector<std::string>& argv, std::size_t& i, const bool failsafe = false) const;
+        void parseOption(utils::arguments::ParsedData& data, const std::vector<std::string>& argv, const std::size_t i, const bool failsafe = false) const;
+        std::string checkUsageCompliance(const utils::arguments::ParsedData& data, const bool full) const;
 
     public:
         // ---------- Pre-Function -------- //
-        void help(void); // Help display (using hook)
+        void help(void) const; // Help display (using hook)
 
         /* parsing */
         // Allways ignore the first argument, return a list of flag's found
         // Check only the option & dosn't
-        utils::arguments::ParsedData parse(const int argc, const char *const argv[], const bool failsafe = false);
-        utils::arguments::ParsedData parse(const std::vector<std::string>& argv, const bool failsafe = false);
+        utils::arguments::ParsedData parse(const int argc, const char *const argv[], const bool failsafe = false) const;
+        utils::arguments::ParsedData parse(const std::vector<std::string>& argv, const bool failsafe = false) const;
 
         /* setup */
         void removeUsage(const std::string& id);
@@ -105,8 +106,8 @@ class ArgParser: private utils::warning::Observer {
         void setOption(const std::string& id, const std::string& name, std::function<bool(const std::string&)> check, const std::string& description = "[None]")
         {
             if constexpr (!force) {
-                if (this->_options.contains(id))
-                    throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::Override, std::string("An option with this id is already defined: ") + id);
+                if (this->_options.contains(id) || this->_flags.contains(id))
+                    throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::Override, std::string("An option/flag with this id is already defined: ") + id);
             }
             this->_options[id] = utils::arguments::Option{name, check, description};
         };
@@ -115,8 +116,8 @@ class ArgParser: private utils::warning::Observer {
         void setFlag(const std::string& id, const std::tuple<std::string, std::string, std::string>& flag, const std::vector<std::tuple<std::string, bool, std::function<bool(const std::string&)>>>& options, const std::string& description = "[None]")
         {
             if constexpr (!force) {
-                if (this->_flags.contains(id))
-                    throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::Override, std::string("An flag with this id is already defined: ") + id);
+                if (this->_flags.contains(id) || this->_options.contains(id))
+                    throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::Override, std::string("A flag/option with this id is already defined: ") + id);
             }
             this->_flags[id] = utils::arguments::Flag{flag, options, description};
         };

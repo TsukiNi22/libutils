@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 03/06/2026 by @author Tsukini
+##  @date 11/06/2026 by @author Tsukini
 
 File Name:
 ##  @file Hooks.cpp
@@ -233,6 +233,8 @@ bool utils::arguments::defaultWritableParsingHook(const std::string& option)
         if (!parent.empty()) std::filesystem::create_directories(parent);
         std::ofstream file(path.string(), std::ios::app);
         if (!file) return false;
+        file.close();
+        std::filesystem::remove(path);
         return true;
     } catch (...) { // Any error same as missing permission
         return false;

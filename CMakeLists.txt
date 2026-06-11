@@ -30,6 +30,7 @@ add_compile_options(
     -Wunused-parameter
     -Wshadow
     -Wuninitialized
+    -Wno-c++26-extensions
 )
 
 # =========================
