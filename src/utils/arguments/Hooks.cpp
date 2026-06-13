@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 11/06/2026 by @author Tsukini
+##  @date 13/06/2026 by @author Tsukini
 
 File Name:
 ##  @file Hooks.cpp
@@ -30,6 +30,7 @@ File Description:
 #include <filesystem>
 #include <exception>
 #include <iostream>
+#include <optional>
 #include <iomanip>
 #include <fstream>
 #include <cstddef>
@@ -117,6 +118,8 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
     std::cout << utils::write::reset() << std::endl;
 
     std::cout << utils::write::format("<strong>FLAGS<>") << std::endl;
+    std::cout << utils::write::color(utils::write::Color::Green) << "\t" << "-h, -help, --help" << utils::write::reset() << std::endl;
+    std::cout << "\t\t" << "Display this help and exit" << std::endl;
     for (const auto& [_, flag]: flags) {
         const auto& [fshort, fflag, flong] = flag.flag;
         std::cout << utils::write::color(utils::write::Color::Green) << "\t";
@@ -133,18 +136,19 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
     std::cout << utils::write::reset() << std::flush;
 }
 
-bool utils::arguments::defaultBoolParsingHook(const std::string& option)
+std::optional<std::string> utils::arguments::defaultBoolParsingHook(const std::string& option)
 {
     try {
         if (option.empty())
             throw std::invalid_argument("empty");
-        return (option == "0" || option == "1" || option == "false" || option == "true");
-    } catch (...) {
-        return false;
+        if (option == "0" || option == "1" || option == "false" || option == "true") return std::nullopt;
+        else return "Invalid boolean option (0/1/false/true): " + option;
+    } catch (const std::exception& e) {
+        return std::string(e.what()) + ": " + option;
     }
 }
 
-bool utils::arguments::defaultInt32ParsingHook(const std::string& option)
+std::optional<std::string> utils::arguments::defaultInt32ParsingHook(const std::string& option)
 {
     try {
         if (option.empty())
@@ -158,13 +162,13 @@ bool utils::arguments::defaultInt32ParsingHook(const std::string& option)
         if (value < std::numeric_limits<std::int32_t>::min() ||
             value > std::numeric_limits<std::int32_t>::max())
             throw std::out_of_range("int32 overflow");
-        return true;
-    } catch (...) {
-        return false;
+        return std::nullopt;
+    } catch (const std::exception& e) {
+        return std::string(e.what()) + ": " + option;
     }
 }
 
-bool utils::arguments::defaultSizetParsingHook(const std::string& option)
+std::optional<std::string> utils::arguments::defaultSizetParsingHook(const std::string& option)
 {
     try {
         if (option.empty())
@@ -175,13 +179,13 @@ bool utils::arguments::defaultSizetParsingHook(const std::string& option)
         (void)std::stoull(option, &pos);
         if (pos != option.size())
             throw std::invalid_argument("not a float");
-        return true;
-    } catch (...) {
-        return false;
+        return std::nullopt;
+    } catch (const std::exception& e) {
+        return std::string(e.what()) + ": " + option;
     }
 }
 
-bool utils::arguments::defaultDoubleParsingHook(const std::string& option)
+std::optional<std::string> utils::arguments::defaultDoubleParsingHook(const std::string& option)
 {
     try {
         if (option.empty())
@@ -190,25 +194,26 @@ bool utils::arguments::defaultDoubleParsingHook(const std::string& option)
         (void)std::stod(option, &pos);
         if (pos != option.size())
             throw std::invalid_argument("not a float");
-        return true;
-    } catch (...) {
-        return false;
+        return std::nullopt;
+    } catch (const std::exception& e) {
+        return std::string(e.what()) + ": " + option;
     }
 }
 
-bool utils::arguments::defaultFileParsingHook(const std::string& option)
+std::optional<std::string> utils::arguments::defaultFileParsingHook(const std::string& option)
 {
     if (!std::filesystem::exists(option) || !std::filesystem::is_regular_file(option))
-        return false;
+        return "The given path isn't a readable regular file: " + option;
     if (std::filesystem::file_size(option) == 0)
-        return false;
-    return true;
+        return "The given file is empty: " + option;
+    return std::nullopt;
 }
 
-bool utils::arguments::defaultWritableParsingHook(const std::string& option)
+std::optional<std::string> utils::arguments::defaultWritableParsingHook(const std::string& option)
 {
-    
     std::filesystem::path path(option);
+    if (std::filesystem::exists(path) && std::filesystem::is_regular_file(path))
+        return "Can't override an existing file: " + option;
 
     // Explicit directory
     bool isDirectory = option.back() == '/' || option.back() == '\\';
@@ -222,21 +227,21 @@ bool utils::arguments::defaultWritableParsingHook(const std::string& option)
             std::filesystem::create_directories(path);
             std::filesystem::path testFile = path / ".TO_DELETE-permission_check_auto_generated_file";
             std::ofstream file(testFile.string());
-            if (!file) return false;
+            if (!file) return "Error during the file opening in the given directory (testing): " + option;
             file.close();
             std::filesystem::remove(testFile);
-            return true;
+            return std::nullopt;
         }
 
         // File case
         std::filesystem::path parent = path.parent_path();
         if (!parent.empty()) std::filesystem::create_directories(parent);
         std::ofstream file(path.string(), std::ios::app);
-        if (!file) return false;
+        if (!file) return "Error during the file opening (testing): " + option;
         file.close();
         std::filesystem::remove(path);
-        return true;
-    } catch (...) { // Any error same as missing permission
-        return false;
+        return std::nullopt;
+    } catch (const std::exception& e) { // Any error same as missing permission
+        return std::string(e.what()) + ": " + option;
     }
 }

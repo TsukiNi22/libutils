@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 11/06/2026 by @author Tsukini
+##  @date 13/06/2026 by @author Tsukini
 
 File Name:
 ##  @file ArgParser.hpp
@@ -33,6 +33,7 @@ File Description:
     #include "ArgParserType.hpp"                        // utils::arguments::* (Type)
     #include <unordered_map>                            // std::unordered_map
     #include <functional>                               // std::function
+    #include <optional>                                 // std::optional
     #include <vector>                                   // std::vector
     #include <string>                                   // std::string
     #include <tuple>                                    // std::tuple
@@ -45,13 +46,13 @@ class ArgParser;
 
 /* default hooks (parsing = only check) */
 void defaultHelpHook(const utils::arguments::ArgParser& parser);
-bool defaultBoolParsingHook(const std::string& option);     // Parse boolean (0, 1, fase, true)
-bool defaultInt32ParsingHook(const std::string& option);    // Parse std::int32_t
-bool defaultSizetParsingHook(const std::string& option);    // Parse std::size_t
-bool defaultDoubleParsingHook(const std::string& option);   // Parse double
-bool defaultFileParsingHook(const std::string& option);     // Check for file reading (only!)
-bool defaultWritableParsingHook(const std::string& option); // Check if the path/file is readable & writable (only!)
-inline bool defaultTrueParsingHook(unused const std::string&) {return true;};
+std::optional<std::string> defaultBoolParsingHook(const std::string& option);     // Parse boolean (0, 1, fase, true)
+std::optional<std::string> defaultInt32ParsingHook(const std::string& option);    // Parse std::int32_t
+std::optional<std::string> defaultSizetParsingHook(const std::string& option);    // Parse std::size_t
+std::optional<std::string> defaultDoubleParsingHook(const std::string& option);   // Parse double
+std::optional<std::string> defaultFileParsingHook(const std::string& option);     // Check for file reading (only!)
+std::optional<std::string> defaultWritableParsingHook(const std::string& option); // Check if the path/file is readable & writable (only!)
+inline std::optional<std::string> defaultTrueParsingHook(unused const std::string&) {return std::nullopt;};
 
 //----------------------------------------------------------------//
 /* CLASS */
@@ -61,15 +62,14 @@ class ArgParser: private utils::warning::Observer {
         std::string _binary = "[None]";
         std::string _description = "...";
         std::unordered_map<std::string, utils::arguments::Usage> _usages;
-        std::unordered_map<std::string, utils::arguments::Option> _options; // 2 Different options with a valid check for a same condition might became inverted
-        std::unordered_map<std::string, utils::arguments::Flag> _flags;
+        std::unordered_map<std::string, utils::arguments::Option> _options;
+        std::unordered_map<std::string, utils::arguments::Flag> _flags; // Multiple flag with the same name will result in possible inverted result
         std::function<void(const utils::arguments::ArgParser& parser)> _helpHook;
 
         // ---------- Pre-Function -------- //
         /* sub parsing */
-        void parseFlags(utils::arguments::ParsedData& data, const std::vector<std::string>& argv, std::size_t& i, const bool failsafe = false) const;
-        void parseOption(utils::arguments::ParsedData& data, const std::vector<std::string>& argv, const std::size_t i, const bool failsafe = false) const;
-        std::string checkUsageCompliance(const utils::arguments::ParsedData& data, const bool full) const;
+        bool parseFlags(utils::arguments::ParsedUsageFull& usagesFull, const std::vector<std::string>& argv, std::size_t& i, bool& alreadyFailed, const bool failsafe = false) const;
+        bool parseOption(utils::arguments::ParsedUsageFull& usagesFull, const std::vector<std::string>& argv, const std::size_t i, bool& alreadyFailed, const bool failsafe = false) const;
 
     public:
         // ---------- Pre-Function -------- //
@@ -77,9 +77,8 @@ class ArgParser: private utils::warning::Observer {
 
         /* parsing */
         // Allways ignore the first argument, return a list of flag's found
-        // Check only the option & dosn't
-        utils::arguments::ParsedData parse(const int argc, const char *const argv[], const bool failsafe = false) const;
-        utils::arguments::ParsedData parse(const std::vector<std::string>& argv, const bool failsafe = false) const;
+        utils::arguments::ParsedUsages parse(const int argc, const char *const argv[], const bool failsafe = false) const;
+        utils::arguments::ParsedUsages parse(const std::vector<std::string>& argv, const bool failsafe = false) const;
 
         /* setup */
         void removeUsage(const std::string& id);
@@ -103,7 +102,7 @@ class ArgParser: private utils::warning::Observer {
         };
         void resetUsages(void) {this->_usages.clear();};
         template<bool force = false> // Can't override an exiting one by default, throw of error
-        void setOption(const std::string& id, const std::string& name, std::function<bool(const std::string&)> check, const std::string& description = "[None]")
+        void setOption(const std::string& id, const std::string& name, std::function<std::optional<std::string>(const std::string&)> check, const std::string& description = "[None]")
         {
             if constexpr (!force) {
                 if (this->_options.contains(id) || this->_flags.contains(id))
@@ -113,7 +112,7 @@ class ArgParser: private utils::warning::Observer {
         };
         void resetOptions(void) {this->_options.clear();};
         template<bool force = false> // Can't override an exiting one by default, throw of error
-        void setFlag(const std::string& id, const std::tuple<std::string, std::string, std::string>& flag, const std::vector<std::tuple<std::string, bool, std::function<bool(const std::string&)>>>& options, const std::string& description = "[None]")
+        void setFlag(const std::string& id, const std::tuple<std::string, std::string, std::string>& flag, const std::vector<std::tuple<std::string, bool, std::function<std::optional<std::string>(const std::string&)>>>& options, const std::string& description = "[None]")
         {
             if constexpr (!force) {
                 if (this->_flags.contains(id) || this->_options.contains(id))
