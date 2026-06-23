@@ -11,6 +11,11 @@
             "message": "Empty"
         },
         {
+            "code": "InvalidArgument",
+            "message": "Invalid argument value",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
             "code": "UnknowId",
             "message": "Try to do thing with an unknow id",
             "restrictions": ["Fatal", "Error", "Warning"]
@@ -23,6 +28,11 @@
         {
             "code": "Override",
             "message": "The override is desactivated",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "OutOfBounds",
+            "message": "Bounds have been oversteapaded",
             "restrictions": ["Fatal", "Error", "Warning"]
         },
         {

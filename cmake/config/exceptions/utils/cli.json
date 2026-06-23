@@ -28,6 +28,11 @@
             "code": "CliAlreadyRunning",
             "message": "Can't start a cli that is already running",
             "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "CliKilled",
+            "message": "Can't start or restart a cli that was killed",
+            "restrictions": ["Fatal", "Error", "Warning"]
         }
     ]
 }

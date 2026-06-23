@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 02/06/2026 by @author Tsukini
+##  @date 16/06/2026 by @author Tsukini
 
 File Name:
 ##  @file Cli.hpp
@@ -72,6 +72,7 @@ class Cli: private utils::warning::Observer {
         termios _orig;
         bool _sig = false;
         std::atomic<bool> _interrupted = false;
+        std::atomic<bool> _killed = false; // Can't be undone
         std::atomic<bool> _running = false;
         std::atomic<std::uint32_t> _flags = utils::cli::Flags::DEFAULT;
         std::atomic<std::uint8_t> _code = 0;
@@ -133,9 +134,11 @@ class Cli: private utils::warning::Observer {
         // ------------ Function ---------- //
         void setInputDelimitor(char c) {this->_inputDelimitor = c;};
         void interrupt() {this->_interrupted = true;};
+        void kill() {this->_killed = true; this->_interrupted = true;};
         bool isRunning() const {return this->_running;};
-        bool wasInterrupt() const {return (!this->_running && this->_interrupted);};
-        bool wasKilled() const {return (!this->_running && !this->_interrupted);};
+        bool wasInterrupted() const {return (!this->_running && this->_interrupted && !this->_killed);};
+        bool wasKilled() const {return (!this->_running && this->_killed);};
+        bool wasStopped() const {return (!this->_running && !this->_interrupted && !this->_killed);};
 
         /* flag */
         void resetFlags() {this->_flags = utils::cli::Flags::DEFAULT;};

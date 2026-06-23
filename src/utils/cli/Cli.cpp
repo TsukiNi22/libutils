@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 02/06/2026 by @author Tsukini
+##  @date 22/06/2026 by @author Tsukini
 
 File Name:
 ##  @file Cli.cpp
@@ -173,6 +173,9 @@ std::optional<std::thread> utils::cli::Cli::start(std::size_t call, const bool f
     if (this->_running) {
         if (failsafe) return std::nullopt;
         throw utils::exception::WarningException(utils::exception::Code::CliAlreadyRunning);
+    } else if (this->_killed) {
+        if (failsafe) return std::nullopt;
+        throw utils::exception::WarningException(utils::exception::Code::CliKilled);
     }
     this->_interrupted = false; // Reset interrupt status
     this->_running = true;
@@ -407,7 +410,8 @@ hot nodiscard std::string utils::cli::Cli::getInput()
         std::cout << std::flush;
     }
 
-    if (this->_interrupted) {
+    if (this->_killed) return "";
+    else if (this->_interrupted) {
         if (isatty(STDOUT_FILENO)) std::cout << std::endl;
         this->_input = input;
         return "";

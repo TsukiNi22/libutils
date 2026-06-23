@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 13/06/2026 by @author Tsukini
+##  @date 14/06/2026 by @author Tsukini
 
 File Name:
 ##  @file ArgParser.cpp
@@ -151,7 +151,7 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
     // Select the id who is the next one in the usage
     for (const std::string& subId: ids) {
         // Check if they are allowed in the left over ids of the usage
-        if (!std::any_of(usageFull.ids.begin(), usageFull.ids.end(), [&](const auto& p) {return p.first == subId;}))
+        if (!std::any_of(this->_usages.at(usageFull.id).ids.begin(), this->_usages.at(usageFull.id).ids.end(), [&](const auto& p) {return p.first == subId;}))
             continue;
 
         // Check in ordered case if the flag is the next one
@@ -173,10 +173,13 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
     const utils::arguments::Flag& flag = this->_flags.at(id);
 
     // Check for redefinition
+    bool redefined = false;
     for (const auto &[fid, type, _]: usageFull.arguments) {
         if (!type && fid == id) {
-            std::cout << utils::exception::CustomException(utils::exception::Type::Warning, utils::exception::Code::DuplicatedFlag, (isLong ? std::get<2>(flag.flag) : (isShort ? std::get<0>(flag.flag) : std::get<1>(flag.flag)))).formated() << std::endl;
-            continue;
+            if (!alreadyFailed) std::cout << utils::exception::CustomException(utils::exception::Type::Warning, utils::exception::Code::DuplicatedFlag, (isLong ? std::get<2>(flag.flag) : (isShort ? std::get<0>(flag.flag) : std::get<1>(flag.flag)))).formated() << std::endl;
+            alreadyFailed = true;
+            redefined = true;
+            break;
         }
     }
 
@@ -191,27 +194,44 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
 
     // Check for the option(s)
     std::optional<std::string> res;
-    if (flag.options.size() != 0) {
-        for (const auto &[_, mandatory, check]: flag.options) {
-            if (argv.size() <= i + 1) {
-                if (!mandatory) continue;
-                if (alreadyFailed) return false;
-                alreadyFailed = true;
-                std::string s = (isLong ? "--" : "-") + arg;
-                if (failsafe) {std::cout << utils::exception::CustomException(utils::exception::Type::Warning, utils::exception::Code::FlagOptionsNumber, s).formated() << std::endl; return false;}
-                else throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::FlagOptionsNumber, s);
-            } else if ((res = check(argv[i + 1])).has_value()) {
-                if (!mandatory) continue;
-                if (alreadyFailed) return false;
-                alreadyFailed = true;
-                std::string s = (isLong ? "--" : "-") + arg + ": " + *res;
-                if (failsafe) {std::cout << utils::exception::CustomException(utils::exception::Type::Warning, utils::exception::Code::FlagOption, s).formated() << std::endl; return false;}
-                else throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::FlagOption, s);
-            } else {
-                options.push_back(argv[++i]);
-            }
+    bool breaked = false;
+    for (std::size_t j = 0; j < flag.options.size(); ++j) {
+        const auto &[_, mandatory, check] = flag.options[j];
+        if (argv.size() <= i + 1) {
+            if (!mandatory) continue;
+            if (alreadyFailed) return false;
+            alreadyFailed = true;
+            std::string s = (isLong ? "--" : "-") + arg;
+            if (failsafe) {std::cout << utils::exception::CustomException(utils::exception::Type::Warning, utils::exception::Code::FlagOptionsNumber, s).formated() << std::endl; return false;}
+            else throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::FlagOptionsNumber, s);
+        } else if (j + 1 >= flag.options.size() && flag.unlimited && argv[i + 1].front() == '-') { // Special case (unlimited can also accept no argument)
+            breaked = true;
+            break;
+        } else if ((res = check(argv[i + 1])).has_value()) {
+            if (!mandatory) continue;
+            if (alreadyFailed) return false;
+            alreadyFailed = true;
+            std::string s = (isLong ? "--" : "-") + arg + ": " + *res;
+            if (failsafe) {std::cout << utils::exception::CustomException(utils::exception::Type::Warning, utils::exception::Code::FlagOption, s).formated() << std::endl; return false;}
+            else throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::FlagOption, s);
+        } else {
+            options.push_back(argv[++i]);
         }
     }
+
+    // For unlimited options (extend to infinite the last option)
+    if (flag.unlimited && !breaked) {
+        const auto &[_, _, check] = flag.options.back();
+        while (true) {
+            if (argv.size() <= i + 1) break; // End of arguments
+            else if (argv[i + 1].front() == '-') break; // Other flag
+            else if (check(argv[i + 1]).has_value()) break; // Non compliance
+            else options.push_back(argv[++i]);
+        }
+    }
+
+    // Exit and dosen't store the redefined one
+    if (redefined) return true;
 
     // Store it
     usageFull.arguments.emplace_back(id, false, options);

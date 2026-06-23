@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 13/06/2026 by @author Tsukini
+##  @date 22/06/2026 by @author Tsukini
 
 File Name:
 ##  @file Hooks.cpp
@@ -49,8 +49,8 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
     std::cout << utils::write::reset() << std::endl;
 
     std::size_t maxNameLen = 0;
-    for (const auto& [_, usage]: usages) {
-        if (usage.name != "default")
+    for (const auto& [id, usage]: usages) {
+        if (id != "default")
             maxNameLen = std::max(maxNameLen, usage.name.size());
     }
     maxNameLen += 2;
@@ -58,8 +58,8 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
     std::cout << utils::write::format("<strong>USAGE<>") << std::endl;
     std::cout << utils::write::color(utils::write::Color::Magenta);
     bool defaultUsage = false;
-    for (const auto& [_, usage]: usages) {
-        if (usage.name == "default") {
+    for (const auto& [idU, usage]: usages) {
+        if (idU == "default") {
             defaultUsage = true;
             continue;
         }
@@ -82,10 +82,12 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
                 if (it == flags.end()) continue;
                 const auto& [fshort, fflag, flong] = it->second.flag;
                 if (fshort.empty() && fflag.empty() && flong.empty()) continue;
+                std::cout << " ";
                 if (!mandatory) std::cout << "[";
-                std::cout << " " << ((fshort.empty() && fflag.empty()) ? "--" : "-") << (fshort.empty() ? (fflag.empty() ? flong : fflag) : fshort);
+                std::cout << ((fshort.empty() && fflag.empty()) ? "--" : "-") << (fshort.empty() ? (fflag.empty() ? flong : fflag) : fshort);
                 for (const auto& [name, fmandatory, _]: it->second.options)
                     std::cout << (fmandatory ? "" : "[") << " <" << name << ">" << (fmandatory ? "" : "]");
+                if (it->second.unlimited) std::cout << "*";
                 if (!mandatory) std::cout << "]";
             }
 
@@ -127,8 +129,10 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
         if (!fflag.empty())  std::cout << (fshort.empty() ? "" : ", ") << "-" << fflag;
         if (!flong.empty())  std::cout << ((fshort.empty() && fflag.empty()) ? "" : ", ") << "--" << flong;
         std::cout << utils::write::reset();
-        for (const auto& [name, mandatory, _]: flag.options)
-            std::cout << (mandatory ? "" : "[") << " <" << utils::write::color(utils::write::Color::Red) << name << utils::write::reset() << ">" << (mandatory ? "" : "]");
+        for (std::size_t i = 0; i < flag.options.size(); ++i) {
+            const auto& [name, mandatory, _] = flag.options[i];
+            std::cout << " " << (mandatory ? "" : "[") << "<" << utils::write::color(utils::write::Color::Red) << name << utils::write::reset() << ">" << ((flag.unlimited && i == flag.options.size() - 1) ? "*" : "") << (mandatory ? "" : "]");
+        }
         std::cout << utils::write::reset() << std::endl;
         std::cout << "\t\t" << flag.description << std::endl;
     }
@@ -178,7 +182,7 @@ std::optional<std::string> utils::arguments::defaultSizetParsingHook(const std::
         std::size_t pos = 0;
         (void)std::stoull(option, &pos);
         if (pos != option.size())
-            throw std::invalid_argument("not a float");
+            throw std::invalid_argument("invalid number");
         return std::nullopt;
     } catch (const std::exception& e) {
         return std::string(e.what()) + ": " + option;

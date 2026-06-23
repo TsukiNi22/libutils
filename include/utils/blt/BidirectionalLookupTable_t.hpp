@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 04/06/2026 by @author Tsukini
+##  @date 18/06/2026 by @author Tsukini
 
 File Name:
 ##  @file BidirectionalLookupTable.hpp
@@ -66,7 +66,7 @@ class BidirectionalLookupTable<T, T, Hash, Hash, Equal, Equal>: private utils::w
         void removeElement(const T& element) noexcept
         {
             if (this->_freezed) throw utils::exception::ErrorException(utils::exception::Code::Freezed);
-            if (this->_table.contains(element)) {
+            if (!this->_table.contains(element)) {
                 utils::exception::WarningException e(utils::exception::Code::UnknowKey);
                 std::cout << e.formated() << std::endl;
                 return;

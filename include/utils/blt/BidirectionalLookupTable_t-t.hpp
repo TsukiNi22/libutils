@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 04/06/2026 by @author Tsukini
+##  @date 18/06/2026 by @author Tsukini
 
 File Name:
 ##  @file BidirectionalLookupTable.hpp
@@ -66,7 +66,7 @@ class BidirectionalLookupTable: private utils::warning::Observer {
         void removeElement(const L& left)
         {
             if (this->_freezed) throw utils::exception::ErrorException(utils::exception::Code::Freezed);
-            if (this->_left.contains(left)) {
+            if (!this->_left.contains(left)) {
                 utils::exception::WarningException e(utils::exception::Code::UnknowKey);
                 std::cout << e.formated() << std::endl;
                 return;
@@ -78,7 +78,7 @@ class BidirectionalLookupTable: private utils::warning::Observer {
         void removeElement(const R& right)
         {
             if (this->_freezed) throw utils::exception::ErrorException(utils::exception::Code::Freezed);
-            if (this->_right.contains(right)) {
+            if (!this->_right.contains(right)) {
                 utils::exception::WarningException e(utils::exception::Code::UnknowKey);
                 std::cout << e.formated() << std::endl;
                 return;
