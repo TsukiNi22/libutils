@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 26/04/2026 by @author Tsukini
+##  @date 06/07/2026 by @author Tsukini
 
 File Name:
 ##  @file WarningException.hpp
@@ -32,7 +32,8 @@ class WarningException: public utils::exception::AException {
         WarningException& operator=(WarningException&& other) = delete;
 
         // ---------- Constructor --------- //
-        cold WarningException(utils::exception::Code code = utils::exception::Code::Undefined, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::Warning, code) {};
+        cold explicit WarningException(utils::exception::Code code = utils::exception::Code::Undefined, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::Warning, code) {};
+        cold WarningException(utils::exception::Code code, std::string info, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::Warning, code, info) {};
         WarningException(const WarningException& other) = delete;
         WarningException(WarningException&& other) = delete;
 

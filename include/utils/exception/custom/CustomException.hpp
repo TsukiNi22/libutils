@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 29/05/2026 by @author Tsukini
+##  @date 06/07/2026 by @author Tsukini
 
 File Name:
 ##  @file CustomException.hpp
@@ -33,7 +33,7 @@ class CustomException: public utils::exception::AException {
 
         // ---------- Constructor --------- //
         cold CustomException(utils::exception::Type type = utils::exception::Type::None, std::string info = "[None]", std::source_location loc = std::source_location::current()) : AException(loc, type, utils::exception::Code::Undefined, info) {};
-        cold CustomException(utils::exception::Type type = utils::exception::Type::None, utils::exception::Code code = utils::exception::Code::Undefined, std::string info = "[None]", std::source_location loc = std::source_location::current()) : AException(loc, type, code, info) {};
+        cold explicit CustomException(utils::exception::Type type = utils::exception::Type::None, utils::exception::Code code = utils::exception::Code::Undefined, std::string info = "[None]", std::source_location loc = std::source_location::current()) : AException(loc, type, code, info) {};
         CustomException(const CustomException& other) = delete;
         CustomException(CustomException&& other) = delete;
 

@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 26/04/2026 by @author Tsukini
+##  @date 06/07/2026 by @author Tsukini
 
 File Name:
 ##  @file ErrorException.hpp
@@ -32,7 +32,8 @@ class ErrorException: public utils::exception::AException {
         ErrorException& operator=(ErrorException&& other) = delete;
 
         // ---------- Constructor --------- //
-        cold ErrorException(utils::exception::Code code = utils::exception::Code::Undefined, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::Error | utils::exception::Type::Fatal, code) {};
+        cold explicit ErrorException(utils::exception::Code code = utils::exception::Code::Undefined, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::Error | utils::exception::Type::Fatal, code) {};
+        cold ErrorException(utils::exception::Code code, std::string info, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::Error | utils::exception::Type::Fatal, code, info) {};
         ErrorException(const ErrorException& other) = delete;
         ErrorException(ErrorException&& other) = delete;
 

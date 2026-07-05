@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 26/04/2026 by @author Tsukini
+##  @date 06/07/2026 by @author Tsukini
 
 File Name:
 ##  @file NoneException.hpp
@@ -32,7 +32,8 @@ class NoneException: public utils::exception::AException {
         NoneException& operator=(NoneException&& other) = delete;
 
         // ---------- Constructor --------- //
-        cold NoneException(utils::exception::Code code = utils::exception::Code::Undefined, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::None, code) {};
+        cold explicit NoneException(utils::exception::Code code = utils::exception::Code::Undefined, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::None, code) {};
+        cold NoneException(utils::exception::Code code, std::string info, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::None, code, info) {};
         NoneException(const NoneException& other) = delete;
         NoneException(NoneException&& other) = delete;
 
