@@ -17,7 +17,6 @@ File Description:
 ##  Definition of the main cli functions
 \**************************************************************/
 
-#define NO_OUTDATED_WARNING
 #include "utils/attribute/Attribute.hpp"
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/basic/WarningException.hpp"

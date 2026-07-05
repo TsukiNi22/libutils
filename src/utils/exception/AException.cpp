@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 19/05/2026 by @author Tsukini
+##  @date 05/07/2026 by @author Tsukini
 
 File Name:
 ##  @file AException.cpp
@@ -9,7 +9,6 @@ File Description:
 ##  Definition of the function used in the abstract for exception
 \**************************************************************/
 
-#define NO_OUTDATED_WARNING
 #include "utils/attribute/Attribute.hpp"
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/AException.hpp"
@@ -25,14 +24,12 @@ File Description:
 
 cold void utils::exception::AException::subinit()
 {
-    std::size_t index = static_cast<std::size_t>(this->_code);
-
     // Setup the default info if nessecary
-    if (this->_info == "[None]" && this->Info[index])
-        this->_info = std::string{this->Info[index]};
+    if (this->_info == "[None]" && this->Info.at(this->_code))
+        this->_info = std::string{this->Info.at(this->_code)};
 
     // Check the restriction for code & type combination
-    std::uint8_t restriction = this->Restriction[index];
+    std::uint8_t restriction = this->Restriction.at(this->_code);
     if (this->_code == utils::exception::Code::ExceptionCodeRestriction) return; // Check to counter any mistake and cause a infinit throw loop
     else if (restriction != 0 && (this->_type & restriction) != this->_type)
         throw utils::exception::ErrorException(utils::exception::Code::ExceptionCodeRestriction, this->_loc);
@@ -53,7 +50,7 @@ nodiscard std::string utils::exception::AException::formated() const noexcept
     oss << " " << utils::write::reset();
 
     // Emplacement information
-    oss << utils::write::strong() << this->_file << ":" << this->_line << utils::write::reset() << " -> " << this->Message[static_cast<std::size_t>(this->_code)] << std::endl;
+    oss << utils::write::strong() << this->_file << ":" << this->_line << utils::write::reset() << " -> " << this->Message.at(this->_code) << std::endl;
 
     // Content
     oss << utils::write::color_rgb(175, 100, 0) << "-------------------------------------------" << utils::write::reset() << std::endl;

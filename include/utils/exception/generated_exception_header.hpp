@@ -18,9 +18,10 @@ File Description:
     //----------------------------------------------------------------//
     /* INCLUDE */
 
-    #include <iterator> // std::size
-    #include <cstddef>  // std::size_t
-    #include <cstdint>  // std::uint8_t
+    #include <unordered_map>    // std::unordered_map
+    #include <iterator>         // std::size
+    #include <cstddef>          // std::size_t
+    #include <cstdint>          // std::uint8_t
 
 namespace utils::exception { // namespace start
 //----------------------------------------------------------------//
@@ -29,104 +30,112 @@ namespace utils::exception { // namespace start
 /* Definition of the different exception code */
 enum class Code: std::size_t {
     Undefined = 0,
-    Exit,
-    Empty,
-    UnknowId,
-    UnknowKey,
-    Override,
-    Freezed,
-    VectorInvalidIndex,
-    ExceptionCodeRestriction,
-    ANSIMouseEvent,
-    IdOverflow,
-    SharedObject,
-    CliInternal,
-    CliHook,
-    CliParser,
-    CliExecution,
-    CliUndefined,
-    CliAlreadyRunning,
-    ArgumentsNumber,
-    OptionIngored,
-    UnknowFlag,
-    NoCompliantUsage,
-    ArgParserHook,
-    OptionsNumber,
-    FlagOptionsNumber,
-    Option,
-    FlagOption,
-    FlagCombinaison,
-    DuplicatedFlag,
-    MiddlewareCall,
-    CODE_SENTINEL // sentinel used for verification
+    Exit = 15095367374592363379ull,
+    Empty = 14321610350218508748ull,
+    InvalidArgument = 3345669790923938179ull,
+    UnknowId = 4263289034106755386ull,
+    UnknowKey = 12334043516309347137ull,
+    Override = 4880793000083787920ull,
+    OutOfBounds = 3389359889948621131ull,
+    Freezed = 2508248173660191566ull,
+    CliInternal = 12564791026278379151ull,
+    CliHook = 13081330417418057012ull,
+    CliParser = 12964789185312968338ull,
+    CliExecution = 4618793667853650974ull,
+    CliUndefined = 6899293127811735148ull,
+    CliAlreadyRunning = 1182638627334015411ull,
+    CliKilled = 13835053808356336641ull,
+    ArgumentsNumber = 7876789757338490523ull,
+    OptionIngored = 11084392326436070358ull,
+    UnknowFlag = 1888382847103148552ull,
+    NoCompliantUsage = 4261266083679998998ull,
+    ArgParserHook = 4700046732834365152ull,
+    OptionsNumber = 17652397889544614484ull,
+    FlagOptionsNumber = 8992712080362871110ull,
+    Option = 5020014651646256745ull,
+    FlagOption = 7286571616319965473ull,
+    FlagCombinaison = 3465342320065814886ull,
+    DuplicatedFlag = 1484916767978747442ull,
+    ExceptionCodeRestriction = 13879425725543769625ull,
+    MiddlewareCall = 13499662014297344931ull,
+    VectorInvalidIndex = 9996010333556084833ull,
+    IdOverflow = 8610564673716166394ull,
+    SharedObject = 4197965883596487577ull,
+    ANSIMouseEvent = 15574262374879664887ull,
 };
 
 /* Corresponding exception message for each code */
-constexpr inline const char *Message[] = {
-    /* Undefined */ "An undefined error has occured",
-    /* Exit */ "Exit",
-    /* Empty */ "Empty",
-    /* UnknowId */ "Try to do thing with an unknow id",
-    /* UnknowKey */ "Try to do thing with an unknow key",
-    /* Override */ "The override is desactivated",
-    /* Freezed */ "Can't edit a freezed things",
-    /* VectorInvalidIndex */ "Invalid index on a vector",
-    /* ExceptionCodeRestriction */ "Error during the setup of an exception",
-    /* ANSIMouseEvent */ "Error during the read of the mouse event",
-    /* IdOverflow */ "Can't distribute an id, uint32_t limits are reach",
-    /* SharedObject */ "An object created with dynamic code that was free is still alive",
-    /* CliInternal */ "Internal error from the cli",
-    /* CliHook */ "Error during a hook call",
-    /* CliParser */ "Error during the parsing",
-    /* CliExecution */ "Error during the command execution",
-    /* CliUndefined */ "An undefined error has append",
-    /* CliAlreadyRunning */ "Can't start a cli that is already running",
-    /* ArgumentsNumber */ "Invalid number of argument(s) given, use '-h' for more information",
-    /* OptionIngored */ "Option ignored, can't determine it's ownership",
-    /* UnknowFlag */ "Unknow flag",
-    /* NoCompliantUsage */ "No compliant usage where found, use '-h' for more information",
-    /* ArgParserHook */ "Error during an execution of hook",
-    /* OptionsNumber */ "Invalid number of option(s) given, use '-h' for more information",
-    /* FlagOptionsNumber */ "Invalid number of option(s) for the flag",
-    /* Option */ "Invalid option, the parsing hook has failed",
-    /* FlagOption */ "Invalid flag option, the parsing hook has failed",
-    /* FlagCombinaison */ "Invalid flag combinaison",
-    /* DuplicatedFlag */ "A flag was redefined, only the first will be used",
-    /* MiddlewareCall */ "Error during a middleware call",
+inline const std::unordered_map<utils::exception::Code, const char*> Message = {
+    {utils::exception::Code::Undefined, "An undefined error has occured"},
+    {utils::exception::Code::Exit, "Exit"},
+    {utils::exception::Code::Empty, "Empty"},
+    {utils::exception::Code::InvalidArgument, "Invalid argument value"},
+    {utils::exception::Code::UnknowId, "Try to do thing with an unknow id"},
+    {utils::exception::Code::UnknowKey, "Try to do thing with an unknow key"},
+    {utils::exception::Code::Override, "The override is desactivated"},
+    {utils::exception::Code::OutOfBounds, "Bounds have been oversteapaded"},
+    {utils::exception::Code::Freezed, "Can't edit a freezed things"},
+    {utils::exception::Code::CliInternal, "Internal error from the cli"},
+    {utils::exception::Code::CliHook, "Error during a hook call"},
+    {utils::exception::Code::CliParser, "Error during the parsing"},
+    {utils::exception::Code::CliExecution, "Error during the command execution"},
+    {utils::exception::Code::CliUndefined, "An undefined error has append"},
+    {utils::exception::Code::CliAlreadyRunning, "Can't start a cli that is already running"},
+    {utils::exception::Code::CliKilled, "Can't start or restart a cli that was killed"},
+    {utils::exception::Code::ArgumentsNumber, "Invalid number of argument(s) given, use '-h' for more information"},
+    {utils::exception::Code::OptionIngored, "Option ignored, can't determine it's ownership"},
+    {utils::exception::Code::UnknowFlag, "Unknow flag"},
+    {utils::exception::Code::NoCompliantUsage, "No compliant usage where found, use '-h' for more information"},
+    {utils::exception::Code::ArgParserHook, "Error during an execution of hook"},
+    {utils::exception::Code::OptionsNumber, "Invalid number of option(s) given, use '-h' for more information"},
+    {utils::exception::Code::FlagOptionsNumber, "Invalid number of option(s) for the flag"},
+    {utils::exception::Code::Option, "Invalid option, the parsing hook has failed"},
+    {utils::exception::Code::FlagOption, "Invalid flag option, the parsing hook has failed"},
+    {utils::exception::Code::FlagCombinaison, "Invalid flag combinaison"},
+    {utils::exception::Code::DuplicatedFlag, "A flag was redefined, only the first will be used"},
+    {utils::exception::Code::ExceptionCodeRestriction, "Error during the setup of an exception"},
+    {utils::exception::Code::MiddlewareCall, "Error during a middleware call"},
+    {utils::exception::Code::VectorInvalidIndex, "Invalid index on a vector"},
+    {utils::exception::Code::IdOverflow, "Can't distribute an id, uint32_t limits are reach"},
+    {utils::exception::Code::SharedObject, "An object created with dynamic code that was free is still alive"},
+    {utils::exception::Code::ANSIMouseEvent, "Error during the read of the mouse event"},
 };
 
 /* Potential default info: nullptr same as "[None]" */
-constexpr inline const char *Info[] = {
-    /* Undefined */ nullptr,
-    /* Exit */ "Exit",
-    /* Empty */ nullptr,
-    /* UnknowId */ nullptr,
-    /* UnknowKey */ nullptr,
-    /* Override */ nullptr,
-    /* Freezed */ nullptr,
-    /* VectorInvalidIndex */ "Can't retrieve the value, the VectorX dosen't have this index",
-    /* ExceptionCodeRestriction */ "Restriction trigerred on a code & type combination",
-    /* ANSIMouseEvent */ nullptr,
-    /* IdOverflow */ nullptr,
-    /* SharedObject */ nullptr,
-    /* CliInternal */ nullptr,
-    /* CliHook */ nullptr,
-    /* CliParser */ nullptr,
-    /* CliExecution */ nullptr,
-    /* CliUndefined */ nullptr,
-    /* CliAlreadyRunning */ nullptr,
-    /* ArgumentsNumber */ nullptr,
-    /* OptionIngored */ nullptr,
-    /* UnknowFlag */ nullptr,
-    /* NoCompliantUsage */ nullptr,
-    /* ArgParserHook */ nullptr,
-    /* OptionsNumber */ nullptr,
-    /* FlagOptionsNumber */ nullptr,
-    /* Option */ nullptr,
-    /* FlagOption */ nullptr,
-    /* FlagCombinaison */ nullptr,
-    /* DuplicatedFlag */ nullptr,
-    /* MiddlewareCall */ nullptr,
+inline const std::unordered_map<utils::exception::Code, const char*> Info = {
+    {utils::exception::Code::Undefined, nullptr},
+    {utils::exception::Code::Exit, "Exit"},
+    {utils::exception::Code::Empty, nullptr},
+    {utils::exception::Code::InvalidArgument, nullptr},
+    {utils::exception::Code::UnknowId, nullptr},
+    {utils::exception::Code::UnknowKey, nullptr},
+    {utils::exception::Code::Override, nullptr},
+    {utils::exception::Code::OutOfBounds, nullptr},
+    {utils::exception::Code::Freezed, nullptr},
+    {utils::exception::Code::CliInternal, nullptr},
+    {utils::exception::Code::CliHook, nullptr},
+    {utils::exception::Code::CliParser, nullptr},
+    {utils::exception::Code::CliExecution, nullptr},
+    {utils::exception::Code::CliUndefined, nullptr},
+    {utils::exception::Code::CliAlreadyRunning, nullptr},
+    {utils::exception::Code::CliKilled, nullptr},
+    {utils::exception::Code::ArgumentsNumber, nullptr},
+    {utils::exception::Code::OptionIngored, nullptr},
+    {utils::exception::Code::UnknowFlag, nullptr},
+    {utils::exception::Code::NoCompliantUsage, nullptr},
+    {utils::exception::Code::ArgParserHook, nullptr},
+    {utils::exception::Code::OptionsNumber, nullptr},
+    {utils::exception::Code::FlagOptionsNumber, nullptr},
+    {utils::exception::Code::Option, nullptr},
+    {utils::exception::Code::FlagOption, nullptr},
+    {utils::exception::Code::FlagCombinaison, nullptr},
+    {utils::exception::Code::DuplicatedFlag, nullptr},
+    {utils::exception::Code::ExceptionCodeRestriction, "Restriction trigerred on a code & type combination"},
+    {utils::exception::Code::MiddlewareCall, nullptr},
+    {utils::exception::Code::VectorInvalidIndex, "Can't retrieve the value, the VectorX dosen't have this index"},
+    {utils::exception::Code::IdOverflow, nullptr},
+    {utils::exception::Code::SharedObject, nullptr},
+    {utils::exception::Code::ANSIMouseEvent, nullptr},
 };
 
 /* Potential restriction on exception code */
@@ -135,43 +144,48 @@ constexpr inline const char *Info[] = {
 // 0b0010 = Fatal			(allow Fatal)
 // 0b0100 = Error			(allow Error)
 // 0b1000 = Warning			(allow Warning)
-constexpr inline const std::uint8_t Restriction[] = {
-    /* Undefined */ 0b0000, // allow: All
-    /* Exit */ 0b0001, // allow: None
-    /* Empty */ 0b0000, // allow: All
-    /* UnknowId */ 0b1110, // allow: Fatal, Error, Warning
-    /* UnknowKey */ 0b1110, // allow: Fatal, Error, Warning
-    /* Override */ 0b1110, // allow: Fatal, Error, Warning
-    /* Freezed */ 0b1110, // allow: Fatal, Error, Warning
-    /* VectorInvalidIndex */ 0b1110, // allow: Fatal, Error, Warning
-    /* ExceptionCodeRestriction */ 0b0110, // allow: Fatal, Error
-    /* ANSIMouseEvent */ 0b0110, // allow: Fatal, Error
-    /* IdOverflow */ 0b0110, // allow: Fatal, Error
-    /* SharedObject */ 0b1110, // allow: Fatal, Error, Warning
-    /* CliInternal */ 0b0110, // allow: Fatal, Error
-    /* CliHook */ 0b1110, // allow: Fatal, Error, Warning
-    /* CliParser */ 0b0000, // allow: All
-    /* CliExecution */ 0b0110, // allow: Fatal, Error
-    /* CliUndefined */ 0b0110, // allow: Fatal, Error
-    /* CliAlreadyRunning */ 0b1110, // allow: Fatal, Error, Warning
-    /* ArgumentsNumber */ 0b0110, // allow: Fatal, Error
-    /* OptionIngored */ 0b1110, // allow: Fatal, Error, Warning
-    /* UnknowFlag */ 0b1110, // allow: Fatal, Error, Warning
-    /* NoCompliantUsage */ 0b0110, // allow: Fatal, Error
-    /* ArgParserHook */ 0b0110, // allow: Fatal, Error
-    /* OptionsNumber */ 0b0110, // allow: Fatal, Error
-    /* FlagOptionsNumber */ 0b0110, // allow: Fatal, Error
-    /* Option */ 0b1110, // allow: Fatal, Error, Warning
-    /* FlagOption */ 0b1110, // allow: Fatal, Error, Warning
-    /* FlagCombinaison */ 0b1110, // allow: Fatal, Error, Warning
-    /* DuplicatedFlag */ 0b1110, // allow: Fatal, Error, Warning
-    /* MiddlewareCall */ 0b1110, // allow: Fatal, Error, Warning
+inline const std::unordered_map<utils::exception::Code, const std::uint8_t> Restriction = {
+    {utils::exception::Code::Undefined, 0b0000}, // allow: All
+    {utils::exception::Code::Exit, 0b0001}, // allow: None
+    {utils::exception::Code::Empty, 0b0000}, // allow: All
+    {utils::exception::Code::InvalidArgument, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::Code::UnknowId, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::Code::UnknowKey, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::Code::Override, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::Code::OutOfBounds, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::Code::Freezed, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::Code::CliInternal, 0b0110}, // allow: Fatal, Error
+    {utils::exception::Code::CliHook, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::Code::CliParser, 0b0000}, // allow: All
+    {utils::exception::Code::CliExecution, 0b0110}, // allow: Fatal, Error
+    {utils::exception::Code::CliUndefined, 0b0110}, // allow: Fatal, Error
+    {utils::exception::Code::CliAlreadyRunning, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::Code::CliKilled, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::Code::ArgumentsNumber, 0b0110}, // allow: Fatal, Error
+    {utils::exception::Code::OptionIngored, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::Code::UnknowFlag, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::Code::NoCompliantUsage, 0b0110}, // allow: Fatal, Error
+    {utils::exception::Code::ArgParserHook, 0b0110}, // allow: Fatal, Error
+    {utils::exception::Code::OptionsNumber, 0b0110}, // allow: Fatal, Error
+    {utils::exception::Code::FlagOptionsNumber, 0b0110}, // allow: Fatal, Error
+    {utils::exception::Code::Option, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::Code::FlagOption, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::Code::FlagCombinaison, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::Code::DuplicatedFlag, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::Code::ExceptionCodeRestriction, 0b0110}, // allow: Fatal, Error
+    {utils::exception::Code::MiddlewareCall, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::Code::VectorInvalidIndex, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::Code::IdOverflow, 0b0110}, // allow: Fatal, Error
+    {utils::exception::Code::SharedObject, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::Code::ANSIMouseEvent, 0b0110}, // allow: Fatal, Error
 };
 
 // Check at the compile time the correspondece between the message & code
+/*
 static_assert(std::size(Message) == static_cast<std::size_t>(utils::exception::Code::CODE_SENTINEL), "The message array doesn't correspond to the available exception codes");
 static_assert(std::size(Info) == static_cast<std::size_t>(utils::exception::Code::CODE_SENTINEL), "The info array doesn't correspond to the available exception codes");
 static_assert(std::size(Restriction) == static_cast<std::size_t>(utils::exception::Code::CODE_SENTINEL), "The restriction array doesn't correspond to the available exception codes");
+*/
 
 } // namespace end
 #endif /* GENERATED_EXCEPTION_HEADER_H */

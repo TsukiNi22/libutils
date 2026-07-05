@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 23/06/2026 by @author Tsukini
+##  @date 05/07/2026 by @author Tsukini
 
 File Name:
 ##  @file ArgParser.hpp
@@ -25,7 +25,6 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #define NO_OUTDATED_WARNING
     #include "../attribute/Attribute.hpp"               // nodicard, unused
     #include "../warning/Observer.hpp"                  // utils::warning::Observer
     #include "../exception/custom/CustomException.hpp"  // utils::exception::CustomException

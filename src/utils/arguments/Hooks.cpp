@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 22/06/2026 by @author Tsukini
+##  @date 05/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Hooks.cpp
@@ -17,7 +17,6 @@ File Description:
 ##  Default hook used for the cli
 \**************************************************************/
 
-#define NO_OUTDATED_WARNING
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/custom/CustomException.hpp"
 #include "utils/arguments/ArgParser.hpp"

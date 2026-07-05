@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 19/05/2026 by @author Tsukini
+##  @date 05/07/2026 by @author Tsukini
 
 File Name:
 ##  @file UnsafeObserver.cpp
@@ -9,7 +9,6 @@ File Description:
 ##  Warning observer methods
 \**************************************************************/
 
-#define NO_OUTDATED_WARNING
 #include "utils/attribute/Attribute.hpp"
 #include "utils/warning/UnsafeObserver.hpp"
 

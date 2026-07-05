@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 19/05/2026 by @author Tsukini
+##  @date 05/07/2026 by @author Tsukini
 
 File Name:
 ##  @file OVector2.hpp
@@ -45,7 +45,8 @@ namespace utils::vector { // namespace start
 /* CLASS */
 
 template<typename T>
-class outdated("OVector2 dosen't have any concepts safty (Be careful!!!)") OVector2 {
+//class outdated("OVector2 dosen't have any concepts safty (Be careful!!!)") OVector2 {
+class OVector2 {
     public:
         T x;
         T y;

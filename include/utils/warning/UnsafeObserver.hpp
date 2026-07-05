@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 19/05/2026 by @author Tsukini
+##  @date 05/07/2026 by @author Tsukini
 
 File Name:
 ##  @file UnsafeObserver.hpp
@@ -25,7 +25,8 @@ namespace utils::warning { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-class outdated("UnsafeObserver dosen't have any memory safty (Be careful!!!)") UnsafeObserver {
+//class outdated("UnsafeObserver dosen't have any memory safty (Be careful!!!)") UnsafeObserver {
+class UnsafeObserver {
     private:
         std::uint32_t _id = 0;
 

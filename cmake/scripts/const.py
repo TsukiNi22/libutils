@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  04/06/2026 by Tsukini
+##  05/07/2026 by Tsukini
 
 File Name:
 ##  const.py
@@ -42,14 +42,13 @@ class Return():
     """
     OK: int = 0 # Return value upon success on a call function
     KO: int = 1 # Return value upon fail on a call function
-    ERR: int = 84 # Epitech return upon fail
 
 @dataclass(frozen=True)
 class Error():
     """
         Error values
     """
-    FATAL: bin  = 0b1000    # Global error, the program whole execution won't be able to run after this        (100% execution stop)
+    FATAL: bin  = 0b1000    # Global error, the program whole execution won't be able to run after this         (100% execution stop)
     LOCAL: bin  = 0b100     # Local error, the program local execution won't probably be able to run after this (some chance of execution stop)
     ACTION: bin = 0b10      # Same~~ as Return.KO, a program action execution won't be able to run after this   (low chance of execution stop)
 
@@ -65,6 +64,9 @@ class Values:
         "Error":   0b0100,
         "Warning": 0b1000,
     }
+
+    # Limits
+    SIZE_MAX: int = 2**64 - 1  # size_t max on 64 bits machine
 
 @dataclass(frozen=True)
 class Files:
