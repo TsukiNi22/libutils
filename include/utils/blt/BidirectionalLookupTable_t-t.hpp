@@ -28,7 +28,6 @@ File Description:
     #include "../warning/Observer.hpp"                  // utils::warning::Observer
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "../exception/basic/WarningException.hpp"  // utils::exception::WarningException
-    #include "../exception/custom/CustomException.hpp"  // utils::exception::CustomException
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::* (Type)
     #include <unordered_map>                            // std::unordered_map
     #include <iostream>                                 // std::cout, std::endl
@@ -94,7 +93,7 @@ class BidirectionalLookupTable: private utils::warning::Observer {
             if (this->_freezed) throw utils::exception::ErrorException(utils::exception::Code::Freezed);
             if constexpr (!force) {
                 if (this->_left.contains(left) || this->_right.contains(right))
-                    throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::Override, "The override is disabled for the BidirectionalLookupTable");
+                    throw utils::exception::ErrorException(utils::exception::Code::Override, "The override is disabled for the BidirectionalLookupTable");
             }
             this->_left[left] = right;
             this->_right[right] = left;
@@ -105,7 +104,7 @@ class BidirectionalLookupTable: private utils::warning::Observer {
             if (this->_freezed) throw utils::exception::ErrorException(utils::exception::Code::Freezed);
             if constexpr (!force) {
                 if (this->_right.contains(right) || this->_left.contains(left))
-                    throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::Override, "The override is disabled for the BidirectionalLookupTable");
+                    throw utils::exception::ErrorException(utils::exception::Code::Override, "The override is disabled for the BidirectionalLookupTable");
             }
             this->_right[right] = left;
             this->_left[left] = right;

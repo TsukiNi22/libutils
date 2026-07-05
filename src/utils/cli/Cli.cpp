@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 05/07/2026 by @author Tsukini
+##  @date 06/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Cli.cpp
@@ -21,7 +21,7 @@ File Description:
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/basic/WarningException.hpp"
 #include "utils/exception/basic/NoneException.hpp"
-#include "utils/exception/custom/CustomException.hpp"
+#include "utils/exception/basic/ErrorException.hpp" 
 #include "utils/algorithms/c2dmp-hsm/c2dmp-hsm.hpp"
 #include "utils/write/ANSI.hpp"
 #include "utils/cli/Cli.hpp"
@@ -58,7 +58,7 @@ static void deleteChars(std::size_t n)
 void utils::cli::Cli::launch(std::size_t call)
 {
     try {this->cliMiddlewares.callBefore();}
-    catch (const utils::exception::CustomException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
+    catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
     std::string input;
 
     // Main loop
@@ -68,16 +68,16 @@ void utils::cli::Cli::launch(std::size_t call)
             if (this->_flags & utils::cli::Flag::PROMPT) {
                 try {
                     this->prompt();
-                } catch (const utils::exception::CustomException& e) {
+                } catch (const utils::exception::ErrorException& e) {
                     utils::exception::Code code = e.getCode();
                     if (code == utils::exception::Code::CliHook) this->_code = 2;
                     else unlikely {this->_code = 255;}
                     try {this->errorMiddlewares.callBefore(this->_code);}
-                    catch (const utils::exception::CustomException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
+                    catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
                     if (this->_code <= 3 || this->_code == 255) std::cout << e.what() << ": " << e.info() << std::endl;
                     else std::cout << e.info() << std::endl;
                     try {this->errorMiddlewares.callAfter(this->_code);}
-                    catch (const utils::exception::CustomException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
+                    catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
                     continue;
                 }
             }
@@ -91,34 +91,34 @@ void utils::cli::Cli::launch(std::size_t call)
                 }
                 if (this->_history.size() == 0 || this->_history.back() != input)
                     this->_history.push_back(input);
-            } catch (const utils::exception::CustomException& e) {
+            } catch (const utils::exception::ErrorException& e) {
                 utils::exception::Code code = e.getCode();
                 if (code == utils::exception::Code::CliInternal) this->_code = 1;
                 else if (code == utils::exception::Code::CliHook) this->_code = 2;
                 else if (code == utils::exception::Code::MiddlewareCall) this->_code = 3;
                 else unlikely {this->_code = 255;}
                 try {this->errorMiddlewares.callBefore(this->_code);}
-                catch (const utils::exception::CustomException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
+                catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
                 if (this->_code <= 3 || this->_code == 255) std::cout << e.what() << ": " << e.info() << std::endl;
                 else std::cout << e.info() << std::endl;
                 try {this->errorMiddlewares.callAfter(this->_code);}
-                catch (const utils::exception::CustomException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
+                catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
                 continue;
             }
             if (!(this->_flags & utils::cli::Flag::EMPTY_INPUT) && input.empty()) {
                 this->_code = 127;
                 try {this->errorMiddlewares.callBefore(this->_code);}
-                catch (const utils::exception::CustomException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
+                catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
                 std::cout << "Empty input" << std::endl;
                 try {this->errorMiddlewares.callAfter(this->_code);}
-                catch (const utils::exception::CustomException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
+                catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
                 continue;
             }
 
             // Parse & Execute input
             try {
                 this->exec(this->parse(input));
-            } catch (const utils::exception::CustomException& e) {
+            } catch (const utils::exception::ErrorException& e) {
                 utils::exception::Code code = e.getCode();
                 if (code == utils::exception::Code::CliHook) this->_code = 2;
                 else if (code == utils::exception::Code::MiddlewareCall) this->_code = 3;
@@ -140,11 +140,11 @@ void utils::cli::Cli::launch(std::size_t call)
                     }
                 } else unlikely {this->_code = 255;}
                 try {this->errorMiddlewares.callBefore(this->_code);}
-                catch (const utils::exception::CustomException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
+                catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
                 if (this->_code <= 3 || this->_code == 255) std::cout << e.what() << ": " << e.info() << std::endl;
                 else std::cout << e.info() << std::endl;
                 try {this->errorMiddlewares.callAfter(this->_code);}
-                catch (const utils::exception::CustomException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
+                catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
                 continue;
             }
         }
@@ -156,7 +156,7 @@ void utils::cli::Cli::launch(std::size_t call)
     }
 
     try {this->cliMiddlewares.callAfter();}
-    catch (const utils::exception::CustomException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
+    catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
     this->_running = false;
 }
 
@@ -225,10 +225,10 @@ hot void utils::cli::Cli::prompt()
                 std::lock_guard lock(this->_hooksLock);
                 this->_promptHook(*this, this->_code);
             } catch (const std::exception& e) {
-                throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::CliHook, e.what());
+                throw utils::exception::ErrorException(utils::exception::Code::CliHook, e.what());
             }
         } else unlikely {
-            throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::CliHook, "Missing hook for prompting");
+            throw utils::exception::ErrorException(utils::exception::Code::CliHook, "Missing hook for prompting");
         }
     }
 
@@ -295,10 +295,10 @@ hot nodiscard std::string utils::cli::Cli::getInput()
                 this->inputMiddlewares.callAfter(c);
             } catch (const std::exception& e) {
                 //throw utils::exception::NoneException(utils::exception::Code::Exit);
-                throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::CliHook, e.what());
+                throw utils::exception::ErrorException(utils::exception::Code::CliHook, e.what());
             }
         } else unlikely {
-            throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::CliHook, "Missing hook for char getter");
+            throw utils::exception::ErrorException(utils::exception::Code::CliHook, "Missing hook for char getter");
         }
         if (this->_interrupted) break; // Check for interrupt
 
@@ -434,10 +434,10 @@ hot utils::cli::ParsedData utils::cli::Cli::parse(const std::string& input)
                 this->_flags & utils::cli::Flag::PARSED
             );
         } catch (const std::exception& e) {
-            throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::CliHook, e.what());
+            throw utils::exception::ErrorException(utils::exception::Code::CliHook, e.what());
         }
     } else unlikely {
-        throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::CliHook, "Missing hook for parsing");
+        throw utils::exception::ErrorException(utils::exception::Code::CliHook, "Missing hook for parsing");
     }
 
     this->parserMiddlewares.callAfter(parsedInput);
@@ -472,12 +472,12 @@ hot void utils::cli::Cli::exec(const utils::cli::ParsedData& parsedInput)
                 if (std::get<0>(itParsed->second)) { // Check the command existense
                     // Check commands arguments number
                     if (std::get<1>(itParsed->second) != -1 || static_cast<std::int16_t>(command.size()) < std::get<1>(itParsed->second) + 1 + 2)
-                        throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::CliParser, "Not enough arguments");
+                        throw utils::exception::ErrorException(utils::exception::Code::CliParser, "Not enough arguments");
                     else if (std::get<2>(itParsed->second) != -1 || static_cast<std::int16_t>(command.size()) > std::get<2>(itParsed->second) + 1 + 2)
-                        throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::CliParser, "Too many arguments");
+                        throw utils::exception::ErrorException(utils::exception::Code::CliParser, "Too many arguments");
                     std::get<0>(itParsed->second)(*this, std::vector<std::string>(command.begin() + 1, command.end() - 1));
                 } else
-                    throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::CliExecution, "Command not implemented");
+                    throw utils::exception::ErrorException(utils::exception::Code::CliExecution, "Command not implemented");
                 this->commandMiddlewares.callAfter(command.front());
             }
 
@@ -487,7 +487,7 @@ hot void utils::cli::Cli::exec(const utils::cli::ParsedData& parsedInput)
                 if (itRaw->second) // Check the command existense
                     (itRaw->second)(*this, command[1]);
                 else
-                    throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::CliExecution, "Command not implemented");
+                    throw utils::exception::ErrorException(utils::exception::Code::CliExecution, "Command not implemented");
                 this->commandMiddlewares.callAfter(command.front());
             }
 
@@ -506,10 +506,10 @@ hot void utils::cli::Cli::exec(const utils::cli::ParsedData& parsedInput)
                     status = 4;
                     lastExceptionInfo = "Unknow command";
                 } else {
-                    throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::CliExecution, "Unknow command");
+                    throw utils::exception::ErrorException(utils::exception::Code::CliExecution, "Unknow command");
                 }
             }
-        } catch (const utils::exception::CustomException& e) {
+        } catch (const utils::exception::ErrorException& e) {
             lastExceptionInfo = e.info();
             if (!(this->_flags & utils::cli::Flag::CATCH)) throw;
             if (e.getCode() == utils::exception::Code::CliParser) status = 1;
@@ -520,7 +520,7 @@ hot void utils::cli::Cli::exec(const utils::cli::ParsedData& parsedInput)
         } catch (const std::exception& e) {
             lastExceptionInfo = e.what();
             if (!(this->_flags & utils::cli::Flag::CATCH))
-                throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::CliExecution, std::string("Callback exception: ") + lastExceptionInfo);
+                throw utils::exception::ErrorException(utils::exception::Code::CliExecution, std::string("Callback exception: ") + lastExceptionInfo);
             status = 3;
         }
 
@@ -533,7 +533,7 @@ hot void utils::cli::Cli::exec(const utils::cli::ParsedData& parsedInput)
                 case 3: std::cout << "Callback exception: " << lastExceptionInfo << std::endl; break; // Other
                 case 4: break; // For error with no display
                 default: // Unknow
-                    throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::CliExecution, "Callback exception: can't determine the error");
+                    throw utils::exception::ErrorException(utils::exception::Code::CliExecution, "Callback exception: can't determine the error");
             }
 
             // Update internal code

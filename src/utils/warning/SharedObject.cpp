@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 05/07/2026 by @author Tsukini
+##  @date 06/07/2026 by @author Tsukini
 
 File Name:
 ##  @file SharedObject.cpp
@@ -12,8 +12,8 @@ File Description:
 #include "utils/attribute/Attribute.hpp"
 #include "utils/warning/SharedObject.hpp"
 #include "utils/exception/ExceptionDefine.hpp"
+#include "utils/exception/basic/WarningException.hpp"
 #include "utils/exception/basic/ErrorException.hpp"
-#include "utils/exception/custom/CustomException.hpp"
 #include <dlfcn.h>
 #include <iostream>
 #include <cstdint>
@@ -78,7 +78,7 @@ void utils::warning::SharedObject::link(const std::string& InstanceName, std::ui
 
     // Check the attribution
     if (id == 0)
-        throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::UnknowId, "Can't attribute the id: 0");
+        throw utils::exception::ErrorException(utils::exception::Code::UnknowId, "Can't attribute the id: 0");
 }
 
 void utils::warning::SharedObject::unlink(std::uint32_t id, bool safe)
@@ -90,11 +90,11 @@ void utils::warning::SharedObject::unlink(std::uint32_t id, bool safe)
 
     // Basic check for the id validity
     if (id == 0)
-        throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::UnknowId, "Can't unlink an invalide id: 0");
+        throw utils::exception::ErrorException(utils::exception::Code::UnknowId, "Can't unlink an invalide id: 0");
 
     // Check the id existance
     if (!this->_links.contains(id)) unlikely {
-        utils::exception::CustomException e(utils::exception::Type::Warning, utils::exception::Code::UnknowId, std::to_string(id));
+        utils::exception::WarningException e(utils::exception::Code::UnknowId, std::to_string(id));
         std::cerr << e.formated() << std::endl;
         return;
     }
@@ -123,7 +123,7 @@ utils::warning::SharedObject::~SharedObject() noexcept
         message += std::format("\n{} - {}", id, InstanceName);
 
     // Display warning
-    //utils::exception::CustomException warning(utils::exception::Type::Warning, utils::exception::Code::SharedObject, message);
+    //utils::exception::ErrorException warning(utils::exception::Type::Warning, utils::exception::Code::SharedObject, message);
     //std::cerr << warning.formated() << std::endl;
     std::cerr << message << std::endl;
 }

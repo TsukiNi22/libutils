@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 05/07/2026 by @author Tsukini
+##  @date 06/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Hooks.cpp
@@ -18,7 +18,7 @@ File Description:
 \**************************************************************/
 
 #include "utils/exception/ExceptionDefine.hpp"
-#include "utils/exception/custom/CustomException.hpp"
+#include "utils/exception/basic/WarningException.hpp"
 #include "utils/arguments/ArgParser.hpp"
 #include "utils/arguments/ArgParserType.hpp"
 #include "utils/write/format.hpp"
@@ -92,7 +92,7 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
 
             // Error
             else {
-                throw utils::exception::CustomException(utils::exception::Type::Warning, utils::exception::Code::UnknowId, id);
+                throw utils::exception::WarningException(utils::exception::Code::UnknowId, id);
             }
         }
         std::cout << std::endl;

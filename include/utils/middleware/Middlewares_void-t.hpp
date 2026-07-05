@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 18/05/2026 by @author Tsukini
+##  @date 06/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Middlewares.hpp
@@ -26,7 +26,7 @@ File Description:
     /* type */
     #include "../warning/Observer.hpp"                  // utils::warning::Observer
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::Type, utils::exception::Code
-    #include "../exception/custom/CustomException.hpp"  // utils::exception::CustomException
+    #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "MiddlewaresType.hpp"                      // utils::middleware::Middleware<...>
     #include <shared_mutex>                             // std::shared_mutex, std::unique_lock, std::shared_lock
     #include <functional>                               // std::function
@@ -58,7 +58,7 @@ class Middlewares<void, U>: private utils::warning::Observer {
             std::shared_lock lock(this->_lock);
             for (const utils::middleware::Middleware<void>& middleware: this->before) {
                 try {middleware();}
-                catch (const std::exception& e) {throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::MiddlewareCall, e.what());}
+                catch (const std::exception& e) {throw utils::exception::ErrorException(utils::exception::Code::MiddlewareCall, e.what());}
             }
         }
         void callAfter(U arg) const
@@ -66,7 +66,7 @@ class Middlewares<void, U>: private utils::warning::Observer {
             std::shared_lock lock(this->_lock);
             for (const utils::middleware::Middleware<U>& middleware: this->after) {
                 try {middleware(arg);}
-                catch (const std::exception& e) {throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::MiddlewareCall, e.what());}
+                catch (const std::exception& e) {throw utils::exception::ErrorException(utils::exception::Code::MiddlewareCall, e.what());}
             }
         }
 

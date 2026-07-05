@@ -27,7 +27,7 @@ File Description:
     #include "../attribute/Attribute.hpp"               // nodicard, unused
     #include "../warning/Observer.hpp"                  // utils::warning::Observer
     #include "../exception/basic/WarningException.hpp"  // utils::exception::WarningException
-    #include "../exception/custom/CustomException.hpp"  // utils::exception::CustomException
+    #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::* (Type)
     #include <unordered_map>                            // std::unordered_map
     #include <iostream>                                 // std::cout, std::endl
@@ -80,7 +80,7 @@ class BidirectionalLookupTable<T, T, Hash, Hash, Equal, Equal>: private utils::w
             if (this->_freezed) throw utils::exception::ErrorException(utils::exception::Code::Freezed);
             if constexpr (!force) {
                 if (this->_table.contains(left) || this->_table.contains(right))
-                    throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::Override, "The override is disabled for the BidirectionalLookupTable");
+                    throw utils::exception::ErrorException(utils::exception::Code::Override, "The override is disabled for the BidirectionalLookupTable");
             }
             this->_table[left] = right;
             this->_table[right] = left;

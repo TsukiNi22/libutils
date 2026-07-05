@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 05/07/2026 by @author Tsukini
+##  @date 06/07/2026 by @author Tsukini
 
 File Name:
 ##  @file ArgParser.cpp
@@ -23,7 +23,6 @@ File Description:
 #include "utils/exception/basic/NoneException.hpp"
 #include "utils/exception/basic/ErrorException.hpp"
 #include "utils/exception/basic/WarningException.hpp"
-#include "utils/exception/custom/CustomException.hpp"
 #include "utils/arguments/ArgParser.hpp"
 #include "utils/arguments/ArgParserType.hpp"
 #include <algorithm>
@@ -42,7 +41,7 @@ utils::arguments::ArgParser::ArgParser(const std::string& binary, const std::str
 void utils::arguments::ArgParser::removeUsage(const std::string& id)
 {
     if (!this->_usages.contains(id)) {
-        utils::exception::CustomException e(utils::exception::Type::Warning, utils::exception::Code::UnknowId, id);
+        utils::exception::WarningException e(utils::exception::Code::UnknowId, id);
         std::cout << e.formated() << std::endl;
         return;
     }
@@ -58,7 +57,7 @@ void utils::arguments::ArgParser::removeUsages(const std::vector<std::string>& i
 void utils::arguments::ArgParser::removeOption(const std::string& id)
 {
     if (!this->_options.contains(id)) {
-        utils::exception::CustomException e(utils::exception::Type::Warning, utils::exception::Code::UnknowId, id);
+        utils::exception::WarningException e(utils::exception::Code::UnknowId, id);
         std::cout << e.formated() << std::endl;
         return;
     }
@@ -74,7 +73,7 @@ void utils::arguments::ArgParser::removeOptions(const std::vector<std::string>& 
 void utils::arguments::ArgParser::removeFlag(const std::string& id)
 {
     if (!this->_flags.contains(id)) {
-        utils::exception::CustomException e(utils::exception::Type::Warning, utils::exception::Code::UnknowId, id);
+        utils::exception::WarningException e(utils::exception::Code::UnknowId, id);
         std::cout << e.formated() << std::endl;
         return;
     }
@@ -92,7 +91,7 @@ void utils::arguments::ArgParser::help(void) const
     try {
         this->_helpHook(*this);
     } catch (const std::exception& e) {
-        throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::ArgParserHook, e.what());
+        throw utils::exception::ErrorException(utils::exception::Code::ArgParserHook, e.what());
     }
 }
 
@@ -143,8 +142,8 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
         if (alreadyFailed) return false;
         alreadyFailed = true;
         std::string s = ((!isLong && arg == sarg) ? ("-" + arg + ": " + sarg + " (unknow short)") : ((isLong ? "--" : "-") + arg));
-        if (failsafe) {std::cout << utils::exception::CustomException(utils::exception::Type::Warning, utils::exception::Code::UnknowFlag, s).formated() << std::endl; return false;}
-        else throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::UnknowFlag, s);
+        if (failsafe) {std::cout << utils::exception::WarningException(utils::exception::Code::UnknowFlag, s).formated() << std::endl; return false;}
+        else throw utils::exception::ErrorException(utils::exception::Code::UnknowFlag, s);
     }
 
     // Select the id who is the next one in the usage
@@ -175,7 +174,7 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
     bool redefined = false;
     for (const auto &[fid, type, _]: usageFull.arguments) {
         if (!type && fid == id) {
-            if (!alreadyFailed) std::cout << utils::exception::CustomException(utils::exception::Type::Warning, utils::exception::Code::DuplicatedFlag, (isLong ? std::get<2>(flag.flag) : (isShort ? std::get<0>(flag.flag) : std::get<1>(flag.flag)))).formated() << std::endl;
+            if (!alreadyFailed) std::cout << utils::exception::WarningException(utils::exception::Code::DuplicatedFlag, (isLong ? std::get<2>(flag.flag) : (isShort ? std::get<0>(flag.flag) : std::get<1>(flag.flag)))).formated() << std::endl;
             alreadyFailed = true;
             redefined = true;
             break;
@@ -187,8 +186,8 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
         if (alreadyFailed) return false;
         alreadyFailed = true;
         std::string s = "Can't combine short flag that have option(s), '" + std::get<0>(flag.flag) + "' in '-" + arg + "'";
-        if (failsafe) {std::cout << utils::exception::CustomException(utils::exception::Type::Warning, utils::exception::Code::FlagCombinaison, s).formated() << std::endl; return false;}
-        else throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::FlagCombinaison, s);
+        if (failsafe) {std::cout << utils::exception::WarningException(utils::exception::Code::FlagCombinaison, s).formated() << std::endl; return false;}
+        else throw utils::exception::ErrorException(utils::exception::Code::FlagCombinaison, s);
     }
 
     // Check for the option(s)
@@ -201,8 +200,8 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
             if (alreadyFailed) return false;
             alreadyFailed = true;
             std::string s = (isLong ? "--" : "-") + arg;
-            if (failsafe) {std::cout << utils::exception::CustomException(utils::exception::Type::Warning, utils::exception::Code::FlagOptionsNumber, s).formated() << std::endl; return false;}
-            else throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::FlagOptionsNumber, s);
+            if (failsafe) {std::cout << utils::exception::WarningException(utils::exception::Code::FlagOptionsNumber, s).formated() << std::endl; return false;}
+            else throw utils::exception::ErrorException(utils::exception::Code::FlagOptionsNumber, s);
         } else if (j + 1 >= flag.options.size() && flag.unlimited && argv[i + 1].front() == '-') { // Special case (unlimited can also accept no argument)
             breaked = true;
             break;
@@ -211,8 +210,8 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
             if (alreadyFailed) return false;
             alreadyFailed = true;
             std::string s = (isLong ? "--" : "-") + arg + ": " + *res;
-            if (failsafe) {std::cout << utils::exception::CustomException(utils::exception::Type::Warning, utils::exception::Code::FlagOption, s).formated() << std::endl; return false;}
-            else throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::FlagOption, s);
+            if (failsafe) {std::cout << utils::exception::WarningException(utils::exception::Code::FlagOption, s).formated() << std::endl; return false;}
+            else throw utils::exception::ErrorException(utils::exception::Code::FlagOption, s);
         } else {
             options.push_back(argv[++i]);
         }
@@ -260,8 +259,8 @@ bool utils::arguments::ArgParser::parseOption(utils::arguments::ParsedUsageFull&
         if (alreadyFailed) return false;
         alreadyFailed = true;
         std::string s = option;
-        if (failsafe) {std::cout << utils::exception::CustomException(utils::exception::Type::Warning, utils::exception::Code::OptionIngored, s).formated() << std::endl; return false;}
-        else throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::OptionIngored, s);
+        if (failsafe) {std::cout << utils::exception::WarningException(utils::exception::Code::OptionIngored, s).formated() << std::endl; return false;}
+        else throw utils::exception::ErrorException(utils::exception::Code::OptionIngored, s);
     }
 
     // Check if the actual usage allow the id (first valid correspondence win)
@@ -300,7 +299,7 @@ nodiscard utils::arguments::ParsedUsages utils::arguments::ArgParser::parse(cons
 
     // Minimalist check
     if (argv.size() == 0)
-        throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::ArgumentsNumber, "The arguments should start with the binary name, with a size of 1 at least, got: 0");
+        throw utils::exception::ErrorException(utils::exception::Code::ArgumentsNumber, "The arguments should start with the binary name, with a size of 1 at least, got: 0");
 
     // Check for hardcoded flag: -h, -help, --help
     if (std::any_of(argv.begin(), argv.end(), [&](const std::string& arg) {return (arg == "-h" || arg == "-help" || arg == "--help");})) {
