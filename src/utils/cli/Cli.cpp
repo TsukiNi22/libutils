@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 22/06/2026 by @author Tsukini
+##  @date 05/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Cli.cpp
@@ -472,9 +472,9 @@ hot void utils::cli::Cli::exec(const utils::cli::ParsedData& parsedInput)
                 this->commandMiddlewares.callBefore(command.front());
                 if (std::get<0>(itParsed->second)) { // Check the command existense
                     // Check commands arguments number
-                    if (std::get<1>(itParsed->second) == -1 || static_cast<std::int16_t>(command.size()) < std::get<1>(itParsed->second) + 1 + 2)
+                    if (std::get<1>(itParsed->second) != -1 || static_cast<std::int16_t>(command.size()) < std::get<1>(itParsed->second) + 1 + 2)
                         throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::CliParser, "Not enough arguments");
-                    else if (std::get<2>(itParsed->second) == -1 || static_cast<std::int16_t>(command.size()) > std::get<2>(itParsed->second) + 1 + 2)
+                    else if (std::get<2>(itParsed->second) != -1 || static_cast<std::int16_t>(command.size()) > std::get<2>(itParsed->second) + 1 + 2)
                         throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::CliParser, "Too many arguments");
                     std::get<0>(itParsed->second)(*this, std::vector<std::string>(command.begin() + 1, command.end() - 1));
                 } else
