@@ -38,6 +38,7 @@ enum class Code: std::size_t {
     Override = 4880793000083787920ull,
     OutOfBounds = 3389359889948621131ull,
     Freezed = 2508248173660191566ull,
+    CliTTY = 7532242402519323293ull,
     CliInternal = 12564791026278379151ull,
     CliHook = 13081330417418057012ull,
     CliParser = 12964789185312968338ull,
@@ -75,6 +76,7 @@ inline const std::unordered_map<utils::exception::Code, const char*> Message = {
     {utils::exception::Code::Override, "The override is desactivated"},
     {utils::exception::Code::OutOfBounds, "Bounds have been oversteapaded"},
     {utils::exception::Code::Freezed, "Can't edit a freezed things"},
+    {utils::exception::Code::CliTTY, "Can't start cli, not in a tty (enable the flag TTY to force usage)"},
     {utils::exception::Code::CliInternal, "Internal error from the cli"},
     {utils::exception::Code::CliHook, "Error during a hook call"},
     {utils::exception::Code::CliParser, "Error during the parsing"},
@@ -112,6 +114,7 @@ inline const std::unordered_map<utils::exception::Code, const char*> Info = {
     {utils::exception::Code::Override, nullptr},
     {utils::exception::Code::OutOfBounds, nullptr},
     {utils::exception::Code::Freezed, nullptr},
+    {utils::exception::Code::CliTTY, nullptr},
     {utils::exception::Code::CliInternal, nullptr},
     {utils::exception::Code::CliHook, nullptr},
     {utils::exception::Code::CliParser, nullptr},
@@ -154,6 +157,7 @@ inline const std::unordered_map<utils::exception::Code, const std::uint8_t> Rest
     {utils::exception::Code::Override, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::Code::OutOfBounds, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::Code::Freezed, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::Code::CliTTY, 0b0110}, // allow: Fatal, Error
     {utils::exception::Code::CliInternal, 0b0110}, // allow: Fatal, Error
     {utils::exception::Code::CliHook, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::Code::CliParser, 0b0000}, // allow: All

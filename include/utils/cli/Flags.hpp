@@ -47,6 +47,7 @@ enum Flag {
     MANUAL          = 1 << 13, // Enable manual call for each new input handling
     THREAD          = 1 << 14, // Run in a thread
     DETACHED        = 1 << 15, // Detach the thread execution (by default return the thread at start)
+    NO_TTY          = 1 << 16, // Allow usage even without tty
 };
 
 /*
@@ -77,6 +78,7 @@ constexpr std::uint32_t DUMB    = 0;
 constexpr std::uint32_t TERM1   = CATCH | EMPTY_INPUT | TRIM | PARSED | PROMPT | EMPTY_INPUT | LOGIC | ARROW | HISTORY;
 constexpr std::uint32_t TERM2   = TERM1 | HINT | AUTO_COMPLETION;
 constexpr std::uint32_t TERM3   = TERM2 | THREAD;
+constexpr std::uint32_t LOG     = TERM3 | DETACHED | NO_TTY;
 constexpr std::uint32_t DEV     = TERM2 | DEBUG;
 constexpr std::uint32_t MULTI_THREADING = THREAD | DETACHED;
 /*
