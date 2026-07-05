@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 05/07/2026 by @author Tsukini
+##  @date 06/07/2026 by @author Tsukini
 
 File Name:
 ##  @file BidirectionalLookupTable.hpp
@@ -95,9 +95,6 @@ class BidirectionalLookupTable: private utils::warning::Observer {
             if constexpr (!force) {
                 if (this->_left.contains(left) || this->_right.contains(right))
                     throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::Override, "The override is disabled for the BidirectionalLookupTable");
-            } else {
-                this->_left.erase(left);
-                this->_right.erase(right);
             }
             this->_left[left] = right;
             this->_right[right] = left;
@@ -109,9 +106,6 @@ class BidirectionalLookupTable: private utils::warning::Observer {
             if constexpr (!force) {
                 if (this->_right.contains(right) || this->_left.contains(left))
                     throw utils::exception::CustomException(utils::exception::Type::Error, utils::exception::Code::Override, "The override is disabled for the BidirectionalLookupTable");
-            } else {
-                this->_right.erase(right);
-                this->_left.erase(left);
             }
             this->_right[right] = left;
             this->_left[left] = right;
