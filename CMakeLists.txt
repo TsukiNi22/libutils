@@ -69,11 +69,23 @@ add_library(${TARGET} STATIC ${SRC})
 # =========================
 # Special Targets
 # =========================
-add_custom_target(generated_exception_header ALL
+file(GLOB_RECURSE EXCEPTION_CONFIG_FILES
+    CONFIGURE_DEPENDS
+    "${CMAKE_SOURCE_DIR}/cmake/config/exceptions/*.json"
+)
+set(GENERATED_EXCEPTION_HEADER
+    "${CMAKE_SOURCE_DIR}/include/utils/exception/generated_exception_header.hpp"
+)
+add_custom_command(
+    OUTPUT ${GENERATED_EXCEPTION_HEADER}
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/cmake/scripts/generate_exception_header.py
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    COMMENT "Generating exception header"
+    DEPENDS ${EXCEPTION_CONFIG_FILES} ${CMAKE_SOURCE_DIR}/cmake/scripts/generate_exception_header.py
+    COMMENT "Generating exception header (config changed)"
     VERBATIM
+)
+add_custom_target(generated_exception_header
+    DEPENDS ${GENERATED_EXCEPTION_HEADER}
 )
 
 # =========================
