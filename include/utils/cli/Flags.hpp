@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 03/06/2026 by @author Tsukini
+##  @date 06/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Flags.hpp
@@ -25,12 +25,6 @@ File Description:
 
     /* type */
     #include <cstdint>  // std::uint32_t
-
-    //----------------------------------------------------------------//
-    /* DEFINE */
-
-    /* values */
-    #define HISTORY_FILE ".utils-cli_history"
 
 namespace utils::cli { // namespace
 //----------------------------------------------------------------//

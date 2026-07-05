@@ -41,6 +41,13 @@ File Description:
     #include <tuple>                            // std::tuple
     #include <queue>                            // std::queue
 
+    //----------------------------------------------------------------//
+    /* DEFINE */
+
+    /* values */
+    #define HISTORY_FILE ".utils-cli_history"
+    #define HISTORY_LIMITS 10000
+
 namespace utils::cli { // namespace start
 //----------------------------------------------------------------//
 /* PROTOTYPE */
@@ -99,6 +106,10 @@ class Cli: private utils::warning::Observer {
         std::string getInput();
         utils::cli::ParsedData parse(const std::string& input);
         void exec(const utils::cli::ParsedData& parsedInput);
+
+        /* persitent storage handling */
+        void loadHistory();
+        void saveHistory();
 
     public:
         /* middlewares */

@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 05/07/2026 by @author Tsukini
+##  @date 06/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Setup.cpp
@@ -24,8 +24,12 @@ File Description:
 #include "utils/write/format.hpp"
 #include "utils/cli/Cli.hpp"
 #include <termios.h>
+#include <shared_mutex>
 #include <functional>
+#include <filesystem>
 #include <iostream>
+#include <fstream>
+#include <cstdlib>
 #include <cstdint>
 #include <csignal>
 #include <vector>
@@ -54,6 +58,9 @@ utils::cli::Cli::Cli(bool sig)
         std::signal(SIGINT, SIG_IGN); // ctrl+c
         std::signal(SIGTSTP, SIG_IGN); // ctrl+z
     }
+
+    // Load history from persitent storage
+    this->loadHistory();
 }
 
 utils::cli::Cli::~Cli()
@@ -67,6 +74,49 @@ utils::cli::Cli::~Cli()
         std::signal(SIGINT, SIG_DFL); // ctrl+c
         std::signal(SIGTSTP, SIG_DFL); // ctrl+z
     }
+
+    // Save history if persitent is enable
+    if (this->_flags & utils::cli::Flag::PERSISTENT)
+        this->saveHistory();
+}
+
+static std::filesystem::path getHistoryFilePath()
+{
+    const char* home = std::getenv("HOME");
+    if (!home) home = ".";
+    return std::filesystem::path(home) / HISTORY_FILE;
+}
+
+void utils::cli::Cli::loadHistory()
+{
+    std::unique_lock lock(this->_historyLock);
+    const std::filesystem::path path = getHistoryFilePath();
+
+    // Open the file
+    std::ifstream file(path);
+    if (!file.is_open())
+        return; // Silent fail
+
+    // Read the file and put them into the array
+    std::string line;
+    while (std::getline(file, line))
+        if (!line.empty()) this->_history.push_back(line);
+}
+
+void utils::cli::Cli::saveHistory()
+{
+    std::shared_lock lock(this->_historyLock);
+    const std::filesystem::path path = getHistoryFilePath();
+
+    // Open the file
+    std::ofstream file(path, std::ios::trunc);
+    if (!file.is_open())
+        return; // Silent fail
+
+    // Write on the file from the history
+    const std::size_t start = (this->_history.size() > HISTORY_LIMITS) ? this->_history.size() - HISTORY_LIMITS : 0;
+    for (std::size_t i = start; i < this->_history.size(); ++i)
+        file << this->_history[i] << '\n';
 }
 
 /* Default commands
