@@ -8,7 +8,7 @@ env:
   LIBRARYS: "libutils.a libutils_debug.a"
 
 jobs:
-  build-librarys:
+  build-libraries:
     runs-on: ${{ vars.RUNNER }}
     defaults:
       run:
@@ -31,7 +31,7 @@ jobs:
           restore-keys: |
             ccache-${{ runner.os }}-
 
-      - name: Build librarys (Release)
+      - name: Build libraries (Release)
         run: |
           set -e
           cmake -S . -B build
@@ -41,7 +41,7 @@ jobs:
       - name: Show ccache stats
         run: ccache -s
 
-      - name: Check librarys
+      - name: Check libraries
         run: |
           set -euo pipefail
           for library in $(echo $LIBRARYS | tr ',' ' ' | xargs); do
@@ -61,8 +61,8 @@ jobs:
             build/libutils_debug.a
 
   sync-template:
-    needs: build-librarys
-    if: github.event_name == 'push' && needs.build-librarys.result == 'success'
+    needs: build-libraries
+    if: github.event_name == 'push' && needs.build-libraries.result == 'success'
 
     runs-on: ${{ vars.RUNNER }}
     defaults:
