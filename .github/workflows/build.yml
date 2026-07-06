@@ -1,0 +1,55 @@
+name: CI - Library
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  LIBRARYS: "libutils.a"
+
+jobs:
+  build-librarys:
+    #runs-on: self-hosted
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
+    container:
+      image: ghcr.io/tsukini22/ci:latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: /github/home/.cache/ccache
+          key: ccache-${{ runner.os }}-${{ hashFiles('**/*.cpp', '**/*.hpp', 'CMakeLists.txt') }}
+          restore-keys: |
+            ccache-${{ runner.os }}-
+
+      - name: Build librarys
+        run: |
+          set -e
+          make re
+        timeout-minutes: 2
+
+      - name: Show ccache stats
+        run: ccache -s
+
+      - name: Check librarys
+        run: |
+          set -euo pipefail
+          for library in $(echo $LIBRARYS | tr ',' ' ' | xargs); do
+            if [ ! -f "./build/$library" ]; then
+              echo "::error title=Missing library, file=$library::Library '$library' not found"
+              exit 1
+            fi
+            echo "✓ Library '$library' ok"
+          done

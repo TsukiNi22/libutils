@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  05/07/2026 by Tsukini
+##  06/07/2026 by Tsukini
 
 File Name:
 ##  generate_exception_header.py
@@ -29,8 +29,7 @@ try:
     from subprocess import check_call
     check_call([executable, "-m", "ensurepip", "--upgrade"])
     check_call([executable, "-m", "pip", "install", "-r", FILES.REQUIREMENTS])
-except Exception as e:
-    pass
+except Exception: pass
 
 # Import that can be checked
 try:
@@ -62,7 +61,7 @@ for json_file in Path(FILES.CONFIG_EXCEPTION).rglob("*.json"):
         json_content = json.load(f)
         for error in json_content.get("errors", []):
             if data.__contains__(error["code"]):
-                stderr.write(f"Duplicated error code encoutered in data extraction '{error["code"]}'\n")
+                stderr.write(f"Duplicated error code encoutered in data extraction '{error['code']}'\n")
                 stderr.write(f"Auto generated header '{FILES.GENERATED_EXCEPTION_HEADER}': FAIL\n")
                 exit(RETURN.KO)
             data[error["code"]] = [error["message"], error["info"] if error.__contains__("info") else "[None]", error["restrictions"] if error.__contains__("restrictions") else []]
@@ -75,7 +74,7 @@ with open(FILES.EXCEPTION_DEFINE_HEADER, "r", encoding="utf-8") as f:
     inside_enum = False
     for line in f:
         # Detect the start of the enum
-        if "enum Type" in line:
+        if f"enum {NAMES.EXCEPTION_TYPE_ENUM}" in line:
             inside_enum = True
             continue
         # Detect the end of the enum
@@ -100,10 +99,11 @@ for i, (code, [message, info, restriction]) in enumerate(data_list):
     code_str += f"    {code} = {uint64_hash(code)}ull,"
     # message
     escaped_message = message.replace('"', r'\"')
-    message_str += f'    {{utils::exception::Code::{code}, "{escaped_message}"}},'
+    message_str += f'    {{{NAMES.EXCEPTION_SCOPE}::Code::{code}, "{escaped_message}"}},'
     # info
     escaped_info = info.replace('"', r'\"')
-    info_str += f'    {{utils::exception::Code::{code}, {"nullptr" if escaped_info == "[None]" else ("\"" + escaped_info + "\"")}}},'
+    info = ("nullptr" if escaped_info == "[None]" else f'"{escaped_info}"')
+    info_str += f'    {{{NAMES.EXCEPTION_SCOPE}::Code::{code}, {info}}},'
     # restriction
     value = 0
     types = ""
@@ -111,7 +111,7 @@ for i, (code, [message, info, restriction]) in enumerate(data_list):
         t = restriction[j]
         value |= VALUES.EXCEPTION_TYPE.get(t, 0)
         if VALUES.EXCEPTION_TYPE.get(t, 0) != 0: types += t + (", " if j != len(restriction) - 1 else "")
-    restriction_str += f"    {{utils::exception::Code::{code}, {value:#0{len(VALUES.EXCEPTION_TYPE) + 2}b}}}, // allow: {'All' if types == '' else types}"
+    restriction_str += f"    {{{NAMES.EXCEPTION_SCOPE}::Code::{code}, {value:#0{len(VALUES.EXCEPTION_TYPE) + 2}b}}}, // allow: {'All' if types == '' else types}"
     # End of line
     if i != len(data_list) - 1:
         code_str += "\n"
@@ -156,7 +156,7 @@ File Description:
     #include <cstddef>          // std::size_t
     #include <cstdint>          // std::uint8_t
 
-namespace utils::exception {{ // namespace start
+namespace {NAMES.EXCEPTION_SCOPE} {{ // namespace start
 //----------------------------------------------------------------//
 /* TYPEDEF */
 
@@ -167,29 +167,29 @@ enum class Code: std::size_t {{
 }};
 
 /* Corresponding exception message for each code */
-inline const std::unordered_map<utils::exception::Code, const char*> Message = {{
-    {{utils::exception::Code::Undefined, "An undefined error has occured"}},
+inline const std::unordered_map<{NAMES.EXCEPTION_SCOPE}::Code, const char*> Message = {{
+    {{{NAMES.EXCEPTION_SCOPE}::Code::Undefined, "An undefined error has occured"}},
 {message_str}
 }};
 
 /* Potential default info: nullptr same as "[None]" */
-inline const std::unordered_map<utils::exception::Code, const char*> Info = {{
-    {{utils::exception::Code::Undefined, nullptr}},
+inline const std::unordered_map<{NAMES.EXCEPTION_SCOPE}::Code, const char*> Info = {{
+    {{{NAMES.EXCEPTION_SCOPE}::Code::Undefined, nullptr}},
 {info_str}
 }};
 
 /* Potential restriction on exception code */
 {restriction_str_comment}
-inline const std::unordered_map<utils::exception::Code, const std::uint8_t> Restriction = {{
-    {{utils::exception::Code::Undefined, 0b0000}}, // allow: All
+inline const std::unordered_map<{NAMES.EXCEPTION_SCOPE}::Code, const std::uint8_t> Restriction = {{
+    {{{NAMES.EXCEPTION_SCOPE}::Code::Undefined, 0b0000}}, // allow: All
 {restriction_str}
 }};
 
 // Check at the compile time the correspondece between the message & code
 /*
-static_assert(std::size(Message) == static_cast<std::size_t>(utils::exception::Code::CODE_SENTINEL), "The message array doesn't correspond to the available exception codes");
-static_assert(std::size(Info) == static_cast<std::size_t>(utils::exception::Code::CODE_SENTINEL), "The info array doesn't correspond to the available exception codes");
-static_assert(std::size(Restriction) == static_cast<std::size_t>(utils::exception::Code::CODE_SENTINEL), "The restriction array doesn't correspond to the available exception codes");
+static_assert(std::size(Message) == static_cast<std::size_t>({NAMES.EXCEPTION_SCOPE}::Code::CODE_SENTINEL), "The message array doesn't correspond to the available exception codes");
+static_assert(std::size(Info) == static_cast<std::size_t>({NAMES.EXCEPTION_SCOPE}::Code::CODE_SENTINEL), "The info array doesn't correspond to the available exception codes");
+static_assert(std::size(Restriction) == static_cast<std::size_t>({NAMES.EXCEPTION_SCOPE}::Code::CODE_SENTINEL), "The restriction array doesn't correspond to the available exception codes");
 */
 
 }} // namespace end

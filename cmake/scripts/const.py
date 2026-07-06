@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  05/07/2026 by Tsukini
+##  06/07/2026 by Tsukini
 
 File Name:
 ##  const.py
@@ -83,8 +83,8 @@ class Names:
     """
         Different names
     """
-    EXCEPTION_CODE_ENUM: str = "Code"
-    EXCEPTION_MESSAGE_VAR: str = "Message"
+    EXCEPTION_SCOPE: str = "utils::exception"
+    EXCEPTION_TYPE_ENUM: str = "Type"
 
 ##### Declaration #####
 RETURN  = Return()
