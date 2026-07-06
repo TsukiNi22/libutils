@@ -11,7 +11,7 @@ env:
 
 jobs:
   build-librarys:
-    runs-on: ${{ variables.RUNNER }}
+    runs-on: ${{ vars.RUNNER }}
     defaults:
       run:
         shell: bash
@@ -66,7 +66,7 @@ jobs:
     needs: build-librarys
     if: github.event_name == 'push' && needs.build-librarys.result == 'success'
 
-    runs-on: ${{ variables.RUNNER }}
+    runs-on: ${{ vars.RUNNER }}
     defaults:
       run:
         shell: bash
