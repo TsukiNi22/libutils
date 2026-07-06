@@ -147,7 +147,7 @@ float c2dmp_fsimplified(const std::string_view a, const std::string_view b)
             }
         }
     }
-    
+
     // Compute missplaced char computing (full)
     for (std::size_t i = min; i < as; ++i) {
         // basic call & condition
