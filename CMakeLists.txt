@@ -12,7 +12,12 @@ set(CMAKE_CXX_COMPILER clang++)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON) # Moderne compilation -fPIE
 add_definitions(-DFORCED_CXX_STANDARD=14) # Used for the attribute definition
 add_definitions(-D_NoWarning) # Remove warnings from utils (usless for hard import)
-add_definitions(-D__cpp_lib_hardware_interference_size=201703L) # Force the declaration of hardware_interference_size
+
+# Force the standard lib used
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    add_compile_options(-stdlib=libc++)
+    add_link_options(-stdlib=libc++)
+endif()
 
 # =========================
 # Requirement
