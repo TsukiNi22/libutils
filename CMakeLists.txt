@@ -95,6 +95,18 @@ add_custom_target(generated_exception_header
 )
 
 # =========================
+# Release (build Debug & Optimized)
+# =========================
+add_custom_target(release
+    COMMAND ${CMAKE_COMMAND} -S ${CMAKE_SOURCE_DIR} -B ${CMAKE_BINARY_DIR} -DCMAKE_BUILD_TYPE=Debug
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --parallel
+    COMMAND ${CMAKE_COMMAND} -S ${CMAKE_SOURCE_DIR} -B ${CMAKE_BINARY_DIR} -DCMAKE_BUILD_TYPE=Optimized
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --parallel
+    COMMENT "Building both Debug (libutils_debug.a) and Optimized (libutils.a) versions"
+    VERBATIM
+)
+
+# =========================
 # Dependencies
 # =========================
 add_dependencies(${TARGET} generated_exception_header)
@@ -108,6 +120,10 @@ target_include_directories(${TARGET} PUBLIC include)
 # =========================
 # Modes
 # =========================
+set_target_properties(${TARGET} PROPERTIES
+    OUTPUT_NAME "utils$<$<CONFIG:Debug>:_debug>"
+)
+
 target_compile_options(${TARGET} PRIVATE
     $<$<CONFIG:Debug>:-g -ggdb3>
     $<$<CONFIG:Optimized>:-O3 -ffast-math -funroll-loops -pipe -DNDEBUG>

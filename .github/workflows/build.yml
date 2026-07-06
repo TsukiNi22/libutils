@@ -73,7 +73,7 @@ jobs:
         run: |
           set -e
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Optimized
-          cmake --build build --parallel $(nproc)
+          cmake --build build --target release --parallel $(nproc)
 
       - name: Checkout cpp_project_template
         uses: actions/checkout@v4
@@ -89,10 +89,12 @@ jobs:
           rm -rf cpp_project_template/cmake/scripts
           rm -rf cpp_project_template/include/utils
 
-          cp -r my_lib_cpp/cmake/config   cpp_project_template/cmake/config
-          cp -r my_lib_cpp/cmake/scripts  cpp_project_template/cmake/scripts
-          cp -r my_lib_cpp/include/utils  cpp_project_template/include/utils
-          cp my_lib_cpp/build/libutils.a  cpp_project_template/cmake/libs/libutils.a
+          cp -r my_lib_cpp/cmake/config  cpp_project_template/cmake/config
+          cp -r my_lib_cpp/cmake/scripts cpp_project_template/cmake/scripts
+          cp -r my_lib_cpp/include/utils cpp_project_template/include/utils
+
+          cp my_lib_cpp/build/libutils.a        cpp_project_template/cmake/libs/libutils.a
+          cp my_lib_cpp/build/libutils_debug.a  cpp_project_template/cmake/libs/libutils_debug.a
 
       - name: Commit and push
         working-directory: cpp_project_template
