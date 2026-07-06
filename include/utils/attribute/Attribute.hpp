@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 19/05/2026 by @author Tsukini
+##  @date 06/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Attribute.hpp
@@ -54,5 +54,15 @@ File Description:
     
     #endif
 
+    // fallback (x86-64)
+    #include <new> // std::hardware_destructive_interference_size, std::hardware_constructive_interference_size
+    #if !defined(__cpp_lib_hardware_interference_size)
+        #warning "fallback (x86-64) - hardware interference size = 64"
+        #include <cstddef>  // std::size_t
+        namespace std {
+            inline constexpr std::size_t hardware_destructive_interference_size = 64;
+            inline constexpr std::size_t hardware_constructive_interference_size = 64;
+        }
+    #endif
 
 #endif /* ATTRIBUTE_H */
