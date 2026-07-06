@@ -11,8 +11,7 @@ env:
 
 jobs:
   build-librarys:
-    #runs-on: self-hosted
-    runs-on: ubuntu-latest
+    runs-on: ${{ variables.RUNNER }}
     defaults:
       run:
         shell: bash
@@ -67,7 +66,11 @@ jobs:
     needs: build-librarys
     if: github.event_name == 'push' && needs.build-librarys.result == 'success'
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ variables.RUNNER }}
+    defaults:
+      run:
+        shell: bash
+
     container:
       image: ghcr.io/tsukini22/ci:latest
 
