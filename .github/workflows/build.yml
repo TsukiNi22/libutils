@@ -74,7 +74,7 @@ jobs:
 
     steps:
       - name: Checkout my_lib_cpp
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: my_lib_cpp
 
@@ -85,7 +85,7 @@ jobs:
           path: build
 
       - name: Checkout cpp_project_template
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: TsukiNi22/cpp_project_template
           token: ${{ secrets.TEMPLATE_REPO_TOKEN }}
