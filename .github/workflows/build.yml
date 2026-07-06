@@ -72,8 +72,8 @@ jobs:
         working-directory: my_lib_cpp
         run: |
           set -e
-          cmake -S . -B $BUILD_DIR -DCMAKE_BUILD_TYPE=Optimized
-          cmake --build $BUILD_DIR --parallel $(nproc)
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Optimized
+          cmake --build build --parallel $(nproc)
 
       - name: Checkout cpp_project_template
         uses: actions/checkout@v4
