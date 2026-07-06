@@ -58,6 +58,7 @@ inline std::optional<std::string> defaultTrueParsingHook(unused const std::strin
 
 class ArgParser: private utils::warning::Observer {
     private:
+        bool _help = true; // Enable/Disable -h default overwrite
         std::string _binary = "[None]";
         std::string _description = "...";
         std::unordered_map<std::string, utils::arguments::Usage> _usages;
@@ -126,6 +127,7 @@ class ArgParser: private utils::warning::Observer {
         void resetHelpHook(void) {this->_helpHook = defaultHelpHook;};
 
         /* setter */
+        void disableHelp(void) {this->_help = false;};
         void setBinary(const std::string& binary) {this->_binary = binary;};
         void setDescription(const std::string& description) {this->_description = description;};
 

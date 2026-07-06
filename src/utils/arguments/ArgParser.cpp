@@ -302,7 +302,7 @@ nodiscard utils::arguments::ParsedUsages utils::arguments::ArgParser::parse(cons
         throw utils::exception::ErrorException(utils::exception::Code::ArgumentsNumber, "The arguments should start with the binary name, with a size of 1 at least, got: 0");
 
     // Check for hardcoded flag: -h, -help, --help
-    if (std::any_of(argv.begin(), argv.end(), [&](const std::string& arg) {return (arg == "-h" || arg == "-help" || arg == "--help");})) {
+    if (this->_help && std::any_of(argv.begin(), argv.end(), [&](const std::string& arg) {return (arg == "-h" || arg == "-help" || arg == "--help");})) {
         this->help();
         throw utils::exception::NoneException(utils::exception::Code::Exit);
     }
