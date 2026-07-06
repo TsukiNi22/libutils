@@ -1,4 +1,4 @@
-name: CI - Library
+name: CI/CD - Library
 
 on:
   push:
@@ -53,3 +53,57 @@ jobs:
             fi
             echo "✓ Library '$library' ok"
           done
+
+  sync-template:
+    needs: build-librarys
+    if: github.event_name == 'push' && needs.build-librarys.result == 'success'
+
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/tsukini22/ci:latest
+
+    steps:
+      - name: Checkout my_lib_cpp
+        uses: actions/checkout@v4
+        with:
+          path: my_lib_cpp
+
+      - name: Build library (Optimized)
+        working-directory: my_lib_cpp
+        run: |
+          set -e
+          cmake -S . -B $BUILD_DIR -DCMAKE_BUILD_TYPE=Optimized
+          cmake --build $BUILD_DIR --parallel $(nproc)
+
+      - name: Checkout cpp_project_template
+        uses: actions/checkout@v4
+        with:
+          repository: TsukiNi22/cpp_project_template
+          token: ${{ secrets.TEMPLATE_REPO_TOKEN }}
+          path: cpp_project_template
+
+      - name: Sync files into template
+        run: |
+          set -e
+          rm -rf cpp_project_template/cmake/config
+          rm -rf cpp_project_template/cmake/scripts
+          rm -rf cpp_project_template/include/utils
+
+          cp -r my_lib_cpp/cmake/config   cpp_project_template/cmake/config
+          cp -r my_lib_cpp/cmake/scripts  cpp_project_template/cmake/scripts
+          cp -r my_lib_cpp/include/utils  cpp_project_template/include/utils
+          cp my_lib_cpp/build/libutils.a  cpp_project_template/cmake/libs/libutils.a
+
+      - name: Commit and push
+        working-directory: cpp_project_template
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add cmake/config cmake/scripts include/utils cmake/libs/libutils.a
+          if git diff --cached --quiet; then
+            echo "No changes to sync."
+            exit 0
+          fi
+          git commit -m "chore: sync utils lib from my_lib_cpp (${{ github.sha }})"
+          git push origin main
