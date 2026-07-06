@@ -1,19 +1,31 @@
 ## Compilation
 *.o
+*.a
+!cmake/libs/*.a
+*.so
 a.out
+generated_exception_header.hpp
+
+# Executables
+project
 
 ## Vim
 *.sw*
 \#*#
 *~
-:
+:*
 q
 vg
 z
 
+## Doxygen
+/html
+/latex
+
 ## CMake
 build/
 __pycache__
+/libs
 
 ## Other
 .info
