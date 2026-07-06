@@ -18,6 +18,10 @@ jobs:
       image: ghcr.io/tsukini22/ci:latest
 
     steps:
+      - run: apt-install -y ping curl
+      - run: ping github.com -c 2
+      - run: curl -I https://github.com
+
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
