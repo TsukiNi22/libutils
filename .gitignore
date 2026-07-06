@@ -28,5 +28,6 @@ __pycache__
 /libs
 
 ## Other
+runner/
 .info
 main.cpp
