@@ -83,7 +83,7 @@ static inline unsigned char normalize(unsigned char c) {return lookup_table[c];}
 #ifndef C2DMP_HSM_SIMPLIFIED
     #define C2DMP_HSM_SIMPLIFIED
 template<std::uint32_t prefixDepthSearch = 3, typename UINTN = std::uint32_t>
-outdated("This version isn't the most optimized one, you should use c2dmp_optimized or c2dmp")
+[[deprecated("This version isn't the most optimized one, you should use c2dmp_optimized or c2dmp")]]
 float c2dmp_simplified(const std::string_view a, const std::string_view b)
 {
     // Check given type

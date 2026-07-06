@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 29/05/2026 by @author Tsukini
+##  @date 06/07/2026 by @author Tsukini
 
 File Name:
 ##  @file fsimplified.cpp
@@ -147,7 +147,7 @@ float c2dmp_fsimplified(const std::string_view a, const std::string_view b)
             }
         }
     }
-
+    
     // Compute missplaced char computing (full)
     for (std::size_t i = min; i < as; ++i) {
         // basic call & condition

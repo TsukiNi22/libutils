@@ -8,13 +8,13 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 29/05/2026 by @author Tsukini
+##  @date 08/06/2026 by @author Tsukini
 
 File Name:
 ##  @file c2dmp-hsm.hpp
 
 File Description:
-##  Header for include all the different c2dmp-hsm version
+##  Header for include all the different algorithm
 \**************************************************************/
 
 #ifndef C2DMP_HSM_H
