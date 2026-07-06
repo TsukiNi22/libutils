@@ -6,9 +6,6 @@
 a.out
 generated_exception_header.hpp
 
-# Executables
-project
-
 ## Vim
 *.sw*
 \#*#
@@ -23,11 +20,10 @@ z
 /latex
 
 ## CMake
-build/
+/build
 __pycache__
-/libs
 
 ## Other
-runner/
+/runner
 .info
-main.cpp
+/main.cpp
