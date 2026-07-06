@@ -52,6 +52,9 @@ set(SRC
     src/utils/math/geometry/Point.cpp
     src/utils/math/geometry/Angle.cpp
 
+    # Verbose
+    src/utils/verbose/Verbose.cpp
+
     ## Cli
     src/utils/cli/Cli.cpp
     src/utils/cli/Setup.cpp

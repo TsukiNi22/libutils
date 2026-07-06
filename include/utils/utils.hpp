@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 04/06/2026 by @author Tsukini
+##  @date 06/07/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -40,6 +40,7 @@ File Description:
 
 /* Activate all tool include */
 #ifdef _Tools
+    #define _Verbose
     #define _BLT // Bidirectional Lookup Table
     #define _Vector
     #define _Concepts
@@ -84,6 +85,12 @@ File Description:
 #ifdef _Attribute
     // -> Define/Macro of attribute & keyword for optimisation & other
     #include "attribute/Attribute.hpp"  // different define/macro for optimisation & other
+#endif
+
+/* Verbose */
+#ifdef _Verbose
+    // -> Define/Macro of verbose usage
+    #include "verbose/Verbose.hpp"  // different define/macro for verbose usage
 #endif
 
 /* Bidirectional Lookup Table */
