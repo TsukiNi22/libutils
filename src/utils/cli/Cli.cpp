@@ -169,7 +169,7 @@ void utils::cli::Cli::join(void) const noexcept
 std::optional<std::thread> utils::cli::Cli::start(const std::size_t call, const bool failsafe)
 {
     // Check status
-    if (!(this->_flags & utils::cli::Flag::NO_TTY) && isatty(STDOUT_FILENO)) {
+    if (!(this->_flags & utils::cli::Flag::NO_TTY) && !isatty(STDOUT_FILENO)) {
         if (failsafe) return std::nullopt;
         throw utils::exception::ErrorException(utils::exception::Code::CliTTY);
     } else if (this->_running) {

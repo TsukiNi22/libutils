@@ -99,10 +99,21 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
 {
     std::vector<std::string> ids; // <id>
     std::string arg = argv[i], sarg; // sarg is used for temporary sub edition
+    const std::string argOrigin = arg; // keep the orignal value
     std::string id;
     bool isLong = arg.starts_with("--"), isShort = false;
     bool unknow = true;
     std::size_t f = 0; // short counter
+    std::size_t pos = 0;
+
+    // Check for '='
+    bool equalFound = false;
+    std::string equal;
+    if ((pos = arg.find('=')) != std::string::npos) {
+        equalFound = true;
+        equal = arg.substr(pos + 1);
+        arg = arg.substr(0, pos);
+    }
 
     // Long
     if (isLong) {
@@ -119,7 +130,6 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
     else {
         arg.erase(0, 1); // Remove '-'
         sarg = arg; // Used for the short checking
-        std::size_t pos = 0;
 
         // Is the flag know (Flag have the priority)
         for (const auto &[fid, flag]: this->_flags) {
@@ -170,6 +180,16 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
     std::vector<std::string> options;
     const utils::arguments::Flag& flag = this->_flags.at(id);
 
+    // Check if the '=' is allowed
+    bool single = (flag.options.size() == 1);
+    if (equalFound && !single) {
+        if (alreadyFailed) return false;
+        alreadyFailed = true;
+        std::string s = "Can't use '=' on flag that have only one option(s): '" + argOrigin + "'";
+        if (failsafe) {std::cout << utils::exception::WarningException(utils::exception::Code::FlagOption, s).formated() << std::endl; return false;}
+        else throw utils::exception::ErrorException(utils::exception::Code::FlagOption, s);
+    }
+
     // Check for redefinition
     bool redefined = false;
     for (const auto &[fid, type, _]: usageFull.arguments) {
@@ -195,17 +215,17 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
     bool breaked = false;
     for (std::size_t j = 0; j < flag.options.size(); ++j) {
         const auto &[_, mandatory, check] = flag.options[j];
-        if (argv.size() <= i + 1) {
+        if (!equalFound && argv.size() <= i + 1) {
             if (!mandatory) continue;
             if (alreadyFailed) return false;
             alreadyFailed = true;
             std::string s = (isLong ? "--" : "-") + arg;
             if (failsafe) {std::cout << utils::exception::WarningException(utils::exception::Code::FlagOptionsNumber, s).formated() << std::endl; return false;}
             else throw utils::exception::ErrorException(utils::exception::Code::FlagOptionsNumber, s);
-        } else if (j + 1 >= flag.options.size() && flag.unlimited && argv[i + 1].front() == '-') { // Special case (unlimited can also accept no argument)
+        } else if (!equalFound && j + 1 >= flag.options.size() && flag.unlimited && argv[i + 1].front() == '-') { // Special case (unlimited can also accept no argument)
             breaked = true;
             break;
-        } else if ((res = check(argv[i + 1])).has_value()) {
+        } else if ((equalFound && (res = check(equal)).has_value()) || (!equalFound && (res = check(argv[i + 1])).has_value())) {
             if (!mandatory) continue;
             if (alreadyFailed) return false;
             alreadyFailed = true;
@@ -213,7 +233,7 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
             if (failsafe) {std::cout << utils::exception::WarningException(utils::exception::Code::FlagOption, s).formated() << std::endl; return false;}
             else throw utils::exception::ErrorException(utils::exception::Code::FlagOption, s);
         } else {
-            options.push_back(argv[++i]);
+            options.push_back(equalFound ? equal : argv[++i]);
         }
     }
 
