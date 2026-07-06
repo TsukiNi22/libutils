@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 18/05/2026 by @author Tsukini
+##  @date 06/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Vector3.hpp
@@ -80,14 +80,14 @@ class Vector3: public utils::vector::IVector<T> {
                 x * v.y - y * v.x
             };
         }
-        T length() const
+        T length(void) const
         requires utils::concepts::Multipliable<T> {return std::sqrt(x * x + y * y + z * z);}
-        T lengthSquared() const
+        T lengthSquared(void) const
         requires utils::concepts::Multipliable<T> && utils::concepts::Addable<T> {return x * x + y * y + z * z;}
-        Vector3 sign() const
+        Vector3 sign(void) const
         requires utils::concepts::ComparableWith<T, int>
         {return {(x > 0) - (x < 0), (y > 0) - (y < 0), (z > 0) - (z < 0)};}
-        Vector3 normalize() const
+        Vector3 normalize(void) const
         requires utils::concepts::Divisible<T>
         {
             T len = length();
@@ -172,7 +172,7 @@ class Vector3: public utils::vector::IVector<T> {
         }
 
         // -------- Special-Operator -------- //
-        Vector3& operator++()
+        Vector3& operator++(void)
         requires utils::concepts::Incrementable<T>
         {
             ++x; ++y; ++z;
@@ -187,7 +187,7 @@ class Vector3: public utils::vector::IVector<T> {
             return tmp;
         }
 
-        Vector3& operator--()
+        Vector3& operator--(void)
         requires utils::concepts::Decrementable<T>
         {
             --x; --y; --z;
@@ -287,7 +287,7 @@ class Vector3: public utils::vector::IVector<T> {
         requires utils::concepts::ComparableWith<T, U> {return (x >= v.x && y >= v.y && z >= v.z);}
 
         // ------------ Unary ------------- //
-        Vector3 operator-() const
+        Vector3 operator-(void) const
         requires utils::concepts::Negatable<T> {return {-x, -y, -z};}
 
         // ---------- Constructor --------- //

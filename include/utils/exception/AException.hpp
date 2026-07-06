@@ -39,7 +39,7 @@ class AException: public utils::exception::IException {
         std::unordered_map<utils::exception::Code, const std::uint8_t> Restriction;
 
         // --------- Pre-Function --------- //
-        void subinit();
+        void subinit(void);
 
     protected:
         /* Exception call info */
@@ -55,17 +55,17 @@ class AException: public utils::exception::IException {
 
     public:
         // --------- Pre-Function --------- //
-        std::string formated() const noexcept final;
+        std::string formated(void) const noexcept final;
 
         // ----------- Function ----------- //
         // auto -> const std::array<type auto, size auto>
-        nodiscard utils::exception::Type getType() const noexcept final {return this->_type;};
-        nodiscard utils::exception::Code getCode() const noexcept final {return this->_code;};
-        nodiscard bool isNone() const noexcept final {return (this->_type & utils::exception::Type::None);};
-        nodiscard bool isFatal() const noexcept final {return (this->_type & utils::exception::Type::Fatal);};
-        nodiscard const char* what() const noexcept final {return this->Message.at(this->_code);};
-        nodiscard const char* info() const noexcept final {return this->_info.c_str();};
-        nodiscard const std::source_location& loc() const noexcept final {return this->_loc;};
+        nodiscard utils::exception::Type getType(void) const noexcept final {return this->_type;};
+        nodiscard utils::exception::Code getCode(void) const noexcept final {return this->_code;};
+        nodiscard bool isNone(void) const noexcept final {return (this->_type & utils::exception::Type::None);};
+        nodiscard bool isFatal(void) const noexcept final {return (this->_type & utils::exception::Type::Fatal);};
+        nodiscard const char* what(void) const noexcept final {return this->Message.at(this->_code);};
+        nodiscard const char* info(void) const noexcept final {return this->_info.c_str();};
+        nodiscard const std::source_location& loc(void) const noexcept final {return this->_loc;};
 
         // ------------ Operator ---------- //
         AException& operator=(const AException& other) = delete;

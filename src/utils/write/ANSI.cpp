@@ -62,7 +62,7 @@ std::string utils::write::setStyle(std::initializer_list<utils::write::Style> st
 }
 
 // Report format -> "ESC[rows;colsR"
-std::pair<int, int> utils::write::readCursorPosition()
+std::pair<int, int> utils::write::readCursorPosition(void)
 {
     char buffer[32] = {'\0'};
     std::size_t i = 0;
@@ -84,7 +84,7 @@ std::pair<int, int> utils::write::readCursorPosition()
 }
 
 // Report format -> "ESC[Mb;x;y"
-utils::write::MouseEvent utils::write::readMouseEvent()
+utils::write::MouseEvent utils::write::readMouseEvent(void)
 {
     utils::write::MouseEvent event;
     std::string buffer;
@@ -142,7 +142,7 @@ utils::write::MouseEvent utils::write::readMouseEvent()
 }
 
 // Report format -> "ESC[<b;x;y(M|m)"
-utils::write::AdvancedMouseEvent utils::write::readAdvancedMouseEvent()
+utils::write::AdvancedMouseEvent utils::write::readAdvancedMouseEvent(void)
 {
     utils::write::AdvancedMouseEvent event;
     std::string buffer;

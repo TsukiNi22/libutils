@@ -48,14 +48,14 @@ static std::string trim(const std::string& s)
     return s.substr(start, end - start + 1);
 }
 
-static void deleteChars(std::size_t n)
+static void deleteChars(const std::size_t n)
 {
     for (std::size_t i = 0; i < n; ++i)
         std::cout << "\b \b";
     std::cout << std::flush;
 }
 
-void utils::cli::Cli::launch(std::size_t call)
+void utils::cli::Cli::launch(const std::size_t call)
 {
     try {this->cliMiddlewares.callBefore();}
     catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
@@ -160,13 +160,13 @@ void utils::cli::Cli::launch(std::size_t call)
     this->_running = false;
 }
 
-void utils::cli::Cli::join()
+void utils::cli::Cli::join(void) const noexcept
 {
     while (this->_running)
         std::this_thread::yield();
 }
 
-std::optional<std::thread> utils::cli::Cli::start(std::size_t call, const bool failsafe)
+std::optional<std::thread> utils::cli::Cli::start(const std::size_t call, const bool failsafe)
 {
     // Check status
     if (!(this->_flags & utils::cli::Flag::NO_TTY) && isatty(STDOUT_FILENO)) {
@@ -179,6 +179,7 @@ std::optional<std::thread> utils::cli::Cli::start(std::size_t call, const bool f
         if (failsafe) return std::nullopt;
         throw utils::exception::WarningException(utils::exception::Code::CliKilled);
     }
+
     this->_interrupted = false; // Reset interrupt status
     this->_running = true;
 
@@ -204,20 +205,20 @@ std::optional<std::thread> utils::cli::Cli::start(std::size_t call, const bool f
     return std::nullopt;
 }
 
-std::optional<std::thread> utils::cli::Cli::start(const std::string& input, std::size_t call, const bool failsafe)
+std::optional<std::thread> utils::cli::Cli::start(const std::string& input, const std::size_t call, const bool failsafe)
 {
     this->_initInput.push(input);
     return this->start(call, failsafe);
 }
 
-std::optional<std::thread> utils::cli::Cli::start(const std::vector<std::string>& inputs, std::size_t call, const bool failsafe)
+std::optional<std::thread> utils::cli::Cli::start(const std::vector<std::string>& inputs, const std::size_t call, const bool failsafe)
 {
     for (const std::string& input: inputs)
         this->_initInput.push(input);
     return this->start(call, failsafe);
 }
 
-hot void utils::cli::Cli::prompt()
+hot void utils::cli::Cli::prompt(void)
 {
     this->promptMiddlewares.callBefore();
 
@@ -258,7 +259,7 @@ static std::string getHint(const std::vector<std::string>& list, const std::stri
     return first ? "[None]" : hint;
 }
 
-hot nodiscard std::string utils::cli::Cli::getInput()
+hot nodiscard std::string utils::cli::Cli::getInput(void)
 {
     std::vector<std::string> commands;
     bool echo = !(this->_flags & utils::cli::Flag::NOECHO);

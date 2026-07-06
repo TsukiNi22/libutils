@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 05/07/2026 by @author Tsukini
+##  @date 06/07/2026 by @author Tsukini
 
 File Name:
 ##  @file AException.cpp
@@ -22,7 +22,7 @@ File Description:
 #include <cstdint>
 #include <string>
 
-cold void utils::exception::AException::subinit()
+cold void utils::exception::AException::subinit(void)
 {
     // Setup the default info if nessecary
     if (this->_info == "[None]" && this->Info.at(this->_code))
@@ -35,7 +35,7 @@ cold void utils::exception::AException::subinit()
         throw utils::exception::ErrorException(utils::exception::Code::ExceptionCodeRestriction, this->_loc);
 }
 
-nodiscard std::string utils::exception::AException::formated() const noexcept
+nodiscard std::string utils::exception::AException::formated(void) const noexcept
 {
     std::ostringstream oss;
 

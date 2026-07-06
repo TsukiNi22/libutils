@@ -67,7 +67,7 @@ class Cli;
 
 /* default hooks */
 void defaultPromptHook(const utils::cli::Cli& cli, std::uint8_t code);
-utils::cli::ParsedData defaultParserHook(const std::string& input, bool trim, bool logic, bool parse);
+utils::cli::ParsedData defaultParserHook(const std::string& input, const bool trim, const bool logic, const bool parse);
 bool defaultGetCHook(char& c);
 
 //----------------------------------------------------------------//
@@ -97,19 +97,19 @@ class Cli: private utils::warning::Observer {
         /* hooks */
         mutable std::mutex _hooksLock;
         std::function<void(const utils::cli::Cli&, std::uint8_t)> _promptHook;
-        std::function<utils::cli::ParsedData(const std::string&, bool, bool, bool)> _parserHook;
+        std::function<utils::cli::ParsedData(const std::string&, const bool, const bool, const bool)> _parserHook;
         std::function<bool(char&)> _getcHook;
 
         // ---------- Pre-Function -------- //
-        void launch(std::size_t call); // Stop on ctrl+d (except: MANUAL) or interrupt()
-        void prompt();
-        std::string getInput();
+        void launch(const std::size_t call); // Stop on ctrl+d (except: MANUAL) or interrupt()
+        void prompt(void);
+        std::string getInput(void);
         utils::cli::ParsedData parse(const std::string& input);
         void exec(const utils::cli::ParsedData& parsedInput);
 
         /* persitent storage handling */
-        void loadHistory();
-        void saveHistory();
+        void loadHistory(void);
+        void saveHistory(void);
 
     public:
         /* middlewares */
@@ -122,37 +122,37 @@ class Cli: private utils::warning::Observer {
         utils::middleware::Middlewares<const std::string&, const std::string&> commandMiddlewares; // When a command is executed
 
         // ---------- Pre-Function -------- //
-        void join(); // Yield until the cli stop running
-        std::optional<std::thread> start(std::size_t call = 1, const bool failsafe = false);
-        std::optional<std::thread> start(const std::string& input, std::size_t call = 1, const bool failsafe = false); // Execute an input on start
-        std::optional<std::thread> start(const std::vector<std::string>& inputs, std::size_t call = 1, const bool failsafe = false); // Execute multiple input on start
+        void join(void) const noexcept; // Yield until the cli stop running
+        std::optional<std::thread> start(const std::size_t call = 1, const bool failsafe = false);
+        std::optional<std::thread> start(const std::string& input, const std::size_t call = 1, const bool failsafe = false); // Execute an input on start
+        std::optional<std::thread> start(const std::vector<std::string>& inputs, const std::size_t call = 1, const bool failsafe = false); // Execute multiple input on start
 
         /* commands */
-        void resetCommands();
-        void clearCommands();
+        void resetCommands(void);
+        void clearCommands(void);
         void delCommand(const std::string& command);
         void delCommands(const std::vector<std::string>& commands);
 
         /* hooks */
-        void resetHooks(); // Reset all hooks
+        void resetHooks(void); // Reset all hooks
 
         /* middlewares */
-        void resetMiddlewares(); // Reset all middlewares
+        void resetMiddlewares(void); // Reset all middlewares
 
         /* getter */
         std::string strcode(std::uint8_t code) const;
 
         // ------------ Function ---------- //
-        void setInputDelimitor(char c) {this->_inputDelimitor = c;};
-        void interrupt() {this->_interrupted = true;};
-        void kill() {this->_killed = true; this->_interrupted = true;};
-        bool isRunning() const {return this->_running;};
-        bool wasInterrupted() const {return (!this->_running && this->_interrupted && !this->_killed);};
-        bool wasKilled() const {return (!this->_running && this->_killed);};
-        bool wasStopped() const {return (!this->_running && !this->_interrupted && !this->_killed);};
+        void setInputDelimitor(const char c) {this->_inputDelimitor = c;};
+        void interrupt(void) {this->_interrupted = true;};
+        void kill(void) {this->_killed = true; this->_interrupted = true;};
+        bool isRunning(void) const {return this->_running;};
+        bool wasInterrupted(void) const {return (!this->_running && this->_interrupted && !this->_killed);};
+        bool wasKilled(void) const {return (!this->_running && this->_killed);};
+        bool wasStopped(void) const {return (!this->_running && !this->_interrupted && !this->_killed);};
 
         /* flag */
-        void resetFlags() {this->_flags = utils::cli::Flags::DEFAULT;};
+        void resetFlags(void) {this->_flags = utils::cli::Flags::DEFAULT;};
         void subFlags(std::uint32_t flags) {this->_flags &= ~flags;};
         void addFlags(std::uint32_t flags) {this->_flags |= flags;};
         void setFlags(std::uint32_t flags) {this->_flags = flags;};
@@ -204,17 +204,17 @@ class Cli: private utils::warning::Observer {
         };
 
         /* hooks */
-        void resetPromptHook() {std::lock_guard lock(this->_hooksLock); this->_promptHook = defaultPromptHook;};
-        void resetParserHook() {std::lock_guard lock(this->_hooksLock); this->_parserHook = defaultParserHook;};
-        void resetGetCHook()   {std::lock_guard lock(this->_hooksLock); this->_getcHook = defaultGetCHook;};
+        void resetPromptHook(void) {std::lock_guard lock(this->_hooksLock); this->_promptHook = defaultPromptHook;};
+        void resetParserHook(void) {std::lock_guard lock(this->_hooksLock); this->_parserHook = defaultParserHook;};
+        void resetGetCHook(void)   {std::lock_guard lock(this->_hooksLock); this->_getcHook = defaultGetCHook;};
         void setPromptHook(const std::function<void(const utils::cli::Cli&, std::uint8_t)>& hook) {std::lock_guard lock(this->_hooksLock); this->_promptHook = hook;}; // Called to print the prompt
         void setParserHook(const std::function<ParsedData(const std::string&, bool, bool, bool)>& hook) {std::lock_guard lock(this->_hooksLock); this->_parserHook = hook;}; // Called to parse the input
         void setGetCHook(const std::function<bool(char&)>& hook) {std::lock_guard lock(this->_hooksLock); this->_getcHook = hook;}; // Called to print the prompt
 
         /* getter */
-        std::uint8_t getCode() const {return this->_code;};
-        std::uint32_t getFlags() const {return this->_flags;};
-        char getInputDelimitor() const {return this->_inputDelimitor;};
+        std::uint8_t getCode(void) const {return this->_code;};
+        std::uint32_t getFlags(void) const {return this->_flags;};
+        char getInputDelimitor(void) const {return this->_inputDelimitor;};
         std::vector<std::string> getHistory() const {std::lock_guard lock(this->_hooksLock); return this->_history;};
 
         // ------------ Operator ---------- //
@@ -222,7 +222,7 @@ class Cli: private utils::warning::Observer {
         Cli& operator=(Cli&& other) = delete;
 
         // ---------- Constructor --------- //
-        Cli(bool sig = false); // Enable/Disbale catch of ctrl-c & ctrl-z signal
+        Cli(const bool sig = false); // Enable/Disbale catch of ctrl-c & ctrl-z signal
         Cli(const Cli& other) = delete;
         Cli(Cli&& other) = delete;
 

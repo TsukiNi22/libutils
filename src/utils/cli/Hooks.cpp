@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 05/07/2026 by @author Tsukini
+##  @date 06/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Hooks.cpp
@@ -117,7 +117,7 @@ static std::vector<std::string> splitCommand(const std::string& command)
     return splited;
 }
 
-hot utils::cli::ParsedData utils::cli::defaultParserHook(const std::string& input, bool trim, bool logic, bool parse)
+hot utils::cli::ParsedData utils::cli::defaultParserHook(const std::string& input, const bool trim, const bool logic, const bool parse)
 {
     utils::cli::ParsedData parsedInput;
     std::vector<std::string> commands;

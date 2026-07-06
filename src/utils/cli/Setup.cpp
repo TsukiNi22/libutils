@@ -37,7 +37,7 @@ File Description:
 #include <string>
 #include <tuple>
 
-utils::cli::Cli::Cli(bool sig)
+utils::cli::Cli::Cli(const bool sig)
 : _sig{sig}
 {
     // Setup initial values
@@ -80,14 +80,14 @@ utils::cli::Cli::~Cli()
         this->saveHistory();
 }
 
-static std::filesystem::path getHistoryFilePath()
+static std::filesystem::path getHistoryFilePath(void)
 {
     const char* home = std::getenv("HOME");
     if (!home) home = ".";
     return std::filesystem::path(home) / HISTORY_FILE;
 }
 
-void utils::cli::Cli::loadHistory()
+void utils::cli::Cli::loadHistory(void)
 {
     std::unique_lock lock(this->_historyLock);
     const std::filesystem::path path = getHistoryFilePath();
@@ -103,7 +103,7 @@ void utils::cli::Cli::loadHistory()
         if (!line.empty()) this->_history.push_back(line);
 }
 
-void utils::cli::Cli::saveHistory()
+void utils::cli::Cli::saveHistory(void)
 {
     std::shared_lock lock(this->_historyLock);
     const std::filesystem::path path = getHistoryFilePath();
@@ -123,7 +123,7 @@ void utils::cli::Cli::saveHistory()
  * help -> display commands help
  * bye == quit == exit -> exit the cli
 */
-static void help()
+static void help(void)
 {
     std::cout
     << "help:" << std::endl
@@ -134,12 +134,12 @@ static void help()
     << " ?\t- Display the precedent return code" << std::endl;
 }
 
-static void exit()
+static void exit(void)
 {
     throw utils::exception::NoneException(utils::exception::Code::Exit);
 }
-static void bye() {exit();}
-static void quit() {exit();}
+static void bye(void) {exit();}
+static void quit(void) {exit();}
 
 static void displayCode(const utils::cli::Cli& cli)
 {
@@ -153,7 +153,7 @@ static void displayCode(const utils::cli::Cli& cli)
     std::cout << std::endl << std::flush;
 }
 
-void utils::cli::Cli::resetCommands()
+void utils::cli::Cli::resetCommands(void)
 {
     std::unique_lock lock(this->_commandsLock);
     this->_parsedCommands.clear();
@@ -176,14 +176,14 @@ void utils::cli::Cli::resetCommands()
     this->_rawCommands["?"] = FnStr([](const utils::cli::Cli& cli, unused const std::string& input){displayCode(cli);});
 }
 
-void utils::cli::Cli::resetHooks()
+void utils::cli::Cli::resetHooks(void)
 {
     this->resetPromptHook();
     this->resetParserHook();
     this->resetGetCHook();
 }
 
-void utils::cli::Cli::resetMiddlewares()
+void utils::cli::Cli::resetMiddlewares(void)
 {
     this->cliMiddlewares.clear();
     this->errorMiddlewares.clear();
@@ -194,7 +194,7 @@ void utils::cli::Cli::resetMiddlewares()
     this->commandMiddlewares.clear();
 }
 
-void utils::cli::Cli::clearCommands()
+void utils::cli::Cli::clearCommands(void)
 {
     std::unique_lock lock(this->_commandsLock);
     this->_parsedCommands.clear();

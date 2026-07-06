@@ -35,39 +35,39 @@ namespace utils::write { // namespace start
     constexpr inline std::string csi(const std::string& code) {return std::string(1, static_cast<char>(utils::write::Char::ESC)) + "[" + code;}
 
     /* ----------- reset ----------- */
-    constexpr inline std::string reset()                    {return csi("0m");}
-    constexpr inline std::string strong_reset()             {return csi("21m");}
-    constexpr inline std::string dark_reset()               {return csi("22m");}
-    constexpr inline std::string italic_reset()             {return csi("23m");}
-    constexpr inline std::string underlined_reset()         {return csi("24m");}
-    constexpr inline std::string flashing_fast_reset()      {return csi("25m");}
-    constexpr inline std::string flashing_slow_reset()      {return csi("26m");}
-    constexpr inline std::string reversed_reset()           {return csi("27m");}
-    constexpr inline std::string hide_reset()               {return csi("28m");}
-    constexpr inline std::string bar_reset()                {return csi("29m");}
-    constexpr inline std::string framed_encircled_reset()   {return csi("54m");}
-    constexpr inline std::string overlined_reset()          {return csi("55m");}
-    constexpr inline std::string underline_color_reset()    {return csi("59m");}
-    constexpr inline std::string exposant_indice_reset()    {return csi("75m");}
+    constexpr inline std::string reset(void)                    {return csi("0m");}
+    constexpr inline std::string strong_reset(void)             {return csi("21m");}
+    constexpr inline std::string dark_reset(void)               {return csi("22m");}
+    constexpr inline std::string italic_reset(void)             {return csi("23m");}
+    constexpr inline std::string underlined_reset(void)         {return csi("24m");}
+    constexpr inline std::string flashing_fast_reset(void)      {return csi("25m");}
+    constexpr inline std::string flashing_slow_reset(void)      {return csi("26m");}
+    constexpr inline std::string reversed_reset(void)           {return csi("27m");}
+    constexpr inline std::string hide_reset(void)               {return csi("28m");}
+    constexpr inline std::string bar_reset(void)                {return csi("29m");}
+    constexpr inline std::string framed_encircled_reset(void)   {return csi("54m");}
+    constexpr inline std::string overlined_reset(void)          {return csi("55m");}
+    constexpr inline std::string underline_color_reset(void)    {return csi("59m");}
+    constexpr inline std::string exposant_indice_reset(void)    {return csi("75m");}
     /* args */
     constexpr inline std::string resetStyle(utils::write::ResetStyle style) {return csi(std::to_string(static_cast<std::uint8_t>(style)) + "m");}
 
     /* ----------- style ----------- */
-    constexpr inline std::string strong()           {return csi("1m");}
-    constexpr inline std::string dark()             {return csi("2m");}
-    constexpr inline std::string italic()           {return csi("3m");}
-    constexpr inline std::string underlined()       {return csi("4m");}
-    constexpr inline std::string flashing_fast()    {return csi("5m");}
-    constexpr inline std::string flashing_slow()    {return csi("6m");}
-    constexpr inline std::string reversed()         {return csi("7m");}
-    constexpr inline std::string hide()             {return csi("8m");}
-    constexpr inline std::string bar()              {return csi("9m");}
-    constexpr inline std::string monospace()        {return csi("50m");}
-    constexpr inline std::string framed()           {return csi("51m");} // Rarely supported
-    constexpr inline std::string encircled()        {return csi("52m");} // Rarely supported
-    constexpr inline std::string overlined()        {return csi("53m");}
-    constexpr inline std::string exposant()         {return csi("73m");} // Rarely supported
-    constexpr inline std::string indice()           {return csi("74m");} // Rarely supported
+    constexpr inline std::string strong(void)           {return csi("1m");}
+    constexpr inline std::string dark(void)             {return csi("2m");}
+    constexpr inline std::string italic(void)           {return csi("3m");}
+    constexpr inline std::string underlined(void)       {return csi("4m");}
+    constexpr inline std::string flashing_fast(void)    {return csi("5m");}
+    constexpr inline std::string flashing_slow(void)    {return csi("6m");}
+    constexpr inline std::string reversed(void)         {return csi("7m");}
+    constexpr inline std::string hide(void)             {return csi("8m");}
+    constexpr inline std::string bar(void)              {return csi("9m");}
+    constexpr inline std::string monospace(void)        {return csi("50m");}
+    constexpr inline std::string framed(void)           {return csi("51m");} // Rarely supported
+    constexpr inline std::string encircled(void)        {return csi("52m");} // Rarely supported
+    constexpr inline std::string overlined(void)        {return csi("53m");}
+    constexpr inline std::string exposant(void)         {return csi("73m");} // Rarely supported
+    constexpr inline std::string indice(void)           {return csi("74m");} // Rarely supported
     /* args */
     constexpr inline std::string setStyle(utils::write::Style style)                                    {return csi(std::to_string(static_cast<std::uint8_t>(style)) + "m");}
     constexpr inline std::string color(utils::write::Color c)                                           {return csi(std::to_string(static_cast<std::uint8_t>(c)) + "m");}
@@ -80,8 +80,8 @@ namespace utils::write { // namespace start
     constexpr inline std::string underline_color_rgb(std::uint8_t r, std::uint8_t g, std::uint8_t b)    {return csi("58;2;" + std::to_string(r) + ";" + std::to_string(g) + ";" + std::to_string(b) + "m");}
 
     /* ---------- cursor ----------- */
-    constexpr inline std::string load_cur() {return csi("u");}
-    constexpr inline std::string save_cur() {return csi("s");}
+    constexpr inline std::string load_cur(void) {return csi("u");}
+    constexpr inline std::string save_cur(void) {return csi("s");}
     /* args */
     constexpr inline std::string up(std::size_t n)                      {return csi(std::to_string(n) + "A");}
     constexpr inline std::string down(std::size_t n)                    {return csi(std::to_string(n) + "B");}
@@ -95,42 +95,42 @@ namespace utils::write { // namespace start
     constexpr inline std::string scroll_down(std::size_t n)             {return csi(std::to_string(n) + "T");}
 
     /* ----------- erase ----------- */
-    constexpr inline std::string screen_end()           {return csi("0J");}
-    constexpr inline std::string screen_start()         {return csi("1J");}
-    constexpr inline std::string screen()               {return csi("2J");}
-    constexpr inline std::string scrollback_buffer()    {return csi("3J");} // Can delete the term history
-    constexpr inline std::string line_end()             {return csi("0K");}
-    constexpr inline std::string line_start()           {return csi("1K");}
-    constexpr inline std::string line()                 {return csi("2K");}
+    constexpr inline std::string screen_end(void)           {return csi("0J");}
+    constexpr inline std::string screen_start(void)         {return csi("1J");}
+    constexpr inline std::string screen(void)               {return csi("2J");}
+    constexpr inline std::string scrollback_buffer(void)    {return csi("3J");} // Can delete the term history
+    constexpr inline std::string line_end(void)             {return csi("0K");}
+    constexpr inline std::string line_start(void)           {return csi("1K");}
+    constexpr inline std::string line(void)                 {return csi("2K");}
 
     /* ------ private-modes ------- */
-    constexpr inline std::string inverted_color_enable()    {return csi("?5h");}
-    constexpr inline std::string inverted_color_disable()   {return csi("?5l");}
-    constexpr inline std::string wrapping_enable()          {return csi("?7h");}
-    constexpr inline std::string wrapping_disable()         {return csi("?7l");}
-    constexpr inline std::string show_cur()                 {return csi("?25h");}
-    constexpr inline std::string hide_cur()                 {return csi("?25l");}
-    constexpr inline std::string save_screen()              {return csi("?1049h");}
-    constexpr inline std::string load_screen()              {return csi("?1049l");}
+    constexpr inline std::string inverted_color_enable(void)    {return csi("?5h");}
+    constexpr inline std::string inverted_color_disable(void)   {return csi("?5l");}
+    constexpr inline std::string wrapping_enable(void)          {return csi("?7h");}
+    constexpr inline std::string wrapping_disable(void)         {return csi("?7l");}
+    constexpr inline std::string show_cur(void)                 {return csi("?25h");}
+    constexpr inline std::string hide_cur(void)                 {return csi("?25l");}
+    constexpr inline std::string save_screen(void)              {return csi("?1049h");}
+    constexpr inline std::string load_screen(void)              {return csi("?1049l");}
     
     /* --------- reports ---------- */
-    constexpr inline std::string get_pos()                      {return csi("6n");} // Reports cursor position as "ESC[row;colR"
-    constexpr inline std::string mouse_tracking_enable()        {return csi("?1000h");}
-    constexpr inline std::string mouse_tracking_disable()       {return csi("?1000l");}
-    constexpr inline std::string mouse_move_tracking_enable()   {return csi("?1002h");}
-    constexpr inline std::string mouse_move_tracking_disable()  {return csi("?1002l");}
+    constexpr inline std::string get_pos(void)                      {return csi("6n");} // Reports cursor position as "ESC[row;colR"
+    constexpr inline std::string mouse_tracking_enable(void)        {return csi("?1000h");}
+    constexpr inline std::string mouse_tracking_disable(void)       {return csi("?1000l");}
+    constexpr inline std::string mouse_move_tracking_enable(void)   {return csi("?1002h");}
+    constexpr inline std::string mouse_move_tracking_disable(void)  {return csi("?1002l");}
     // Reports mouse action as (each x&y value as a '+ 32') "ESC[Mb;x;y" -> 'b' is the boutton & modifier
     // Boutton: 0 left, 1 mid, 2 right, 3 release
     // Modifer: +4 shift, +8 alt, +16 ctrl
-    constexpr inline std::string mouse_adv_tracking_enable()    {return csi("?1006h");}
-    constexpr inline std::string mouse_adv_tracking_disable()   {return csi("?1006l");}
+    constexpr inline std::string mouse_adv_tracking_enable(void)    {return csi("?1006h");}
+    constexpr inline std::string mouse_adv_tracking_disable(void)   {return csi("?1006l");}
     // Reports mouse action as "ESC[<b;x;y(M|m)" -> 'b' is the boutton & modifier -> M = pressed, m = released
     // Boutton: 0 left, 1 mid, 2 right, 3 release
     // Modifer: +4 shift, +8 alt, +16 ctrl
-    constexpr inline std::string report_focus_enable()          {return csi("?1004h");} // Focus in: "ESC[I" | Focus out: "ESC[O"
-    constexpr inline std::string report_focus_disabled()        {return csi("?1004l");}
-    constexpr inline std::string report_past_enable()           {return csi("?2004h");} // Reports for pasted data: "ESC[200~{data}ESC[201~"
-    constexpr inline std::string report_past_disable()          {return csi("?2004l");}
+    constexpr inline std::string report_focus_enable(void)          {return csi("?1004h");} // Focus in: "ESC[I" | Focus out: "ESC[O"
+    constexpr inline std::string report_focus_disabled(void)        {return csi("?1004l");}
+    constexpr inline std::string report_past_enable(void)           {return csi("?2004h");} // Reports for pasted data: "ESC[200~{data}ESC[201~"
+    constexpr inline std::string report_past_disable(void)          {return csi("?2004l");}
 
 //----------------------------------------------------------------//
 /* TYPDEF */
@@ -160,9 +160,9 @@ struct AdvancedMouseEvent {
 };
 
 /* reports */
-std::pair<int, int> readCursorPosition();
-utils::write::MouseEvent readMouseEvent();
-utils::write::AdvancedMouseEvent readAdvancedMouseEvent();
+std::pair<int, int> readCursorPosition(void);
+utils::write::MouseEvent readMouseEvent(void);
+utils::write::AdvancedMouseEvent readAdvancedMouseEvent(void);
 
 } // namespace ends
 #endif /* ANSI_H */

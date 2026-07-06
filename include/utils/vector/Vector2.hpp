@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 18/05/2026 by @author Tsukini
+##  @date 06/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Vector2.hpp
@@ -72,14 +72,14 @@ class Vector2: public utils::vector::IVector<T> {
         template<typename U>
         T cross(const Vector2<U>& v) const
         requires utils::concepts::MultipliableWith<T, U> && utils::concepts::SubtractableWith<T, U> {return x * v.y - y * v.x;}
-        T length() const
+        T length(void) const
         requires utils::concepts::Multipliable<T> {return std::sqrt(x * x + y * y);}
-        T lengthSquared() const
+        T lengthSquared(void) const
         requires utils::concepts::Multipliable<T> && utils::concepts::Addable<T> {return x * x + y * y;}
-        Vector2 sign() const
+        Vector2 sign(void) const
         requires utils::concepts::ComparableWith<T, int>
         {return {(x > 0) - (x < 0), (y > 0) - (y < 0)};}
-        Vector2 normalize() const
+        Vector2 normalize(void) const
         requires utils::concepts::Divisible<T>
         {
             T len = length();
@@ -164,7 +164,7 @@ class Vector2: public utils::vector::IVector<T> {
         }
 
         // -------- Special-Operator -------- //
-        Vector2& operator++()
+        Vector2& operator++(void)
         requires utils::concepts::Incrementable<T>
         {
             ++x; ++y;
@@ -179,7 +179,7 @@ class Vector2: public utils::vector::IVector<T> {
             return tmp;
         }
 
-        Vector2& operator--()
+        Vector2& operator--(void)
         requires utils::concepts::Decrementable<T>
         {
             --x; --y;
@@ -302,7 +302,7 @@ class Vector2: public utils::vector::IVector<T> {
         requires utils::concepts::ComparableWith<T, U> {return (x >= v.x && y >= v.y);}
 
         // ------------ Unary ------------- //
-        Vector2 operator-() const
+        Vector2 operator-(void) const
         requires utils::concepts::Negatable<T> {return {-x, -y};}
 
         // ---------- Constructor --------- //

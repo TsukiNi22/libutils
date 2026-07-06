@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 05/07/2026 by @author Tsukini
+##  @date 06/07/2026 by @author Tsukini
 
 File Name:
 ##  @file IException.hpp
@@ -29,14 +29,14 @@ namespace utils::exception { // namespace start
 class IException: public std::exception, private utils::warning::UnsafeObserver {
     public:
         // --------- Pre-Function --------- //
-        virtual utils::exception::Type getType() const noexcept = 0;
-        virtual utils::exception::Code getCode() const noexcept = 0;
-        virtual bool isNone() const noexcept = 0;
-        virtual bool isFatal() const noexcept = 0;
-        virtual const char* what() const noexcept = 0;
-        virtual const char* info() const noexcept = 0;
-        virtual const std::source_location& loc() const noexcept = 0;
-        virtual std::string formated() const noexcept = 0;
+        virtual utils::exception::Type getType(void) const noexcept = 0;
+        virtual utils::exception::Code getCode(void) const noexcept = 0;
+        virtual bool isNone(void) const noexcept = 0;
+        virtual bool isFatal(void) const noexcept = 0;
+        virtual const char* what(void) const noexcept = 0;
+        virtual const char* info(void) const noexcept = 0;
+        virtual const std::source_location& loc(void) const noexcept = 0;
+        virtual std::string formated(void) const noexcept = 0;
 
         // ------------ Operator ---------- //
         IException& operator=(const IException& other) = delete;
