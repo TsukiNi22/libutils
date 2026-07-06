@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 29/05/2026 by @author Tsukini
+##  @date 09/06/2026 by @author Tsukini
 
 File Name:
 ##  @file foptimized.cpp
