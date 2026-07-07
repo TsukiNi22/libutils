@@ -3,6 +3,8 @@ name: CI/CD - Library
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - '.github/**'
 
 env:
   LIBRARYS: "libutils.a libutils_debug.a"
@@ -24,7 +26,7 @@ jobs:
           fetch-depth: 1
 
       - name: Cache ccache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: /github/home/.cache/ccache
           key: ccache-${{ runner.os }}-${{ hashFiles('**/*.cpp', '**/*.hpp', 'CMakeLists.txt') }}
@@ -53,7 +55,7 @@ jobs:
           done
 
       - name: Upload compiled libraries
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: compiled-libs
           path: |
@@ -79,7 +81,7 @@ jobs:
           path: my_lib_cpp
 
       - name: Download compiled libraries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: compiled-libs
           path: build
