@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 06/07/2026 by @author Tsukini
+##  @date 08/07/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -139,6 +139,8 @@ File Description:
     // -> ArgParser: basic check & parsing of arguments
     #include "arguments/ArgParser.hpp"      // utils::arguments::ArgParser
     #include "arguments/ArgParserType.hpp"  // utils::arguments::* (Type)
+    #include "arguments/Settings.hpp"       // utils::arguments::Settings (Setting are sub class not public and indidualy used)
+    #include "arguments/SettingsDefine.hpp" // utils::arguments::CastType
 #endif
 
 /* Algorithms */

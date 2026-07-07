@@ -39,6 +39,16 @@
             "code": "Freezed",
             "message": "Can't edit a freezed things",
             "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "BadCast",
+            "message": "Invalid cast between from a type to another",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "UnknowCast",
+            "message": "Unknow cast type, can't proceed",
+            "restrictions": ["Fatal", "Error"]
         }
     ]
 }

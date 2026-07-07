@@ -63,6 +63,7 @@ set(SRC
     ## Arguments
     src/utils/arguments/ArgParser.cpp
     src/utils/arguments/Hooks.cpp
+    src/utils/arguments/Settings.cpp
 
     ## Warning
     src/utils/warning/Observer.cpp
