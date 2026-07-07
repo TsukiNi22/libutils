@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 07/07/2026 by @author Tsukini
+##  @date 08/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Settings.cpp
@@ -114,7 +114,7 @@ nodiscard utils::arguments::CastType utils::arguments::Settings::getType(const s
                 throw std::invalid_argument("invalid float");
             if (errno == ERANGE)
                 throw std::out_of_range("float overflow");
-            utils::arguments::float128_t abs_value = std::fabsl(value);
+            utils::arguments::float128_t abs_value = std::fabs(value);
 
             if (abs_value <= static_cast<long double>(std::numeric_limits<utils::arguments::float16_t>::max()))
                 return utils::arguments::CastType::Float16;
