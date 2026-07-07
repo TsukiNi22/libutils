@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 09/06/2026 by @author Tsukini
+##  @date 08/07/2026 by @author Tsukini
 
 File Name:
 ##  @file foptimized.cpp
@@ -33,7 +33,7 @@ File Description:
 
 #include "utils/attribute/Attribute.hpp"
 #include <string_view>  // std::string_view
-#include <cstdint>      // std::uint8_t, std::uint16_t, std::uint32_t, std::uint64_t
+#include <cstdint>      // std::uint_fast8_t
 #include <cstddef>      // std::size_t
 #include <cstring>      // std::memset
 #include <array>        // std::array
@@ -99,7 +99,7 @@ static constexpr inline float upper_limit_table[5][5] = {
 // case sensitive
 #ifndef C2DMP_FHSM_OPTIMIZED
     #define C2DMP_FHSM_OPTIMIZED
-template<std::uint32_t prefixDepthSearch = 3, typename UINTN = std::uint32_t>
+template<std::uint_fast8_t prefixDepthSearch = 3, typename UINTN = std::uint_fast8_t>
 float c2dmp_foptimized(const std::string_view a, const std::string_view b)
 {
     // Check given type

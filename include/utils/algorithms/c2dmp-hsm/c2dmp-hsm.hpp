@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 08/06/2026 by @author Tsukini
+##  @date 08/07/2026 by @author Tsukini
 
 File Name:
 ##  @file c2dmp-hsm.hpp
@@ -30,7 +30,7 @@ File Description:
 namespace utils::algorithms::c2dmp { // namespace start
 
 // rediretion
-template<std::uint32_t prefixDepthSearch = 3, typename UINTN = std::uint32_t, bool full = false>
+template<std::uint_fast8_t prefixDepthSearch = 3, typename UINTN = std::uint_fast8_t, bool full = false>
 inline float c2dmp(const std::string_view a, const std::string_view b)
 {
     if constexpr (full) {
