@@ -14,14 +14,14 @@
 ### Table of Contents
  - [Exception](#exception)
  - [Write](#write)
- - [Cli](#cli)
  - [Verbose](#verbose)
+ - [Arguments](#arguments)
+ - [Cli](#cli)
  - [BLT](#blt)
  - [Vector](#vector)
  - [Attribute](#attribute)
  - [Concepts](#concepts)
  - [Middleware](#middleware)
- - [Arguments](#arguments)
  - [Algorithms](#algorithms)
  - [Warning](#warning)
 
@@ -34,18 +34,18 @@
 | Category | Define to include | Content |
 | -------- | ----------------- | ------- |
 | Utils | `_Utils` | handling, tools and attribute |
-| Handling | `_Handling` | exception, write and cli |
+| Handling | `_Handling` | exception, write, verbose, arguments and cli |
 | Exception | `_Exception` | customized exception |
 | Write | `_Write` | different handling for writing edition |
-| Cli | `_Cli` | customizable command line interface |
-| Tools | `_Tools` | verbose, BLT, vector, concepts, middleware and algorithms |
 | Verbose | `_Verbose` | some tools used for verbose handling |
+| Algorithms | `_Algorithms` | definition of home made algorithms such as the c2dmp-hsm (`_C2DMP`, `_SOS`) |
+| Cli | `_Cli` | customizable command line interface |
+| Tools | `_Tools` | BLT, vector, concepts, middleware and algorithms |
 | BLT | `_Blt` | implementation of a bidirectional lookup table |
 | Vector | `_Vector` | definition of vector2<T> and vector3<T> |
 | Concepts | `_Concepts` | definition of different concepts |
 | Middleware | `_Middleware` | definition of middlwares |
 | Arguments | `_Arguments` | utils for arguments (argc/argv) handling |
-| Algorithms | `_Algorithms` | definition of home made algorithms such as the c2dmp-hsm (`_C2DMP`, `_SOS`) |
 | Attribute | `_Attribute` | auto select of attribute definition for `fallback`, `c++14`, `c++17` and `c++20` |
 
 ## Exception
@@ -119,6 +119,53 @@ ResetStyle
 
 ```
 
+## Verbose
+> [!NOTE]
+> Definition of tools for verbose
+
+Included from:
+```cpp
+// Namespace used
+using utils::verbose
+
+/* macro */
+set_verbose(v) {utils::verbose::verbose = v;}
+
+/* macro verbose display */
+// info = str
+// level = verbose value
+onBasicVerbose(info)
+onAdvancedVerbose(info)
+onDebugVerbose(info)
+onVerbose(level, info)
+
+/* macro verbose execution */
+// fn = instructions
+// level = verbose value
+onBasicVerboseFn(fn)
+onAdvancedVerboseFn(fn)
+onDebugVerboseFn(fn)
+onVerboseFn(level, fn)
+
+/* variables */
+verbose // define the global level of verbosity
+stdout_lock // mutex that lock the verbose writing (auto handled)
+```
+
+## Arguments
+> [!NOTE]
+> Definition of utils to handle arguments argc/argv
+
+Included from:
+```cpp
+// Namespace used
+using utils::arguments
+
+/* class */
+ArgParser // argc/argv parsing and dispatching
+Settings // Handle settings extracted from argc/argv
+```
+
 ## Cli
 > [!NOTE]
 > Command line interface customizable using flags, hooks and middlewares
@@ -174,39 +221,6 @@ constexpr std::uint32_t MULTI_THREADING = THREAD | DETACHED;
  * TERM2   -> Completion on advenced term
  * TERM3   -> Multi threading advenced term
 */
-```
-
-## Verbose
-> [!NOTE]
-> Definition of tools for verbose
-
-Included from:
-```cpp
-// Namespace used
-using utils::verbose
-
-/* macro */
-set_verbose(v) {utils::verbose::verbose = v;}
-
-/* macro verbose display */
-// info = str
-// level = verbose value
-onBasicVerbose(info)
-onAdvancedVerbose(info)
-onDebugVerbose(info)
-onVerbose(level, info)
-
-/* macro verbose execution */
-// fn = instructions
-// level = verbose value
-onBasicVerboseFn(fn)
-onAdvancedVerboseFn(fn)
-onDebugVerboseFn(fn)
-onVerboseFn(level, fn)
-
-/* variables */
-verbose // define the global level of verbosity
-stdout_lock // mutex that lock the verbose writing (auto handled)
 ```
 
 ## BLT
@@ -273,20 +287,6 @@ Middlewares<T, U>
 Middlewares<T, void>
 Middlewares<void, T>
 Middlewares<void, void>
-```
-
-## Arguments
-> [!NOTE]
-> Definition of utils to handle arguments argc/argv
-
-Included from:
-```cpp
-// Namespace used
-using utils::arguments
-
-/* class */
-ArgParser // argc/argv parsing and dispatching
-Settings // Handle settings extracted from argc/argv
 ```
 
 ## Algorithms
