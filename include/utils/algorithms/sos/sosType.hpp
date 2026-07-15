@@ -8,14 +8,13 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 10/07/2026 by @author Tsukini
+##  @date 16/07/2026 by @author Tsukini
 
 File Name:
 ##  @file sosType.hpp
 
 File Description:
-##  You know, I don t think there are good or bad descriptions,
-##  for me, life is all about functions...
+##  Default type used by the s.o.s algorithm
 \**************************************************************/
 
 #ifndef SOSTYPE_H
