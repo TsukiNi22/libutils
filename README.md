@@ -2,20 +2,32 @@
 > [!NOTE]
 > To have more information look directly in the files
 
+## Dependencies
+
+| Name + Link | Status | Last Update |
+| ----------- | ------ | ----------- |
+| [c2dmp-hsm](https://github.com/TsukiNi22/c2dmp-hsm) | ![CD - Algorithm](https://github.com/TsukiNi22/c2dmp-hsm/actions/workflows/sync.yml/badge.svg) | ![](https://img.shields.io/github/last-commit/TsukiNi22/c2dmp-hsm) |
+| [s.o.s](https://github.com/TsukiNi22/s.o.s) | ![CD - Algorithm](https://github.com/TsukiNi22/s.o.s/actions/workflows/sync.yml/badge.svg) | ![](https://img.shields.io/github/last-commit/TsukiNi22/s.o.s) |
+
+## Utils - Content
+
 ### Table of Contents
  - [Exception](#exception)
  - [Write](#write)
+ - [Cli](#cli)
+ - [Verbose](#verbose)
+ - [BLT](#blt)
  - [Vector](#vector)
  - [Attribute](#attribute)
  - [Concepts](#concepts)
- - [Algorithms](#algorithms)
  - [Middleware](#middleware)
- - [Cli](#cli)
+ - [Arguments](#arguments)
+ - [Algorithms](#algorithms)
  - [Warning](#warning)
 
 ### Usage
 > [!NOTE]
-> Define used to include only part of the Utils lib
+> Define used to include only part of the Utils lib (by default everything is included)
 >
 > Included with `utils/utils.hpp` & the `libutils.a`
 
@@ -25,12 +37,15 @@
 | Handling | `_Handling` | exception, write and cli |
 | Exception | `_Exception` | customized exception |
 | Write | `_Write` | different handling for writing edition |
-| Command line interface | `_Cli` | customizable command line interface |
-| Tools | `_Tools` | vector, concepts, middleware and algorithms |
+| Cli | `_Cli` | customizable command line interface |
+| Tools | `_Tools` | verbose, BLT, vector, concepts, middleware and algorithms |
+| Verbose | `_Verbose` | some tools used for verbose handling |
+| BLT | `_Blt` | implementation of a bidirectional lookup table |
 | Vector | `_Vector` | definition of vector2<T> and vector3<T> |
 | Concepts | `_Concepts` | definition of different concepts |
 | Middleware | `_Middleware` | definition of middlwares |
-| Algorithms | `_Algorithms` | definition of home made algorithms such as the c2dmp-hsm |
+| Arguments | `_Arguments` | utils for arguments (argc/argv) handling |
+| Algorithms | `_Algorithms` | definition of home made algorithms such as the c2dmp-hsm (`_C2DMP`, `_SOS`) |
 | Attribute | `_Attribute` | auto select of attribute definition for `fallback`, `c++14`, `c++17` and `c++20` |
 
 ## Exception
@@ -104,6 +119,110 @@ ResetStyle
 
 ```
 
+## Cli
+> [!NOTE]
+> Command line interface customizable using flags, hooks and middlewares
+
+Included from:
+```cpp
+// Namespace used
+using utils::cli
+
+/* type */
+ParsedData
+
+/* class */
+Cli
+
+/* flag */
+enum Flag {
+    DEBUG           = 1 << 0, // Active verbose for internal action (Nothing for now)
+    NOECHO          = 1 << 1, // Disable echo of the input
+    CATCH           = 1 << 2, // Enable error catching on execution
+    EMPTY_INPUT     = 1 << 3, // Ingore empty input (default: error)
+    TRIM            = 1 << 4, // Enable trim on input
+    PARSED          = 1 << 5, // Active parser for the input and send vector<std::string> (default: std::string)
+    PROMPT          = 1 << 6, // Active the prompt
+    LOGIC           = 1 << 7, // Enable logic with '&&', '||' and ';'
+    ARROW           = 1 << 8, // Activate left, right
+    HISTORY         = 1 << 9, // Activate history, up and down arrow
+    PERSISTENT      = 1 << 10, // Allow persistent memory between session (history, ...)
+    HINT            = 1 << 11, // Display hint when a command fail
+    AUTO_COMPLETION = 1 << 12, // Active auto completion with `\t` (only work on the first command for now)
+    MANUAL          = 1 << 13, // Enable manual call for each new input handling
+    THREAD          = 1 << 14, // Run in a thread
+    DETACHED        = 1 << 15, // Detach the thread execution (by default return the thread at start)
+    NO_TTY          = 1 << 16, // Allow usage even without tty
+};
+
+// Namespace used
+using utils::cli::Flags
+
+/* flags */
+constexpr std::uint32_t ALL     = DEBUG | CATCH | NOECHO | TRIM | EMPTY_INPUT | PARSED | PROMPT | LOGIC | ARROW | HISTORY | HINT | AUTO_COMPLETION | MANUAL | THREAD | DETACHED;
+constexpr std::uint32_t DEFAULT = CATCH | EMPTY_INPUT | TRIM | PROMPT | ARROW;
+constexpr std::uint32_t DUMB    = 0;
+constexpr std::uint32_t TERM1   = CATCH | EMPTY_INPUT | TRIM | PARSED | PROMPT | EMPTY_INPUT | LOGIC | ARROW | HISTORY;
+constexpr std::uint32_t TERM2   = TERM1 | HINT | AUTO_COMPLETION;
+constexpr std::uint32_t TERM3   = TERM2 | THREAD;
+constexpr std::uint32_t LOG     = TERM3 | DETACHED | NO_TTY;
+constexpr std::uint32_t DEV     = TERM2 | DEBUG;
+constexpr std::uint32_t MULTI_THREADING = THREAD | DETACHED;
+/*
+ * DEFAULT -> Basic term
+ * TERM1   -> Advenced term
+ * TERM2   -> Completion on advenced term
+ * TERM3   -> Multi threading advenced term
+*/
+```
+
+## Verbose
+> [!NOTE]
+> Definition of tools for verbose
+
+Included from:
+```cpp
+// Namespace used
+using utils::verbose
+
+/* macro */
+set_verbose(v) {utils::verbose::verbose = v;}
+
+/* macro verbose display */
+// info = str
+// level = verbose value
+onBasicVerbose(info)
+onAdvancedVerbose(info)
+onDebugVerbose(info)
+onVerbose(level, info)
+
+/* macro verbose execution */
+// fn = instructions
+// level = verbose value
+onBasicVerboseFn(fn)
+onAdvancedVerboseFn(fn)
+onDebugVerboseFn(fn)
+onVerboseFn(level, fn)
+
+/* variables */
+verbose // define the global level of verbosity
+stdout_lock // mutex that lock the verbose writing (auto handled)
+```
+
+## BLT
+> [!NOTE]
+> Bidirectional Lookup Table definition
+
+Included from:
+```cpp
+// Namespace used
+using utils::blt
+
+/* class */
+utils::btl::BidirectionalLookupTable<L, R, ...>
+utils::btl::BidirectionalLookupTable<T, ...>
+```
+
 ## Vector
 > [!NOTE]
 > Definition of vector2 and vector3
@@ -156,10 +275,23 @@ Middlewares<void, T>
 Middlewares<void, void>
 ```
 
-## Algorithms
+## Arguments
 > [!NOTE]
-> Different algorithms such as the c2dmp-hsm ([here](https://github.com/TsukiNi22/c2dmp-hsm))
+> Definition of utils to handle arguments argc/argv
 
+Included from:
+```cpp
+// Namespace used
+using utils::arguments
+
+/* class */
+ArgParser // argc/argv parsing and dispatching
+Settings // Handle settings extracted from argc/argv
+```
+
+## Algorithms
+
+### [c2dmp-hsm](https://github.com/TsukiNi22/c2dmp-hsm)
 Included from:
 ```cpp
 // Namespace used
@@ -171,59 +303,19 @@ c2dmp::c2dmp_optimized // Optimized version of the c2dmp-hsm and the one used by
 c2dmp::c2dmp_simplified // Semi Optimized version of the c2dmp-hsm (deprecated)
 ```
 
-## Cli
-> [!NOTE]
-> Command line interface customizable using flags, hooks and middlewares
-
+### [s.o.s](https://github.com/TsukiNi22/s.o.s)
 Included from:
 ```cpp
 // Namespace used
-using utils::cli
+using utils::algorithms
 
-/* type */
-ParsedData
+/* s.o.s */
+sos::sos_embed & sos::sos_extract // You should call these, automatic redirection to the best one
+sos::sos_embed_optimized & sos::sos_extract_optimized // Optimized versions of the s.o.s and the one used by default
 
-/* class */
-Cli
-
-/* flag */
-enum Flag {
-    DEBUG           = 1 << 0, // Active verbose for internal action (Nothing for now)
-    NOECHO          = 1 << 1, // Disable echo of the input
-    CATCH           = 1 << 2, // Enable error catching on execution
-    EMPTY_INPUT     = 1 << 3, // Ingore empty input (default: error)
-    TRIM            = 1 << 4, // Enable trim on input
-    PARSED          = 1 << 5, // Active parser for the input and send vector<std::string> (default: std::string)
-    PROMPT          = 1 << 6, // Active the prompt
-    LOGIC           = 1 << 7, // Enable logic with '&&', '||' and ';'
-    ARROW           = 1 << 8, // Activate left, right
-    HISTORY         = 1 << 9, // Activate history, up and down arrow
-    HINT            = 1 << 10, // Display hint when a command fail
-    AUTO_COMPLETION = 1 << 11, // Active auto completion with `\t` (only work on the first command for now)
-    MANUAL          = 1 << 12, // Enable manual call for each new input handling
-    THREAD          = 1 << 13, // Run in a thread
-    DETACHED        = 1 << 14, // Detach the thread execution (by default return the thread at start)
-};
-
-// Namespace used
-using utils::cli::Flags
-
-/* flags */
-constexpr std::uint32_t ALL     = DEBUG | CATCH | NOECHO | TRIM | EMPTY_INPUT | PARSED | PROMPT | LOGIC | ARROW | HISTORY | HINT | AUTO_COMPLETION | MANUAL | THREAD | DETACHED;
-constexpr std::uint32_t DEFAULT = CATCH | EMPTY_INPUT | TRIM | PROMPT | ARROW;
-constexpr std::uint32_t DUMB    = 0;
-constexpr std::uint32_t TERM1   = CATCH | EMPTY_INPUT | TRIM | PARSED | PROMPT | EMPTY_INPUT | LOGIC | ARROW | HISTORY;
-constexpr std::uint32_t TERM2   = TERM1 | HINT | AUTO_COMPLETION;
-constexpr std::uint32_t TERM3   = TERM2 | THREAD;
-constexpr std::uint32_t DEV     = TERM2 | DEBUG;
-constexpr std::uint32_t SPECIAL = MANUAL | THREAD | DETACHED;
-constexpr std::uint32_t MULTI_THREADING = THREAD | DETACHED;
-/*
- * DEFAULT -> Basic term
- * TERM1   -> Advenced term
- * TERM2   -> Completion on advenced term
- * TERM3   -> Multi threading advenced term
-*/
+/* tools */
+sos::to_bytes // Convert any range type into an array of byte
+sos::bytes_to // Convert any array of byte into a range type
 ```
 
 ## Warning
