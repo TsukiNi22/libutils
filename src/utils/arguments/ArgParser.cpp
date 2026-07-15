@@ -8,14 +8,13 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 07/07/2026 by @author Tsukini
+##  @date 16/07/2026 by @author Tsukini
 
 File Name:
 ##  @file ArgParser.cpp
 
 File Description:
-##  You know, I don t think there are good or bad descriptions,
-##  for me, life is all about functions...
+##  ArgParser methods definition
 \**************************************************************/
 
 #include "utils/attribute/Attribute.hpp"

@@ -8,14 +8,13 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 08/07/2026 by @author Tsukini
+##  @date 16/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Settings.hpp
 
 File Description:
-##  You know, I don t think there are good or bad descriptions,
-##  for me, life is all about functions...
+##  Declaration of the Settings class used for settings handling
 \**************************************************************/
 
 #ifndef SETTINGS_H
