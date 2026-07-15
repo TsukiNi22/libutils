@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 08/07/2026 by @author Tsukini
+##  @date 15/07/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -47,6 +47,12 @@ File Description:
     #define _Middleware
     #define _Arguments
     #define _Algorithms
+#endif
+
+/* Activate all the algorithms */
+#ifdef _Algorithms
+    #define _C2DMP
+    #define _SOS
 #endif
 
 //----------------------------------------------------------------//
@@ -143,13 +149,21 @@ File Description:
     #include "arguments/SettingsDefine.hpp" // utils::arguments::CastType
 #endif
 
-/* Algorithms */
-#ifdef _Algorithms
-    // -> Definition of different algorithms
+/* c2dmp-hsm */
+#ifdef _C2DMP
     // -> c2dmp-hsm: heuristic string matching
     #include "algorithms/c2dmp-hsm/c2dmp-hsm.hpp"               // utils::algorithms::c2dmp::c2dmp
     #include "algorithms/c2dmp-hsm/algorithm/optimized.hpp"     // utils::algorithms::c2dmp::c2dmp_optimized
     #include "algorithms/c2dmp-hsm/algorithm/simplified.hpp"    // utils::algorithms::c2dmp::c2dmp_simplified
     #include "algorithms/c2dmp-hsm/algorithm/foptimized.hpp"    // utils::algorithms::c2dmp::c2dmp_foptimized
     #include "algorithms/c2dmp-hsm/algorithm/fsimplified.hpp"   // utils::algorithms::c2dmp::c2dmp_fsimplified
+#endif
+
+/* s.o.s */
+#ifdef _SOS
+    // -> s.o.s: steganography optimized and securized
+    #include "algorithms/sos/sos.hpp"                           // utils::algorithms::sos::sos_embed, utils::algorithms::sos::sos_extract, utils::algorithms::sos::tools::* (convert tools), utils::algorithms::sos::* (default type)
+    #include "algorithms/sos/algorithm/embed_optimized.hpp"     // utils::algorithms::sos::sos_embed_optimized
+    #include "algorithms/sos/algorithm/extract_optimized.hpp"   // utils::algorithms::sos::sos_extract_optimized
+    #include "algorithms/sos/tools/convert.hpp"                 // utils::algorithms::sos::to_bytes, utils::algorithms::sos::bytes_to
 #endif
