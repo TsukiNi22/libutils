@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 15/07/2026 by @author Tsukini
+##  @date 16/07/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -24,6 +24,18 @@ File Description:
     #warning "Automatic shared object warnings from 'utils/utils.hpp' are disable"
 #endif
 
+/* default: if nothing is defined - include everything */
+#if !defined(_Handling) && !defined(_Attribute) && !defined(_Tools) && \
+    /* _Handling */\
+    !defined(_Exception) && !defined(_Write) && !defined(_Verbose) && !defined(_Arguments) && !defined(_Cli) && \
+    /* _Tools */\
+    !defined(_BLT) && !defined(_Vector) && !defined(_Concepts) && !defined(_Middleware) && !defined(_Algorithms) && \
+    /* _Algorithms */\
+    !defined(_C2DMP) && !defined(_SOS)
+
+    #define _Utils
+#endif
+
 /* Activate all include */
 #ifdef _Utils
     #define _Handling
@@ -35,17 +47,17 @@ File Description:
 #ifdef _Handling
     #define _Exception
     #define _Write
+    #define _Verbose
+    #define _Arguments
     #define _Cli
 #endif
 
 /* Activate all tool include */
 #ifdef _Tools
-    #define _Verbose
     #define _BLT // Bidirectional Lookup Table
     #define _Vector
     #define _Concepts
     #define _Middleware
-    #define _Arguments
     #define _Algorithms
 #endif
 
