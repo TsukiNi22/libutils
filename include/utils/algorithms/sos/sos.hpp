@@ -20,19 +20,15 @@ File Description:
 #ifndef SOS_H
     #define SOS_H
 
-    //----------------------------------------------------------------//
-    /* INCLUDE */
-
-    /* type */
 #include "utils/attribute/Attribute.hpp"
-    #include "algorithm/embed_optimized.hpp"    // utils::algorithms::sos::algorithm::sos_embed_optimized
-    #include "algorithm/extract_optimized.hpp"  // utils::algorithms::sos::algorithm::sos_extract_optimized
-    #include "tools/convert.hpp"                // utils::algorithms::sos::tools::to_bytes
-    #include "sosDefine.hpp"                    // utils::algorithms::sos::Option
-    #include "sosType.hpp"                      // std::vector<ByteT>
-    #include <optional>                         // std::optional, std::nullopt
-    #include <cstdint>                          // std::uint8_t
-    #include <vector>                           // std::vector
+#include "algorithm/embed_optimized.hpp"    // utils::algorithms::sos::algorithm::sos_embed_optimized
+#include "algorithm/extract_optimized.hpp"  // utils::algorithms::sos::algorithm::sos_extract_optimized
+#include "tools/convert.hpp"                // utils::algorithms::sos::tools::to_bytes
+#include "sosDefine.hpp"                    // utils::algorithms::sos::Option
+#include "sosType.hpp"                      // std::vector<ByteT>
+#include <optional>                         // std::optional, std::nullopt
+#include <cstdint>                          // std::uint8_t
+#include <vector>                           // std::vector
 
 namespace utils::algorithms::sos { // namespace start
 

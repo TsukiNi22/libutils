@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 10/07/2026 by @author Tsukini
+##  @date 15/07/2026 by @author Tsukini
 
 File Name:
 ##  @file threshold.hpp
@@ -20,22 +20,18 @@ File Description:
 #ifndef THRESHOLD_H
     #define THRESHOLD_H
 
-    //----------------------------------------------------------------//
-    /* INCLUDE */
-
-    /* type */
 #include "utils/attribute/Attribute.hpp"
-    #include "../sosDefine.hpp" // utils::algorithms::sos::* (define)
-    #include "../sosType.hpp"   // utils::algorithms::sos::* (type)
-    #include <unordered_set>    // std::unordered_set
-    #include <stdexcept>        // std::* (exception)
-    #include <algorithm>        // std::count
-    #include <optional>         // std::optional
-    #include <cstdint>          // std::uint_fast32_t
-    #include <vector>           // std::vector
-    #include <string>           // std::to_string
+#include "../sosDefine.hpp" // utils::algorithms::sos::* (define)
+#include "../sosType.hpp"   // utils::algorithms::sos::* (type)
+#include <unordered_set>    // std::unordered_set
+#include <stdexcept>        // std::* (exception)
+#include <algorithm>        // std::count
+#include <optional>         // std::optional
+#include <cstdint>          // std::uint_fast32_t
+#include <vector>           // std::vector
+#include <string>           // std::to_string
 
-namespace utils::algorithms::utils::algorithms::sos::tools { // namespace start
+namespace utils::algorithms::sos::tools { // namespace start
 //----------------------------------------------------------------//
 /* PROTOTYPE */
 

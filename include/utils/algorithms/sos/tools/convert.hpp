@@ -20,19 +20,15 @@ File Description:
 #ifndef CONVERT_H
     #define CONVERT_H
 
-    //----------------------------------------------------------------//
-    /* INCLUDE */
-
-    /* type */
 #include "utils/attribute/Attribute.hpp"
-    #include "../sosDefine.hpp" // utils::algorithms::sos::* (define)
-    #include "../sosType.hpp"   // utils::algorithms::sos::* (type)
-    #include <exception>        // std::invalid_argument
-    #include <concepts>         // requires
-    #include <cstring>          // std::memcpy
-    #include <ranges>           // std::ranges::*
+#include "../sosDefine.hpp" // utils::algorithms::sos::* (define)
+#include "../sosType.hpp"   // utils::algorithms::sos::* (type)
+#include <exception>        // std::invalid_argument
+#include <concepts>         // requires
+#include <cstring>          // std::memcpy
+#include <ranges>           // std::ranges::*
 
-namespace utils::algorithms::utils::algorithms::sos::tools { // namespace start
+namespace utils::algorithms::sos::tools { // namespace start
 //----------------------------------------------------------------//
 /* PROTOTYPE */
 

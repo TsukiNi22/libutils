@@ -30,7 +30,7 @@ File Description:
 #include <random>                   // std::mt19937
 #include <vector>                   // std::vector
 
-namespace utils::algorithms::utils::algorithms::sos::algorithm { // namespace start
+namespace utils::algorithms::sos::algorithm { // namespace start
 
 #ifndef SOS_EMBED_OPTIMIZED
     #define SOS_EMBED_OPTIMIZED

@@ -20,23 +20,19 @@ File Description:
 #ifndef HASH_H
     #define HASH_H
 
-    //----------------------------------------------------------------//
-    /* INCLUDE */
-
-    /* type */
 #include "utils/attribute/Attribute.hpp"
-    #include "../sosDefine.hpp" // utils::algorithms::sos::* (define)
-    #include "../sosType.hpp"   // utils::algorithms::sos::* (type)
-    #include <stdexcept>        // std::* (exception)
-    #include <optional>         // std::optional
-    #include <cstdint>          // std::uint_fast32_t
-    #include <random>           // std::mt19937, std::seed_seq
-    #include <vector>           // std::vector
-    #include <array>            // std::array
-    #include <cmath>            // std::sin, std::abs
-    #include <bit>              // std::rotl
+#include "../sosDefine.hpp" // utils::algorithms::sos::* (define)
+#include "../sosType.hpp"   // utils::algorithms::sos::* (type)
+#include <stdexcept>        // std::* (exception)
+#include <optional>         // std::optional
+#include <cstdint>          // std::uint_fast32_t
+#include <random>           // std::mt19937, std::seed_seq
+#include <vector>           // std::vector
+#include <array>            // std::array
+#include <cmath>            // std::sin, std::abs
+#include <bit>              // std::rotl
 
-namespace utils::algorithms::utils::algorithms::sos::tools { // namespace start
+namespace utils::algorithms::sos::tools { // namespace start
 //----------------------------------------------------------------//
 /* PROTOTYPE */
 
@@ -68,6 +64,10 @@ struct DirectSeedSequence {
 template<typename ByteT>
 nodiscard std::mt19937 make_generator(const std::uint_fast32_t base_seed, const std::optional<std::vector<ByteT>>& key)
 {
+    // Check given type
+    static_assert(std::unsigned_integral<ByteT>, "ByteT must be an unsigned integer type");
+    using Byte = ByteT;
+
     std::array<std::uint32_t, std::mt19937::state_size> seed_data{};
     constexpr std::uint32_t prime = 0x9E3779B1u; // Prime used to 'shake' the bits
     constexpr std::uint32_t phi = 7; // Used to dephase the World dependencies & the Key
@@ -78,7 +78,7 @@ nodiscard std::mt19937 make_generator(const std::uint_fast32_t base_seed, const 
 
     // Key
     if (key.has_value()) unlikely {
-        for (utils::algorithms::sos::Byte byte: *key) {
+        for (Byte byte: *key) {
             for (std::size_t i = 0; i < seed_data.size(); ++i) {
                 seed_data[i] ^= static_cast<std::uint32_t>(byte) * 2654435761u;
                 seed_data[i] = std::rotl(seed_data[i], (i % 31) + 1) * prime;
