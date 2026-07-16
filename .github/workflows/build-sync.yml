@@ -3,8 +3,6 @@ name: CI/CD - Library
 on:
   push:
     branches: [main]
-    paths-ignore:
-      - '.github/**'
 
 env:
   LIBRARYS: "libutils.a libutils_debug.a"
