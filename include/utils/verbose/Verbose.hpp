@@ -32,7 +32,7 @@ File Description:
     /* MACRO */
 
     /* verbose edtion */
-    #define set_verbose(v) {utils::verbose::verbose = v;}
+    #define set_verbose(v) {utils::verbose::verbose = utils::verbose::Verbose::v;}
 
     /* multi-threading */
     #define LOCK_STDOUT std::lock_guard<std::mutex> lock(utils::verbose::stdout_lock)
