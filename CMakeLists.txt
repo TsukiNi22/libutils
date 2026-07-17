@@ -101,9 +101,11 @@ add_custom_target(generated_exception_header
 add_custom_target(release
     COMMAND ${CMAKE_COMMAND} -S ${CMAKE_SOURCE_DIR} -B ${CMAKE_BINARY_DIR} -DCMAKE_BUILD_TYPE=Debug
     COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --parallel
+    COMMAND ${CMAKE_COMMAND} -S ${CMAKE_SOURCE_DIR} -B ${CMAKE_BINARY_DIR} -DCMAKE_BUILD_TYPE=Asan
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --parallel
     COMMAND ${CMAKE_COMMAND} -S ${CMAKE_SOURCE_DIR} -B ${CMAKE_BINARY_DIR} -DCMAKE_BUILD_TYPE=Optimized
     COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --parallel
-    COMMENT "Building both Debug (libutils_debug.a) and Optimized (libutils.a) versions"
+    COMMENT "Building both debug versions Debug & Asan (libutils_debug.a, libutils_asan.a) and Optimized (libutils.a) one"
     VERBATIM
 )
 
@@ -116,17 +118,17 @@ add_dependencies(${TARGET} generated_exception_header)
 # Includes
 # =========================
 target_include_directories(${TARGET} PUBLIC include)
-#target_link_libraries(${TARGET} PRIVATE ...)
 
 # =========================
 # Modes
 # =========================
 set_target_properties(${TARGET} PROPERTIES
-    OUTPUT_NAME "utils$<$<CONFIG:Debug>:_debug>"
+    OUTPUT_NAME "utils$<$<CONFIG:Debug>:_debug>$<$<CONFIG:Asan>:_asan>"
 )
 
 target_compile_options(${TARGET} PRIVATE
     $<$<CONFIG:Debug>:-g -ggdb3>
+    $<$<CONFIG:Asan>:-fsanitize=address -fno-omit-frame-pointer -g -ggdb3>
     $<$<CONFIG:Optimized>:-O3 -ffast-math -funroll-loops -pipe -DNDEBUG>
 )
 

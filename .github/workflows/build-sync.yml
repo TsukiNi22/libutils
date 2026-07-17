@@ -102,8 +102,9 @@ jobs:
           cp -r my_lib_cpp/cmake/scripts cpp_project_template/cmake/scripts
           cp -r my_lib_cpp/include/utils cpp_project_template/include/utils
 
-          cp build/libutils.a        cpp_project_template/cmake/libs/libutils.a
-          cp build/libutils_debug.a  cpp_project_template/cmake/libs/libutils_debug.a
+          cp build/libutils.a       cpp_project_template/cmake/libs/libutils.a
+          cp build/libutils_debug.a cpp_project_template/cmake/libs/libutils_debug.a
+          cp build/libutils_asan.a  cpp_project_template/cmake/libs/libutils_asan.a
 
       - name: Commit and push
         working-directory: cpp_project_template
