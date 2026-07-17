@@ -59,6 +59,7 @@ jobs:
           path: |
             build/libutils.a
             build/libutils_debug.a
+            build/libutils_asan.a
 
   sync-template:
     needs: build-libraries
