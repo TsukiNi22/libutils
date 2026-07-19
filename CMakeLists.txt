@@ -10,7 +10,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_COMPILER clang++)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON) # Moderne compilation -fPIE
-add_definitions(-DFORCED_CXX_STANDARD=14) # Used for the attribute definition
 add_definitions(-D_NoWarning) # Remove warnings from utils (usless for hard import)
 
 # =========================
