@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_COMPILER clang++)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON) # Moderne compilation -fPIE
-add_definitions(-D_NoWarning) # Remove warnings from utils (usless for hard import)
+add_definitions(-D_NoWarning -DNO_LINKER_WARNING) # Remove warnings from utils (usless for hard import)
 
 # =========================
 # Requirement
@@ -115,6 +115,7 @@ add_custom_target(release
 # Dependencies
 # =========================
 add_dependencies(${TARGET} generated_exception_header)
+target_link_libraries(${TARGET} PRIVATE ssl crypto) # Network & Codec
 
 # =========================
 # Includes

@@ -25,7 +25,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"               // outdated
+    #include "../attribute/Attribute.hpp"               // _deprecated
     #include "../concepts/OperationConcepts.hpp"        // Operation Concepts
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::Code
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
@@ -45,7 +45,7 @@ namespace utils::vector { // namespace start
 /* CLASS */
 
 template<typename T>
-//class outdated("OVector2 dosen't have any concepts safty (Be careful!!!)") OVector2 {
+//class _deprecated("OVector2 dosen't have any concepts safty (Be careful!!!)") OVector2 {
 class OVector2 {
     public:
         T x;

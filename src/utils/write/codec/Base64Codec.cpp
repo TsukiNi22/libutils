@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 19/07/2026 by @author Tsukini
+##  @date 20/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Base64Codec.cpp
@@ -17,11 +17,11 @@ File Description:
 ##  Declaration of the base 64 codec methods
 \**************************************************************/
 
-#include <openssl/evp.h> // included before due to macro error
 #include "utils/attribute/Attribute.hpp"
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/basic/ErrorException.hpp"
 #include "utils/write/codec/Base64Codec.hpp"
+#include <openssl/evp.h>
 #include <cstdint>
 #include <string>
 

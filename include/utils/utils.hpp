@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 19/07/2026 by @author Tsukini
+##  @date 20/07/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -12,9 +12,10 @@ File Description:
 //----------------------------------------------------------------//
 /* DEFINE */
 
-/* Desactivate all automatic warning & outdated message */
+/* Desactivate all automatic warning & _deprecated message */
 #ifdef _NoWarning
-    #define NO_OUTDATED_WARNING // outdated(...)
+    #define NO_DEPRECATED_WARNING // _deprecated(...)
+    #define NO_LINKER_WARNING // Linker requirement
     //#define NO_SHARED_OBJECT_WARNING // shared object
     //#warning "All warnings from 'utils/utils.hpp' are disable"
 #endif

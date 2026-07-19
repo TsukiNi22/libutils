@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 19/07/2026 by @author Tsukini
+##  @date 20/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Base64Codec.hpp
@@ -31,6 +31,9 @@ namespace utils::write::codec { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
+#ifndef NO_LINKER_WARNING
+    #warning "The -lssl and -lcrypto are needed to use the Base64Codec"
+#endif
 class Base64Codec: public utils::write::codec::ICodec {
     public:
         // ------------ Function ---------- //
