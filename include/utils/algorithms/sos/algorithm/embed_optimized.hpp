@@ -74,16 +74,16 @@ void sos_embed_optimized(std::vector<ByteT>& carrier, const std::vector<ByteT>& 
     utils::algorithms::sos::tools::getThresholdIndex(index, carrier);
 
     // Check if the payload can be hiden in the carrier
-    if (index.size() == 0) unlikely {
+    if (index.size() == 0) _unlikely {
         throw std::out_of_range("Too few valide bytes that allow data storage, none where found!");
     }
     double percentage = static_cast<double>(sizeof(Byte) * 8 * bytes.size()) / static_cast<double>(index.size());
-    if (percentage > PAYLOAD_PERCENTAGE_LIMIT * 100.0) unlikely {
+    if (percentage > PAYLOAD_PERCENTAGE_LIMIT * 100.0) _unlikely {
         throw std::out_of_range("Too few valide bytes that allow data storage, the payload percentage limit was reach: " + std::to_string(percentage / 100.0) + "%");
     }
 
     // Check if there is place for the element used for the seed
-    if (index.size() < sizeof(Byte) * 8 * bytes.size() + SEED_ELEMENT_COUNT) unlikely {
+    if (index.size() < sizeof(Byte) * 8 * bytes.size() + SEED_ELEMENT_COUNT) _unlikely {
         throw std::out_of_range("Too few valide bytes that allow data storage, the limit was reach: " + std::to_string(sizeof(Byte) * 8 * bytes.size() + SEED_ELEMENT_COUNT));
     }
 

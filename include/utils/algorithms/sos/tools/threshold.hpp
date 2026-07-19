@@ -45,7 +45,7 @@ void getThresholdIndex(std::vector<std::uint_fast32_t>& index, const std::vector
     index.clear();
     index.reserve(bytes.size());
     for (std::size_t i = 0; i < bytes.size(); ++i) {
-        if (bytes[i] >= THRESHOLD_MIN(Byte) && bytes[i] <= THRESHOLD_MAX(Byte)) likely {index.push_back(i);}
+        if (bytes[i] >= THRESHOLD_MIN(Byte) && bytes[i] <= THRESHOLD_MAX(Byte)) _likely {index.push_back(i);}
     }
 }
 
@@ -61,9 +61,9 @@ void removeThreshold(std::vector<ByteT>& bytes)
     for (Byte byte: bytes) seen.insert(byte);
     std::size_t rangeUsed = seen.size();
 
-    if (rangeUsed < RANGE_USED_MIN(Byte)) unlikely {
+    if (rangeUsed < RANGE_USED_MIN(Byte)) _unlikely {
         throw std::out_of_range("Too few range used can't edit thresholds, the limit was reach: " + std::to_string(rangeUsed));
-    } else if (rangeUsed > RANGE_USED_MAX(Byte)) unlikely {
+    } else if (rangeUsed > RANGE_USED_MAX(Byte)) _unlikely {
         throw std::out_of_range("Too many range used can't edit thresholds, the limit was reach: " + std::to_string(rangeUsed));
     }
 

@@ -37,7 +37,7 @@ namespace utils::algorithms::sos::tools { // namespace start
 /* PROTOTYPE */
 
 template<typename ByteT>
-nodiscard std::uint_fast32_t hash(const std::vector<std::uint_fast32_t>& index, const std::vector<ByteT>& bytes)
+_nodiscard std::uint_fast32_t hash(const std::vector<std::uint_fast32_t>& index, const std::vector<ByteT>& bytes)
 {
     // Check given type
     static_assert(std::unsigned_integral<ByteT>, "ByteT must be an unsigned integer type");
@@ -56,13 +56,13 @@ nodiscard std::uint_fast32_t hash(const std::vector<std::uint_fast32_t>& index, 
 struct DirectSeedSequence {
     using result_type = std::uint32_t;
     const std::array<std::uint32_t, std::mt19937::state_size>& data;
-    nodiscard std::size_t size(void) const noexcept {return data.size();}
+    _nodiscard std::size_t size(void) const noexcept {return data.size();}
     template<typename It>
     void generate(It first, It last) const {std::copy_n(data.begin(), std::distance(first, last), first);}
 };
 
 template<typename ByteT>
-nodiscard std::mt19937 make_generator(const std::uint_fast32_t base_seed, const std::optional<std::vector<ByteT>>& key)
+_nodiscard std::mt19937 make_generator(const std::uint_fast32_t base_seed, const std::optional<std::vector<ByteT>>& key)
 {
     // Check given type
     static_assert(std::unsigned_integral<ByteT>, "ByteT must be an unsigned integer type");
@@ -77,7 +77,7 @@ nodiscard std::mt19937 make_generator(const std::uint_fast32_t base_seed, const 
         seed_data[i] = (base_seed + static_cast<std::uint32_t>(i)) * prime;
 
     // Key
-    if (key.has_value()) unlikely {
+    if (key.has_value()) _unlikely {
         for (Byte byte: *key) {
             for (std::size_t i = 0; i < seed_data.size(); ++i) {
                 seed_data[i] ^= static_cast<std::uint32_t>(byte) * 2654435761u;

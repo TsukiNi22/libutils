@@ -34,7 +34,7 @@ namespace utils::algorithms::sos::algorithm { // namespace start
 #ifndef SOS_EXTRACT_OPTIMIZED
     #define SOS_EXTRACT_OPTIMIZED
 template<std::uint8_t magic = MAGIC, typename ByteT>
-nodiscard std::vector<ByteT> sos_extract_optimized(const std::vector<ByteT>& carrier, const std::optional<std::vector<ByteT>>& key = std::nullopt)
+_nodiscard std::vector<ByteT> sos_extract_optimized(const std::vector<ByteT>& carrier, const std::optional<std::vector<ByteT>>& key = std::nullopt)
 {
     // Check given type
     static_assert(std::unsigned_integral<ByteT>, "ByteT must be an unsigned integer type");
@@ -48,7 +48,7 @@ nodiscard std::vector<ByteT> sos_extract_optimized(const std::vector<ByteT>& car
     utils::algorithms::sos::tools::getThresholdIndex(index, carrier);
 
     // Check for the minimum space that is required (magic + size) + index used for the seed
-    if (index.size() < (sizeof(Byte) + std::max(std::size_t{1}, sizeof(std::size_t) / sizeof(Byte))) * 8 + SEED_ELEMENT_COUNT) unlikely {
+    if (index.size() < (sizeof(Byte) + std::max(std::size_t{1}, sizeof(std::size_t) / sizeof(Byte))) * 8 + SEED_ELEMENT_COUNT) _unlikely {
         throw std::out_of_range("Too few valide bytes that allow data storage, no hidden message");
     }
 
@@ -75,7 +75,7 @@ nodiscard std::vector<ByteT> sos_extract_optimized(const std::vector<ByteT>& car
     // Check the header (magic)
     Byte identifier = 0;
     read_byte(identifier);
-    if (identifier != magic) unlikely {
+    if (identifier != magic) _unlikely {
         throw std::invalid_argument("Invalid MAGIC byte, no hidden message");
     }
 
@@ -88,7 +88,7 @@ nodiscard std::vector<ByteT> sos_extract_optimized(const std::vector<ByteT>& car
     }
 
     // Check if there is place for the index used for the seed & payload
-    if (index.size() < sizeof(Byte) * 8 * size + SEED_ELEMENT_COUNT) unlikely {
+    if (index.size() < sizeof(Byte) * 8 * size + SEED_ELEMENT_COUNT) _unlikely {
         throw std::out_of_range("Invalid carrier, there is less valide bytes that allow data storage than excepted: " + std::to_string(sizeof(Byte) * 8 * size + SEED_ELEMENT_COUNT));
     }
 

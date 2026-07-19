@@ -47,13 +47,13 @@ inline void sos_embed(std::vector<ByteT>& carrier, const std::vector<ByteT>& pay
 }
 
 template<std::uint8_t magic = MAGIC, typename ByteT>
-nodiscard inline std::vector<ByteT> sos_extract(const std::vector<ByteT>& carrier)
+_nodiscard inline std::vector<ByteT> sos_extract(const std::vector<ByteT>& carrier)
 {
     static_assert(std::unsigned_integral<ByteT>, "ByteT must be an unsigned integer type");
     return utils::algorithms::sos::algorithm::sos_extract_optimized<magic>(carrier);
 }
 template<std::uint8_t magic = MAGIC, typename ByteT>
-nodiscard inline std::vector<ByteT> sos_extract(const std::vector<ByteT>& carrier, const std::vector<ByteT>& key)
+_nodiscard inline std::vector<ByteT> sos_extract(const std::vector<ByteT>& carrier, const std::vector<ByteT>& key)
 {
     static_assert(std::unsigned_integral<ByteT>, "ByteT must be an unsigned integer type");
     return utils::algorithms::sos::algorithm::sos_extract_optimized<magic>(carrier, std::make_optional(key));

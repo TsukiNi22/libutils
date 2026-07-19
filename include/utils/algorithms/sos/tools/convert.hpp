@@ -70,12 +70,12 @@ Range bytes_to(const std::vector<ByteT>& bytes)
     static_assert(std::is_trivially_copyable_v<T>, "Element type must be trivially copyable.");
 
     std::size_t raw_size = bytes.size() * sizeof(Byte);
-    if (raw_size % sizeof(T) != 0) unlikely {
+    if (raw_size % sizeof(T) != 0) _unlikely {
         throw std::invalid_argument("Invalid byte count.");
     }
 
     Range range;
-    if constexpr (requires {range.reserve(0);}) likely {
+    if constexpr (requires {range.reserve(0);}) _likely {
         range.reserve(raw_size / sizeof(T));
     }
 
@@ -83,7 +83,7 @@ Range bytes_to(const std::vector<ByteT>& bytes)
     for (std::size_t i = 0; i < raw_size; i += sizeof(T)) {
         T value;
         std::memcpy(&value, raw + i, sizeof(T));
-        if constexpr (requires {range.push_back(value);}) likely {
+        if constexpr (requires {range.push_back(value);}) _likely {
             range.push_back(value);
         } else {
             range.insert(range.end(), value);
