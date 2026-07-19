@@ -22,7 +22,7 @@ void utils::warning::Observer::unlink(void)
     utils::warning::WarningInstance::SharedObject.unlink(this->_id);
 }
 
-utils::warning::Observer& utils::warning::Observer::operator=(unused const Observer& other)
+utils::warning::Observer& utils::warning::Observer::operator=(_unused const Observer& other)
 {
     return *this;
 }
@@ -40,7 +40,7 @@ utils::warning::Observer::Observer()
     this->link();
 }
 
-utils::warning::Observer::Observer(unused const Observer& other)
+utils::warning::Observer::Observer(_unused const Observer& other)
 {
     this->link();
 }

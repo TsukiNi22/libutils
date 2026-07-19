@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 05/07/2026 by @author Tsukini
+##  @date 20/07/2026 by @author Tsukini
 
 File Name:
 ##  @file UnsafeObserver.hpp
@@ -16,7 +16,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"   // nodiscard, outdated
+    #include "../attribute/Attribute.hpp"   // _nodiscard, outdated
     #include "SharedObject.hpp"             // utils::warning::WarningInstance::SharedObject
     #include <cstdint>                      // std::uint32_t
     #include <string>                       // std::string
@@ -35,7 +35,7 @@ class UnsafeObserver {
         void unlink(void);
 
         // ------------ Function ---------- //
-        inline nodiscard const std::string getInstanceName() const noexcept {return "[Unknow]";};
+        _nodiscard inline const std::string getInstanceName(void) const noexcept {return "[Unknow]";};
 
     public:
         // ------------ Operator ---------- //

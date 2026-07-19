@@ -25,7 +25,7 @@ File Description:
 #include <cstdint>
 #include <string>
 
-nodiscard std::string utils::write::codec::Base64Codec::encode(std::string s) const
+_nodiscard std::string utils::write::codec::Base64Codec::encode(std::string s) const
 {
     int len = ((s.size() + 2) / 3) * 4;
     std::string encoded(len, '\0');
@@ -41,7 +41,7 @@ nodiscard std::string utils::write::codec::Base64Codec::encode(std::string s) co
     return encoded;
 }
 
-nodiscard std::string utils::write::codec::Base64Codec::decode(std::string s) const
+_nodiscard std::string utils::write::codec::Base64Codec::decode(std::string s) const
 {
     std::size_t padding = 0, len = (s.size() * 3) / 4;
     std::string decoded(len, '\0');

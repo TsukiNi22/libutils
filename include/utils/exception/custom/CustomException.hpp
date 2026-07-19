@@ -18,7 +18,7 @@ File Description:
     /* type */
     #include "../ExceptionDefine.hpp"           // utils::exception::Code, utils::exception::Type
     #include "../AException.hpp"                // utils::exception::AException
-    #include "../../attribute/Attribute.hpp"    // cold
+    #include "../../attribute/Attribute.hpp"    // _cold
     #include <source_location>                  // std::source_location
 
 namespace utils::exception { // namespace start
@@ -32,8 +32,8 @@ class CustomException: public utils::exception::AException {
         CustomException& operator=(CustomException&& other) = delete;
 
         // ---------- Constructor --------- //
-        cold CustomException(utils::exception::Type type = utils::exception::Type::None, std::string info = "[None]", std::source_location loc = std::source_location::current()) : AException(loc, type, utils::exception::Code::Undefined, info) {};
-        cold explicit CustomException(utils::exception::Type type = utils::exception::Type::None, utils::exception::Code code = utils::exception::Code::Undefined, std::string info = "[None]", std::source_location loc = std::source_location::current()) : AException(loc, type, code, info) {};
+        _cold CustomException(utils::exception::Type type = utils::exception::Type::None, std::string info = "[None]", std::source_location loc = std::source_location::current()) : AException(loc, type, utils::exception::Code::Undefined, info) {};
+        _cold explicit CustomException(utils::exception::Type type = utils::exception::Type::None, utils::exception::Code code = utils::exception::Code::Undefined, std::string info = "[None]", std::source_location loc = std::source_location::current()) : AException(loc, type, code, info) {};
         CustomException(const CustomException& other) = delete;
         CustomException(CustomException&& other) = delete;
 

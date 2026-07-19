@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 19/07/2026 by @author Tsukini
+##  @date 20/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Attribute-c++20.hpp

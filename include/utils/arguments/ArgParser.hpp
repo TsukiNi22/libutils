@@ -24,7 +24,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"               // nodicard, unused
+    #include "../attribute/Attribute.hpp"               // nodicard, _unused
     #include "../warning/Observer.hpp"                  // utils::warning::Observer
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::* (Type)
@@ -50,7 +50,7 @@ std::optional<std::string> defaultSizetParsingHook(const std::string& option);  
 std::optional<std::string> defaultDoubleParsingHook(const std::string& option);   // Parse double
 std::optional<std::string> defaultFileParsingHook(const std::string& option);     // Check for file reading (only!)
 std::optional<std::string> defaultWritableParsingHook(const std::string& option); // Check if the path/file is readable & writable (only!)
-inline std::optional<std::string> defaultTrueParsingHook(unused const std::string&) {return std::nullopt;};
+inline std::optional<std::string> defaultTrueParsingHook(_unused const std::string&) {return std::nullopt;};
 
 //----------------------------------------------------------------//
 /* CLASS */
@@ -131,11 +131,11 @@ class ArgParser: private utils::warning::Observer {
         void setDescription(const std::string& description) {this->_description = description;};
 
         /* getter */
-        nodiscard const std::string& getBinary(void) const {return this->_binary;};
-        nodiscard const std::string& getDescription(void) const {return this->_description;};
-        nodiscard const std::unordered_map<std::string, utils::arguments::Usage>& getUsages(void) const {return this->_usages;};
-        nodiscard const std::unordered_map<std::string, utils::arguments::Option>& getOptions(void) const {return this->_options;};
-        nodiscard const std::unordered_map<std::string, utils::arguments::Flag>& getFlags(void) const {return this->_flags;};
+        _nodiscard const std::string& getBinary(void) const {return this->_binary;};
+        _nodiscard const std::string& getDescription(void) const {return this->_description;};
+        _nodiscard const std::unordered_map<std::string, utils::arguments::Usage>& getUsages(void) const {return this->_usages;};
+        _nodiscard const std::unordered_map<std::string, utils::arguments::Option>& getOptions(void) const {return this->_options;};
+        _nodiscard const std::unordered_map<std::string, utils::arguments::Flag>& getFlags(void) const {return this->_flags;};
 
         // ------------ Operator ---------- //
         ArgParser& operator=(const ArgParser& other) = delete;

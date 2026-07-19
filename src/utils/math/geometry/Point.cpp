@@ -15,7 +15,7 @@ File Description:
 #include "utils/math/MathType.hpp"
 #include <cmath>
 
-hot nodiscard utils::math::Coord2D utils::math::geometry::rotatePoint2D(const utils::math::Coord2D& origin, const utils::math::Coord2D& point, utils::math::Angle angle, const bool rad)
+_hot _nodiscard utils::math::Coord2D utils::math::geometry::rotatePoint2D(const utils::math::Coord2D& origin, const utils::math::Coord2D& point, utils::math::Angle angle, const bool rad)
 {
     utils::math::Type radian = rad ? angle : utils::math::trigo::degToRad(angle);
 
@@ -33,7 +33,7 @@ hot nodiscard utils::math::Coord2D utils::math::geometry::rotatePoint2D(const ut
     return {xr + origin.x, yr + origin.y};
 }
 
-hot nodiscard utils::math::Coord utils::math::geometry::rotatePoint3D(const utils::math::Coord& origin, const utils::math::Coord& point, const utils::math::Direction& orientation, const bool rad)
+_hot _nodiscard utils::math::Coord utils::math::geometry::rotatePoint3D(const utils::math::Coord& origin, const utils::math::Coord& point, const utils::math::Direction& orientation, const bool rad)
 {
     // Pre compute
     utils::math::Coord p = point - origin;

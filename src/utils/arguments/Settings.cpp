@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 16/07/2026 by @author Tsukini
+##  @date 20/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Settings.cpp
@@ -32,7 +32,7 @@ File Description:
 #include <regex>
 #include <cmath>
 
-static nodiscard std::u32string decode_utf8(const std::string& setting)
+_nodiscard static std::u32string decode_utf8(const std::string& setting)
 {
     std::u32string result;
     std::size_t i = 0;
@@ -60,14 +60,14 @@ static nodiscard std::u32string decode_utf8(const std::string& setting)
     return result;
 }
 
-nodiscard const utils::arguments::Setting& utils::arguments::Settings::at(const std::string& id) const
+_nodiscard const utils::arguments::Setting& utils::arguments::Settings::at(const std::string& id) const
 {
     if (!this->_settings.contains(id))
         throw utils::exception::ErrorException(utils::exception::Code::UnknowId, id);
     return this->_settings.at(id);
 }
 
-nodiscard utils::arguments::CastType utils::arguments::Settings::getType(const std::string& setting)
+_nodiscard utils::arguments::CastType utils::arguments::Settings::getType(const std::string& setting)
 {
     static const std::regex bool_pattern(R"(^(true|false|t|f)$)", std::regex::icase);
     static const std::regex int_pattern(R"(^[+-]?[0-9]+$)");
@@ -141,7 +141,7 @@ nodiscard utils::arguments::CastType utils::arguments::Settings::getType(const s
     return utils::arguments::CastType::None;
 }
 
-nodiscard std::byte utils::arguments::Settings::cast_byte(const std::string& setting)
+_nodiscard std::byte utils::arguments::Settings::cast_byte(const std::string& setting)
 {
     try {
         if (setting.empty())
@@ -160,7 +160,7 @@ nodiscard std::byte utils::arguments::Settings::cast_byte(const std::string& set
     }
 }
 
-nodiscard bool utils::arguments::Settings::cast_bool(const std::string& setting)
+_nodiscard bool utils::arguments::Settings::cast_bool(const std::string& setting)
 {
     try {
         if (setting.empty())
@@ -177,7 +177,7 @@ nodiscard bool utils::arguments::Settings::cast_bool(const std::string& setting)
     }
 }
 
-nodiscard std::int8_t utils::arguments::Settings::cast_int8(const std::string& setting)
+_nodiscard std::int8_t utils::arguments::Settings::cast_int8(const std::string& setting)
 {
     try {
         if (setting.empty())
@@ -195,7 +195,7 @@ nodiscard std::int8_t utils::arguments::Settings::cast_int8(const std::string& s
     }
 }
 
-nodiscard std::int16_t utils::arguments::Settings::cast_int16(const std::string& setting)
+_nodiscard std::int16_t utils::arguments::Settings::cast_int16(const std::string& setting)
 {
     try {
         if (setting.empty())
@@ -213,7 +213,7 @@ nodiscard std::int16_t utils::arguments::Settings::cast_int16(const std::string&
     }
 }
 
-nodiscard std::int32_t utils::arguments::Settings::cast_int32(const std::string& setting)
+_nodiscard std::int32_t utils::arguments::Settings::cast_int32(const std::string& setting)
 {
     try {
         if (setting.empty())
@@ -233,7 +233,7 @@ nodiscard std::int32_t utils::arguments::Settings::cast_int32(const std::string&
     }
 }
 
-nodiscard std::int64_t utils::arguments::Settings::cast_int64(const std::string& setting)
+_nodiscard std::int64_t utils::arguments::Settings::cast_int64(const std::string& setting)
 {
     try {
         if (setting.empty())
@@ -248,7 +248,7 @@ nodiscard std::int64_t utils::arguments::Settings::cast_int64(const std::string&
     }
 }
 
-nodiscard std::uint8_t utils::arguments::Settings::cast_uint8(const std::string& setting)
+_nodiscard std::uint8_t utils::arguments::Settings::cast_uint8(const std::string& setting)
 {
     try {
         if (setting.empty())
@@ -267,7 +267,7 @@ nodiscard std::uint8_t utils::arguments::Settings::cast_uint8(const std::string&
     }
 }
 
-nodiscard std::uint16_t utils::arguments::Settings::cast_uint16(const std::string& setting)
+_nodiscard std::uint16_t utils::arguments::Settings::cast_uint16(const std::string& setting)
 {
     try {
         if (setting.empty())
@@ -286,7 +286,7 @@ nodiscard std::uint16_t utils::arguments::Settings::cast_uint16(const std::strin
     }
 }
 
-nodiscard std::uint32_t utils::arguments::Settings::cast_uint32(const std::string& setting)
+_nodiscard std::uint32_t utils::arguments::Settings::cast_uint32(const std::string& setting)
 {
     try {
         if (setting.empty())
@@ -305,7 +305,7 @@ nodiscard std::uint32_t utils::arguments::Settings::cast_uint32(const std::strin
     }
 }
 
-nodiscard std::uint64_t utils::arguments::Settings::cast_uint64(const std::string& setting)
+_nodiscard std::uint64_t utils::arguments::Settings::cast_uint64(const std::string& setting)
 {
     try {
         if (setting.empty())
@@ -322,7 +322,7 @@ nodiscard std::uint64_t utils::arguments::Settings::cast_uint64(const std::strin
     }
 }
 
-nodiscard utils::arguments::float16_t utils::arguments::Settings::cast_float16(const std::string& setting)
+_nodiscard utils::arguments::float16_t utils::arguments::Settings::cast_float16(const std::string& setting)
 {
     try {
         if (setting.empty())
@@ -337,7 +337,7 @@ nodiscard utils::arguments::float16_t utils::arguments::Settings::cast_float16(c
     }
 }
 
-nodiscard utils::arguments::float32_t utils::arguments::Settings::cast_float32(const std::string& setting)
+_nodiscard utils::arguments::float32_t utils::arguments::Settings::cast_float32(const std::string& setting)
 {
     try {
         if (setting.empty())
@@ -352,7 +352,7 @@ nodiscard utils::arguments::float32_t utils::arguments::Settings::cast_float32(c
     }
 }
 
-nodiscard utils::arguments::float64_t utils::arguments::Settings::cast_float64(const std::string& setting)
+_nodiscard utils::arguments::float64_t utils::arguments::Settings::cast_float64(const std::string& setting)
 {
     try {
         if (setting.empty())
@@ -367,7 +367,7 @@ nodiscard utils::arguments::float64_t utils::arguments::Settings::cast_float64(c
     }
 }
 
-nodiscard utils::arguments::float128_t utils::arguments::Settings::cast_float128(const std::string& setting)
+_nodiscard utils::arguments::float128_t utils::arguments::Settings::cast_float128(const std::string& setting)
 {
     try {
         if (setting.empty())
@@ -382,7 +382,7 @@ nodiscard utils::arguments::float128_t utils::arguments::Settings::cast_float128
     }
 }
 
-nodiscard char8_t utils::arguments::Settings::cast_char8(const std::string& setting)
+_nodiscard char8_t utils::arguments::Settings::cast_char8(const std::string& setting)
 {
     try {
         if (setting.size() != 1)
@@ -393,7 +393,7 @@ nodiscard char8_t utils::arguments::Settings::cast_char8(const std::string& sett
     }
 }
 
-nodiscard char16_t utils::arguments::Settings::cast_char16(const std::string& setting)
+_nodiscard char16_t utils::arguments::Settings::cast_char16(const std::string& setting)
 {
     try {
         if (setting.empty())
@@ -410,7 +410,7 @@ nodiscard char16_t utils::arguments::Settings::cast_char16(const std::string& se
     }
 }
 
-nodiscard char32_t utils::arguments::Settings::cast_char32(const std::string& setting)
+_nodiscard char32_t utils::arguments::Settings::cast_char32(const std::string& setting)
 {
     try {
         if (setting.empty())
@@ -427,7 +427,7 @@ nodiscard char32_t utils::arguments::Settings::cast_char32(const std::string& se
     }
 }
 
-nodiscard std::u8string utils::arguments::Settings::cast_u8string(const std::string& setting)
+_nodiscard std::u8string utils::arguments::Settings::cast_u8string(const std::string& setting)
 {
     try {
         (void)decode_utf8(setting);
@@ -437,7 +437,7 @@ nodiscard std::u8string utils::arguments::Settings::cast_u8string(const std::str
     }
 }
 
-nodiscard std::u16string utils::arguments::Settings::cast_u16string(const std::string& setting)
+_nodiscard std::u16string utils::arguments::Settings::cast_u16string(const std::string& setting)
 {
     try {
         std::u32string codepoints = decode_utf8(setting);
@@ -457,7 +457,7 @@ nodiscard std::u16string utils::arguments::Settings::cast_u16string(const std::s
     }
 }
 
-nodiscard std::u32string utils::arguments::Settings::cast_u32string(const std::string& setting)
+_nodiscard std::u32string utils::arguments::Settings::cast_u32string(const std::string& setting)
 {
     try {
         return decode_utf8(setting);
@@ -466,7 +466,7 @@ nodiscard std::u32string utils::arguments::Settings::cast_u32string(const std::s
     }
 }
 
-nodiscard wchar_t utils::arguments::Settings::cast_wchar(const std::string& setting)
+_nodiscard wchar_t utils::arguments::Settings::cast_wchar(const std::string& setting)
 {
     try {
         std::u32string codepoints = decode_utf8(setting);
@@ -478,7 +478,7 @@ nodiscard wchar_t utils::arguments::Settings::cast_wchar(const std::string& sett
     }
 }
 
-nodiscard std::wstring utils::arguments::Settings::cast_wstring(const std::string& setting)
+_nodiscard std::wstring utils::arguments::Settings::cast_wstring(const std::string& setting)
 {
     try {
         std::u32string codepoints = decode_utf8(setting);
@@ -488,7 +488,7 @@ nodiscard std::wstring utils::arguments::Settings::cast_wstring(const std::strin
     }
 }
 
-nodiscard std::filesystem::path utils::arguments::Settings::cast_path(const std::string& setting)
+_nodiscard std::filesystem::path utils::arguments::Settings::cast_path(const std::string& setting)
 {
     try {
         if (setting.empty())

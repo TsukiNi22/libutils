@@ -305,13 +305,13 @@ bool utils::arguments::ArgParser::parseOption(utils::arguments::ParsedUsageFull&
     return true;
 }
 
-nodiscard utils::arguments::ParsedUsages utils::arguments::ArgParser::parse(const int argc, const char *const argv[], const bool failsafe) const
+_nodiscard utils::arguments::ParsedUsages utils::arguments::ArgParser::parse(const int argc, const char *const argv[], const bool failsafe) const
 {
     std::vector<std::string> args(argv, argv + argc);
     return this->parse(args, failsafe);
 }
 
-nodiscard utils::arguments::ParsedUsages utils::arguments::ArgParser::parse(const std::vector<std::string>& argv, const bool failsafe) const
+_nodiscard utils::arguments::ParsedUsages utils::arguments::ArgParser::parse(const std::vector<std::string>& argv, const bool failsafe) const
 {
     std::vector<utils::arguments::ParsedUsageFull> usagesFull;
     utils::arguments::ParsedUsages usages;

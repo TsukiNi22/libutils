@@ -18,7 +18,7 @@ File Description:
     /* type/class */
     #include "IException.hpp"               // utils::exception::IException
     #include "ExceptionDefine.hpp"          // utils::exception::Code, utils::exception::Type, utils::exception::Message
-    #include "../attribute/Attribute.hpp"   // nodiscard
+    #include "../attribute/Attribute.hpp"   // _nodiscard
     #include <source_location>              // std::source_location
     #include <unordered_map>                // std::unordered_map
     #include <cstdint>                      // std::uint8_t
@@ -59,20 +59,20 @@ class AException: public utils::exception::IException {
 
         // ----------- Function ----------- //
         // auto -> const std::array<type auto, size auto>
-        nodiscard utils::exception::Type getType(void) const noexcept final {return this->_type;};
-        nodiscard utils::exception::Code getCode(void) const noexcept final {return this->_code;};
-        nodiscard bool isNone(void) const noexcept final {return (this->_type & utils::exception::Type::None);};
-        nodiscard bool isFatal(void) const noexcept final {return (this->_type & utils::exception::Type::Fatal);};
-        nodiscard const char* what(void) const noexcept final {return this->Message.at(this->_code);};
-        nodiscard const char* info(void) const noexcept final {return this->_info.c_str();};
-        nodiscard const std::source_location& loc(void) const noexcept final {return this->_loc;};
+        _nodiscard utils::exception::Type getType(void) const noexcept final {return this->_type;};
+        _nodiscard utils::exception::Code getCode(void) const noexcept final {return this->_code;};
+        _nodiscard bool isNone(void) const noexcept final {return (this->_type & utils::exception::Type::None);};
+        _nodiscard bool isFatal(void) const noexcept final {return (this->_type & utils::exception::Type::Fatal);};
+        _nodiscard const char* what(void) const noexcept final {return this->Message.at(this->_code);};
+        _nodiscard const char* info(void) const noexcept final {return this->_info.c_str();};
+        _nodiscard const std::source_location& loc(void) const noexcept final {return this->_loc;};
 
         // ------------ Operator ---------- //
         AException& operator=(const AException& other) = delete;
         AException& operator=(AException&& other) = delete;
 
         // ---------- Constructor --------- //
-        cold AException(std::source_location loc = std::source_location::current(), utils::exception::Type type = utils::exception::Type::None, utils::exception::Code code = utils::exception::Code::Undefined, std::string info = "[None]")
+        _cold AException(std::source_location loc = std::source_location::current(), utils::exception::Type type = utils::exception::Type::None, utils::exception::Code code = utils::exception::Code::Undefined, std::string info = "[None]")
         : IException(),
             Message{}, Info{}, Restriction{},
             _loc{loc}, _file{loc.file_name()}, _func{loc.function_name()}, _line{loc.line()},

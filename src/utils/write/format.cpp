@@ -45,7 +45,7 @@ static const std::unordered_map<std::string, std::function<void(std::string&)>> 
     {"indice",          [](std::string& s){s += utils::write::indice();}},
 };
 
-nodiscard std::string utils::write::format(const std::string& s)
+_nodiscard std::string utils::write::format(const std::string& s)
 {
     // Init the string
     std::string formated;

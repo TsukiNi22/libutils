@@ -40,7 +40,7 @@ static std::string trimString(const std::string& s)
     return s.substr(start, end - start + 1);
 }
 
-hot void utils::cli::defaultPromptHook(unused const utils::cli::Cli& cli, unused std::uint8_t code)
+_hot void utils::cli::defaultPromptHook(_unused const utils::cli::Cli& cli, _unused std::uint8_t code)
 {
     std::cout << "> " << std::flush;
 }
@@ -105,7 +105,7 @@ static std::vector<std::string> splitCommand(const std::string& command)
         }
 
         // Basic char
-        else likely {
+        else _likely {
             token += c;
         }
     }
@@ -117,7 +117,7 @@ static std::vector<std::string> splitCommand(const std::string& command)
     return splited;
 }
 
-hot utils::cli::ParsedData utils::cli::defaultParserHook(const std::string& input, const bool trim, const bool logic, const bool parse)
+_hot utils::cli::ParsedData utils::cli::defaultParserHook(const std::string& input, const bool trim, const bool logic, const bool parse)
 {
     utils::cli::ParsedData parsedInput;
     std::vector<std::string> commands;
@@ -158,7 +158,7 @@ hot utils::cli::ParsedData utils::cli::defaultParserHook(const std::string& inpu
     return parsedInput;
 }
 
-hot nodiscard bool utils::cli::defaultGetCHook(char& c)
+_hot _nodiscard bool utils::cli::defaultGetCHook(char& c)
 {
     // poll config
     pollfd pfd;

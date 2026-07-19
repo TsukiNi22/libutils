@@ -71,7 +71,7 @@ void utils::cli::Cli::launch(const std::size_t call)
                 } catch (const utils::exception::ErrorException& e) {
                     utils::exception::Code code = e.getCode();
                     if (code == utils::exception::Code::CliHook) this->_code = 2;
-                    else unlikely {this->_code = 255;}
+                    else _unlikely {this->_code = 255;}
                     try {this->errorMiddlewares.callBefore(this->_code);}
                     catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
                     if (this->_code <= 3 || this->_code == 255) std::cout << e.what() << ": " << e.info() << std::endl;
@@ -96,7 +96,7 @@ void utils::cli::Cli::launch(const std::size_t call)
                 if (code == utils::exception::Code::CliInternal) this->_code = 1;
                 else if (code == utils::exception::Code::CliHook) this->_code = 2;
                 else if (code == utils::exception::Code::MiddlewareCall) this->_code = 3;
-                else unlikely {this->_code = 255;}
+                else _unlikely {this->_code = 255;}
                 try {this->errorMiddlewares.callBefore(this->_code);}
                 catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
                 if (this->_code <= 3 || this->_code == 255) std::cout << e.what() << ": " << e.info() << std::endl;
@@ -138,7 +138,7 @@ void utils::cli::Cli::launch(const std::size_t call)
                         }
                         this->_code = 130;
                     }
-                } else unlikely {this->_code = 255;}
+                } else _unlikely {this->_code = 255;}
                 try {this->errorMiddlewares.callBefore(this->_code);}
                 catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
                 if (this->_code <= 3 || this->_code == 255) std::cout << e.what() << ": " << e.info() << std::endl;
@@ -218,20 +218,20 @@ std::optional<std::thread> utils::cli::Cli::start(const std::vector<std::string>
     return this->start(call, failsafe);
 }
 
-hot void utils::cli::Cli::prompt(void)
+_hot void utils::cli::Cli::prompt(void)
 {
     this->promptMiddlewares.callBefore();
 
     // Call the hook
     if (isatty(STDOUT_FILENO)) {
-        if (this->_promptHook) likely {
+        if (this->_promptHook) _likely {
             try {
                 std::lock_guard lock(this->_hooksLock);
                 this->_promptHook(*this, this->_code);
             } catch (const std::exception& e) {
                 throw utils::exception::ErrorException(utils::exception::Code::CliHook, e.what());
             }
-        } else unlikely {
+        } else _unlikely {
             throw utils::exception::ErrorException(utils::exception::Code::CliHook, "Missing hook for prompting");
         }
     }
@@ -259,7 +259,7 @@ static std::string getHint(const std::vector<std::string>& list, const std::stri
     return first ? "[None]" : hint;
 }
 
-hot nodiscard std::string utils::cli::Cli::getInput(void)
+_hot _nodiscard std::string utils::cli::Cli::getInput(void)
 {
     std::vector<std::string> commands;
     bool echo = !(this->_flags & utils::cli::Flag::NOECHO);
@@ -290,7 +290,7 @@ hot nodiscard std::string utils::cli::Cli::getInput(void)
     // Loop to get full input
     while (true && !this->_interrupted) {
         // Get the char
-        if (this->_getcHook) likely {
+        if (this->_getcHook) _likely {
             try {
                 this->inputMiddlewares.callBefore();
                 std::lock_guard lock(this->_hooksLock);
@@ -301,7 +301,7 @@ hot nodiscard std::string utils::cli::Cli::getInput(void)
                 //throw utils::exception::NoneException(utils::exception::Code::Exit);
                 throw utils::exception::ErrorException(utils::exception::Code::CliHook, e.what());
             }
-        } else unlikely {
+        } else _unlikely {
             throw utils::exception::ErrorException(utils::exception::Code::CliHook, "Missing hook for char getter");
         }
         if (this->_interrupted) break; // Check for interrupt
@@ -382,7 +382,7 @@ hot nodiscard std::string utils::cli::Cli::getInput(void)
         }
 
         // Add char to the input
-        else if (std::isprint(c)) likely {
+        else if (std::isprint(c)) _likely {
             input.insert(indexBuffer++, 1, c);
         }
 
@@ -423,13 +423,13 @@ hot nodiscard std::string utils::cli::Cli::getInput(void)
     else return input;
 }
 
-hot utils::cli::ParsedData utils::cli::Cli::parse(const std::string& input)
+_hot utils::cli::ParsedData utils::cli::Cli::parse(const std::string& input)
 {
     this->parserMiddlewares.callBefore(input);
     utils::cli::ParsedData parsedInput;
 
     // Call the hook
-    if (this->_parserHook) likely {
+    if (this->_parserHook) _likely {
         try {
             std::lock_guard lock(this->_hooksLock);
             parsedInput = this->_parserHook(input,
@@ -440,7 +440,7 @@ hot utils::cli::ParsedData utils::cli::Cli::parse(const std::string& input)
         } catch (const std::exception& e) {
             throw utils::exception::ErrorException(utils::exception::Code::CliHook, e.what());
         }
-    } else unlikely {
+    } else _unlikely {
         throw utils::exception::ErrorException(utils::exception::Code::CliHook, "Missing hook for parsing");
     }
 
@@ -448,7 +448,7 @@ hot utils::cli::ParsedData utils::cli::Cli::parse(const std::string& input)
     return parsedInput;
 }
 
-hot void utils::cli::Cli::exec(const utils::cli::ParsedData& parsedInput)
+_hot void utils::cli::Cli::exec(const utils::cli::ParsedData& parsedInput)
 {
     this->execMiddlewares.callBefore(parsedInput);
     std::unordered_map<std::string, std::tuple<std::function<void(const utils::cli::Cli&, const std::vector<std::string>&)>, std::int16_t, std::int16_t>>::iterator itParsed;
@@ -547,7 +547,7 @@ hot void utils::cli::Cli::exec(const utils::cli::ParsedData& parsedInput)
             else if (lastExceptionInfo == "Unknow command") this->_code = 128;
             else if (lastExceptionInfo == "Command not implemented") this->_code = 129;
             else if (lastExceptionInfo.starts_with("Callback exception: ")) this->_code = 130;
-            else unlikely {this->_code = 255;}
+            else _unlikely {this->_code = 255;}
         } else this->_code = 0;
 
         // Check the logic

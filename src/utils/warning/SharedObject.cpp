@@ -27,24 +27,24 @@ utils::warning::SharedObject utils::warning::WarningInstance::SharedObject;
 // Used to locate the code
 static void fn(void) {/* Nothing */};
 
-nodiscard std::string utils::warning::SharedObject::getOrigin(void)
+_nodiscard std::string utils::warning::SharedObject::getOrigin(void)
 {
     Dl_info info{};
 
     // Get data on the isSharedObject function
-    if (dladdr((void*)fn, &info) == 0) unlikely {
+    if (dladdr((void*)fn, &info) == 0) _unlikely {
         return "";
     }
 
     // Check if the orign file name was succefully getted
-    if (!info.dli_fname) unlikely {
+    if (!info.dli_fname) _unlikely {
         return "";
-    } else likely {
+    } else _likely {
         return info.dli_fname;
     }
 }
 
-nodiscard bool utils::warning::SharedObject::isSharedObject(void)
+_nodiscard bool utils::warning::SharedObject::isSharedObject(void)
 {
     // Try to get the orign
     std::string path = this->getOrigin();
@@ -69,7 +69,7 @@ void utils::warning::SharedObject::link(const std::string& InstanceName, std::ui
     // No id available
     else {
         // Check for overflow
-        if (this->_nextId == UINT32_MAX) unlikely {
+        if (this->_nextId == UINT32_MAX) _unlikely {
             throw utils::exception::ErrorException(utils::exception::Code::IdOverflow);
         }
         id = ++(this->_nextId);
@@ -93,7 +93,7 @@ void utils::warning::SharedObject::unlink(std::uint32_t id, bool safe)
         throw utils::exception::ErrorException(utils::exception::Code::UnknowId, "Can't unlink an invalide id: 0");
 
     // Check the id existance
-    if (!this->_links.contains(id)) unlikely {
+    if (!this->_links.contains(id)) _unlikely {
         utils::exception::WarningException e(utils::exception::Code::UnknowId, std::to_string(id));
         std::cerr << e.formated() << std::endl;
         return;

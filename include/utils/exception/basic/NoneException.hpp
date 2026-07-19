@@ -18,7 +18,7 @@ File Description:
     /* type */
     #include "../ExceptionDefine.hpp"           // utils::exception::Code, utils::exception::Type
     #include "../AException.hpp"                // utils::exception::AException
-    #include "../../attribute/Attribute.hpp"    // cold
+    #include "../../attribute/Attribute.hpp"    // _cold
     #include <source_location>                  // std::source_location
 
 namespace utils::exception { // namespace start
@@ -32,8 +32,8 @@ class NoneException: public utils::exception::AException {
         NoneException& operator=(NoneException&& other) = delete;
 
         // ---------- Constructor --------- //
-        cold explicit NoneException(utils::exception::Code code = utils::exception::Code::Undefined, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::None, code) {};
-        cold NoneException(utils::exception::Code code, std::string info, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::None, code, info) {};
+        _cold explicit NoneException(utils::exception::Code code = utils::exception::Code::Undefined, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::None, code) {};
+        _cold NoneException(utils::exception::Code code, std::string info, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::None, code, info) {};
         NoneException(const NoneException& other) = delete;
         NoneException(NoneException&& other) = delete;
 

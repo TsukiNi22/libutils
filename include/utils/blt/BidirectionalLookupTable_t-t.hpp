@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 06/07/2026 by @author Tsukini
+##  @date 20/07/2026 by @author Tsukini
 
 File Name:
 ##  @file BidirectionalLookupTable.hpp
@@ -24,7 +24,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"               // nodicard, unused
+    #include "../attribute/Attribute.hpp"               // _nodiscard, _unused
     #include "../warning/Observer.hpp"                  // utils::warning::Observer
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "../exception/basic/WarningException.hpp"  // utils::exception::WarningException
@@ -54,7 +54,7 @@ class BidirectionalLookupTable: private utils::warning::Observer {
     public:
         // ------------ Function ---------- //
         void freeze(void) {this->_freezed = true;};
-        nodiscard bool isFreezed(void) {return this->_freezed;};
+        _nodiscard bool isFreezed(void) {return this->_freezed;};
         void clear(void)
         {
             if (this->_freezed) throw utils::exception::ErrorException(utils::exception::Code::Freezed);

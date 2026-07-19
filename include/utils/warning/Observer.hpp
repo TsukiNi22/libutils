@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 18/05/2026 by @author Tsukini
+##  @date 20/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Observer.hpp
@@ -16,7 +16,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"   // nodiscard
+    #include "../attribute/Attribute.hpp"   // _nodiscard
     #include "SharedObject.hpp"             // utils::warning::WarningInstance::SharedObject
     #include <cstdint>                      // std::uint32_t
     #include <string>                       // std::string
@@ -34,7 +34,7 @@ class Observer {
         void unlink(void);
 
         // ------------ Function ---------- //
-        inline nodiscard const std::string getInstanceName() const noexcept {return "[Unknow]";};
+        _nodiscard inline const std::string getInstanceName(void) const noexcept {return "[Unknow]";};
 
     public:
         // ------------ Operator ---------- //

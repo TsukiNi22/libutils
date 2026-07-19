@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 16/07/2026 by @author Tsukini
+##  @date 20/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Setting.hpp
@@ -37,7 +37,7 @@ File Description:
 //----------------------------------------------------------------//
 /* TOOLS */
 
-static inline nodiscard std::string demangle(const char* mangled_name)
+_nodiscard static inline std::string demangle(const char* mangled_name)
 {
     int status = 0;
     std::unique_ptr<char, void(*)(void*)> demangled(

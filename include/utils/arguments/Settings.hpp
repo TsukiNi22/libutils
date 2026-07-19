@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 16/07/2026 by @author Tsukini
+##  @date 20/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Settings.hpp
@@ -161,13 +161,13 @@ class Settings: private utils::warning::Observer {
             this->_settings.erase(id);
         };
         void clear(void) {this->_settings.clear();};
-        nodiscard const utils::arguments::Setting& get(const std::string& id) const {return this->at(id);};
+        _nodiscard const utils::arguments::Setting& get(const std::string& id) const {return this->at(id);};
 
         // ------------ Operator ---------- //
         Settings& operator=(const Settings& other) = delete;
         Settings& operator=(Settings&& other) = delete;
-        nodiscard const utils::arguments::Setting& operator[](const std::string& id) {return this->at(id);}
-        nodiscard const utils::arguments::Setting& operator[](const std::string& id) const {return this->at(id);}
+        _nodiscard const utils::arguments::Setting& operator[](const std::string& id) {return this->at(id);}
+        _nodiscard const utils::arguments::Setting& operator[](const std::string& id) const {return this->at(id);}
 
         // ---------- Constructor --------- //
         Settings() = default;

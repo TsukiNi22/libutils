@@ -18,7 +18,7 @@ File Description:
     /* type */
     #include "../ExceptionDefine.hpp"           // utils::exception::Code, utils::exception::Type
     #include "../AException.hpp"                // utils::exception::AException
-    #include "../../attribute/Attribute.hpp"    // cold
+    #include "../../attribute/Attribute.hpp"    // _cold
     #include <source_location>                  // std::source_location
 
 namespace utils::exception { // namespace start
@@ -32,8 +32,8 @@ class WarningException: public utils::exception::AException {
         WarningException& operator=(WarningException&& other) = delete;
 
         // ---------- Constructor --------- //
-        cold explicit WarningException(utils::exception::Code code = utils::exception::Code::Undefined, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::Warning, code) {};
-        cold WarningException(utils::exception::Code code, std::string info, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::Warning, code, info) {};
+        _cold explicit WarningException(utils::exception::Code code = utils::exception::Code::Undefined, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::Warning, code) {};
+        _cold WarningException(utils::exception::Code code, std::string info, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::Warning, code, info) {};
         WarningException(const WarningException& other) = delete;
         WarningException(WarningException&& other) = delete;
 
