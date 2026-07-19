@@ -74,8 +74,8 @@ static consteval inline std::array<unsigned char, 256> make_lookup_table()
 }
 
 // case insensitive lookup table
-set_padding(std::hardware_destructive_interference_size) static constexpr inline std::array<unsigned char, 256> lookup_table = make_lookup_table();
-unused // remove warning, due to inline the funtion isn't really used directly
+_alignas(std::hardware_destructive_interference_size) static constexpr inline std::array<unsigned char, 256> lookup_table = make_lookup_table();
+_unused // remove warning, due to inline the funtion isn't really used directly
 static inline unsigned char normalize(unsigned char c) {return lookup_table[c];}
 #endif /* C2DMP_HSM_NORMALIZE_LOOKUP_TABLE */
 
@@ -112,7 +112,7 @@ float c2dmp_foptimized(const std::string_view a, const std::string_view b)
     std::size_t bs = b.size();
     std::size_t min = (as < bs) ? as : bs;
     std::size_t max = (as > bs) ? as : bs;
-    set_padding(std::hardware_destructive_interference_size) UINTN cc[256];
+    _alignas(std::hardware_destructive_interference_size) UINTN cc[256];
     std::memset(cc, 0, sizeof(cc));
     UINTN missplaced_char = 0;
     UINTN prefix_size0 = 0, prefix_size1 = 0, prefix_size2 = 0, prefix_size3 = 0, prefix_size4 = 0;

@@ -74,8 +74,8 @@ static consteval inline std::array<unsigned char, 256> make_lookup_table()
 }
 
 // case insensitive lookup table
-set_padding(std::hardware_destructive_interference_size) static constexpr inline std::array<unsigned char, 256> lookup_table = make_lookup_table();
-unused // remove warning, due to inline the funtion isn't really used directly
+_alignas(std::hardware_destructive_interference_size) static constexpr inline std::array<unsigned char, 256> lookup_table = make_lookup_table();
+_unused // remove warning, due to inline the funtion isn't really used directly
 static inline unsigned char normalize(unsigned char c) {return lookup_table[c];}
 #endif /* C2DMP_HSM_NORMALIZE_LOOKUP_TABLE */
 
@@ -83,7 +83,7 @@ static inline unsigned char normalize(unsigned char c) {return lookup_table[c];}
 #ifndef C2DMP_FHSM_SIMPLIFIED
     #define C2DMP_FHSM_SIMPLIFIED
 template<std::uint_fast8_t prefixDepthSearch = 3, typename UINTN = std::uint_fast8_t>
-outdated("This version isn't the most optimized one, you should use c2dmp_optimized or c2dmp")
+_deprecated("This version isn't the most optimized one, you should use c2dmp_optimized or c2dmp")
 float c2dmp_fsimplified(const std::string_view a, const std::string_view b)
 {
     // Check given type
@@ -96,7 +96,7 @@ float c2dmp_fsimplified(const std::string_view a, const std::string_view b)
     std::size_t bs = b.size();
     std::size_t min = std::min(as, bs);
     std::size_t max = std::max(as, bs);
-    set_padding(std::hardware_destructive_interference_size) UINTN cc[256] = {0};
+    _alignas(std::hardware_destructive_interference_size) UINTN cc[256] = {0};
     UINTN missplaced_char = 0;
     UINTN prefix_sizes[prefixDepthSearch] = {0};
     UINTN prefixs[prefixDepthSearch] = {0};
