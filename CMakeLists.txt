@@ -48,6 +48,9 @@ set(SRC
     src/utils/write/ANSI.cpp
     src/utils/write/format.cpp
 
+    ## Write (sub-part: codec)
+    src/utils/write/codec/Base64Codec.cpp
+
     ## Math (sub-part: geometry)
     src/utils/math/geometry/Point.cpp
     src/utils/math/geometry/Angle.cpp

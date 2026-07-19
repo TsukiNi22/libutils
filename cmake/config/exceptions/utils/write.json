@@ -4,6 +4,11 @@
             "code": "ANSIMouseEvent",
             "message": "Error during the read of the mouse event",
             "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "Codec",
+            "message": "Error during the encoding/decoding of the given string",
+            "restrictions": ["Fatal", "Error"]
         }
     ]
 }

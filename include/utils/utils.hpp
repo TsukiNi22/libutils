@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 16/07/2026 by @author Tsukini
+##  @date 19/07/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -83,13 +83,14 @@ File Description:
 
 /* Write */
 #ifdef _Write
-    // -> Handling of the ANSI escape sequences
-    // -> Define some special char & other
-    #include "write/Color.hpp"  // utils::write::Color, utils::write::BackColor
-    #include "write/Char.hpp"   // utils::write::Char
-    #include "write/Style.hpp"  // utils::write::Style, utils::write::ResetStyle
-    #include "write/ANSI.hpp"   // different inline function for ANSI escape sequences
-    #include "write/format.hpp" // utils::write::format
+    // -> Handling of string/ouput manipulation
+    // -> Define some special char & other, ANSI escape sequences, ...
+    #include "write/Color.hpp"       // utils::write::Color, utils::write::BackColor
+    #include "write/Char.hpp"        // utils::write::Char
+    #include "write/Style.hpp"       // utils::write::Style, utils::write::ResetStyle
+    #include "write/ANSI.hpp"        // different inline function for ANSI escape sequences
+    #include "write/format.hpp"      // utils::write::format
+    #include "write/codec/Codec.hpp" // utils::write::codec::ICodec, utils::write::codec::*Codec
 #endif
 
 /* Cli */

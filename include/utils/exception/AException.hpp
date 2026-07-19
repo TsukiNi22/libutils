@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 06/07/2026 by @author Tsukini
+##  @date 19/07/2026 by @author Tsukini
 
 File Name:
 ##  @file AException.hpp
