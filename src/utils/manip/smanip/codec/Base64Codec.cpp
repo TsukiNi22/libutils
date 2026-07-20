@@ -20,12 +20,12 @@ File Description:
 #include "utils/attribute/Attribute.hpp"
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/basic/ErrorException.hpp"
-#include "utils/write/codec/Base64Codec.hpp"
+#include "utils/manip/smanip/codec/Base64Codec.hpp"
 #include <openssl/evp.h>
 #include <cstdint>
 #include <string>
 
-_nodiscard std::string utils::write::codec::Base64Codec::encode(std::string s) const
+_nodiscard std::string utils::iomanip::codec::Base64Codec::encode(std::string s) const
 {
     int len = ((s.size() + 2) / 3) * 4;
     std::string encoded(len, '\0');
@@ -41,7 +41,7 @@ _nodiscard std::string utils::write::codec::Base64Codec::encode(std::string s) c
     return encoded;
 }
 
-_nodiscard std::string utils::write::codec::Base64Codec::decode(std::string s) const
+_nodiscard std::string utils::iomanip::codec::Base64Codec::decode(std::string s) const
 {
     std::size_t padding = 0, len = (s.size() * 3) / 4;
     std::string decoded(len, '\0');

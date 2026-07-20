@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 06/07/2026 by @author Tsukini
+##  @date 20/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Cli.cpp
@@ -23,7 +23,7 @@ File Description:
 #include "utils/exception/basic/NoneException.hpp"
 #include "utils/exception/basic/ErrorException.hpp" 
 #include "utils/algorithms/c2dmp-hsm/c2dmp-hsm.hpp"
-#include "utils/write/ANSI.hpp"
+#include "utils/manip/iomanip/ANSI.hpp"
 #include "utils/cli/Cli.hpp"
 #include "utils/cli/Flags.hpp"
 #include <unistd.h>
@@ -396,7 +396,7 @@ _hot _nodiscard std::string utils::cli::Cli::getInput(void)
         if (echo && isatty(STDOUT_FILENO)) {
             // Reset the cursor place
             if (lastInputSize - lastIndexBuffer > 0)
-                std::cout << utils::write::right(lastInputSize - lastIndexBuffer);
+                std::cout << utils::iomanip::right(lastInputSize - lastIndexBuffer);
 
             // Refresh input display
             deleteChars(lastInputSize);
@@ -406,7 +406,7 @@ _hot _nodiscard std::string utils::cli::Cli::getInput(void)
 
             // Place the cursor
             if (input.size() - indexBuffer > 0)
-                std::cout << utils::write::left(input.size() - indexBuffer);
+                std::cout << utils::iomanip::left(input.size() - indexBuffer);
         }
 
         // Update output

@@ -12,7 +12,7 @@ File Description:
 #ifndef CHAR_H
     #define CHAR_H
 
-namespace utils::write { // namespace start
+namespace utils::iomanip { // namespace start
 //----------------------------------------------------------------//
 /* TYPEDEF */
 

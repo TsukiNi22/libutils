@@ -16,23 +16,23 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "Color.hpp"        // utils::write::Color, utils::write::BackColor
-    #include "Char.hpp"         // utils::write::Char
-    #include "Style.hpp"        // utils::write::Style, utils::write::ResetStyle
+    #include "Color.hpp"        // utils::iomanip::Color, utils::iomanip::BackColor
+    #include "Char.hpp"         // utils::iomanip::Char
+    #include "Style.hpp"        // utils::iomanip::Style, utils::iomanip::ResetStyle
     #include <initializer_list> // std::initializer_list
     #include <cstdint>          // std::uint8_t, std::size_t
     #include <string>           // std::string
 
-namespace utils::write { // namespace start
+namespace utils::iomanip { // namespace start
     //----------------------------------------------------------------//
     /* ANSI */
 
     /* --------- function ---------- */
-    std::string setStyle(std::initializer_list<utils::write::Style> styles);
-    std::string resetStyle(std::initializer_list<utils::write::ResetStyle> styles);
+    std::string setStyle(std::initializer_list<utils::iomanip::Style> styles);
+    std::string resetStyle(std::initializer_list<utils::iomanip::ResetStyle> styles);
 
     /* --------- internal ---------- */
-    constexpr inline std::string csi(const std::string& code) {return std::string(1, static_cast<char>(utils::write::Char::ESC)) + "[" + code;}
+    constexpr inline std::string csi(const std::string& code) {return std::string(1, static_cast<char>(utils::iomanip::Char::ESC)) + "[" + code;}
 
     /* ----------- reset ----------- */
     constexpr inline std::string reset(void)                    {return csi("0m");}
@@ -50,7 +50,7 @@ namespace utils::write { // namespace start
     constexpr inline std::string underline_color_reset(void)    {return csi("59m");}
     constexpr inline std::string exposant_indice_reset(void)    {return csi("75m");}
     /* args */
-    constexpr inline std::string resetStyle(utils::write::ResetStyle style) {return csi(std::to_string(static_cast<std::uint8_t>(style)) + "m");}
+    constexpr inline std::string resetStyle(utils::iomanip::ResetStyle style) {return csi(std::to_string(static_cast<std::uint8_t>(style)) + "m");}
 
     /* ----------- style ----------- */
     constexpr inline std::string strong(void)           {return csi("1m");}
@@ -69,9 +69,9 @@ namespace utils::write { // namespace start
     constexpr inline std::string exposant(void)         {return csi("73m");} // Rarely supported
     constexpr inline std::string indice(void)           {return csi("74m");} // Rarely supported
     /* args */
-    constexpr inline std::string setStyle(utils::write::Style style)                                    {return csi(std::to_string(static_cast<std::uint8_t>(style)) + "m");}
-    constexpr inline std::string color(utils::write::Color c)                                           {return csi(std::to_string(static_cast<std::uint8_t>(c)) + "m");}
-    constexpr inline std::string color(utils::write::BackColor c)                                       {return csi(std::to_string(static_cast<std::uint8_t>(c)) + "m");}
+    constexpr inline std::string setStyle(utils::iomanip::Style style)                                    {return csi(std::to_string(static_cast<std::uint8_t>(style)) + "m");}
+    constexpr inline std::string color(utils::iomanip::Color c)                                           {return csi(std::to_string(static_cast<std::uint8_t>(c)) + "m");}
+    constexpr inline std::string color(utils::iomanip::BackColor c)                                       {return csi(std::to_string(static_cast<std::uint8_t>(c)) + "m");}
     constexpr inline std::string color_id(std::uint8_t id)                                              {return csi("38;5;" + std::to_string(id) + "m");}
     constexpr inline std::string back_color_id(std::uint8_t id)                                         {return csi("48;5;" + std::to_string(id) + "m");}
     constexpr inline std::string underline_color_id(std::uint8_t id)                                    {return csi("58;5;" + std::to_string(id) + "m");}
@@ -146,14 +146,14 @@ enum class MouseButton {
 
 /* mouse event -> "ESC[Mb;x;y" */
 struct MouseEvent {
-    utils::write::MouseButton button = utils::write::MouseButton::Unknown;
+    utils::iomanip::MouseButton button = utils::iomanip::MouseButton::Unknown;
     std::size_t x = 0;
     std::size_t y = 0;
 };
 
 /* mouse event -> "ESC[<b;x;y(M|m)" */
 struct AdvancedMouseEvent {
-    utils::write::MouseButton button = utils::write::MouseButton::Unknown;
+    utils::iomanip::MouseButton button = utils::iomanip::MouseButton::Unknown;
     std::size_t x = 0;
     std::size_t y = 0;
     bool pressed = false;
@@ -161,8 +161,8 @@ struct AdvancedMouseEvent {
 
 /* reports */
 std::pair<int, int> readCursorPosition(void);
-utils::write::MouseEvent readMouseEvent(void);
-utils::write::AdvancedMouseEvent readAdvancedMouseEvent(void);
+utils::iomanip::MouseEvent readMouseEvent(void);
+utils::iomanip::AdvancedMouseEvent readAdvancedMouseEvent(void);
 
 } // namespace ends
 #endif /* ANSI_H */

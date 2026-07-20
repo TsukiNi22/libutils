@@ -47,7 +47,7 @@ File Description:
 /* Activate all handling include */
 #ifdef _Handling
     #define _Exception
-    #define _Write
+    #define _Manip
     #define _Verbose
     #define _Arguments
     #define _Cli
@@ -60,6 +60,12 @@ File Description:
     #define _Concepts
     #define _Middleware
     #define _Algorithms
+#endif
+
+/* Activate all manip include */
+#ifdef _Manip
+    #define _IOManip
+    #define _SManip
 #endif
 
 /* Activate all the algorithms */
@@ -82,16 +88,21 @@ File Description:
     #include "exception/custom/CustomException.hpp" // utils::exception::CustomException
 #endif
 
-/* Write */
-#ifdef _Write
-    // -> Handling of string/ouput manipulation
+/* Input/Output - Manip */
+#ifdef _IOManip
+    // -> Handling of input/output manipulation
     // -> Define some special char & other, ANSI escape sequences, ...
-    #include "write/Color.hpp"       // utils::write::Color, utils::write::BackColor
-    #include "write/Char.hpp"        // utils::write::Char
-    #include "write/Style.hpp"       // utils::write::Style, utils::write::ResetStyle
-    #include "write/ANSI.hpp"        // different inline function for ANSI escape sequences
-    #include "write/format.hpp"      // utils::write::format
-    #include "write/codec/Codec.hpp" // utils::write::codec::ICodec, utils::write::codec::*Codec
+    #include "manip/iomanip/Color.hpp" // utils::iomanip::Color, utils::iomanip::BackColor
+    #include "manip/iomanip/Char.hpp"  // utils::iomanip::Char
+    #include "manip/iomanip/Style.hpp" // utils::iomanip::Style, utils::iomanip::ResetStyle
+    #include "manip/iomanip/ANSI.hpp"  // different inline function for ANSI escape sequences
+#endif
+
+/* String - Manip */
+#ifdef _SManip
+    // -> Handling of string manipulation
+    #include "manip/smanip/format.hpp"      // utils::smanip::format
+    #include "manip/smanip/codec/Codec.hpp" // utils::smanip::codec::ICodec, utils::smanip::codec::*Codec
 #endif
 
 /* Cli */

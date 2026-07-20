@@ -43,12 +43,14 @@ set(SRC
     ## Exception
     src/utils/exception/AException.cpp
 
-    ## Write
-    src/utils/write/ANSI.cpp
-    src/utils/write/format.cpp
+    ## IO - Manip
+    src/utils/manip/iomanip/ANSI.cpp
 
-    ## Write (sub-part: codec)
-    src/utils/write/codec/Base64Codec.cpp
+    ## S - Manip
+    src/utils/manip/smanip/format.cpp
+
+    ## S - Manip (sub-part: codec)
+    src/utils/manip/smanip/codec/Base64Codec.cpp
 
     ## Math (sub-part: geometry)
     src/utils/math/geometry/Point.cpp

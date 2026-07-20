@@ -26,7 +26,7 @@ File Description:
     /* type */
     #include <string>   // std::string
 
-namespace utils::write::codec { // namespace start
+namespace utils::iomanip::codec { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 

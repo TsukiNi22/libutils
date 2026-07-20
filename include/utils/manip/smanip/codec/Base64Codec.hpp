@@ -24,17 +24,17 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "ICodec.hpp"   // utils::write::codec::ICodec
+    #include "ICodec.hpp"   // utils::iomanip::codec::ICodec
     #include <string>       // std::string
 
-namespace utils::write::codec { // namespace start
+namespace utils::iomanip::codec { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
 #ifndef NO_LINKER_WARNING
     #warning "The -lssl and -lcrypto are needed to use the Base64Codec"
 #endif
-class Base64Codec: public utils::write::codec::ICodec {
+class Base64Codec: public utils::iomanip::codec::ICodec {
     public:
         // ------------ Function ---------- //
         std::string encode(std::string s) const;

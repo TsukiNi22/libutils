@@ -8,64 +8,72 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 11/05/2026 by @author Tsukini
+##  @date 18/05/2026 by @author Tsukini
 
 File Name:
-##  @file Style.hpp
+##  @file Format.hpp
 
 File Description:
-##  Define of the different style used in ANSI
+##  Definition of the utils::iomanip::format & explication
 \**************************************************************/
 
-#ifndef STYLE_H
-    #define STYLE_H
-
+#ifndef FORMAT_H
+    #define FORMAT_H
+    
     //----------------------------------------------------------------//
     /* INCLUDE */
 
     /* type */
-    #include <iostream>
+    #include <string>   // std::string
 
-namespace utils::write { // namespace start
+namespace utils::iomanip { // namespace start
 //----------------------------------------------------------------//
-/* TYPDEF */
+/* PROTOTYPE */
 
-/* style */
-enum class Style: std::uint8_t {
-    Strong = 1,
-    Dark,
-    Italic,
-    Underlined,
-    FlashingFast,
-    FlashingSlow,
-    Reversed,
-    Hide,
-    Bar,
-    Monospace = 50,
-    Framed,         // Rarely supported
-    Encircled,      // Rarely supported
-    Overlined,
-    Exposant = 73,  // Rarely supported
-    Indice,         // Rarely supported
-};
+/* format */
+std::string format(const std::string& s);
 
-/* reset style */
-enum class ResetStyle: std::uint8_t {
-    All = 0,
-    Strong = 21,
-    Dark,
-    Italic,
-    Underlined,
-    FlashingFast,
-    FlashingSlow,
-    Reversed,
-    Hide,
-    Bar,
-    FramedEncircled = 54,
-    Overlined,
-    UnderlineColor = 59,
-    ExposantIndice = 75,
-};
+//----------------------------------------------------------------//
+/* DESCRIPTION */
+/*
+Only edit style for now, other sequence style require manual call
+
+Delimitor: <...>
+Empty content: <>
+    - reset style
+Content: <DATA1|DATA2|...|DATAX>
+    - setup the given style
+    - ignore the unknow ones
+
+Data (case insensitive):
+    reset
+    strong
+    dark
+    italic
+    underlined
+    flashing_fast
+    flashing_slow
+    reversed
+    hide
+    bar
+    monospace
+    framed
+    encircled
+    overlined
+    exposant
+    indice
+
+not for now:
+    color(name)
+    b_color(name)
+    id_color(id)
+    id_b_color(id)
+    id_ucolor(id)
+    color(r, g, b)
+    b_color(r, g, b)
+    u_color(r, g, b)
+
+*/
 
 } // namespace end
-#endif /* STYLE_H */
+#endif /* FORMAT_H */

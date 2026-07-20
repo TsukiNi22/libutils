@@ -18,7 +18,7 @@ File Description:
     /* type */
     #include <cstdint>  // std::uint8_t
 
-namespace utils::write { // namespace start
+namespace utils::iomanip { // namespace start
 //----------------------------------------------------------------//
 /* TYPEDEF */
 

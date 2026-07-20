@@ -24,9 +24,9 @@ File Description:
     /* INCLUDE */
 
     /* interface */
-    #include "ICodec.hpp"   // utils::write::codec::ICodec
+    #include "ICodec.hpp"   // utils::iomanip::codec::ICodec
 
     /* codec (basic) */
-    #include "Base64Codec.hpp"  // utils::write::codec::Base64Codec
+    #include "Base64Codec.hpp"  // utils::iomanip::codec::Base64Codec
 
 #endif /* CODEC_H */

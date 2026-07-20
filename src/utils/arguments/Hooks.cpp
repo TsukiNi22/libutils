@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 06/07/2026 by @author Tsukini
+##  @date 20/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Hooks.cpp
@@ -21,10 +21,10 @@ File Description:
 #include "utils/exception/basic/WarningException.hpp"
 #include "utils/arguments/ArgParser.hpp"
 #include "utils/arguments/ArgParserType.hpp"
-#include "utils/write/format.hpp"
-#include "utils/write/Color.hpp"
-#include "utils/write/ANSI.hpp"
-#include "utils/write/Style.hpp"
+#include "utils/manip/iomanip/Color.hpp"
+#include "utils/manip/iomanip/ANSI.hpp"
+#include "utils/manip/iomanip/Style.hpp"
+#include "utils/manip/smanip/format.hpp"
 #include <unordered_map>
 #include <filesystem>
 #include <exception>
@@ -43,9 +43,9 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
     const std::unordered_map<std::string, utils::arguments::Flag>&   flags   = parser.getFlags();
     const std::unordered_map<std::string, utils::arguments::Option>& options = parser.getOptions();
 
-    std::cout << utils::write::format("<strong>PROJECT<>") << std::endl;
-    std::cout << utils::write::color(utils::write::Color::Cyan) << "\t" << parser.getDescription() << std::endl;
-    std::cout << utils::write::reset() << std::endl;
+    std::cout << utils::iomanip::format("<strong>PROJECT<>") << std::endl;
+    std::cout << utils::iomanip::color(utils::iomanip::Color::Cyan) << "\t" << parser.getDescription() << std::endl;
+    std::cout << utils::iomanip::reset() << std::endl;
 
     std::size_t maxNameLen = 0;
     for (const auto& [id, usage]: usages) {
@@ -54,8 +54,8 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
     }
     maxNameLen += 2;
 
-    std::cout << utils::write::format("<strong>USAGE<>") << std::endl;
-    std::cout << utils::write::color(utils::write::Color::Magenta);
+    std::cout << utils::iomanip::format("<strong>USAGE<>") << std::endl;
+    std::cout << utils::iomanip::color(utils::iomanip::Color::Magenta);
     bool defaultUsage = false;
     for (const auto& [idU, usage]: usages) {
         if (idU == "default") {
@@ -108,35 +108,35 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
         }
         std::cout << std::endl;
     }
-    std::cout << utils::write::reset() << std::endl;
+    std::cout << utils::iomanip::reset() << std::endl;
 
-    std::cout << utils::write::format("<strong>OPTIONS<>") << std::endl;
+    std::cout << utils::iomanip::format("<strong>OPTIONS<>") << std::endl;
     for (const auto& [_, option]: options) {
-        std::cout << utils::write::color(utils::write::Color::Green) << "\t" << option.name << utils::write::reset() << std::endl;
+        std::cout << utils::iomanip::color(utils::iomanip::Color::Green) << "\t" << option.name << utils::iomanip::reset() << std::endl;
         std::cout << "\t\t" << option.description << std::endl;
     }
     if (options.size() == 0) std::cout << "\tNothing..." << std::endl;;
-    std::cout << utils::write::reset() << std::endl;
+    std::cout << utils::iomanip::reset() << std::endl;
 
-    std::cout << utils::write::format("<strong>FLAGS<>") << std::endl;
-    std::cout << utils::write::color(utils::write::Color::Green) << "\t" << "-h, -help, --help" << utils::write::reset() << std::endl;
+    std::cout << utils::iomanip::format("<strong>FLAGS<>") << std::endl;
+    std::cout << utils::iomanip::color(utils::iomanip::Color::Green) << "\t" << "-h, -help, --help" << utils::iomanip::reset() << std::endl;
     std::cout << "\t\t" << "Display this help and exit" << std::endl;
     for (const auto& [_, flag]: flags) {
         const auto& [fshort, fflag, flong] = flag.flag;
-        std::cout << utils::write::color(utils::write::Color::Green) << "\t";
+        std::cout << utils::iomanip::color(utils::iomanip::Color::Green) << "\t";
         if (!fshort.empty()) std::cout << "-" << fshort;
         if (!fflag.empty())  std::cout << (fshort.empty() ? "" : ", ") << "-" << fflag;
         if (!flong.empty())  std::cout << ((fshort.empty() && fflag.empty()) ? "" : ", ") << "--" << flong;
-        std::cout << utils::write::reset();
+        std::cout << utils::iomanip::reset();
         for (std::size_t i = 0; i < flag.options.size(); ++i) {
             const auto& [name, mandatory, _] = flag.options[i];
-            std::cout << " " << (mandatory ? "" : "[") << "<" << utils::write::color(utils::write::Color::Red) << name << utils::write::reset() << ">" << ((flag.unlimited && i == flag.options.size() - 1) ? "*" : "") << (mandatory ? "" : "]");
+            std::cout << " " << (mandatory ? "" : "[") << "<" << utils::iomanip::color(utils::iomanip::Color::Red) << name << utils::iomanip::reset() << ">" << ((flag.unlimited && i == flag.options.size() - 1) ? "*" : "") << (mandatory ? "" : "]");
         }
-        std::cout << utils::write::reset() << std::endl;
+        std::cout << utils::iomanip::reset() << std::endl;
         std::cout << "\t\t" << flag.description << std::endl;
     }
     if (flags.size() == 0) std::cout << "\tNothing..." << std::endl;;
-    std::cout << utils::write::reset() << std::flush;
+    std::cout << utils::iomanip::reset() << std::flush;
 }
 
 std::optional<std::string> utils::arguments::defaultBoolParsingHook(const std::string& option)

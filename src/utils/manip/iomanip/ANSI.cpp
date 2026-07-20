@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 06/07/2026 by @author Tsukini
+##  @date 20/07/2026 by @author Tsukini
 
 File Name:
 ##  @file ANSI.cpp
@@ -19,8 +19,8 @@ File Description:
 
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/basic/ErrorException.hpp" 
-#include "utils/write/ANSI.hpp"
-#include "utils/write/Style.hpp"
+#include "utils/manip/iomanip/ANSI.hpp"
+#include "utils/manip/iomanip/Style.hpp"
 #include <unistd.h>
 #include <initializer_list>
 #include <iostream>
@@ -29,12 +29,12 @@ File Description:
 #include <format>
 #include <string>
 
-std::string utils::write::resetStyle(std::initializer_list<utils::write::ResetStyle> styles)
+std::string utils::iomanip::resetStyle(std::initializer_list<utils::iomanip::ResetStyle> styles)
 {
     std::string s_styles;
 
     bool first = true;
-    for (const utils::write::ResetStyle& style : styles) {
+    for (const utils::iomanip::ResetStyle& style : styles) {
         if (!first) s_styles += ";";
         s_styles += std::to_string(static_cast<std::uint8_t>(style));
         first = false;
@@ -44,25 +44,25 @@ std::string utils::write::resetStyle(std::initializer_list<utils::write::ResetSt
     if (styles.size() == 0)
         s_styles = "0";
 
-    return std::format("{}[{}m", static_cast<char>(utils::write::Char::ESC), s_styles);
+    return std::format("{}[{}m", static_cast<char>(utils::iomanip::Char::ESC), s_styles);
 }
 
-std::string utils::write::setStyle(std::initializer_list<utils::write::Style> styles)
+std::string utils::iomanip::setStyle(std::initializer_list<utils::iomanip::Style> styles)
 {
     std::string s_styles;
 
     bool first = true;
-    for (const utils::write::Style& style : styles) {
+    for (const utils::iomanip::Style& style : styles) {
         if (!first) s_styles += ";";
         s_styles += std::to_string(static_cast<std::uint8_t>(style));
         first = false;
     }
 
-    return std::format("{}[{}m", static_cast<char>(utils::write::Char::ESC), s_styles);
+    return std::format("{}[{}m", static_cast<char>(utils::iomanip::Char::ESC), s_styles);
 }
 
 // Report format -> "ESC[rows;colsR"
-std::pair<int, int> utils::write::readCursorPosition(void)
+std::pair<int, int> utils::iomanip::readCursorPosition(void)
 {
     char buffer[32] = {'\0'};
     std::size_t i = 0;
@@ -84,9 +84,9 @@ std::pair<int, int> utils::write::readCursorPosition(void)
 }
 
 // Report format -> "ESC[Mb;x;y"
-utils::write::MouseEvent utils::write::readMouseEvent(void)
+utils::iomanip::MouseEvent utils::iomanip::readMouseEvent(void)
 {
-    utils::write::MouseEvent event;
+    utils::iomanip::MouseEvent event;
     std::string buffer;
     char c = '\0';
 
@@ -94,7 +94,7 @@ utils::write::MouseEvent utils::write::readMouseEvent(void)
     bool started = false;
     for (std::size_t i = 0; std::cin.get(c) && i < 128; ++i)
     {
-        if (c == static_cast<char>(utils::write::Char::ESC)) started = true;
+        if (c == static_cast<char>(utils::iomanip::Char::ESC)) started = true;
         if (started) buffer += c;
         if (started && std::isdigit(c)) continue;
         if (started && c == '\n') break;
@@ -131,27 +131,27 @@ utils::write::MouseEvent utils::write::readMouseEvent(void)
 
     // Convert the button value
     switch (cb & 0b11) {
-        case 0: event.button = utils::write::MouseButton::Left;        break;
-        case 1: event.button = utils::write::MouseButton::Middle;      break;
-        case 2: event.button = utils::write::MouseButton::Right;       break;
-        case 3: event.button = utils::write::MouseButton::Release;     break;
-        default: event.button = utils::write::MouseButton::Unknown;    break;
+        case 0: event.button = utils::iomanip::MouseButton::Left;        break;
+        case 1: event.button = utils::iomanip::MouseButton::Middle;      break;
+        case 2: event.button = utils::iomanip::MouseButton::Right;       break;
+        case 3: event.button = utils::iomanip::MouseButton::Release;     break;
+        default: event.button = utils::iomanip::MouseButton::Unknown;    break;
     }
 
     return event;
 }
 
 // Report format -> "ESC[<b;x;y(M|m)"
-utils::write::AdvancedMouseEvent utils::write::readAdvancedMouseEvent(void)
+utils::iomanip::AdvancedMouseEvent utils::iomanip::readAdvancedMouseEvent(void)
 {
-    utils::write::AdvancedMouseEvent event;
+    utils::iomanip::AdvancedMouseEvent event;
     std::string buffer;
     char c = '\0';
 
     // Get the input until 'M' or 'm'
     bool started = false;
     for (std::size_t i = 0; std::cin.get(c) && i < 128; ++i) { // Limitation of 128 char to counter infinite possible loop
-        if (c == static_cast<char>(utils::write::Char::ESC)) started = true;
+        if (c == static_cast<char>(utils::iomanip::Char::ESC)) started = true;
         if (started) buffer += c;
         if (started && (c == 'M' || c == 'm')) break;
     }
@@ -192,11 +192,11 @@ utils::write::AdvancedMouseEvent utils::write::readAdvancedMouseEvent(void)
 
     // Convert the button value
     switch (cb & 0b11) {
-        case 0: event.button = utils::write::MouseButton::Left;        break;
-        case 1: event.button = utils::write::MouseButton::Middle;      break;
-        case 2: event.button = utils::write::MouseButton::Right;       break;
-        case 3: event.button = utils::write::MouseButton::Release;     break;
-        default: event.button = utils::write::MouseButton::Unknown;    break;
+        case 0: event.button = utils::iomanip::MouseButton::Left;        break;
+        case 1: event.button = utils::iomanip::MouseButton::Middle;      break;
+        case 2: event.button = utils::iomanip::MouseButton::Right;       break;
+        case 3: event.button = utils::iomanip::MouseButton::Release;     break;
+        default: event.button = utils::iomanip::MouseButton::Unknown;    break;
     }
 
     return event;

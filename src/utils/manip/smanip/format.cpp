@@ -8,18 +8,18 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 19/07/2026 by @author Tsukini
+##  @date 20/07/2026 by @author Tsukini
 
 File Name:
 ##  @file format.cpp
 
 File Description:
-##  Format a string for the utils::write 
+##  Format a string for the utils::iomanip 
 \**************************************************************/
 
 #include "utils/attribute/Attribute.hpp"
-#include "utils/write/ANSI.hpp"
-#include "utils/write/format.hpp"
+#include "utils/manip/iomanip/ANSI.hpp"
+#include "utils/manip/smanip/format.hpp"
 #include <unordered_map>
 #include <functional>
 #include <algorithm>
@@ -28,24 +28,24 @@ File Description:
 
 // Map of ANSI sequence avaible for this format function
 static const std::unordered_map<std::string, std::function<void(std::string&)>> ansi = {
-    {"strong",          [](std::string& s){s += utils::write::strong();}},
-    {"dark",            [](std::string& s){s += utils::write::dark();}},
-    {"italic",          [](std::string& s){s += utils::write::italic();}},
-    {"underlined",      [](std::string& s){s += utils::write::underlined();}},
-    {"flashing_fast",   [](std::string& s){s += utils::write::flashing_fast();}},
-    {"flashing_slow",   [](std::string& s){s += utils::write::flashing_slow();}},
-    {"reversed",        [](std::string& s){s += utils::write::reversed();}},
-    {"hide",            [](std::string& s){s += utils::write::hide();}},
-    {"bar",             [](std::string& s){s += utils::write::bar();}},
-    {"monospace",       [](std::string& s){s += utils::write::monospace();}},
-    {"framed",          [](std::string& s){s += utils::write::framed();}},
-    {"encircled",       [](std::string& s){s += utils::write::encircled();}},
-    {"overlined",       [](std::string& s){s += utils::write::overlined();}},
-    {"exposant",        [](std::string& s){s += utils::write::exposant();}},
-    {"indice",          [](std::string& s){s += utils::write::indice();}},
+    {"strong",          [](std::string& s){s += utils::iomanip::strong();}},
+    {"dark",            [](std::string& s){s += utils::iomanip::dark();}},
+    {"italic",          [](std::string& s){s += utils::iomanip::italic();}},
+    {"underlined",      [](std::string& s){s += utils::iomanip::underlined();}},
+    {"flashing_fast",   [](std::string& s){s += utils::iomanip::flashing_fast();}},
+    {"flashing_slow",   [](std::string& s){s += utils::iomanip::flashing_slow();}},
+    {"reversed",        [](std::string& s){s += utils::iomanip::reversed();}},
+    {"hide",            [](std::string& s){s += utils::iomanip::hide();}},
+    {"bar",             [](std::string& s){s += utils::iomanip::bar();}},
+    {"monospace",       [](std::string& s){s += utils::iomanip::monospace();}},
+    {"framed",          [](std::string& s){s += utils::iomanip::framed();}},
+    {"encircled",       [](std::string& s){s += utils::iomanip::encircled();}},
+    {"overlined",       [](std::string& s){s += utils::iomanip::overlined();}},
+    {"exposant",        [](std::string& s){s += utils::iomanip::exposant();}},
+    {"indice",          [](std::string& s){s += utils::iomanip::indice();}},
 };
 
-_nodiscard std::string utils::write::format(const std::string& s)
+_nodiscard std::string utils::iomanip::format(const std::string& s)
 {
     // Init the string
     std::string formated;
@@ -97,7 +97,7 @@ _nodiscard std::string utils::write::format(const std::string& s)
 
             // Detect <> -> reset sequence
             if (start == 0)
-                formated += utils::write::reset();
+                formated += utils::iomanip::reset();
 
             // inc
             i = end + 1;

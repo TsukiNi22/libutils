@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 06/07/2026 by @author Tsukini
+##  @date 20/07/2026 by @author Tsukini
 
 File Name:
 ##  @file AException.cpp
@@ -13,9 +13,9 @@ File Description:
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/AException.hpp"
 #include "utils/exception/basic/ErrorException.hpp"
-#include "utils/write/Color.hpp"
-#include "utils/write/ANSI.hpp"
-#include "utils/write/Style.hpp"
+#include "utils/manip/iomanip/Color.hpp"
+#include "utils/manip/iomanip/ANSI.hpp"
+#include "utils/manip/iomanip/Style.hpp"
 #include <source_location>
 #include <sstream>
 #include <cstddef>
@@ -40,22 +40,22 @@ _nodiscard std::string utils::exception::AException::formated(void) const noexce
     std::ostringstream oss;
 
     // Exception type
-    oss << utils::write::strong();
+    oss << utils::iomanip::strong();
     if (this->_type & utils::exception::Type::None)
-        oss << utils::write::color_rgb(175, 100, 0) << "[None]";
+        oss << utils::iomanip::color_rgb(175, 100, 0) << "[None]";
     else if (this->_type & utils::exception::Type::Error)
-        oss << utils::write::color_rgb(205, 0, 0) << "[Error]";
+        oss << utils::iomanip::color_rgb(205, 0, 0) << "[Error]";
     else if (this->_type & utils::exception::Type::Warning)
-        oss << utils::write::color_rgb(175, 0, 175) << "[Warning]";
-    oss << " " << utils::write::reset();
+        oss << utils::iomanip::color_rgb(175, 0, 175) << "[Warning]";
+    oss << " " << utils::iomanip::reset();
 
     // Emplacement information
-    oss << utils::write::strong() << this->_file << ":" << this->_line << utils::write::reset() << " -> " << this->Message.at(this->_code) << std::endl;
+    oss << utils::iomanip::strong() << this->_file << ":" << this->_line << utils::iomanip::reset() << " -> " << this->Message.at(this->_code) << std::endl;
 
     // Content
-    oss << utils::write::color_rgb(175, 100, 0) << "-------------------------------------------" << utils::write::reset() << std::endl;
-    oss << utils::write::color(utils::write::Color::Cyan) << this->_func << utils::write::color_rgb(175, 100, 0) << " = " << utils::write::reset() << this->_info << std::endl;
-    oss << utils::write::color_rgb(175, 100, 0) << "-------------------------------------------" << utils::write::reset();
+    oss << utils::iomanip::color_rgb(175, 100, 0) << "-------------------------------------------" << utils::iomanip::reset() << std::endl;
+    oss << utils::iomanip::color(utils::iomanip::Color::Cyan) << this->_func << utils::iomanip::color_rgb(175, 100, 0) << " = " << utils::iomanip::reset() << this->_info << std::endl;
+    oss << utils::iomanip::color_rgb(175, 100, 0) << "-------------------------------------------" << utils::iomanip::reset();
 
     return oss.str();
 }

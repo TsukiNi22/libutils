@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 06/07/2026 by @author Tsukini
+##  @date 20/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Setup.cpp
@@ -20,8 +20,8 @@ File Description:
 #include "utils/attribute/Attribute.hpp"
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/basic/NoneException.hpp"
-#include "utils/write/ANSI.hpp"
-#include "utils/write/format.hpp"
+#include "utils/manip/iomanip/ANSI.hpp"
+#include "utils/manip/smanip/format.hpp"
 #include "utils/cli/Cli.hpp"
 #include <termios.h>
 #include <shared_mutex>
@@ -144,12 +144,12 @@ static void quit(void) {exit();}
 static void displayCode(const utils::cli::Cli& cli)
 {
     std::uint8_t code = cli.getCode();
-    std::cout << utils::write::strong();
-    if (code == 0) std::cout << utils::write::color_rgb(0, 255, 0) << "✔ ";
-    else std::cout << utils::write::color_rgb(255, 80, 80) << "✖ ";
-    std::cout << utils::write::format(std::format("<><strong>[{:03}]<>", code));
-    std::cout << utils::write::format("<strong>➤ ");
-    std::cout << utils::write::color_rgb(0, 200, 200) << cli.strcode(code) << utils::write::reset();
+    std::cout << utils::iomanip::strong();
+    if (code == 0) std::cout << utils::iomanip::color_rgb(0, 255, 0) << "✔ ";
+    else std::cout << utils::iomanip::color_rgb(255, 80, 80) << "✖ ";
+    std::cout << utils::iomanip::format(std::format("<><strong>[{:03}]<>", code));
+    std::cout << utils::iomanip::format("<strong>➤ ");
+    std::cout << utils::iomanip::color_rgb(0, 200, 200) << cli.strcode(code) << utils::iomanip::reset();
     std::cout << std::endl << std::flush;
 }
 
