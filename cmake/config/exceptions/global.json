@@ -11,6 +11,16 @@
             "message": "Empty"
         },
         {
+            "code": "UndefinedCall",
+            "message": "This function is not defined and was left as-is",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "UnauthorizedCall",
+            "message": "Can't allow the call to this function",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
             "code": "InvalidArgument",
             "message": "Invalid argument value",
             "restrictions": ["Fatal", "Error", "Warning"]

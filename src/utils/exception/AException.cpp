@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 20/07/2026 by @author Tsukini
+##  @date 25/07/2026 by @author Tsukini
 
 File Name:
 ##  @file AException.cpp
@@ -40,13 +40,14 @@ _nodiscard std::string utils::exception::AException::formated(void) const noexce
     std::ostringstream oss;
 
     // Exception type
+    std::string option = (this->isFatal() ? "(fatal)" : "");
     oss << utils::iomanip::strong();
     if (this->_type & utils::exception::Type::None)
-        oss << utils::iomanip::color_rgb(175, 100, 0) << "[None]";
+        oss << utils::iomanip::color_rgb(175, 100, 0) << "[None" << option << "]";
     else if (this->_type & utils::exception::Type::Error)
-        oss << utils::iomanip::color_rgb(205, 0, 0) << "[Error]";
+        oss << utils::iomanip::color_rgb(205, 0, 0) << "[Error" << option << "]";
     else if (this->_type & utils::exception::Type::Warning)
-        oss << utils::iomanip::color_rgb(175, 0, 175) << "[Warning]";
+        oss << utils::iomanip::color_rgb(175, 0, 175) << "[Warning" << option << "]";
     oss << " " << utils::iomanip::reset();
 
     // Emplacement information
