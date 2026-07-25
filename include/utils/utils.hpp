@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 20/07/2026 by @author Tsukini
+##  @date 25/07/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -16,6 +16,7 @@ File Description:
 #ifdef _NoWarning
     #define NO_DEPRECATED_WARNING // _deprecated(...)
     #define NO_LINKER_WARNING // Linker requirement
+    #define NO_USAGE_WARNING // Things that should be used carfully
     //#define NO_SHARED_OBJECT_WARNING // shared object
     //#warning "All warnings from 'utils/utils.hpp' are disable"
 #endif
@@ -86,6 +87,7 @@ File Description:
     #include "exception/basic/ErrorException.hpp"   // utils::exception::ErrorException
     #include "exception/basic/WarningException.hpp" // utils::exception::WarningException
     #include "exception/custom/CustomException.hpp" // utils::exception::CustomException
+    #include "exception/custom/FatalException.hpp"  // utils::exception::FatalException
 #endif
 
 /* Input/Output - Manip */
@@ -101,8 +103,9 @@ File Description:
 /* String - Manip */
 #ifdef _SManip
     // -> Handling of string manipulation
-    #include "manip/smanip/format.hpp"      // utils::smanip::format
-    #include "manip/smanip/codec/Codec.hpp" // utils::smanip::codec::ICodec, utils::smanip::codec::*Codec
+    #include "manip/smanip/format.hpp"        // utils::smanip::format
+    #include "manip/smanip/codec/Codec.hpp"   // utils::smanip::codec::ICodec, utils::smanip::codec::*Codec
+    #include "manip/smanip/parser/Parser.hpp" // utils::smanip::parser::IParser, utils::smanip::parser::*Parser
 #endif
 
 /* Cli */

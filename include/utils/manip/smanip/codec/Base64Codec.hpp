@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 20/07/2026 by @author Tsukini
+##  @date 25/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Base64Codec.hpp
@@ -24,19 +24,19 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "ICodec.hpp"   // utils::iomanip::codec::ICodec
+    #include "ICodec.hpp"   // utils::smanip::codec::ICodec
     #include <string>       // std::string
 
-namespace utils::iomanip::codec { // namespace start
+namespace utils::smanip::codec { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
 #ifndef NO_LINKER_WARNING
     #warning "The -lssl and -lcrypto are needed to use the Base64Codec"
 #endif
-class Base64Codec: public utils::iomanip::codec::ICodec {
+class Base64Codec: public utils::smanip::codec::ICodec {
     public:
-        // ------------ Function ---------- //
+        // ---------- Pre-Function -------- //
         std::string encode(std::string s) const;
         std::string decode(std::string s) const;
 

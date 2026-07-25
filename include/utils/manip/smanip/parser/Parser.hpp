@@ -11,22 +11,22 @@ Edition:
 ##  @date 25/07/2026 by @author Tsukini
 
 File Name:
-##  @file Codec.hpp
+##  @file Parser.hpp
 
 File Description:
-##  Include for all the different codec
+##  Include for all the different parser
 \**************************************************************/
 
-#ifndef CODEC_H
-    #define CODEC_H
+#ifndef PARSER_H
+    #define PARSER_H
 
     //----------------------------------------------------------------//
     /* INCLUDE */
 
     /* interface */
-    #include "ICodec.hpp"   // utils::smanip::codec::ICodec
+    #include "IParser.hpp"   // utils::smanip::parser::IParser
 
-    /* codec (basic) */
-    #include "Base64Codec.hpp"  // utils::smanip::codec::Base64Codec
+    /* parser (default) */
+    //#include "EETPParser.hpp"  // utils::smanip::parser::Base64Parser
 
-#endif /* CODEC_H */
+#endif /* PARSER_H */

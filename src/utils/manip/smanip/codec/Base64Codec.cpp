@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 20/07/2026 by @author Tsukini
+##  @date 25/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Base64Codec.cpp
@@ -25,7 +25,7 @@ File Description:
 #include <cstdint>
 #include <string>
 
-_nodiscard std::string utils::iomanip::codec::Base64Codec::encode(std::string s) const
+_nodiscard std::string utils::smanip::codec::Base64Codec::encode(std::string s) const
 {
     int len = ((s.size() + 2) / 3) * 4;
     std::string encoded(len, '\0');
@@ -41,7 +41,7 @@ _nodiscard std::string utils::iomanip::codec::Base64Codec::encode(std::string s)
     return encoded;
 }
 
-_nodiscard std::string utils::iomanip::codec::Base64Codec::decode(std::string s) const
+_nodiscard std::string utils::smanip::codec::Base64Codec::decode(std::string s) const
 {
     std::size_t padding = 0, len = (s.size() * 3) / 4;
     std::string decoded(len, '\0');

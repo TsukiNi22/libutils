@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 20/07/2026 by @author Tsukini
+##  @date 25/07/2026 by @author Tsukini
 
 File Name:
 ##  @file BidirectionalLookupTable.hpp
@@ -30,7 +30,7 @@ File Description:
     #include "../exception/basic/WarningException.hpp"  // utils::exception::WarningException
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::* (Type)
     #include <unordered_map>                            // std::unordered_map
-    #include <iostream>                                 // std::cout, std::endl
+    #include <iostream>                                 // std::cerr, std::endl
     #include <vector>                                   // std::vector
 
 namespace utils::blt { // namespace start
@@ -66,7 +66,7 @@ class BidirectionalLookupTable: private utils::warning::Observer {
             if (this->_freezed) throw utils::exception::ErrorException(utils::exception::Code::Freezed);
             if (!this->_left.contains(left)) {
                 utils::exception::WarningException e(utils::exception::Code::UnknowKey);
-                std::cout << e.formated() << std::endl;
+                std::cerr << e.formated() << std::endl;
                 return;
             }
             this->_right.erase(this->_left[left]);
@@ -78,7 +78,7 @@ class BidirectionalLookupTable: private utils::warning::Observer {
             if (this->_freezed) throw utils::exception::ErrorException(utils::exception::Code::Freezed);
             if (!this->_right.contains(right)) {
                 utils::exception::WarningException e(utils::exception::Code::UnknowKey);
-                std::cout << e.formated() << std::endl;
+                std::cerr << e.formated() << std::endl;
                 return;
             }
             this->_left.erase(this->_right[right]);

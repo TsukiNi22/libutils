@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 19/07/2026 by @author Tsukini
+##  @date 25/07/2026 by @author Tsukini
 
 File Name:
 ##  @file ArgParser.cpp
@@ -41,7 +41,7 @@ void utils::arguments::ArgParser::removeUsage(const std::string& id)
 {
     if (!this->_usages.contains(id)) {
         utils::exception::WarningException e(utils::exception::Code::UnknowId, id);
-        std::cout << e.formated() << std::endl;
+        std::cerr << e.formated() << std::endl;
         return;
     }
     this->_usages.erase(id);
@@ -57,7 +57,7 @@ void utils::arguments::ArgParser::removeOption(const std::string& id)
 {
     if (!this->_options.contains(id)) {
         utils::exception::WarningException e(utils::exception::Code::UnknowId, id);
-        std::cout << e.formated() << std::endl;
+        std::cerr << e.formated() << std::endl;
         return;
     }
     this->_options.erase(id);
@@ -73,7 +73,7 @@ void utils::arguments::ArgParser::removeFlag(const std::string& id)
 {
     if (!this->_flags.contains(id)) {
         utils::exception::WarningException e(utils::exception::Code::UnknowId, id);
-        std::cout << e.formated() << std::endl;
+        std::cerr << e.formated() << std::endl;
         return;
     }
     this->_flags.erase(id);
@@ -151,7 +151,7 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
         if (alreadyFailed) return false;
         alreadyFailed = true;
         std::string s = ((!isLong && arg == sarg) ? ("-" + arg + ": " + sarg + " (unknow short)") : ((isLong ? "--" : "-") + arg));
-        if (failsafe) {std::cout << utils::exception::WarningException(utils::exception::Code::UnknowFlag, s).formated() << std::endl; return false;}
+        if (failsafe) {std::cerr << utils::exception::WarningException(utils::exception::Code::UnknowFlag, s).formated() << std::endl; return false;}
         else throw utils::exception::ErrorException(utils::exception::Code::UnknowFlag, s);
     }
 
@@ -185,7 +185,7 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
         if (alreadyFailed) return false;
         alreadyFailed = true;
         std::string s = "Can't use '=' on flag that have only one option(s): '" + argOrigin + "'";
-        if (failsafe) {std::cout << utils::exception::WarningException(utils::exception::Code::FlagOption, s).formated() << std::endl; return false;}
+        if (failsafe) {std::cerr << utils::exception::WarningException(utils::exception::Code::FlagOption, s).formated() << std::endl; return false;}
         else throw utils::exception::ErrorException(utils::exception::Code::FlagOption, s);
     }
 
@@ -193,7 +193,7 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
     bool redefined = false;
     for (const auto &[fid, type, _]: usageFull.arguments) {
         if (!type && fid == id) {
-            if (!alreadyFailed) std::cout << utils::exception::WarningException(utils::exception::Code::DuplicatedFlag, (isLong ? std::get<2>(flag.flag) : (isShort ? std::get<0>(flag.flag) : std::get<1>(flag.flag)))).formated() << std::endl;
+            if (!alreadyFailed) std::cerr << utils::exception::WarningException(utils::exception::Code::DuplicatedFlag, (isLong ? std::get<2>(flag.flag) : (isShort ? std::get<0>(flag.flag) : std::get<1>(flag.flag)))).formated() << std::endl;
             alreadyFailed = true;
             redefined = true;
             break;
@@ -205,7 +205,7 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
         if (alreadyFailed) return false;
         alreadyFailed = true;
         std::string s = "Can't combine short flag that have option(s), '" + std::get<0>(flag.flag) + "' in '-" + arg + "'";
-        if (failsafe) {std::cout << utils::exception::WarningException(utils::exception::Code::FlagCombinaison, s).formated() << std::endl; return false;}
+        if (failsafe) {std::cerr << utils::exception::WarningException(utils::exception::Code::FlagCombinaison, s).formated() << std::endl; return false;}
         else throw utils::exception::ErrorException(utils::exception::Code::FlagCombinaison, s);
     }
 
@@ -219,7 +219,7 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
             if (alreadyFailed) return false;
             alreadyFailed = true;
             std::string s = (isLong ? "--" : "-") + arg;
-            if (failsafe) {std::cout << utils::exception::WarningException(utils::exception::Code::FlagOptionsNumber, s).formated() << std::endl; return false;}
+            if (failsafe) {std::cerr << utils::exception::WarningException(utils::exception::Code::FlagOptionsNumber, s).formated() << std::endl; return false;}
             else throw utils::exception::ErrorException(utils::exception::Code::FlagOptionsNumber, s);
         } else if (!equalFound && j + 1 >= flag.options.size() && flag.unlimited && argv[i + 1].front() == '-') { // Special case (unlimited can also accept no argument)
             breaked = true;
@@ -229,7 +229,7 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
             if (alreadyFailed) return false;
             alreadyFailed = true;
             std::string s = (isLong ? "--" : "-") + arg + ": " + *res;
-            if (failsafe) {std::cout << utils::exception::WarningException(utils::exception::Code::FlagOption, s).formated() << std::endl; return false;}
+            if (failsafe) {std::cerr << utils::exception::WarningException(utils::exception::Code::FlagOption, s).formated() << std::endl; return false;}
             else throw utils::exception::ErrorException(utils::exception::Code::FlagOption, s);
         } else {
             options.push_back(equalFound ? equal : argv[++i]);
@@ -278,7 +278,7 @@ bool utils::arguments::ArgParser::parseOption(utils::arguments::ParsedUsageFull&
         if (alreadyFailed) return false;
         alreadyFailed = true;
         std::string s = option;
-        if (failsafe) {std::cout << utils::exception::WarningException(utils::exception::Code::OptionIngored, s).formated() << std::endl; return false;}
+        if (failsafe) {std::cerr << utils::exception::WarningException(utils::exception::Code::OptionIngored, s).formated() << std::endl; return false;}
         else throw utils::exception::ErrorException(utils::exception::Code::OptionIngored, s);
     }
 

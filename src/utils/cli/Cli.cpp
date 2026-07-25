@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 20/07/2026 by @author Tsukini
+##  @date 25/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Cli.cpp
@@ -58,7 +58,7 @@ static void deleteChars(const std::size_t n)
 void utils::cli::Cli::launch(const std::size_t call)
 {
     try {this->cliMiddlewares.callBefore();}
-    catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
+    catch (const utils::exception::ErrorException& e) {std::cerr << e.what() << ": " << e.info() << std::endl;}
     std::string input;
 
     // Main loop
@@ -73,11 +73,11 @@ void utils::cli::Cli::launch(const std::size_t call)
                     if (code == utils::exception::Code::CliHook) this->_code = 2;
                     else _unlikely {this->_code = 255;}
                     try {this->errorMiddlewares.callBefore(this->_code);}
-                    catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
-                    if (this->_code <= 3 || this->_code == 255) std::cout << e.what() << ": " << e.info() << std::endl;
+                    catch (const utils::exception::ErrorException& e) {std::cerr << e.what() << ": " << e.info() << std::endl;}
+                    if (this->_code <= 3 || this->_code == 255) std::cerr << e.what() << ": " << e.info() << std::endl;
                     else std::cout << e.info() << std::endl;
                     try {this->errorMiddlewares.callAfter(this->_code);}
-                    catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
+                    catch (const utils::exception::ErrorException& e) {std::cerr << e.what() << ": " << e.info() << std::endl;}
                     continue;
                 }
             }
@@ -98,20 +98,20 @@ void utils::cli::Cli::launch(const std::size_t call)
                 else if (code == utils::exception::Code::MiddlewareCall) this->_code = 3;
                 else _unlikely {this->_code = 255;}
                 try {this->errorMiddlewares.callBefore(this->_code);}
-                catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
-                if (this->_code <= 3 || this->_code == 255) std::cout << e.what() << ": " << e.info() << std::endl;
+                catch (const utils::exception::ErrorException& e) {std::cerr << e.what() << ": " << e.info() << std::endl;}
+                if (this->_code <= 3 || this->_code == 255) std::cerr << e.what() << ": " << e.info() << std::endl;
                 else std::cout << e.info() << std::endl;
                 try {this->errorMiddlewares.callAfter(this->_code);}
-                catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
+                catch (const utils::exception::ErrorException& e) {std::cerr << e.what() << ": " << e.info() << std::endl;}
                 continue;
             }
             if (!(this->_flags & utils::cli::Flag::EMPTY_INPUT) && input.empty()) {
                 this->_code = 127;
                 try {this->errorMiddlewares.callBefore(this->_code);}
-                catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
+                catch (const utils::exception::ErrorException& e) {std::cerr << e.what() << ": " << e.info() << std::endl;}
                 std::cout << "Empty input" << std::endl;
                 try {this->errorMiddlewares.callAfter(this->_code);}
-                catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
+                catch (const utils::exception::ErrorException& e) {std::cerr << e.what() << ": " << e.info() << std::endl;}
                 continue;
             }
 
@@ -140,11 +140,11 @@ void utils::cli::Cli::launch(const std::size_t call)
                     }
                 } else _unlikely {this->_code = 255;}
                 try {this->errorMiddlewares.callBefore(this->_code);}
-                catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
-                if (this->_code <= 3 || this->_code == 255) std::cout << e.what() << ": " << e.info() << std::endl;
+                catch (const utils::exception::ErrorException& e) {std::cerr << e.what() << ": " << e.info() << std::endl;}
+                if (this->_code <= 3 || this->_code == 255) std::cerr << e.what() << ": " << e.info() << std::endl;
                 else std::cout << e.info() << std::endl;
                 try {this->errorMiddlewares.callAfter(this->_code);}
-                catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
+                catch (const utils::exception::ErrorException& e) {std::cerr << e.what() << ": " << e.info() << std::endl;}
                 continue;
             }
         }
@@ -156,7 +156,7 @@ void utils::cli::Cli::launch(const std::size_t call)
     }
 
     try {this->cliMiddlewares.callAfter();}
-    catch (const utils::exception::ErrorException& e) {std::cout << e.what() << ": " << e.info() << std::endl;}
+    catch (const utils::exception::ErrorException& e) {std::cerr << e.what() << ": " << e.info() << std::endl;}
     this->_running = false;
 }
 
@@ -532,9 +532,9 @@ _hot void utils::cli::Cli::exec(const utils::cli::ParsedData& parsedInput)
         if (status != 0) {
             // Display error
             switch (status) {
-                case 1: std::cout << lastExceptionInfo << std::endl; break; // Parser
-                case 2: std::cout << lastExceptionInfo << std::endl; break; // Execution
-                case 3: std::cout << "Callback exception: " << lastExceptionInfo << std::endl; break; // Other
+                case 1: std::cerr << lastExceptionInfo << std::endl; break; // Parser
+                case 2: std::cerr << lastExceptionInfo << std::endl; break; // Execution
+                case 3: std::cerr << "Callback exception: " << lastExceptionInfo << std::endl; break; // Other
                 case 4: break; // For error with no display
                 default: // Unknow
                     throw utils::exception::ErrorException(utils::exception::Code::CliExecution, "Callback exception: can't determine the error");

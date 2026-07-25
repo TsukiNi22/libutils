@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 19/07/2026 by @author Tsukini
+##  @date 25/07/2026 by @author Tsukini
 
 File Name:
 ##  @file ICodec.hpp
@@ -26,13 +26,13 @@ File Description:
     /* type */
     #include <string>   // std::string
 
-namespace utils::iomanip::codec { // namespace start
+namespace utils::smanip::codec { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
 class ICodec {
     public:
-        // ------------ Function ---------- //
+        // ---------- Pre-Function -------- //
         // Could also be declared as 'static' but doesn't support polymorphism
         virtual std::string encode(std::string s) const = 0;
         virtual std::string decode(std::string s) const = 0;
