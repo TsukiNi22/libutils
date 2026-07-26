@@ -8,25 +8,23 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 25/07/2026 by @author Tsukini
+##  @date 26/07/2026 by @author Tsukini
 
 File Name:
-##  @file Parser.hpp
+##  @file EETPParser.hpp
 
 File Description:
-##  Include for all the different parser
+##  Definition of the 2etp parser methods
 \**************************************************************/
 
-#ifndef PARSER_H
-    #define PARSER_H
+#include "utils/attribute/Attribute.hpp"
+#include "utils/manip/smanip/parser/EETPParser.hpp"
+#include <string>
 
-    //----------------------------------------------------------------//
-    /* INCLUDE */
+_hot _nodiscard std::string utils::smanip::parser::EETPParser::format(std::string id, utils::smanip::parser::EETPContent content)
+{
+}
 
-    /* interface */
-    #include "IParser.hpp"   // utils::smanip::parser::IParser
-
-    /* parser (default) */
-    #include "EETPParser.hpp"  // utils::smanip::parser::Base64Parser
-
-#endif /* PARSER_H */
+_hot _nodiscard utils::smanip::parser::EETPContent utils::smanip::parser::EETPParser::parse(std::string id, std::string s)
+{
+}

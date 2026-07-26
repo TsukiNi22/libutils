@@ -8,24 +8,25 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 25/07/2026 by @author Tsukini
+##  @date 26/07/2026 by @author Tsukini
 
 File Name:
 ##  @file AParser.hpp
 
 File Description:
-##  Declaration of the interface used for different parser (base64, ...)
+##  Declaration of the abstract used for different parser (2etp, ...)
 \**************************************************************/
 
 #ifndef APARSER_H
     #define APARSER_H
 
     //----------------------------------------------------------------//
-    /* ANCLUDE */
+    /* INCLUDE */
 
     /* type */
     #include "../../../exception/ExceptionDefine.hpp"       // utils::exception::Code::*
     #include "../../../exception/custom/FatalException.hpp" // utils::exception::FatalException
+    #include "../../../attribute/Attribute.hpp"             // _cold, _nodiscard, _unused
     #include "IParser.hpp"                                  // utils::smanip::parser::IParser
     #include <string>                                       // std::string
 
@@ -38,14 +39,16 @@ template<typename T>
 class AParser: public utils::smanip::parser::IParser<T> {
     public:
         // ------------ Function ---------- //
-        std::string format(T content) const override
+        _cold std::string format(_unused T content) const override
         {throw utils::exception::FatalException(utils::exception::Code::UndefinedCall);};
-        T parse(std::string s) const override
+        _cold T parse(_unused std::string s) const override
         {throw utils::exception::FatalException(utils::exception::Code::UndefinedCall);};
-        std::string format(std::string id, T content) override
+        _cold std::string format(_unused std::string id, _unused T content) override
         {throw utils::exception::FatalException(utils::exception::Code::UndefinedCall);};
-        T parse(std::string id, std::string s) override
+        _cold T parse(_unused std::string id, _unused std::string s) override
         {throw utils::exception::FatalException(utils::exception::Code::UndefinedCall);};
+        _cold _nodiscard inline bool hasIdOverload(void) const override {return false;};
+        _cold _nodiscard inline bool hasNoIdOverload(void) const override {return false;};
 
         // ------------ Operator ---------- //
         AParser& operator=(const AParser& other) = delete;

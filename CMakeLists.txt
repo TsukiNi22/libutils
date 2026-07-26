@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_COMPILER clang++)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON) # Moderne compilation -fPIE
-add_definitions(-D_NoWarning -DNO_LINKER_WARNING) # Remove warnings from utils (usless for hard import)
+add_definitions(-D_NoWarning -DNO_LINKER_WARNING -DNO_USAGE_WARNING) # Remove warnings from utils (usless for hard import)
 
 # =========================
 # Requirement
@@ -51,6 +51,9 @@ set(SRC
 
     ## S - Manip (sub-part: codec)
     src/utils/manip/smanip/codec/Base64Codec.cpp
+
+    ## S - Manip (sub-part: parser)
+    src/utils/manip/smanip/parser/EETPParser.cpp
 
     ## Math (sub-part: geometry)
     src/utils/math/geometry/Point.cpp

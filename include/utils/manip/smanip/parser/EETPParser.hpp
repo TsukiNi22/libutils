@@ -11,49 +11,58 @@ Edition:
 ##  @date 26/07/2026 by @author Tsukini
 
 File Name:
-##  @file IParser.hpp
+##  @file EETPParser.hpp
 
 File Description:
-##  Declaration of the interface used for different parser (2etp, ...)
+##  Declaration of the parser used for the 2etp protocol
 \**************************************************************/
 
-#ifndef IPARSER_H
-    #define IPARSER_H
+#ifndef EETPPARSER_H
+    #define EETPPARSER_H
 
     //----------------------------------------------------------------//
     /* INCLUDE */
 
     /* type */
-    #include <string>   // std::string
+    #include "../../../attribute/Attribute.hpp" // _cold, _nodiscard
+    #include "AParser.hpp"                      // utils::smanip::parser::AParser
+    #include <cstdint>                          // std::uint16_t
+    #include <vector>                           // std::vector
+    #include <string>                           // std::string
 
 namespace utils::smanip::parser { // namespace start
 //----------------------------------------------------------------//
+/* STRUCT */
+
+struct EETPContent {
+    std::uint16_t type = 0;
+    std::vector<std::string> data;
+};
+
+//----------------------------------------------------------------//
 /* CLASS */
 
-template<typename T>
-class IParser {
+class EETPParser: public utils::smanip::parser::AParser<utils::smanip::parser::EETPContent> {
     public:
         // ---------- Pre-Function -------- //
-        virtual std::string format(T content) const = 0;
-        virtual T parse(std::string s) const = 0;
-        // For potential need of identification / individual storage
-        virtual std::string format(std::string id, T content) = 0;
-        virtual T parse(std::string id, std::string s) = 0;
-        virtual bool hasIdOverload(void) const = 0;
-        virtual bool hasNoIdOverload(void) const = 0;
+        std::string format(std::string id, utils::smanip::parser::EETPContent content) final;
+        utils::smanip::parser::EETPContent parse(std::string id, std::string s) final;
+
+        // ------------ Function ---------- //
+        _cold _nodiscard inline bool hasIdOverload(void) const final {return true;};
 
         // ------------ Operator ---------- //
-        IParser& operator=(const IParser& other) = delete;
-        IParser& operator=(IParser&& other) = delete;
+        EETPParser& operator=(const EETPParser& other) = delete;
+        EETPParser& operator=(EETPParser&& other) = delete;
 
         // ---------- Constructor --------- //
-        IParser() = default;
-        IParser(const IParser& other) = delete;
-        IParser(IParser&& other) = delete;
+        EETPParser() = default;
+        EETPParser(const EETPParser& other) = delete;
+        EETPParser(EETPParser&& other) = delete;
 
         // ----------- Destructor --------- //
-        virtual ~IParser() = default;
+        virtual ~EETPParser() = default;
 };
 
 } // namespace end
-#endif /* IPARSER_H */
+#endif /* EETPPARSER_H */
