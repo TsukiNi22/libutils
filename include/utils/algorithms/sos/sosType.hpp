@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 16/07/2026 by @author Tsukini
+##  @date 27/07/2026 by @author Tsukini
 
 File Name:
 ##  @file sosType.hpp
@@ -32,9 +32,9 @@ namespace utils::algorithms::sos { // namespace start
 /* TYPE */
 
 /* type simplification (default) */
-using Byte  = std::uint16_t; // Default Byte type
-using Bytes = std::vector<utils::algorithms::sos::Byte>;
-using Key   = utils::algorithms::sos::Bytes;
+_unused using Byte  = std::uint16_t; // Default Byte type
+_unused using Bytes = std::vector<utils::algorithms::sos::Byte>;
+_unused using Key   = utils::algorithms::sos::Bytes;
 
 } // namespace end
 #endif /* SOSTYPE_H */
