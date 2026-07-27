@@ -66,7 +66,7 @@ _cold _nodiscard static inline std::string canonical_or_raw(const std::string &p
 _cold _nodiscard static inline std::string module_name(const void *addr, const std::string& path)
 {
     // Check if it's the utils library
-    if (path.starts_with("file:///__w/my_lib_cpp/my_lib_cpp/src/utils"))
+    if (path.starts_with("file:///__w/my_lib_cpp/my_lib_cpp/src/utils") || path.find("include/utils") != std::string::npos)
         return "utils";
 
     // Get the module information
@@ -115,10 +115,10 @@ _cold _nodiscard std::string utils::exception::AException::formated(void) const 
         exists = std::filesystem::exists(absolutePath);
     } catch (const std::filesystem::filesystem_error &) {exists = false;}
     oss << utils::iomanip::strong();
-    if (exists) oss << utils::iomanip::file_hyperlink(shorten(this->_file), std::filesystem::absolute(this->_file).lexically_normal().string());
+    if (exists) oss << utils::iomanip::file_hyperlink(shorten(this->_file), absolutePath);
     else oss << shorten(this->_file);
     oss << ":" << this->_line << utils::iomanip::reset();
-    if (!(moduleName = module_name(this->_caller_addr, this->_file)).empty())
+    if (!(moduleName = module_name(this->_caller_addr, absolutePath)).empty())
         oss << utils::iomanip::color_rgb(100, 100, 100) << " (" << moduleName << ")" << utils::iomanip::reset();
     oss << " -> " << this->Messages.at(this->_code) << std::endl;
 
