@@ -76,7 +76,7 @@ class Files:
     REQUIREMENTS: str = "cmake/scripts/requirements.txt"
     CONFIG_EXCEPTION: str = "cmake/config/exceptions/"
     EXCEPTION_DEFINE_HEADER: str = "include/utils/exception/ExceptionDefine.hpp"
-    GENERATED_EXCEPTION_HEADER: str = "include/utils/exception/generated_exception_header.hpp"
+    GENERATED_EXCEPTION_HEADER: str = "include/utils/exception/generated_internal_exception_header.hpp"
 
 @dataclass(frozen=True)
 class Names:
@@ -85,6 +85,13 @@ class Names:
     """
     EXCEPTION_SCOPE: str = "utils::exception"
     EXCEPTION_TYPE_ENUM: str = "Type"
+
+    # Sections
+    GUARD: str = "INTERNAL_"
+    CODE_SECTION: str = "InternalCode"
+    MESSAGES_SECTION: str = "InternalMessages"
+    INFO_SECTION: str = "InternalInfo"
+    RESTRICTION_SECTION: str = "InternalRestriction"
 
 ##### Declaration #####
 RETURN  = Return()

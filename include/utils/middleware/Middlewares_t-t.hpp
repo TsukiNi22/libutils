@@ -25,7 +25,7 @@ File Description:
 
     /* type */
     #include "../warning/Observer.hpp"                  // utils::warning::Observer
-    #include "../exception/ExceptionDefine.hpp"         // utils::exception::Type, utils::exception::Code
+    #include "../exception/ExceptionDefine.hpp"         // utils::exception::Type, utils::exception::InternalCode
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "MiddlewaresType.hpp"                      // utils::middleware::Middleware<...>
     #include <shared_mutex>                             // std::shared_mutex, std::unique_lock, std::shared_lock
@@ -58,7 +58,7 @@ class Middlewares: private utils::warning::Observer {
             std::shared_lock lock(this->_lock);
             for (const utils::middleware::Middleware<T>& middleware: this->before) {
                 try {middleware(arg);}
-                catch (const std::exception& e) {throw utils::exception::ErrorException(utils::exception::Code::MiddlewareCall, e.what());}
+                catch (const std::exception& e) {throw utils::exception::ErrorException(utils::exception::InternalCode::MiddlewareCall, e.what());}
             }
         }
         void callAfter(U arg) const
@@ -66,7 +66,7 @@ class Middlewares: private utils::warning::Observer {
             std::shared_lock lock(this->_lock);
             for (const utils::middleware::Middleware<U>& middleware: this->after) {
                 try {middleware(arg);}
-                catch (const std::exception& e) {throw utils::exception::ErrorException(utils::exception::Code::MiddlewareCall, e.what());}
+                catch (const std::exception& e) {throw utils::exception::ErrorException(utils::exception::InternalCode::MiddlewareCall, e.what());}
             }
         }
 

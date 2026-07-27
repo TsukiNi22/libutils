@@ -20,19 +20,24 @@ File Description:
 ##### Import #####
 # Import that can't be in the try
 from const import RETURN, ERROR, VALUES, FILES, NAMES
-from sys import exit, stderr
+from sys import exit, stderr, stdout
+from os import geteuid
 
 # Try to install dependencies (failsafe)
 try:
-    from hashlib import sha256
-    from sys import executable
-    from subprocess import check_call
-    check_call([executable, "-m", "ensurepip", "--upgrade"])
-    check_call([executable, "-m", "pip", "install", "-r", FILES.REQUIREMENTS])
+    # Avoid pip install when running as root
+    if geteuid() != 0:
+        from sys import executable
+        from subprocess import check_call
+        check_call([executable, "-m", "ensurepip", "--upgrade"])
+        check_call([executable, "-m", "pip", "install", "-r", FILES.REQUIREMENTS])
+    else:
+        stdout.write("Running as root: skipping Python dependency installation\n")
 except Exception: pass
 
 # Import that can be checked
 try:
+    from hashlib import sha256 # Used to identify different error
     from pathlib import Path # Used to create & edit files and to get the file name
     import json # Used to get the json data
     import re # Used for pattern matching
@@ -99,11 +104,11 @@ for i, (code, [message, info, restriction]) in enumerate(data_list):
     code_str += f"    {code} = {uint64_hash(code)}ull,"
     # message
     escaped_message = message.replace('"', r'\"')
-    message_str += f'    {{{NAMES.EXCEPTION_SCOPE}::Code::{code}, "{escaped_message}"}},'
+    message_str += f'    {{{NAMES.EXCEPTION_SCOPE}::{NAMES.CODE_SECTION}::{code}, "{escaped_message}"}},'
     # info
     escaped_info = info.replace('"', r'\"')
     info = ("nullptr" if escaped_info == "[None]" else f'"{escaped_info}"')
-    info_str += f'    {{{NAMES.EXCEPTION_SCOPE}::Code::{code}, {info}}},'
+    info_str += f'    {{{NAMES.EXCEPTION_SCOPE}::{NAMES.CODE_SECTION}::{code}, {info}}},'
     # restriction
     value = 0
     types = ""
@@ -111,7 +116,7 @@ for i, (code, [message, info, restriction]) in enumerate(data_list):
         t = restriction[j]
         value |= VALUES.EXCEPTION_TYPE.get(t, 0)
         if VALUES.EXCEPTION_TYPE.get(t, 0) != 0: types += t + (", " if j != len(restriction) - 1 else "")
-    restriction_str += f"    {{{NAMES.EXCEPTION_SCOPE}::Code::{code}, {value:#0{len(VALUES.EXCEPTION_TYPE) + 2}b}}}, // allow: {'All' if types == '' else types}"
+    restriction_str += f"    {{{NAMES.EXCEPTION_SCOPE}::{NAMES.CODE_SECTION}::{code}, {value:#0{len(VALUES.EXCEPTION_TYPE) + 2}b}}}, // allow: {'All' if types == '' else types}"
     # End of line
     if i != len(data_list) - 1:
         code_str += "\n"
@@ -145,8 +150,8 @@ File Description:
 ##  Used for exception code & message definition
 \\**************************************************************/
 
-#ifndef {Path(FILES.GENERATED_EXCEPTION_HEADER).stem.upper()}_H
-    #define {Path(FILES.GENERATED_EXCEPTION_HEADER).stem.upper()}_H
+#ifndef {NAMES.GUARD + Path(FILES.GENERATED_EXCEPTION_HEADER).stem.upper()}_H
+    #define {NAMES.GUARD + Path(FILES.GENERATED_EXCEPTION_HEADER).stem.upper()}_H
 
     //----------------------------------------------------------------//
     /* INCLUDE */
@@ -161,39 +166,39 @@ namespace {NAMES.EXCEPTION_SCOPE} {{ // namespace start
 /* TYPEDEF */
 
 /* Definition of the different exception code */
-enum class Code: std::size_t {{
+enum class {NAMES.CODE_SECTION}: std::size_t {{
     Undefined = 0,
 {code_str}
 }};
 
 /* Corresponding exception message for each code */
-inline const std::unordered_map<{NAMES.EXCEPTION_SCOPE}::Code, const char*> Messages = {{
-    {{{NAMES.EXCEPTION_SCOPE}::Code::Undefined, "An undefined error has occured"}},
+inline const std::unordered_map<{NAMES.EXCEPTION_SCOPE}::{NAMES.CODE_SECTION}, const char*> {NAMES.MESSAGES_SECTION} = {{
+    {{{NAMES.EXCEPTION_SCOPE}::{NAMES.CODE_SECTION}::Undefined, "An undefined error has occured"}},
 {message_str}
 }};
 
 /* Potential default info: nullptr same as "[None]" */
-inline const std::unordered_map<{NAMES.EXCEPTION_SCOPE}::Code, const char*> Info = {{
-    {{{NAMES.EXCEPTION_SCOPE}::Code::Undefined, nullptr}},
+inline const std::unordered_map<{NAMES.EXCEPTION_SCOPE}::{NAMES.CODE_SECTION}, const char*> {NAMES.INFO_SECTION} = {{
+    {{{NAMES.EXCEPTION_SCOPE}::{NAMES.CODE_SECTION}::Undefined, nullptr}},
 {info_str}
 }};
 
 /* Potential restriction on exception code */
 {restriction_str_comment}
-inline const std::unordered_map<{NAMES.EXCEPTION_SCOPE}::Code, const std::uint8_t> Restriction = {{
-    {{{NAMES.EXCEPTION_SCOPE}::Code::Undefined, 0b0000}}, // allow: All
+inline const std::unordered_map<{NAMES.EXCEPTION_SCOPE}::{NAMES.CODE_SECTION}, const std::uint8_t> {NAMES.RESTRICTION_SECTION} = {{
+    {{{NAMES.EXCEPTION_SCOPE}::{NAMES.CODE_SECTION}::Undefined, 0b0000}}, // allow: All
 {restriction_str}
 }};
 
 // Check at the compile time the correspondece between the message & code
 /*
-static_assert(std::size(Messages) == static_cast<std::size_t>({NAMES.EXCEPTION_SCOPE}::Code::CODE_SENTINEL), "The message array doesn't correspond to the available exception codes");
-static_assert(std::size(Info) == static_cast<std::size_t>({NAMES.EXCEPTION_SCOPE}::Code::CODE_SENTINEL), "The info array doesn't correspond to the available exception codes");
-static_assert(std::size(Restriction) == static_cast<std::size_t>({NAMES.EXCEPTION_SCOPE}::Code::CODE_SENTINEL), "The restriction array doesn't correspond to the available exception codes");
+static_assert(std::size({NAMES.MESSAGES_SECTION}) == static_cast<std::size_t>({NAMES.EXCEPTION_SCOPE}::{NAMES.CODE_SECTION}::CODE_SENTINEL), "The message array doesn't correspond to the available exception codes");
+static_assert(std::size({NAMES.INFO_SECTION}) == static_cast<std::size_t>({NAMES.EXCEPTION_SCOPE}::{NAMES.CODE_SECTION}::CODE_SENTINEL), "The info array doesn't correspond to the available exception codes");
+static_assert(std::size({NAMES.RESTRICTION_SECTION}) == static_cast<std::size_t>({NAMES.EXCEPTION_SCOPE}::{NAMES.CODE_SECTION}::CODE_SENTINEL), "The restriction array doesn't correspond to the available exception codes");
 */
 
 }} // namespace end
-#endif /* {Path(FILES.GENERATED_EXCEPTION_HEADER).stem.upper()}_H */
+#endif /* {NAMES.GUARD + Path(FILES.GENERATED_EXCEPTION_HEADER).stem.upper()}_H */
 """
 
 # Write the file content

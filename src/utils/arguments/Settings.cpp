@@ -63,7 +63,7 @@ _nodiscard static std::u32string decode_utf8(const std::string& setting)
 _nodiscard const utils::arguments::Setting& utils::arguments::Settings::at(const std::string& id) const
 {
     if (!this->_settings.contains(id))
-        throw utils::exception::ErrorException(utils::exception::Code::UnknowId, id);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::UnknowId, id);
     return this->_settings.at(id);
 }
 
@@ -156,7 +156,7 @@ _nodiscard std::byte utils::arguments::Settings::cast_byte(const std::string& se
             throw std::out_of_range("byte overflow");
         return static_cast<std::byte>(value);
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::Code::BadCast, std::string(e.what()) + ": " + setting);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, std::string(e.what()) + ": " + setting);
     }
 }
 
@@ -173,7 +173,7 @@ _nodiscard bool utils::arguments::Settings::cast_bool(const std::string& setting
             return false;
         throw std::invalid_argument("not a boolean");
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::Code::BadCast, std::string(e.what()) + ": " + setting);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, std::string(e.what()) + ": " + setting);
     }
 }
 
@@ -191,7 +191,7 @@ _nodiscard std::int8_t utils::arguments::Settings::cast_int8(const std::string& 
             throw std::out_of_range("int8 overflow");
         return static_cast<std::int8_t>(value);
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::Code::BadCast, std::string(e.what()) + ": " + setting);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, std::string(e.what()) + ": " + setting);
     }
 }
 
@@ -209,7 +209,7 @@ _nodiscard std::int16_t utils::arguments::Settings::cast_int16(const std::string
             throw std::out_of_range("int16 overflow");
         return static_cast<std::int16_t>(value);
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::Code::BadCast, std::string(e.what()) + ": " + setting);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, std::string(e.what()) + ": " + setting);
     }
 }
 
@@ -229,7 +229,7 @@ _nodiscard std::int32_t utils::arguments::Settings::cast_int32(const std::string
             throw std::out_of_range("int32 overflow");
         return static_cast<std::int32_t>(value);
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::Code::BadCast, std::string(e.what()) + ": " + setting);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, std::string(e.what()) + ": " + setting);
     }
 }
 
@@ -244,7 +244,7 @@ _nodiscard std::int64_t utils::arguments::Settings::cast_int64(const std::string
             throw std::invalid_argument("invalid number");
         return static_cast<std::int64_t>(value);
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::Code::BadCast, std::string(e.what()) + ": " + setting);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, std::string(e.what()) + ": " + setting);
     }
 }
 
@@ -263,7 +263,7 @@ _nodiscard std::uint8_t utils::arguments::Settings::cast_uint8(const std::string
             throw std::out_of_range("uint8 overflow");
         return static_cast<std::uint8_t>(value);
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::Code::BadCast, std::string(e.what()) + ": " + setting);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, std::string(e.what()) + ": " + setting);
     }
 }
 
@@ -282,7 +282,7 @@ _nodiscard std::uint16_t utils::arguments::Settings::cast_uint16(const std::stri
             throw std::out_of_range("uint16 overflow");
         return static_cast<std::uint16_t>(value);
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::Code::BadCast, std::string(e.what()) + ": " + setting);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, std::string(e.what()) + ": " + setting);
     }
 }
 
@@ -301,7 +301,7 @@ _nodiscard std::uint32_t utils::arguments::Settings::cast_uint32(const std::stri
             throw std::out_of_range("uint32 overflow");
         return static_cast<std::uint32_t>(value);
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::Code::BadCast, std::string(e.what()) + ": " + setting);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, std::string(e.what()) + ": " + setting);
     }
 }
 
@@ -318,7 +318,7 @@ _nodiscard std::uint64_t utils::arguments::Settings::cast_uint64(const std::stri
             throw std::invalid_argument("invalid number");
         return static_cast<std::uint64_t>(value);
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::Code::BadCast, std::string(e.what()) + ": " + setting);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, std::string(e.what()) + ": " + setting);
     }
 }
 
@@ -333,7 +333,7 @@ _nodiscard utils::arguments::float16_t utils::arguments::Settings::cast_float16(
             throw std::invalid_argument("not a float");
         return static_cast<utils::arguments::float16_t>(value);
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::Code::BadCast, std::string(e.what()) + ": " + setting);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, std::string(e.what()) + ": " + setting);
     }
 }
 
@@ -348,7 +348,7 @@ _nodiscard utils::arguments::float32_t utils::arguments::Settings::cast_float32(
             throw std::invalid_argument("not a float");
         return static_cast<utils::arguments::float32_t>(value);
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::Code::BadCast, std::string(e.what()) + ": " + setting);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, std::string(e.what()) + ": " + setting);
     }
 }
 
@@ -363,7 +363,7 @@ _nodiscard utils::arguments::float64_t utils::arguments::Settings::cast_float64(
             throw std::invalid_argument("not a float");
         return static_cast<utils::arguments::float64_t>(value);
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::Code::BadCast, std::string(e.what()) + ": " + setting);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, std::string(e.what()) + ": " + setting);
     }
 }
 
@@ -378,7 +378,7 @@ _nodiscard utils::arguments::float128_t utils::arguments::Settings::cast_float12
             throw std::invalid_argument("not a float");
         return static_cast<utils::arguments::float128_t>(value);
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::Code::BadCast, std::string(e.what()) + ": " + setting);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, std::string(e.what()) + ": " + setting);
     }
 }
 
@@ -389,7 +389,7 @@ _nodiscard char8_t utils::arguments::Settings::cast_char8(const std::string& set
             throw std::invalid_argument("expected a single character");
         return static_cast<char8_t>(setting[0]);
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::Code::BadCast, std::string(e.what()) + ": " + setting);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, std::string(e.what()) + ": " + setting);
     }
 }
 
@@ -406,7 +406,7 @@ _nodiscard char16_t utils::arguments::Settings::cast_char16(const std::string& s
             throw std::out_of_range("char16 overflow");
         return static_cast<char16_t>(value);
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::Code::BadCast, std::string(e.what()) + ": " + setting);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, std::string(e.what()) + ": " + setting);
     }
 }
 
@@ -423,7 +423,7 @@ _nodiscard char32_t utils::arguments::Settings::cast_char32(const std::string& s
             throw std::out_of_range("not a valid Unicode code point");
         return static_cast<char32_t>(value);
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::Code::BadCast, std::string(e.what()) + ": " + setting);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, std::string(e.what()) + ": " + setting);
     }
 }
 
@@ -433,7 +433,7 @@ _nodiscard std::u8string utils::arguments::Settings::cast_u8string(const std::st
         (void)decode_utf8(setting);
         return std::u8string(setting.begin(), setting.end());
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::Code::BadCast, std::string(e.what()) + ": " + setting);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, std::string(e.what()) + ": " + setting);
     }
 }
 
@@ -453,7 +453,7 @@ _nodiscard std::u16string utils::arguments::Settings::cast_u16string(const std::
         }
         return result;
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::Code::BadCast, std::string(e.what()) + ": " + setting);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, std::string(e.what()) + ": " + setting);
     }
 }
 
@@ -462,7 +462,7 @@ _nodiscard std::u32string utils::arguments::Settings::cast_u32string(const std::
     try {
         return decode_utf8(setting);
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::Code::BadCast, std::string(e.what()) + ": " + setting);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, std::string(e.what()) + ": " + setting);
     }
 }
 
@@ -474,7 +474,7 @@ _nodiscard wchar_t utils::arguments::Settings::cast_wchar(const std::string& set
             throw std::invalid_argument("expected a single character");
         return static_cast<wchar_t>(codepoints[0]);
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::Code::BadCast, std::string(e.what()) + ": " + setting);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, std::string(e.what()) + ": " + setting);
     }
 }
 
@@ -484,7 +484,7 @@ _nodiscard std::wstring utils::arguments::Settings::cast_wstring(const std::stri
         std::u32string codepoints = decode_utf8(setting);
         return std::wstring(codepoints.begin(), codepoints.end());
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::Code::BadCast, std::string(e.what()) + ": " + setting);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, std::string(e.what()) + ": " + setting);
     }
 }
 
@@ -495,6 +495,6 @@ _nodiscard std::filesystem::path utils::arguments::Settings::cast_path(const std
             throw std::invalid_argument("empty");
         return std::filesystem::path(setting);
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::Code::BadCast, std::string(e.what()) + ": " + setting);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, std::string(e.what()) + ": " + setting);
     }
 }

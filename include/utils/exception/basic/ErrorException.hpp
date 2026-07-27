@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 25/07/2026 by @author Tsukini
+##  @date 28/07/2026 by @author Tsukini
 
 File Name:
 ##  @file ErrorException.hpp
@@ -16,7 +16,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../ExceptionDefine.hpp"           // utils::exception::Code, utils::exception::Type
+    #include "../ExceptionDefine.hpp"           // utils::exception::InternalCode, utils::exception::Type
     #include "../AException.hpp"                // utils::exception::AException
     #include "../../attribute/Attribute.hpp"    // _cold
     #include <source_location>                  // std::source_location
@@ -32,8 +32,11 @@ class ErrorException: public utils::exception::AException {
         ErrorException& operator=(ErrorException&& other) = delete;
 
         // ---------- Constructor --------- //
-        _cold explicit ErrorException(utils::exception::Code code = utils::exception::Code::Undefined, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::Error, code) {};
-        _cold ErrorException(utils::exception::Code code, std::string info, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::Error, code, info) {};
+        #ifdef GENERATED_EXCEPTION_HEADER_H
+            _cold explicit ErrorException(utils::exception::Code code, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::Error, static_cast<utils::exception::InternalCode>(code)) {};
+        #endif
+        _cold explicit ErrorException(utils::exception::InternalCode code = utils::exception::InternalCode::Undefined, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::Error, code) {};
+        _cold ErrorException(utils::exception::InternalCode code, std::string info, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::Error, code, info) {};
         ErrorException(const ErrorException& other) = delete;
         ErrorException(ErrorException&& other) = delete;
 

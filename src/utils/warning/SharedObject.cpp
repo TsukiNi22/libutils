@@ -70,7 +70,7 @@ void utils::warning::SharedObject::link(const std::string& InstanceName, std::ui
     else {
         // Check for overflow
         if (this->_nextId == UINT32_MAX) _unlikely {
-            throw utils::exception::ErrorException(utils::exception::Code::IdOverflow);
+            throw utils::exception::ErrorException(utils::exception::InternalCode::IdOverflow);
         }
         id = ++(this->_nextId);
         this->_links[id] = InstanceName;
@@ -78,7 +78,7 @@ void utils::warning::SharedObject::link(const std::string& InstanceName, std::ui
 
     // Check the attribution
     if (id == 0)
-        throw utils::exception::ErrorException(utils::exception::Code::UnknowId, "Can't attribute the id: 0");
+        throw utils::exception::ErrorException(utils::exception::InternalCode::UnknowId, "Can't attribute the id: 0");
 }
 
 void utils::warning::SharedObject::unlink(std::uint32_t id, bool safe)
@@ -90,11 +90,11 @@ void utils::warning::SharedObject::unlink(std::uint32_t id, bool safe)
 
     // Basic check for the id validity
     if (id == 0)
-        throw utils::exception::ErrorException(utils::exception::Code::UnknowId, "Can't unlink an invalide id: 0");
+        throw utils::exception::ErrorException(utils::exception::InternalCode::UnknowId, "Can't unlink an invalide id: 0");
 
     // Check the id existance
     if (!this->_links.contains(id)) _unlikely {
-        utils::exception::WarningException e(utils::exception::Code::UnknowId, std::to_string(id));
+        utils::exception::WarningException e(utils::exception::InternalCode::UnknowId, std::to_string(id));
         std::cerr << e.formated() << std::endl;
         return;
     }
@@ -123,7 +123,7 @@ utils::warning::SharedObject::~SharedObject() noexcept
         message += std::format("\n{} - {}", id, InstanceName);
 
     // Display warning
-    //utils::exception::ErrorException warning(utils::exception::Type::Warning, utils::exception::Code::SharedObject, message);
+    //utils::exception::ErrorException warning(utils::exception::Type::Warning, utils::exception::InternalCode::SharedObject, message);
     //std::cerr << warning.formated() << std::endl;
     std::cerr << message << std::endl;
 }

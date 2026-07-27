@@ -82,7 +82,7 @@ Exception config `cmake/config/exception/*.json` (empty exemple):
 {
     "errors": [
         {
-            "code": "<code_name>", // used with utils::exception::Code::<code_name>
+            "code": "<code_name>", // used with utils::exception::InternalCode::<code_name>
             "message": "<error_message>", // Returned by what()
             "info": "<sub_info>", // Return by info(), can be removed and will be equal to "[None]" by default
             "restrictions": ["<restriction1>", "<restriction2>", ...] // Restrict the <code_name> to certain type of error, can be removed and there will be no restriction

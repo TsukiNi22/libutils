@@ -95,7 +95,7 @@ class ArgParser: private utils::warning::Observer {
         {
             if constexpr (!force) {
                 if (this->_usages.contains(id))
-                    throw utils::exception::ErrorException(utils::exception::Code::Override, std::string("An option with this id is already defined: ") + id);
+                    throw utils::exception::ErrorException(utils::exception::InternalCode::Override, std::string("An option with this id is already defined: ") + id);
             }
             this->_usages[id] = utils::arguments::Usage{name, ordered, ids, description};
         };
@@ -105,7 +105,7 @@ class ArgParser: private utils::warning::Observer {
         {
             if constexpr (!force) {
                 if (this->_options.contains(id) || this->_flags.contains(id))
-                    throw utils::exception::ErrorException(utils::exception::Code::Override, std::string("An option/flag with this id is already defined: ") + id);
+                    throw utils::exception::ErrorException(utils::exception::InternalCode::Override, std::string("An option/flag with this id is already defined: ") + id);
             }
             this->_options[id] = utils::arguments::Option{name, check, description};
         };
@@ -115,7 +115,7 @@ class ArgParser: private utils::warning::Observer {
         {
             if constexpr (!force) {
                 if (this->_flags.contains(id) || this->_options.contains(id))
-                    throw utils::exception::ErrorException(utils::exception::Code::Override, std::string("A flag/option with this id is already defined: ") + id);
+                    throw utils::exception::ErrorException(utils::exception::InternalCode::Override, std::string("A flag/option with this id is already defined: ") + id);
             }
             this->_flags[id] = utils::arguments::Flag{flag, unlimited, options, description};
         };

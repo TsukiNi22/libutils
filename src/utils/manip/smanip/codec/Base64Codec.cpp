@@ -33,7 +33,7 @@ _nodiscard std::string utils::smanip::codec::Base64Codec::encode(std::string s) 
     // Decode string (base 64)
     int size = EVP_EncodeBlock(reinterpret_cast<unsigned char*>(encoded.data()), reinterpret_cast<const unsigned char*>(s.data()), s.size());
     if (size < 0)
-        throw utils::exception::ErrorException(utils::exception::Code::Codec, "Fail to encode given string in base 64");
+        throw utils::exception::ErrorException(utils::exception::InternalCode::Codec, "Fail to encode given string in base 64");
 
     // Remove uless char
     encoded.resize(size);
@@ -49,7 +49,7 @@ _nodiscard std::string utils::smanip::codec::Base64Codec::decode(std::string s) 
     // Decode string (base 64)
     int size = EVP_DecodeBlock(reinterpret_cast<unsigned char*>(decoded.data()), reinterpret_cast<const unsigned char*>(s.data()), s.size());
     if (size < 0)
-        throw utils::exception::ErrorException(utils::exception::Code::Codec, "Fail to decode given string using base 64");
+        throw utils::exception::ErrorException(utils::exception::InternalCode::Codec, "Fail to decode given string using base 64");
 
     // Padding at the end "=="
     padding += (!s.empty() && s.back() == '=');

@@ -57,15 +57,15 @@ class BidirectionalLookupTable: private utils::warning::Observer {
         _nodiscard bool isFreezed(void) {return this->_freezed;};
         void clear(void)
         {
-            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::Code::Freezed);
+            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::InternalCode::Freezed);
             this->_left.clear();
             this->_right.clear();
         };
         void removeElement(const L& left)
         {
-            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::Code::Freezed);
+            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::InternalCode::Freezed);
             if (!this->_left.contains(left)) {
-                utils::exception::WarningException e(utils::exception::Code::UnknowKey);
+                utils::exception::WarningException e(utils::exception::InternalCode::UnknowKey);
                 std::cerr << e.formated() << std::endl;
                 return;
             }
@@ -75,9 +75,9 @@ class BidirectionalLookupTable: private utils::warning::Observer {
         void removeElements(const std::vector<L>& lefts) {for (const L& left: lefts) this->removeElement(left);};
         void removeElement(const R& right)
         {
-            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::Code::Freezed);
+            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::InternalCode::Freezed);
             if (!this->_right.contains(right)) {
-                utils::exception::WarningException e(utils::exception::Code::UnknowKey);
+                utils::exception::WarningException e(utils::exception::InternalCode::UnknowKey);
                 std::cerr << e.formated() << std::endl;
                 return;
             }
@@ -90,10 +90,10 @@ class BidirectionalLookupTable: private utils::warning::Observer {
         template<bool force = false> // Can't override an exiting one by default, throw of error
         void setElement(const L& left, const R& right)
         {
-            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::Code::Freezed);
+            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::InternalCode::Freezed);
             if constexpr (!force) {
                 if (this->_left.contains(left) || this->_right.contains(right))
-                    throw utils::exception::ErrorException(utils::exception::Code::Override, "The override is disabled for the BidirectionalLookupTable");
+                    throw utils::exception::ErrorException(utils::exception::InternalCode::Override, "The override is disabled for the BidirectionalLookupTable");
             }
             this->_left[left] = right;
             this->_right[right] = left;
@@ -101,10 +101,10 @@ class BidirectionalLookupTable: private utils::warning::Observer {
         template<bool force = false> // Can't override an exiting one by default, throw of error
         void setElement(const R& right, const L& left)
         {
-            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::Code::Freezed);
+            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::InternalCode::Freezed);
             if constexpr (!force) {
                 if (this->_right.contains(right) || this->_left.contains(left))
-                    throw utils::exception::ErrorException(utils::exception::Code::Override, "The override is disabled for the BidirectionalLookupTable");
+                    throw utils::exception::ErrorException(utils::exception::InternalCode::Override, "The override is disabled for the BidirectionalLookupTable");
             }
             this->_right[right] = left;
             this->_left[left] = right;
@@ -116,13 +116,13 @@ class BidirectionalLookupTable: private utils::warning::Observer {
         const R& operator[](const L& left) const
         {
             if (!this->_left.contains(left))
-                throw utils::exception::ErrorException(utils::exception::Code::UnknowKey);
+                throw utils::exception::ErrorException(utils::exception::InternalCode::UnknowKey);
             return this->_left.at(left);
         }
         const L& operator[](const R& right) const
         {
             if (!this->_right.contains(right))
-                throw utils::exception::ErrorException(utils::exception::Code::UnknowKey);
+                throw utils::exception::ErrorException(utils::exception::InternalCode::UnknowKey);
             return this->_right.at(right);
         }
 

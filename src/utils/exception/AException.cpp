@@ -34,9 +34,9 @@ _cold void utils::exception::AException::subinit(void)
 
     // Check the restriction for code & type combination
     std::uint8_t restriction = this->Restriction.at(this->_code);
-    if (this->_code == utils::exception::Code::ExceptionCodeRestriction) return; // Check to counter any mistake and cause a infinit throw loop
+    if (this->_code == utils::exception::InternalCode::ExceptionCodeRestriction) return; // Check to counter any mistake and cause a infinit throw loop
     else if (restriction != 0 && (this->_type & restriction) != this->_type)
-        throw utils::exception::ErrorException(utils::exception::Code::ExceptionCodeRestriction, this->_loc);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::ExceptionCodeRestriction, this->_loc);
 }
 
 _cold _nodiscard static inline std::string shorten(const std::string &path)

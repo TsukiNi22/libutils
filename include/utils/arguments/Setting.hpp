@@ -62,7 +62,7 @@ class Setting: private utils::warning::Observer {
         template<typename T>
         operator T(void) const {
             if (this->_setting.type() != typeid(T))
-                throw utils::exception::ErrorException(utils::exception::Code::BadCast, demangle(this->_setting.type().name()) + " -> " + demangle(typeid(T).name()));
+                throw utils::exception::ErrorException(utils::exception::InternalCode::BadCast, demangle(this->_setting.type().name()) + " -> " + demangle(typeid(T).name()));
             return std::any_cast<T>(this->_setting);
         }
 

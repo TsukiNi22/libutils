@@ -17,7 +17,7 @@ File Description:
 
     /* type/class */
     #include "../warning/UnsafeObserver.hpp"    // utils::warning::UnsafeObserver
-    #include "ExceptionDefine.hpp"              // utils::exception::Code, utils::exception::type
+    #include "ExceptionDefine.hpp"              // utils::exception::InternalCode, utils::exception::type
     #include <source_location>                  // std::source_location
     #include <exception>                        // std::exception
     #include <string>                           // std::string
@@ -30,7 +30,7 @@ class IException: public std::exception, private utils::warning::UnsafeObserver 
     public:
         // --------- Pre-Function --------- //
         virtual utils::exception::Type getType(void) const noexcept = 0;
-        virtual utils::exception::Code getCode(void) const noexcept = 0;
+        virtual utils::exception::InternalCode getCode(void) const noexcept = 0;
         virtual bool isNone(void) const noexcept = 0;
         virtual bool isFatal(void) const noexcept = 0;
         virtual const char* what(void) const noexcept = 0;

@@ -25,7 +25,7 @@ File Description:
 
     /* type */
     #include "../concepts/OperationConcepts.hpp"        // Operation Concepts
-    #include "../exception/ExceptionDefine.hpp"         // utils::exception::Code
+    #include "../exception/ExceptionDefine.hpp"         // utils::exception::InternalCode
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "IVector.hpp"                              // utils::vector::IVector
     #include <algorithm>                                // std::clamp
@@ -52,7 +52,7 @@ class Vector2: public utils::vector::IVector<T> {
         // ----------- Function ----------- //
         T get(std::size_t index) const final {
             if (index >= MAX_INDEX_VECTOR2)
-                throw utils::exception::ErrorException(utils::exception::Code::VectorInvalidIndex);
+                throw utils::exception::ErrorException(utils::exception::InternalCode::VectorInvalidIndex);
             return (index == 0 ? this->x : this->y);
         }
         Vector2 min(const Vector2& min) const
@@ -89,12 +89,12 @@ class Vector2: public utils::vector::IVector<T> {
         // ------------ Operator ---------- //
         T& operator[](std::size_t index) {
             if (index >= MAX_INDEX_VECTOR2)
-                throw utils::exception::ErrorException(utils::exception::Code::VectorInvalidIndex);
+                throw utils::exception::ErrorException(utils::exception::InternalCode::VectorInvalidIndex);
             return (index == 0 ? x : y);
         }
         const T& operator[](std::size_t index) const {
             if (index >= MAX_INDEX_VECTOR2)
-                throw utils::exception::ErrorException(utils::exception::Code::VectorInvalidIndex);
+                throw utils::exception::ErrorException(utils::exception::InternalCode::VectorInvalidIndex);
             return (index == 0 ? x : y);
         }
 

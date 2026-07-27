@@ -92,7 +92,7 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
 
             // Error
             else {
-                throw utils::exception::WarningException(utils::exception::Code::UnknowId, id);
+                throw utils::exception::WarningException(utils::exception::InternalCode::UnknowId, id);
             }
         }
         std::cout << std::endl;

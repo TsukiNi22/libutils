@@ -136,7 +136,7 @@ static void help(void)
 
 static void exit(void)
 {
-    throw utils::exception::NoneException(utils::exception::Code::Exit);
+    throw utils::exception::NoneException(utils::exception::InternalCode::Exit);
 }
 static void bye(void) {exit();}
 static void quit(void) {exit();}

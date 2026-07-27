@@ -59,14 +59,14 @@ class BidirectionalLookupTable<T, T, Hash, Hash, Equal, Equal>: private utils::w
         _nodiscard bool isFreezed(void) {return this->_freezed;};
         void clear(void)
         {
-            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::Code::Freezed);
+            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::InternalCode::Freezed);
             this->_table.clear();
         };
         void removeElement(const T& element) noexcept
         {
-            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::Code::Freezed);
+            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::InternalCode::Freezed);
             if (!this->_table.contains(element)) {
-                utils::exception::WarningException e(utils::exception::Code::UnknowKey);
+                utils::exception::WarningException e(utils::exception::InternalCode::UnknowKey);
                 std::cerr << e.formated() << std::endl;
                 return;
             }
@@ -77,10 +77,10 @@ class BidirectionalLookupTable<T, T, Hash, Hash, Equal, Equal>: private utils::w
         template<bool force = false> // Can't override an exiting one by default, throw of error
         void setElement(const T& left, const T& right)
         {
-            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::Code::Freezed);
+            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::InternalCode::Freezed);
             if constexpr (!force) {
                 if (this->_table.contains(left) || this->_table.contains(right))
-                    throw utils::exception::ErrorException(utils::exception::Code::Override, "The override is disabled for the BidirectionalLookupTable");
+                    throw utils::exception::ErrorException(utils::exception::InternalCode::Override, "The override is disabled for the BidirectionalLookupTable");
             }
             this->_table[left] = right;
             this->_table[right] = left;
@@ -92,7 +92,7 @@ class BidirectionalLookupTable<T, T, Hash, Hash, Equal, Equal>: private utils::w
         const T& operator[](const T& element) const
         {
             if (!this->_table.contains(element))
-                throw utils::exception::ErrorException(utils::exception::Code::UnknowKey);
+                throw utils::exception::ErrorException(utils::exception::InternalCode::UnknowKey);
             return this->_table.at(element);
         }
 

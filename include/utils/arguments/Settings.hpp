@@ -137,7 +137,7 @@ class Settings: private utils::warning::Observer {
                 /* special */
                 case utils::arguments::CastType::Path: this->set<force>(id, this->cast_path(setting));      break;
 
-                default: throw utils::exception::ErrorException(utils::exception::Code::UnknowCast);
+                default: throw utils::exception::ErrorException(utils::exception::InternalCode::UnknowCast);
             }
         }
         template<typename T>
@@ -147,7 +147,7 @@ class Settings: private utils::warning::Observer {
         {
             if (this->_settings.contains(id)) {
                 if constexpr (force) this->_settings.erase(id);
-                else throw utils::exception::ErrorException(utils::exception::Code::Override, std::string("A setting with this id is already defined: ") + id);
+                else throw utils::exception::ErrorException(utils::exception::InternalCode::Override, std::string("A setting with this id is already defined: ") + id);
             }
             this->_settings.emplace(id, setting);
         };
@@ -156,7 +156,7 @@ class Settings: private utils::warning::Observer {
         {
             if (!this->_settings.contains(id)) {
                 if constexpr (failsafe) return;
-                else throw utils::exception::ErrorException(utils::exception::Code::UnknowId, id);
+                else throw utils::exception::ErrorException(utils::exception::InternalCode::UnknowId, id);
             }
             this->_settings.erase(id);
         };

@@ -82,7 +82,7 @@ File Description:
 #ifdef _Exception
     // -> Customized exception used for the error/warning handling
     #include "exception/IException.hpp"             // utils::exception::IException
-    #include "exception/ExceptionDefine.hpp"        // OK/KO, utils::exception::Code, utils::exception::Type
+    #include "exception/ExceptionDefine.hpp"        // OK/KO, utils::exception::InternalCode, utils::exception::Type
     #include "exception/basic/NoneException.hpp"    // utils::exception::NoneException
     #include "exception/basic/ErrorException.hpp"   // utils::exception::ErrorException
     #include "exception/basic/WarningException.hpp" // utils::exception::WarningException

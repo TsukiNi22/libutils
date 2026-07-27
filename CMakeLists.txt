@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 set(TARGET utils)
-project(${TARGET} LANGUAGES CXX)
+project(${TARGET} VERSION 1.0.0 LANGUAGES CXX)
 
 # =========================
 # Compilateur & Standard
@@ -17,6 +17,7 @@ add_definitions(-D_NoWarning -DNO_LINKER_WARNING -DNO_USAGE_WARNING) # Remove wa
 # =========================
 find_package(PkgConfig REQUIRED)
 find_package(Python3 REQUIRED) # Used for the special dependencie
+find_package(OpenSSL REQUIRED) # Used for encryption purpose
 find_program(CCACHE_PROGRAM ccache) # Used for cache during compilation
 if (CCACHE_PROGRAM)
     set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
@@ -120,12 +121,15 @@ add_custom_target(release
 # Dependencies
 # =========================
 add_dependencies(${TARGET} generated_exception_header)
-target_link_libraries(${TARGET} PRIVATE ssl crypto) # Network & Codec
+target_link_libraries(${TARGET} PRIVATE OpenSSL::SSL OpenSSL::Crypto) # Network & Codec
 
 # =========================
 # Includes
 # =========================
-target_include_directories(${TARGET} PUBLIC include)
+target_include_directories(${TARGET} PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
 
 # =========================
 # Modes
@@ -141,9 +145,60 @@ target_compile_options(${TARGET} PRIVATE
 )
 
 # =========================
+# Installation
+# =========================
+include(GNUInstallDirs) # load variable used for installation
+
+# library
+install(TARGETS ${TARGET}
+    EXPORT ${TARGET}Targets
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+# header
+install(DIRECTORY include/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+# CMake setup for find_package(utils CONFIG REQUIRED)
+install(EXPORT ${TARGET}Targets
+    FILE ${TARGET}Targets.cmake
+    NAMESPACE ${TARGET}::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
+)
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+    ${CMAKE_SOURCE_DIR}/cmake/package/${TARGET}Config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/${TARGET}Config.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
+)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${TARGET}Config.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
+)
+
+# =========================
 # Utils
 # =========================
 add_custom_target(get_unregistered_files
     COMMAND bash ${CMAKE_SOURCE_DIR}/cmake/scripts/check_files.sh unregistered ${SRC}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
+
+# =========================
+# Package Building
+# =========================
+set(CPACK_PACKAGE_NAME "utils")
+set(CPACK_PACKAGE_VENDOR "TsukiNi22")
+set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library")
+set(CPACK_PACKAGE_CONTACT "TsukiNi22")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
+
+set(CPACK_GENERATOR "DEB;RPM;TGZ")
+
+include(CPack)

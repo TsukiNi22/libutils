@@ -24,7 +24,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../../exception/ExceptionDefine.hpp"       // utils::exception::Code::*
+    #include "../../../exception/ExceptionDefine.hpp"       // utils::exception::InternalCode::*
     #include "../../../exception/custom/FatalException.hpp" // utils::exception::FatalException
     #include "../../../attribute/Attribute.hpp"             // _cold, _nodiscard, _unused
     #include "IParser.hpp"                                  // utils::smanip::parser::IParser
@@ -40,13 +40,13 @@ class AParser: public utils::smanip::parser::IParser<T> {
     public:
         // ------------ Function ---------- //
         _cold std::string format(_unused T content) const override
-        {throw utils::exception::FatalException(utils::exception::Code::UndefinedCall);};
+        {throw utils::exception::FatalException(utils::exception::InternalCode::UndefinedCall);};
         _cold T parse(_unused std::string s) const override
-        {throw utils::exception::FatalException(utils::exception::Code::UndefinedCall);};
+        {throw utils::exception::FatalException(utils::exception::InternalCode::UndefinedCall);};
         _cold std::string format(_unused std::string id, _unused T content) override
-        {throw utils::exception::FatalException(utils::exception::Code::UndefinedCall);};
+        {throw utils::exception::FatalException(utils::exception::InternalCode::UndefinedCall);};
         _cold T parse(_unused std::string id, _unused std::string s) override
-        {throw utils::exception::FatalException(utils::exception::Code::UndefinedCall);};
+        {throw utils::exception::FatalException(utils::exception::InternalCode::UndefinedCall);};
         _cold _nodiscard inline bool hasIdOverload(void) const override {return false;};
         _cold _nodiscard inline bool hasNoIdOverload(void) const override {return false;};
 

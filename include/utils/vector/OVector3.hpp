@@ -27,7 +27,7 @@ File Description:
     /* type */
     #include "../attribute/Attribute.hpp"               // _deprecated
     #include "../concepts/OperationConcepts.hpp"        // Operation Concepts
-    #include "../exception/ExceptionDefine.hpp"         // utils::exception::Code
+    #include "../exception/ExceptionDefine.hpp"         // utils::exception::InternalCode
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include <algorithm>                                // std::clamp
     #include <ostream>                                  // std::ostream
@@ -55,7 +55,7 @@ class OVector3 {
         // ----------- Function ----------- //
         T get(std::size_t index) const {
             if (index >= MAX_INDEX_OVECTOR3)
-                throw utils::exception::ErrorException(utils::exception::Code::VectorInvalidIndex);
+                throw utils::exception::ErrorException(utils::exception::InternalCode::VectorInvalidIndex);
             return (index == 0 ? x : (index == 1 ? y : z));
         }
         inline OVector3 min(const OVector3& min) const
@@ -93,12 +93,12 @@ class OVector3 {
         // ------------ Operator ---------- //
         T& operator[](std::size_t index) {
             if (index >= MAX_INDEX_OVECTOR3)
-                throw utils::exception::ErrorException(utils::exception::Code::VectorInvalidIndex);
+                throw utils::exception::ErrorException(utils::exception::InternalCode::VectorInvalidIndex);
             return (index == 0 ? x : (index == 1 ? y : z));
         }
         const T& operator[](std::size_t index) const {
             if (index >= MAX_INDEX_OVECTOR3)
-                throw utils::exception::ErrorException(utils::exception::Code::VectorInvalidIndex);
+                throw utils::exception::ErrorException(utils::exception::InternalCode::VectorInvalidIndex);
             return (index == 0 ? x : (index == 1 ? y : z));
         }
 
