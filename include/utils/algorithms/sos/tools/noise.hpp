@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 15/07/2026 by @author Tsukini
+##  @date 27/07/2026 by @author Tsukini
 
 File Name:
 ##  @file noise.hpp
@@ -41,7 +41,6 @@ void noise(std::vector<ByteT>& bytes)
     // Check given type
     static_assert(std::unsigned_integral<ByteT>, "ByteT must be an unsigned integer type");
     using Byte  = ByteT;
-    using Bytes = std::vector<Byte>;
 
     // Compute signal amplitudes RMS
     double rms = 0.0;
