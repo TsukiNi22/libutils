@@ -19,6 +19,7 @@ File Description:
     #include "IException.hpp"               // utils::exception::IException
     #include "ExceptionDefine.hpp"          // utils::exception::Code, utils::exception::Type, utils::exception::Messages
     #include "../attribute/Attribute.hpp"   // _nodiscard
+    #include <dlfcn.h>                      // __builtin_return_address
     #include <source_location>              // std::source_location
     #include <unordered_map>                // std::unordered_map
     #include <cstdint>                      // std::uint8_t
@@ -44,6 +45,7 @@ class AException: public utils::exception::IException {
     protected:
         /* Exception call info */
         std::source_location _loc;
+        const void* _caller_addr = nullptr;
         const char* _file = nullptr;
         const char* _func = nullptr;
         std::size_t _line = std::numeric_limits<std::size_t>::max();
@@ -75,7 +77,7 @@ class AException: public utils::exception::IException {
         _cold AException(std::source_location loc = std::source_location::current(), utils::exception::Type type = utils::exception::Type::None, utils::exception::Code code = utils::exception::Code::Undefined, std::string info = "[None]")
         : IException(),
             Messages{}, Info{}, Restriction{},
-            _loc{loc}, _file{loc.file_name()}, _func{loc.function_name()}, _line{loc.line()},
+            _loc{loc}, _caller_addr(__builtin_return_address(0)), _file{loc.file_name()}, _func{loc.function_name()}, _line{loc.line()},
             _info{info}, _type{type}, _code{code}
         {
             this->Messages.insert(std::begin(utils::exception::Messages), std::end(utils::exception::Messages));
