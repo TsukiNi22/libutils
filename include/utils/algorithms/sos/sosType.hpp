@@ -32,9 +32,9 @@ namespace utils::algorithms::sos { // namespace start
 /* TYPE */
 
 /* type simplification (default) */
-_unused using Byte  = std::uint16_t; // Default Byte type
-_unused using Bytes = std::vector<utils::algorithms::sos::Byte>;
-_unused using Key   = utils::algorithms::sos::Bytes;
+using Byte  _unused = std::uint16_t; // Default Byte type
+using Bytes _unused = std::vector<utils::algorithms::sos::Byte>;
+using Key   _unused = utils::algorithms::sos::Bytes;
 
 } // namespace end
 #endif /* SOSTYPE_H */
