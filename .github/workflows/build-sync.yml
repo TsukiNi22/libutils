@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 env:
-  LIBRARYS: "libutils.a libutils_debug.a"
+  LIBRARYS: "libutils.a libutils_debug.a libutils_asan.a"
 
 jobs:
   build-libraries:
@@ -74,10 +74,10 @@ jobs:
       image: ghcr.io/tsukini22/ci:latest
 
     steps:
-      - name: Checkout my_lib_cpp
+      - name: Checkout utils
         uses: actions/checkout@v5
         with:
-          path: my_lib_cpp
+          path: utils
 
       - name: Download compiled libraries
         uses: actions/download-artifact@v7
@@ -99,9 +99,9 @@ jobs:
           rm -rf cpp_project_template/cmake/scripts
           rm -rf cpp_project_template/include/utils
 
-          cp -r my_lib_cpp/cmake/config  cpp_project_template/cmake/config
-          cp -r my_lib_cpp/cmake/scripts cpp_project_template/cmake/scripts
-          cp -r my_lib_cpp/include/utils cpp_project_template/include/utils
+          cp -r utils/cmake/config  cpp_project_template/cmake/config
+          cp -r utils/cmake/scripts cpp_project_template/cmake/scripts
+          cp -r utils/include/utils cpp_project_template/include/utils
 
           cp build/libutils.a       cpp_project_template/cmake/libs/libutils.a
           cp build/libutils_debug.a cpp_project_template/cmake/libs/libutils_debug.a
@@ -118,5 +118,5 @@ jobs:
             echo "No changes to sync."
             exit 0
           fi
-          git commit -m "chore: sync utils lib from my_lib_cpp (${{ github.sha }})"
+          git commit -m "chore: sync utils lib (${{ github.sha }})"
           git push origin main

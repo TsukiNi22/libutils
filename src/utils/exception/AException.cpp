@@ -85,7 +85,6 @@ _cold _nodiscard static inline std::string module_name(const void *addr, const s
     // Check if the actual module is the binary
     if (module_path == self_exe)
         return "";
-    std::cout << module_path << "/////////////" << self_exe << std::endl;
 
     // Only keep the module name
     std::size_t slash = module_path.rfind('/');
