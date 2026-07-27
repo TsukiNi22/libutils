@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  27/07/2026 by Tsukini
+##  28/07/2026 by Tsukini
 
 File Name:
 ##  generate_exception_header.py
@@ -202,6 +202,7 @@ static_assert(std::size({NAMES.RESTRICTION_SECTION}) == static_cast<std::size_t>
 """
 
 # Write the file content
+header.parent.mkdir(parents=True, exist_ok=True)
 header.write_text(content)
 
 # Success

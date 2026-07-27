@@ -89,7 +89,7 @@ file(GLOB_RECURSE EXCEPTION_CONFIG_FILES
     "${CMAKE_SOURCE_DIR}/cmake/config/exceptions/*.json"
 )
 set(GENERATED_EXCEPTION_HEADER
-    "${CMAKE_SOURCE_DIR}/include/utils/exception/generated_exception_header.hpp"
+    "${CMAKE_SOURCE_DIR}/include/utils/exception/generated_internal_exception_header.hpp"
 )
 add_custom_command(
     OUTPUT ${GENERATED_EXCEPTION_HEADER}
@@ -152,6 +152,9 @@ target_compile_options(${TARGET} PRIVATE
     $<$<CONFIG:Debug>:-g -ggdb3>
     $<$<CONFIG:Asan>:-fsanitize=address -fno-omit-frame-pointer -g -ggdb3>
     $<$<CONFIG:Optimized>:-O3 -ffast-math -funroll-loops -pipe -DNDEBUG>
+)
+target_link_options(${TARGET} PRIVATE
+    $<$<CONFIG:Asan>:-fsanitize=address>
 )
 
 # =========================

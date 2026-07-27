@@ -1,5 +1,10 @@
 @PACKAGE_INIT@
 
+# Default mode used for the library to link
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Optimized CACHE STRING "Build type" FORCE)
+endif()
+
 # Dependencies
 include(CMakeFindDependencyMacro)
 find_dependency(OpenSSL REQUIRED)
