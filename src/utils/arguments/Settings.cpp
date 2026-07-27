@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 20/07/2026 by @author Tsukini
+##  @date 27/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Settings.cpp

@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 06/07/2026 by @author Tsukini
+##  @date 27/07/2026 by @author Tsukini
 
 File Name:
 ##  @file ANSI.hpp
@@ -32,7 +32,12 @@ namespace utils::iomanip { // namespace start
     std::string resetStyle(std::initializer_list<utils::iomanip::ResetStyle> styles);
 
     /* --------- internal ---------- */
-    constexpr inline std::string csi(const std::string& code) {return std::string(1, static_cast<char>(utils::iomanip::Char::ESC)) + "[" + code;}
+    constexpr inline std::string esc(void) {return std::string(1, static_cast<char>(utils::iomanip::Char::ESC));}
+    constexpr inline std::string csi(const std::string& code) {return esc() + "[" + code;}
+
+    /* ----------- special ------------ */
+    constexpr inline std::string file_hyperlink(const std::string& display, const std::string& path) {return esc() + "]8;;file://" + path + esc() + "\\" + display + esc() + "]8;;" + esc() + "\\";}
+    constexpr inline std::string hyperlink(const std::string& display, const std::string& link) {return esc() + "]8;;" + link + esc() + "\\" + display + esc() + "]8;;" + esc() + "\\";}
 
     /* ----------- reset ----------- */
     constexpr inline std::string reset(void)                    {return csi("0m");}

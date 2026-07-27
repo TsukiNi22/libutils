@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 09/04/2026 by @author Tsukini
+##  @date 27/07/2026 by @author Tsukini
 
 File Name:
 ##  @file ExceptionDefine.hpp
@@ -16,7 +16,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "generated_exception_header.hpp"   // utils::exception::Code, utils::exception::Message, utils::exception::Info, utils::exception::Restriction
+    #include "generated_exception_header.hpp"   // utils::exception::Code, utils::exception::Messages, utils::exception::Info, utils::exception::Restriction
     #include <cstdint>                          // std::uint8_t
 
     //----------------------------------------------------------------//

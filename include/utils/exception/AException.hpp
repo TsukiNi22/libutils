@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 25/07/2026 by @author Tsukini
+##  @date 27/07/2026 by @author Tsukini
 
 File Name:
 ##  @file AException.hpp
@@ -17,7 +17,7 @@ File Description:
 
     /* type/class */
     #include "IException.hpp"               // utils::exception::IException
-    #include "ExceptionDefine.hpp"          // utils::exception::Code, utils::exception::Type, utils::exception::Message
+    #include "ExceptionDefine.hpp"          // utils::exception::Code, utils::exception::Type, utils::exception::Messages
     #include "../attribute/Attribute.hpp"   // _nodiscard
     #include <source_location>              // std::source_location
     #include <unordered_map>                // std::unordered_map
@@ -34,7 +34,7 @@ namespace utils::exception { // namespace start
 class AException: public utils::exception::IException {
     private:
         /* Exception Data */
-        std::unordered_map<utils::exception::Code, const char*> Message;
+        std::unordered_map<utils::exception::Code, const char*> Messages;
         std::unordered_map<utils::exception::Code, const char*> Info;
         std::unordered_map<utils::exception::Code, const std::uint8_t> Restriction;
 
@@ -63,7 +63,7 @@ class AException: public utils::exception::IException {
         _nodiscard utils::exception::Code getCode(void) const noexcept final {return this->_code;};
         _nodiscard bool isNone(void) const noexcept final {return (this->_type & utils::exception::Type::None);};
         _nodiscard bool isFatal(void) const noexcept final {return (this->_type & utils::exception::Type::Fatal);};
-        _nodiscard const char* what(void) const noexcept final {return this->Message.at(this->_code);};
+        _nodiscard const char* what(void) const noexcept final {return this->Messages.at(this->_code);};
         _nodiscard const char* info(void) const noexcept final {return this->_info.c_str();};
         _nodiscard const std::source_location& loc(void) const noexcept final {return this->_loc;};
 
@@ -74,11 +74,11 @@ class AException: public utils::exception::IException {
         // ---------- Constructor --------- //
         _cold AException(std::source_location loc = std::source_location::current(), utils::exception::Type type = utils::exception::Type::None, utils::exception::Code code = utils::exception::Code::Undefined, std::string info = "[None]")
         : IException(),
-            Message{}, Info{}, Restriction{},
+            Messages{}, Info{}, Restriction{},
             _loc{loc}, _file{loc.file_name()}, _func{loc.function_name()}, _line{loc.line()},
             _info{info}, _type{type}, _code{code}
         {
-            this->Message.insert(std::begin(utils::exception::Message), std::end(utils::exception::Message));
+            this->Messages.insert(std::begin(utils::exception::Messages), std::end(utils::exception::Messages));
             this->Info.insert(std::begin(utils::exception::Info), std::end(utils::exception::Info));
             this->Restriction.insert(std::begin(utils::exception::Restriction), std::end(utils::exception::Restriction));
             this->subinit();

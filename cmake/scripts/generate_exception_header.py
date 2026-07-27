@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  06/07/2026 by Tsukini
+##  27/07/2026 by Tsukini
 
 File Name:
 ##  generate_exception_header.py
@@ -167,7 +167,7 @@ enum class Code: std::size_t {{
 }};
 
 /* Corresponding exception message for each code */
-inline const std::unordered_map<{NAMES.EXCEPTION_SCOPE}::Code, const char*> Message = {{
+inline const std::unordered_map<{NAMES.EXCEPTION_SCOPE}::Code, const char*> Messages = {{
     {{{NAMES.EXCEPTION_SCOPE}::Code::Undefined, "An undefined error has occured"}},
 {message_str}
 }};
@@ -187,7 +187,7 @@ inline const std::unordered_map<{NAMES.EXCEPTION_SCOPE}::Code, const std::uint8_
 
 // Check at the compile time the correspondece between the message & code
 /*
-static_assert(std::size(Message) == static_cast<std::size_t>({NAMES.EXCEPTION_SCOPE}::Code::CODE_SENTINEL), "The message array doesn't correspond to the available exception codes");
+static_assert(std::size(Messages) == static_cast<std::size_t>({NAMES.EXCEPTION_SCOPE}::Code::CODE_SENTINEL), "The message array doesn't correspond to the available exception codes");
 static_assert(std::size(Info) == static_cast<std::size_t>({NAMES.EXCEPTION_SCOPE}::Code::CODE_SENTINEL), "The info array doesn't correspond to the available exception codes");
 static_assert(std::size(Restriction) == static_cast<std::size_t>({NAMES.EXCEPTION_SCOPE}::Code::CODE_SENTINEL), "The restriction array doesn't correspond to the available exception codes");
 */

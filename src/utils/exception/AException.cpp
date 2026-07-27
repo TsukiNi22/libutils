@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 25/07/2026 by @author Tsukini
+##  @date 27/07/2026 by @author Tsukini
 
 File Name:
 ##  @file AException.cpp
@@ -17,10 +17,12 @@ File Description:
 #include "utils/manip/iomanip/ANSI.hpp"
 #include "utils/manip/iomanip/Style.hpp"
 #include <source_location>
+#include <filesystem>
 #include <sstream>
 #include <cstddef>
 #include <cstdint>
 #include <string>
+#include <array>
 
 _cold void utils::exception::AException::subinit(void)
 {
@@ -35,7 +37,22 @@ _cold void utils::exception::AException::subinit(void)
         throw utils::exception::ErrorException(utils::exception::Code::ExceptionCodeRestriction, this->_loc);
 }
 
-_nodiscard std::string utils::exception::AException::formated(void) const noexcept
+_cold _nodiscard inline std::string shorten(const std::string &path)
+{
+    static constexpr std::array<std::string, 2> markers = {"src/", "include/"};
+
+    // Find the last occurence
+    for (const std::string& marker: markers) {
+        std::size_t pos = path.rfind("/" + marker);
+        if (pos != std::string::npos)
+            return "..." + path.substr(pos);
+    }
+
+    // Fallback
+    return path;
+}
+
+_cold _nodiscard std::string utils::exception::AException::formated(void) const noexcept
 {
     std::ostringstream oss;
 
@@ -51,7 +68,13 @@ _nodiscard std::string utils::exception::AException::formated(void) const noexce
     oss << " " << utils::iomanip::reset();
 
     // Emplacement information
-    oss << utils::iomanip::strong() << this->_file << ":" << this->_line << utils::iomanip::reset() << " -> " << this->Message.at(this->_code) << std::endl;
+    oss << utils::iomanip::strong();
+    try {
+        oss << utils::iomanip::file_hyperlink(shorten(this->_file), std::filesystem::absolute(this->_file).lexically_normal().string());
+    } catch (const std::filesystem::filesystem_error&) {
+        oss << shorten(this->_file); // Fallback
+    }
+    oss << ":" << this->_line << utils::iomanip::reset() << " -> " << this->Messages.at(this->_code) << std::endl;
 
     // Content
     oss << utils::iomanip::color_rgb(175, 100, 0) << "-------------------------------------------" << utils::iomanip::reset() << std::endl;

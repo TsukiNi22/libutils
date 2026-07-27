@@ -9,6 +9,11 @@
             "code": "Codec",
             "message": "Error during the encoding/decoding of the given string",
             "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "InvalidCodec",
+            "message": "The given codec is invalid and can't be used for the task",
+            "restrictions": ["Fatal", "Error", "Warning"]
         }
     ]
 }
