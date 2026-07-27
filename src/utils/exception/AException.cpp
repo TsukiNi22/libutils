@@ -66,7 +66,7 @@ _cold _nodiscard static inline std::string canonical_or_raw(const std::string &p
 _cold _nodiscard static inline std::string module_name(const void *addr, const std::string& path)
 {
     // Check if it's the utils library
-    if (path.starts_with("file:///__w/my_lib_cpp/my_lib_cpp/src/utils") || path.find("include/utils") != std::string::npos)
+    if (path.find("src/utils") != std::string::npos || path.find("include/utils") != std::string::npos)
         return "utils";
 
     // Get the module information
