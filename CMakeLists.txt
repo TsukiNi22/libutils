@@ -265,7 +265,9 @@ else()
 endif()
 
 # Dependencies
-if(NOT UTILS_DEV_PACKAGE)
+if(UTILS_DEV_PACKAGE)
+    set(CPACK_RPM_PACKAGE_REQUIRES "libutils-op >= ${PROJECT_VERSION}")
+else()
     set(CPACK_RPM_PACKAGE_REQUIRES "libutils-dev >= ${PROJECT_VERSION}")
 endif()
 
