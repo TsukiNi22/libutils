@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 set(TARGET utils)
 project(${TARGET} VERSION 2.0.0 LANGUAGES CXX)
+option(UTILS_DEV_PACKAGE "Build development package only" OFF)
 
 # =========================
 # Compilateur & Standard
@@ -123,7 +124,19 @@ add_custom_target(install_release
     COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target install --parallel
     COMMAND ${CMAKE_COMMAND} -S ${CMAKE_SOURCE_DIR} -B ${CMAKE_BINARY_DIR} -DCMAKE_BUILD_TYPE=Optimized
     COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target install --parallel
-    COMMENT "Building both debug versions Debug & Asan (libutils_debug.a, libutils_asan.a) and Optimized (libutils.a) one"
+    COMMENT "installing both debug versions Debug & Asan (libutils_debug.a, libutils_asan.a) and Optimized (libutils.a) one"
+    VERBATIM
+)
+add_custom_target(package_release
+    COMMAND ${CMAKE_COMMAND} -S ${CMAKE_SOURCE_DIR} -B ${CMAKE_BINARY_DIR} -DCMAKE_BUILD_TYPE=Debug
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target package --parallel
+    COMMAND ${CMAKE_COMMAND} -S ${CMAKE_SOURCE_DIR} -B ${CMAKE_BINARY_DIR} -DCMAKE_BUILD_TYPE=Asan
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target package --parallel
+    COMMAND ${CMAKE_COMMAND} -S ${CMAKE_SOURCE_DIR} -B ${CMAKE_BINARY_DIR} -DCMAKE_BUILD_TYPE=Optimized
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target package --parallel
+    COMMAND ${CMAKE_COMMAND} -S ${CMAKE_SOURCE_DIR} -B ${CMAKE_BINARY_DIR} -DCMAKE_BUILD_TYPE=Optimized -DUTILS_DEV_PACKAGE=ON
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target package --parallel
+    COMMENT "Building both debug versions Debug & Asan (libutils-db, libutils-as) and Optimized (libutils-op) one with the header (libutils-dev)"
     VERBATIM
 )
 
@@ -163,6 +176,13 @@ target_link_options(${TARGET} PRIVATE
 include(GNUInstallDirs) # load variable used for installation
 include(CMakePackageConfigHelpers)
 
+# licenses
+install(
+    FILES ${CMAKE_SOURCE_DIR}/LICENSE
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/licenses/${CPACK_PACKAGE_NAME}
+    COMPONENT headers
+)
+
 # library
 install(TARGETS ${TARGET}
     EXPORT ${TARGET}Targets
@@ -173,25 +193,25 @@ install(TARGETS ${TARGET}
 )
 
 # header
-if(CMAKE_BUILD_TYPE STREQUAL "Optimized")
+if (CMAKE_BUILD_TYPE STREQUAL "Optimized" OR UTILS_DEV_PACKAGE)
     install(DIRECTORY include/
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
         COMPONENT headers
     )
-
-    # CMake setup for find_package(utils CONFIG REQUIRED)
-    install(EXPORT ${TARGET}Targets
-        FILE ${TARGET}Targets.cmake
-        NAMESPACE ${TARGET}::
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
-        COMPONENT headers
-    )
-
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${TARGET}Config.cmake
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
-        COMPONENT headers
-    )
 endif()
+
+# CMake setup for find_package(utils CONFIG REQUIRED)
+install(EXPORT ${TARGET}Targets
+    FILE ${TARGET}Targets.cmake
+    NAMESPACE ${TARGET}::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
+    COMPONENT headers
+)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${TARGET}Config.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
+    COMPONENT headers
+)
 
 configure_package_config_file(
     ${CMAKE_SOURCE_DIR}/cmake/package/${TARGET}Config.cmake.in
@@ -211,27 +231,42 @@ add_custom_target(get_unregistered_files
 # Package Building
 # =========================
 set(CPACK_PACKAGE_VENDOR "TsukiNi22")
+set(CPACK_PACKAGE_CONTACT "xartania.contact@gmail.com")
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library")
-set(CPACK_PACKAGE_CONTACT "TsukiNi22")
+
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
+set(CPACK_RPM_PACKAGE_LICENSE "MIT")
+
 set(CPACK_GENERATOR "RPM")
 
 # Setup the package name
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+if(UTILS_DEV_PACKAGE)
+    set(CPACK_PACKAGE_NAME "libutils-dev")
+    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (headers)")
+elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(CPACK_PACKAGE_NAME "libutils-db")
+    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (debug)")
 elseif(CMAKE_BUILD_TYPE STREQUAL "Asan")
     set(CPACK_PACKAGE_NAME "libutils-as")
+    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (asan)")
 else()
     set(CPACK_PACKAGE_NAME "libutils-op")
+    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (optimized)")
 endif()
+set(CPACK_RPM_LIB_PACKAGE_NAME ${CPACK_PACKAGE_NAME})
+set(CPACK_RPM_HEADERS_PACKAGE_NAME ${CPACK_PACKAGE_NAME})
 
 # Separate headers & lib
 set(CPACK_RPM_COMPONENT_INSTALL ON)
-set(CPACK_COMPONENTS_ALL headers lib)
+if(UTILS_DEV_PACKAGE)
+    set(CPACK_COMPONENTS_ALL headers)
+else()
+    set(CPACK_COMPONENTS_ALL lib)
+endif()
 
-set(CPACK_RPM_HEADERS_PACKAGE_NAME "libutils-dev")
-set(CPACK_RPM_LIB_PACKAGE_NAME "${CPACK_PACKAGE_NAME}")
-set(CPACK_RPM_LIB_PACKAGE_REQUIRES "${CPACK_PACKAGE_NAME} >= ${PROJECT_VERSION}")
+# Dependencies
+if(NOT UTILS_DEV_PACKAGE)
+    set(CPACK_RPM_PACKAGE_REQUIRES "libutils-dev >= ${PROJECT_VERSION}")
+endif()
 
 include(CPack)
