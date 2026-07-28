@@ -28,8 +28,8 @@
 
 ### Clone the repository
 ```bash
-git clone https://github.com/TsukiNi22/utils.git
-cd utils
+git clone https://github.com/TsukiNi22/libutils.git
+cd libutils
 ```
 
 ### Install the lib
@@ -42,16 +42,16 @@ sudo cmake --build $BUILD_DIR --target install --parallel $(nproc)
 ## Quick Setup - 2 (Fedora only)
 > Setup into `/usr`
 
-Run the setup script directly, without cloning the repository manually. It's setup the different file to allow `dnf` to handle the different package from utils.
+Run the setup script directly, without cloning the repository manually. It's setup the different file to allow `dnf` to handle the different package from libutils.
 
 ```bash
-wget -qO- https://raw.githubusercontent.com/TsukiNi22/utils/main/setup.sh | bash -s
+wget -qO- https://raw.githubusercontent.com/TsukiNi22/libutils/main/setup.sh | bash -s
 ```
 
 or with `curl`:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/TsukiNi22/utils/main/setup.sh | bash -s
+curl -fsSL https://raw.githubusercontent.com/TsukiNi22/libutils/main/setup.sh | bash -s
 ```
 
 ### What the script does
