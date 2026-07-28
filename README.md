@@ -1,6 +1,11 @@
 # Utils
-> [!NOTE]
-> To have more information look directly in the files
+
+### Table of Contents
+ - [Dependencies](#dependencies)
+ - [Packages](#packages)
+ - [Quick Setup 1 (All)](#quick-setup---1-all)
+ - [Quick Setup 2 (Fedora Only)](#quick-setup---2-fedora-only)
+ - [Utils Content](#utils---content-see-github-wiki-for-more-details)
 
 ## Dependencies
 
@@ -18,7 +23,24 @@
 | `libutils-db` | Compiled with debug options (intended for debugging only) |
 | `libutils-as` | Compiled with asan options (intended for debugging only) |
 
-## Quick Setup (Fedora only)
+## Quick Setup - 1 (all)
+> Setup into `/usr/local`
+
+### Clone the repository
+```bash
+git clone https://github.com/TsukiNi22/utils.git
+cd utils
+```
+
+### Install the lib
+```bash
+export BUILD=build
+cmake -S . -B $BUILD_DIR
+sudo cmake --build $BUILD_DIR --target install --parallel $(nproc)
+```
+
+## Quick Setup - 2 (Fedora only)
+> Setup into `/usr`
 
 Run the setup script directly, without cloning the repository manually. It's setup the different file to allow `dnf` to handle the different package from utils.
 
@@ -32,7 +54,7 @@ or with `curl`:
 curl -fsSL https://raw.githubusercontent.com/TsukiNi22/utils/main/setup.sh | bash -s
 ```
 
-## What the script does
+### What the script does
 
 1. Setup the `.repo` file to allow dnf to find the different packages
 2. Get the official GPG key to check the signature
