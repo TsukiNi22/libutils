@@ -161,6 +161,7 @@ target_link_options(${TARGET} PRIVATE
 # Installation
 # =========================
 include(GNUInstallDirs) # load variable used for installation
+include(CMakePackageConfigHelpers)
 
 # library
 install(TARGETS ${TARGET}
@@ -173,27 +174,29 @@ install(TARGETS ${TARGET}
 
 # header
 if(CMAKE_BUILD_TYPE STREQUAL "Optimized")
-    install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT headers)
+    install(DIRECTORY include/
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        COMPONENT headers
+    )
+
+    # CMake setup for find_package(utils CONFIG REQUIRED)
+    install(EXPORT ${TARGET}Targets
+        FILE ${TARGET}Targets.cmake
+        NAMESPACE ${TARGET}::
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
+        COMPONENT headers
+    )
+
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${TARGET}Config.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
+        COMPONENT headers
+    )
 endif()
 
-# CMake setup for find_package(utils CONFIG REQUIRED)
-install(EXPORT ${TARGET}Targets
-    FILE ${TARGET}Targets.cmake
-    NAMESPACE ${TARGET}::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
-    COMPONENT headers
-)
-
-include(CMakePackageConfigHelpers)
 configure_package_config_file(
     ${CMAKE_SOURCE_DIR}/cmake/package/${TARGET}Config.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/${TARGET}Config.cmake
     INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
-)
-
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${TARGET}Config.cmake
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
-    COMPONENT headers
 )
 
 # =========================
@@ -229,6 +232,6 @@ set(CPACK_COMPONENTS_ALL headers lib)
 
 set(CPACK_RPM_HEADERS_PACKAGE_NAME "libutils-dev")
 set(CPACK_RPM_LIB_PACKAGE_NAME "${CPACK_PACKAGE_NAME}")
-set(CPACK_RPM_LIB_PACKAGE_REQUIRES "libutils-dev >= ${PROJECT_VERSION}")
+set(CPACK_RPM_LIB_PACKAGE_REQUIRES "${CPACK_PACKAGE_NAME} >= ${PROJECT_VERSION}")
 
 include(CPack)

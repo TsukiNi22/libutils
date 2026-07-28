@@ -24,6 +24,7 @@ z
 __pycache__
 
 ## Other
+/fedora
 /runner
 .info
 /main.cpp
