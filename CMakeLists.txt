@@ -165,15 +165,15 @@ include(GNUInstallDirs) # load variable used for installation
 # library
 install(TARGETS ${TARGET}
     EXPORT ${TARGET}Targets
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT lib
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT lib
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT lib
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
 # header
 if(CMAKE_BUILD_TYPE STREQUAL "Optimized")
-    install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+    install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT headers)
 endif()
 
 # CMake setup for find_package(utils CONFIG REQUIRED)
@@ -181,6 +181,7 @@ install(EXPORT ${TARGET}Targets
     FILE ${TARGET}Targets.cmake
     NAMESPACE ${TARGET}::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
+    COMPONENT headers
 )
 
 include(CMakePackageConfigHelpers)
@@ -192,6 +193,7 @@ configure_package_config_file(
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${TARGET}Config.cmake
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
+    COMPONENT headers
 )
 
 # =========================
