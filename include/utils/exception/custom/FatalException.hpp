@@ -44,8 +44,8 @@ class FatalException: public utils::exception::AException {
         FatalException& operator=(FatalException&& other) = delete;
 
         // ---------- Constructor --------- //
-        #ifdef GENERATED_EXCEPTION_HEADER_H
-            _cold explicit FatalException(utils::exception::Code code, std::source_location loc = std::source_location::current()) noexcept : AException(loc, utils::exception::Type::Error | utils::exception::Type::Fatal, static_cast<utils::exception::InternalCode>(code))
+        #ifdef GENERATED_EXTERNAL_EXCEPTION_HEADER_H
+            _cold explicit FatalException(utils::exceptionutils::exception::ExternalCode code, std::source_location loc = std::source_location::current()) noexcept : AException(loc, utils::exception::Type::Error | utils::exception::Type::Fatal, static_cast<utils::exception::InternalCode>(code))
             {
                 std::cerr
                 << EXCEPTION_ABORTED_HEADER  << std::endl
@@ -53,7 +53,7 @@ class FatalException: public utils::exception::AException {
                 << EXCEPTION_ABORTED_MESSAGE << std::endl;
                 std::abort();
             };
-            _cold FatalException(utils::exception::Type type, utils::exception::Code code, std::string info = "[None]", std::source_location loc = std::source_location::current()) noexcept : AException(loc, type | utils::exception::Type::Fatal, static_cast<utils::exception::InternalCode>(code), info)
+            _cold FatalException(utils::exception::Type type, utils::exceptionutils::exception::ExternalCode code, std::string info = "[None]", std::source_location loc = std::source_location::current()) noexcept : AException(loc, type | utils::exception::Type::Fatal, static_cast<utils::exception::InternalCode>(code), info)
             {
                 std::cerr
                 << EXCEPTION_ABORTED_HEADER  << std::endl

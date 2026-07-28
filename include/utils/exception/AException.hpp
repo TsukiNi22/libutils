@@ -17,7 +17,7 @@ File Description:
 
     /* type/class */
     #include "IException.hpp"               // utils::exception::IException
-    #include "ExceptionDefine.hpp"          // utils::exception::InternalCode, utils::exception::Type, utils::exception::Messages
+    #include "ExceptionDefine.hpp"          // utils::exception::* (define / vars)
     #include "../attribute/Attribute.hpp"   // _nodiscard
     #include <dlfcn.h>                      // __builtin_return_address
     #include <source_location>              // std::source_location
@@ -84,12 +84,12 @@ class AException: public utils::exception::IException {
             this->Messages.insert(std::begin(utils::exception::InternalMessages), std::end(utils::exception::InternalMessages));
             this->Info.insert(std::begin(utils::exception::InternalInfo), std::end(utils::exception::InternalInfo));
             this->Restriction.insert(std::begin(utils::exception::InternalRestriction), std::end(utils::exception::InternalRestriction));
-            #ifdef GENERATED_EXCEPTION_HEADER_H
-                for (const auto& [code, message]: utils::exception::Messages)
+            #ifdef GENERATED_EXTERNAL_EXCEPTION_HEADER_H
+                for (const auto& [code, message]: utils::exception::ExternalMessages)
                     this->Messages.emplace(static_cast<utils::exception::InternalCode>(code), message);
-                for (const auto& [code, info]: utils::exception::Info)
+                for (const auto& [code, info]: utils::exception::ExternalInfo)
                     this->Info.emplace(static_cast<utils::exception::InternalCode>(code), info);
-                for (const auto& [code, restriction]: utils::exception::Restriction)
+                for (const auto& [code, restriction]: utils::exception::ExternalRestriction)
                     this->Restriction.emplace(static_cast<utils::exception::InternalCode>(code), restriction);
             #endif
             this->subinit();

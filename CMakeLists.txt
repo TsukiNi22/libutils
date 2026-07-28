@@ -99,7 +99,7 @@ add_custom_command(
     COMMENT "Generating exception header (config changed)"
     VERBATIM
 )
-add_custom_target(generated_exception_header
+add_custom_target(generated_internal_exception_header
     DEPENDS ${GENERATED_EXCEPTION_HEADER}
 )
 
@@ -130,7 +130,7 @@ add_custom_target(install_release
 # =========================
 # Dependencies
 # =========================
-add_dependencies(${TARGET} generated_exception_header)
+add_dependencies(${TARGET} generated_internal_exception_header)
 target_link_libraries(${TARGET} PRIVATE OpenSSL::SSL OpenSSL::Crypto) # Network & Codec
 
 # =========================

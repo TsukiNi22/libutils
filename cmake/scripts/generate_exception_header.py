@@ -101,7 +101,7 @@ restriction_str = ""
 data_list = list(data.items())
 for i, (code, [message, info, restriction]) in enumerate(data_list):
     # code
-    code_str += f"    {code} = {uint64_hash(code)}ull,"
+    code_str += f"    {code} = {uint64_hash(code + NAMES.CODE_SECTION)}ull,"
     # message
     escaped_message = message.replace('"', r'\"')
     message_str += f'    {{{NAMES.EXCEPTION_SCOPE}::{NAMES.CODE_SECTION}::{code}, "{escaped_message}"}},'

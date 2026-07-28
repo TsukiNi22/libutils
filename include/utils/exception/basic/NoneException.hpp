@@ -32,8 +32,8 @@ class NoneException: public utils::exception::AException {
         NoneException& operator=(NoneException&& other) = delete;
 
         // ---------- Constructor --------- //
-        #ifdef GENERATED_EXCEPTION_HEADER_H
-            _cold explicit NoneException(utils::exception::Code code, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::None, static_cast<utils::exception::InternalCode>(code)) {};
+        #ifdef GENERATED_EXTERNAL_EXCEPTION_HEADER_H
+            _cold explicit NoneException(utils::exceptionutils::exception::ExternalCode code, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::None, static_cast<utils::exception::InternalCode>(code)) {};
         #endif
         _cold explicit NoneException(utils::exception::InternalCode code = utils::exception::InternalCode::Undefined, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::None, code) {};
         _cold NoneException(utils::exception::InternalCode code, std::string info, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::None, code, info) {};

@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  27/07/2026 by Tsukini
+##  28/07/2026 by Tsukini
 
 File Name:
 ##  const.py
@@ -87,7 +87,7 @@ class Names:
     EXCEPTION_TYPE_ENUM: str = "Type"
 
     # Sections
-    GUARD: str = "INTERNAL_"
+    GUARD: str = ""
     CODE_SECTION: str = "InternalCode"
     MESSAGES_SECTION: str = "InternalMessages"
     INFO_SECTION: str = "InternalInfo"
