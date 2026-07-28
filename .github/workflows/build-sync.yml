@@ -1,0 +1,139 @@
+name: CI/CD - Library
+
+on:
+  push:
+    branches: [main]
+
+env:
+  LIBRARYS: "libutils.a libutils_debug.a libutils_asan.a"
+
+jobs:
+  build-packages:
+    runs-on: ${{ vars.RUNNER }}
+    defaults:
+      run:
+        shell: bash
+
+    container:
+      image: ghcr.io/tsukini22/ci:latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - name: Cache ccache
+        uses: actions/cache@v5
+        with:
+          path: /github/home/.cache/ccache
+          key: ccache-${{ runner.os }}-${{ hashFiles('**/*.cpp', '**/*.hpp', 'CMakeLists.txt') }}
+          restore-keys: |
+            ccache-${{ runner.os }}-
+
+      - name: Build libraries (Release)
+        run: |
+          set -e
+          cmake -S . -B build
+          cmake --build build --target package_release --parallel $(nproc)
+        timeout-minutes: 2
+
+      - name: Show ccache stats
+        run: ccache -s
+
+      - name: Check libraries
+        run: |
+          set -euo pipefail
+          for library in $(echo $LIBRARYS | tr ',' ' ' | xargs); do
+            if [ ! -f "./build/$library" ]; then
+              echo "::error title=Missing library, file=$library::Library '$library' not found"
+              exit 1
+            fi
+            echo "✓ Library '$library' ok"
+          done
+
+      - name: Upload compiled packages
+        uses: actions/upload-artifact@v6
+        with:
+          name: compiled-packages
+          path: |
+            build/*.rpm
+
+  sync-online-packages:
+    needs: build-packages
+    if: github.event_name == 'push' && needs.build-libraries.result == 'success'
+
+    runs-on: ${{ vars.RUNNER }}
+    defaults:
+      run:
+        shell: bash
+
+    container:
+      image: ghcr.io/tsukini22/package:latest
+
+    steps:
+      - name: Download compiled packages
+        uses: actions/download-artifact@v7
+        with:
+          name: compiled-packages
+          path: build
+
+      - name: Checkout utils - gh-pages
+        uses: actions/checkout@v5
+        with:
+          ref: gh-pages
+          path: gh-pages
+          fetch-depth: 1
+
+      - name: Import GPG key
+        run: |
+          set -e
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | base64 -d | gpg --batch --import
+          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+          echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+
+      - name: Sign packages
+        run: |
+          set -e
+          cat > ~/.rpmmacros <<EOF
+          %_gpg_name ${{ secrets.GPG_KEY_ID }}
+          %_signature gpg
+          %__gpg_sign_cmd %{__gpg} gpg --batch --yes --pinentry-mode loopback \
+            --passphrase "${{ secrets.GPG_PASSPHRASE }}" \
+            --no-armor --detach-sign -u "%{_gpg_name}" -o %{__signature_filename} %{__plaintext_filename}
+          EOF
+          rpm --addsign build/*.rpm
+
+          # Check of the signature
+          for f in build/*.rpm; do
+            rpm -K "$f" | grep -q "signatures OK" || { echo "::error::$f not signed"; exit 1; }
+          done
+
+      - name: Sync files into gh-pages
+        run: |
+          set -euo pipefail
+          REPO_DIR="gh-pages/fedora/44/x86_64"
+          mkdir -p "$REPO_DIR" # Security
+          mv build/*.rpm $REPO_DIR/
+
+      - name: Update metadata and signature
+        working-directory: gh-pages/fedora/44/x86_64
+        run: |
+          set -e
+          createrepo_c --update .
+          rm -f repodata/repomd.xml.asc
+          gpg --batch --yes --pinentry-mode loopback --passphrase "${{ secrets.GPG_PASSPHRASE }}" --detach-sign --armor repodata/repomd.xml
+
+      - name: Commit and push
+        working-directory: gh-pages
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          if git diff --cached --quiet; then
+            echo "No changes to sync."
+            exit 0
+          fi
+          git commit -m "chore: sync packages from main (${{ github.sha }})"
+          git push origin gh-pages
