@@ -106,6 +106,10 @@ jobs:
           EOF
           rpm --addsign build/*.rpm
 
+          # Import the public key into rpm
+          gpg --armor --export "${{ secrets.GPG_KEY_ID }}" > /tmp/pubkey.asc
+          rpm --import /tmp/pubkey.asc
+
           # Check of the signature
           for f in build/*.rpm; do
             rpm -K "$f" | grep -q "signatures OK" || { echo "::error::$f not signed"; exit 1; }
