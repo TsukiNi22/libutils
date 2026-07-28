@@ -96,9 +96,11 @@ jobs:
         run: |
           set -e
           cat > ~/.rpmmacros <<EOF
-          %_gpg_name ${{ secrets.GPG_KEY_ID }}
           %_signature gpg
-          %__gpg_sign_cmd %{__gpg} gpg --batch --yes --pinentry-mode loopback \
+          %_gpg_name ${{ secrets.GPG_KEY_ID }}
+          %__gpg $(which gpg)
+          %__gpg_sign_cmd %{__gpg} \
+            --batch --yes --pinentry-mode loopback \
             --passphrase "${{ secrets.GPG_PASSPHRASE }}" \
             --no-armor --detach-sign -u "%{_gpg_name}" -o %{__signature_filename} %{__plaintext_filename}
           EOF
