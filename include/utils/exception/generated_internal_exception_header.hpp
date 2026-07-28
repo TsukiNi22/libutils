@@ -12,8 +12,8 @@ File Description:
 ##  Used for exception code & message definition
 \**************************************************************/
 
-#ifndef INTERNAL_GENERATED_INTERNAL_EXCEPTION_HEADER_H
-    #define INTERNAL_GENERATED_INTERNAL_EXCEPTION_HEADER_H
+#ifndef GENERATED_INTERNAL_EXCEPTION_HEADER_H
+    #define GENERATED_INTERNAL_EXCEPTION_HEADER_H
 
     //----------------------------------------------------------------//
     /* INCLUDE */
@@ -42,14 +42,6 @@ enum class InternalCode: std::size_t {
     Freezed = 4235146037744797477ull,
     BadCast = 13996216691997858231ull,
     UnknowCast = 1638341191902573621ull,
-    CliTTY = 7861082121018508249ull,
-    CliInternal = 13848254282086383450ull,
-    CliHook = 9913310418831031381ull,
-    CliParser = 13204459558341697298ull,
-    CliExecution = 5908385312673045195ull,
-    CliUndefined = 11441856432723067089ull,
-    CliAlreadyRunning = 16477862314081875021ull,
-    CliKilled = 15290329562365419020ull,
     ArgumentsNumber = 12018782069274677273ull,
     OptionIngored = 4645627411356026889ull,
     UnknowFlag = 12987297349800392442ull,
@@ -61,14 +53,22 @@ enum class InternalCode: std::size_t {
     FlagOption = 3560838893808110211ull,
     FlagCombinaison = 7214799768896423168ull,
     DuplicatedFlag = 7579688313914096746ull,
+    CliTTY = 7861082121018508249ull,
+    CliInternal = 13848254282086383450ull,
+    CliHook = 9913310418831031381ull,
+    CliParser = 13204459558341697298ull,
+    CliExecution = 5908385312673045195ull,
+    CliUndefined = 11441856432723067089ull,
+    CliAlreadyRunning = 16477862314081875021ull,
+    CliKilled = 15290329562365419020ull,
     ExceptionCodeRestriction = 6695002857475997726ull,
+    ANSIMouseEvent = 10836869605783267125ull,
+    Codec = 8493933037809394222ull,
+    InvalidCodec = 12193574205768740508ull,
     MiddlewareCall = 14307232079590726764ull,
     VectorInvalidIndex = 8853479528360895127ull,
     IdOverflow = 1572877478651931508ull,
     SharedObject = 2691419733905123322ull,
-    ANSIMouseEvent = 10836869605783267125ull,
-    Codec = 8493933037809394222ull,
-    InvalidCodec = 12193574205768740508ull,
 };
 
 /* Corresponding exception message for each code */
@@ -86,14 +86,6 @@ inline const std::unordered_map<utils::exception::InternalCode, const char*> Int
     {utils::exception::InternalCode::Freezed, "Can't edit a freezed things"},
     {utils::exception::InternalCode::BadCast, "Invalid cast between from a type to another"},
     {utils::exception::InternalCode::UnknowCast, "Unknow cast type, can't proceed"},
-    {utils::exception::InternalCode::CliTTY, "Can't start cli, not in a tty (enable the flag TTY to force usage)"},
-    {utils::exception::InternalCode::CliInternal, "Internal error from the cli"},
-    {utils::exception::InternalCode::CliHook, "Error during a hook call"},
-    {utils::exception::InternalCode::CliParser, "Error during the parsing"},
-    {utils::exception::InternalCode::CliExecution, "Error during the command execution"},
-    {utils::exception::InternalCode::CliUndefined, "An undefined error has append"},
-    {utils::exception::InternalCode::CliAlreadyRunning, "Can't start a cli that is already running"},
-    {utils::exception::InternalCode::CliKilled, "Can't start or restart a cli that was killed"},
     {utils::exception::InternalCode::ArgumentsNumber, "Invalid number of argument(s) given, use '-h' for more information"},
     {utils::exception::InternalCode::OptionIngored, "Option ignored, can't determine it's ownership"},
     {utils::exception::InternalCode::UnknowFlag, "Unknow flag"},
@@ -105,14 +97,22 @@ inline const std::unordered_map<utils::exception::InternalCode, const char*> Int
     {utils::exception::InternalCode::FlagOption, "Invalid flag option, the parsing hook has failed"},
     {utils::exception::InternalCode::FlagCombinaison, "Invalid flag combinaison"},
     {utils::exception::InternalCode::DuplicatedFlag, "A flag was redefined, only the first will be used"},
+    {utils::exception::InternalCode::CliTTY, "Can't start cli, not in a tty (enable the flag TTY to force usage)"},
+    {utils::exception::InternalCode::CliInternal, "Internal error from the cli"},
+    {utils::exception::InternalCode::CliHook, "Error during a hook call"},
+    {utils::exception::InternalCode::CliParser, "Error during the parsing"},
+    {utils::exception::InternalCode::CliExecution, "Error during the command execution"},
+    {utils::exception::InternalCode::CliUndefined, "An undefined error has append"},
+    {utils::exception::InternalCode::CliAlreadyRunning, "Can't start a cli that is already running"},
+    {utils::exception::InternalCode::CliKilled, "Can't start or restart a cli that was killed"},
     {utils::exception::InternalCode::ExceptionCodeRestriction, "Error during the setup of an exception"},
+    {utils::exception::InternalCode::ANSIMouseEvent, "Error during the read of the mouse event"},
+    {utils::exception::InternalCode::Codec, "Error during the encoding/decoding of the given string"},
+    {utils::exception::InternalCode::InvalidCodec, "The given codec is invalid and can't be used for the task"},
     {utils::exception::InternalCode::MiddlewareCall, "Error during a middleware call"},
     {utils::exception::InternalCode::VectorInvalidIndex, "Invalid index on a vector"},
     {utils::exception::InternalCode::IdOverflow, "Can't distribute an id, uint32_t limits are reach"},
     {utils::exception::InternalCode::SharedObject, "An object created with dynamic code that was free is still alive"},
-    {utils::exception::InternalCode::ANSIMouseEvent, "Error during the read of the mouse event"},
-    {utils::exception::InternalCode::Codec, "Error during the encoding/decoding of the given string"},
-    {utils::exception::InternalCode::InvalidCodec, "The given codec is invalid and can't be used for the task"},
 };
 
 /* Potential default info: nullptr same as "[None]" */
@@ -130,14 +130,6 @@ inline const std::unordered_map<utils::exception::InternalCode, const char*> Int
     {utils::exception::InternalCode::Freezed, nullptr},
     {utils::exception::InternalCode::BadCast, nullptr},
     {utils::exception::InternalCode::UnknowCast, nullptr},
-    {utils::exception::InternalCode::CliTTY, nullptr},
-    {utils::exception::InternalCode::CliInternal, nullptr},
-    {utils::exception::InternalCode::CliHook, nullptr},
-    {utils::exception::InternalCode::CliParser, nullptr},
-    {utils::exception::InternalCode::CliExecution, nullptr},
-    {utils::exception::InternalCode::CliUndefined, nullptr},
-    {utils::exception::InternalCode::CliAlreadyRunning, nullptr},
-    {utils::exception::InternalCode::CliKilled, nullptr},
     {utils::exception::InternalCode::ArgumentsNumber, nullptr},
     {utils::exception::InternalCode::OptionIngored, nullptr},
     {utils::exception::InternalCode::UnknowFlag, nullptr},
@@ -149,14 +141,22 @@ inline const std::unordered_map<utils::exception::InternalCode, const char*> Int
     {utils::exception::InternalCode::FlagOption, nullptr},
     {utils::exception::InternalCode::FlagCombinaison, nullptr},
     {utils::exception::InternalCode::DuplicatedFlag, nullptr},
+    {utils::exception::InternalCode::CliTTY, nullptr},
+    {utils::exception::InternalCode::CliInternal, nullptr},
+    {utils::exception::InternalCode::CliHook, nullptr},
+    {utils::exception::InternalCode::CliParser, nullptr},
+    {utils::exception::InternalCode::CliExecution, nullptr},
+    {utils::exception::InternalCode::CliUndefined, nullptr},
+    {utils::exception::InternalCode::CliAlreadyRunning, nullptr},
+    {utils::exception::InternalCode::CliKilled, nullptr},
     {utils::exception::InternalCode::ExceptionCodeRestriction, "Restriction trigerred on a code & type combination"},
+    {utils::exception::InternalCode::ANSIMouseEvent, nullptr},
+    {utils::exception::InternalCode::Codec, nullptr},
+    {utils::exception::InternalCode::InvalidCodec, nullptr},
     {utils::exception::InternalCode::MiddlewareCall, nullptr},
     {utils::exception::InternalCode::VectorInvalidIndex, "Can't retrieve the value, the VectorX dosen't have this index"},
     {utils::exception::InternalCode::IdOverflow, nullptr},
     {utils::exception::InternalCode::SharedObject, nullptr},
-    {utils::exception::InternalCode::ANSIMouseEvent, nullptr},
-    {utils::exception::InternalCode::Codec, nullptr},
-    {utils::exception::InternalCode::InvalidCodec, nullptr},
 };
 
 /* Potential restriction on exception code */
@@ -179,14 +179,6 @@ inline const std::unordered_map<utils::exception::InternalCode, const std::uint8
     {utils::exception::InternalCode::Freezed, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::BadCast, 0b0110}, // allow: Fatal, Error
     {utils::exception::InternalCode::UnknowCast, 0b0110}, // allow: Fatal, Error
-    {utils::exception::InternalCode::CliTTY, 0b0110}, // allow: Fatal, Error
-    {utils::exception::InternalCode::CliInternal, 0b0110}, // allow: Fatal, Error
-    {utils::exception::InternalCode::CliHook, 0b1110}, // allow: Fatal, Error, Warning
-    {utils::exception::InternalCode::CliParser, 0b0000}, // allow: All
-    {utils::exception::InternalCode::CliExecution, 0b0110}, // allow: Fatal, Error
-    {utils::exception::InternalCode::CliUndefined, 0b0110}, // allow: Fatal, Error
-    {utils::exception::InternalCode::CliAlreadyRunning, 0b1110}, // allow: Fatal, Error, Warning
-    {utils::exception::InternalCode::CliKilled, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::ArgumentsNumber, 0b0110}, // allow: Fatal, Error
     {utils::exception::InternalCode::OptionIngored, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::UnknowFlag, 0b1110}, // allow: Fatal, Error, Warning
@@ -198,14 +190,22 @@ inline const std::unordered_map<utils::exception::InternalCode, const std::uint8
     {utils::exception::InternalCode::FlagOption, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::FlagCombinaison, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::DuplicatedFlag, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::CliTTY, 0b0110}, // allow: Fatal, Error
+    {utils::exception::InternalCode::CliInternal, 0b0110}, // allow: Fatal, Error
+    {utils::exception::InternalCode::CliHook, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::CliParser, 0b0000}, // allow: All
+    {utils::exception::InternalCode::CliExecution, 0b0110}, // allow: Fatal, Error
+    {utils::exception::InternalCode::CliUndefined, 0b0110}, // allow: Fatal, Error
+    {utils::exception::InternalCode::CliAlreadyRunning, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::CliKilled, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::ExceptionCodeRestriction, 0b0110}, // allow: Fatal, Error
+    {utils::exception::InternalCode::ANSIMouseEvent, 0b0110}, // allow: Fatal, Error
+    {utils::exception::InternalCode::Codec, 0b0110}, // allow: Fatal, Error
+    {utils::exception::InternalCode::InvalidCodec, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::MiddlewareCall, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::VectorInvalidIndex, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::IdOverflow, 0b0110}, // allow: Fatal, Error
     {utils::exception::InternalCode::SharedObject, 0b1110}, // allow: Fatal, Error, Warning
-    {utils::exception::InternalCode::ANSIMouseEvent, 0b0110}, // allow: Fatal, Error
-    {utils::exception::InternalCode::Codec, 0b0110}, // allow: Fatal, Error
-    {utils::exception::InternalCode::InvalidCodec, 0b1110}, // allow: Fatal, Error, Warning
 };
 
 // Check at the compile time the correspondece between the message & code
@@ -216,4 +216,4 @@ static_assert(std::size(InternalRestriction) == static_cast<std::size_t>(utils::
 */
 
 } // namespace end
-#endif /* INTERNAL_GENERATED_INTERNAL_EXCEPTION_HEADER_H */
+#endif /* GENERATED_INTERNAL_EXCEPTION_HEADER_H */

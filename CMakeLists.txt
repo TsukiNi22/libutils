@@ -205,13 +205,28 @@ add_custom_target(get_unregistered_files
 # =========================
 # Package Building
 # =========================
-set(CPACK_PACKAGE_NAME "utils")
 set(CPACK_PACKAGE_VENDOR "TsukiNi22")
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library")
 set(CPACK_PACKAGE_CONTACT "TsukiNi22")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
+set(CPACK_GENERATOR "RPM")
 
-set(CPACK_GENERATOR "DEB;RPM;TGZ")
+# Setup the package name
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(CPACK_PACKAGE_NAME "libutils-db")
+elseif(CMAKE_BUILD_TYPE STREQUAL "Asan")
+    set(CPACK_PACKAGE_NAME "libutils-as")
+else()
+    set(CPACK_PACKAGE_NAME "libutils-op")
+endif()
+
+# Separate headers & lib
+set(CPACK_RPM_COMPONENT_INSTALL ON)
+set(CPACK_COMPONENTS_ALL headers lib)
+
+set(CPACK_RPM_HEADERS_PACKAGE_NAME "libutils-dev")
+set(CPACK_RPM_LIB_PACKAGE_NAME "${CPACK_PACKAGE_NAME}")
+set(CPACK_RPM_LIB_PACKAGE_REQUIRES "utils-dev >= ${PROJECT_VERSION}")
 
 include(CPack)
