@@ -1,5 +1,6 @@
 *
 !.gitignore
-!fedora/
+!/fedora
+!/fedora/**
 !libutils.repo
 !RPM-GPG-KEY-tsukini
