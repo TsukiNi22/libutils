@@ -62,6 +62,8 @@ jobs:
   sync-online-packages:
     needs: build-packages
     if: github.event_name == 'push' && needs.build-packages.result == 'success'
+    permissions:
+      contents: write
 
     runs-on: ${{ vars.RUNNER }}
     defaults:
