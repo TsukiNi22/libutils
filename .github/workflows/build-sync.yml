@@ -31,7 +31,7 @@ jobs:
           restore-keys: |
             ccache-${{ runner.os }}-
 
-      - name: Build libraries (Release)
+      - name: Build packages (Release)
         run: |
           set -e
           cmake -S . -B build
@@ -61,7 +61,7 @@ jobs:
 
   sync-online-packages:
     needs: build-packages
-    if: github.event_name == 'push' && needs.build-libraries.result == 'success'
+    if: github.event_name == 'push' && needs.build-packages.result == 'success'
 
     runs-on: ${{ vars.RUNNER }}
     defaults:
