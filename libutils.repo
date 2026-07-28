@@ -1,6 +1,6 @@
 [libutils]
 name=libutils repository
-baseurl=https://tsukini22.github.io/utils/fedora/$releasever/$basearch
+baseurl=https://tsukini22.github.io/libutils/fedora/$releasever/$basearch
 enabled=1
 gpgcheck=1
-gpgkey=https://tsukini22.github.io/utils/RPM-GPG-KEY-tsukini
+gpgkey=https://tsukini22.github.io/libutils/RPM-GPG-KEY-tsukini
