@@ -4,7 +4,7 @@
  - [Dependencies](#dependencies)
  - [Packages](#packages)
  - [Quick Setup 1 (All)](#quick-setup---1-all)
- - [Quick Setup 2 (Fedora Only)](#quick-setup---2-fedora-only)
+ - [Quick Setup 2 (Limited)](#quick-setup---2-limited)
  - [Utils Content](#utils---content-see-github-wiki-for-more-details)
 
 ## Dependencies
@@ -19,7 +19,10 @@
 | File Name | Content |
 | --------- | ------- |
 | `libutils` | Install the default packages (`libutils-dev`, `libutils-op`) |
-| `libutils-dev` | Contains all includes needed and cmake configuration |
+| `libutils-dev` | Contains all includes needed and cmake global configuration |
+| `libutils-dev-op` | Contains cmake configuration for `libutils-op` |
+| `libutils-dev-db` | Contains cmake configuration for `libutils-db` |
+| `libutils-dev-as` | Contains cmake configuration for `libutils-as` |
 | `libutils-op` | Compiled with optimization options |
 | `libutils-db` | Compiled with debug options (intended for debugging only) |
 | `libutils-as` | Compiled with asan options (intended for debugging only) |
@@ -40,10 +43,13 @@ cmake -S . -B $BUILD_DIR
 sudo cmake --build $BUILD_DIR --target install --parallel $(nproc)
 ```
 
-## Quick Setup - 2 (Fedora only)
+## Quick Setup - 2 (Limited)
 > Setup into `/usr`
 
-Run the setup script directly, without cloning the repository manually. It's setup the different file to allow `dnf` to handle the different package from libutils.
+> [!WARNING]
+> Restriction: `fedora-based (rpm)`, `debian-based (deb)`
+
+Run the setup script directly, without cloning the repository manually. It's setup the different file to allow installing tools to handle the different package from libutils.
 
 ```bash
 wget -qO- https://raw.githubusercontent.com/TsukiNi22/libutils/main/setup.sh | bash -s
@@ -54,11 +60,6 @@ or with `curl`:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/TsukiNi22/libutils/main/setup.sh | bash -s
 ```
-
-### What the script does
-
-1. Setup the `.repo` file to allow dnf to find the different packages
-2. Get the official GPG key to check the signature
 
 ## Utils - Content (see github wiki for more details)
 > [!NOTE]
