@@ -34,7 +34,7 @@ install_rpm_repo() {
 
     sudo rpm --import "$BASE_URL/RPM-GPG-KEY-tsukini"
 
-    echo "libutils repo installed. You can now run: sudo dnf install libutils-dev"
+    echo "libutils repo installed. You can now run: sudo dnf install libutils"
 }
 
 # =========================
@@ -56,7 +56,7 @@ install_deb_repo() {
 
     sudo apt-get update
 
-    echo "libutils repo installed. You can now run: sudo apt install libutils-dev"
+    echo "libutils repo installed. You can now run: sudo apt install libutils"
 }
 
 # =========================
