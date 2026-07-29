@@ -1,13 +1,41 @@
 @PACKAGE_INIT@
 
 # Default mode used for the library to link
-#if(NOT CMAKE_BUILD_TYPE)
-#    set(CMAKE_BUILD_TYPE Optimized CACHE STRING "Build type" FORCE)
-#endif()
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Optimized CACHE STRING "Build type" FORCE)
+endif()
 
 # Dependencies
 include(CMakeFindDependencyMacro)
 find_dependency(OpenSSL REQUIRED)
+
+# Custom error message if the require file doesn't exist
+set(_utils_libdir "${CMAKE_CURRENT_LIST_DIR}/../../")
+if(CMAKE_BUILD_TYPE STREQUAL "Asan")
+    if(NOT EXISTS "${_utils_libdir}/libutils_asan.a")
+        message(FATAL_ERROR
+            "The Asan version of libutils is not installed.\n"
+            "Please install the package 'libutils-as'."
+        )
+    endif()
+
+elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    if(NOT EXISTS "${_utils_libdir}/libutils_debug.a")
+        message(FATAL_ERROR
+            "The Debug version of libutils is not installed.\n"
+            "Please install the package 'libutils-db'."
+        )
+    endif()
+
+elseif(CMAKE_BUILD_TYPE STREQUAL "Optimized")
+    if(NOT EXISTS "${_utils_libdir}/libutils.a")
+        message(FATAL_ERROR
+            "The Optimized version of libutils is not installed.\n"
+            "Please install the package 'libutils-op'."
+        )
+    endif()
+endif()
+
 
 # Load and check tools
 include("${CMAKE_CURRENT_LIST_DIR}/utilsTargets.cmake")

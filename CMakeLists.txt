@@ -219,6 +219,7 @@ if(UTILS_DEV_PACKAGE)
         "${CMAKE_BINARY_DIR}/${EXPORT_PATH}/*/${TARGET}Targets.cmake"
         "${CMAKE_BINARY_DIR}/${EXPORT_PATH}/*/${TARGET}Targets-*.cmake"
     )
+    list(FILTER UTILS_EXPORT_FILES EXCLUDE REGEX ".*/${TARGET}Targets-noconfig\\.cmake$")
     install(
         FILES ${UTILS_EXPORT_FILES}
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
