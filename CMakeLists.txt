@@ -215,15 +215,32 @@ install(EXPORT ${TARGET}Targets
 # Fuck EXPORT, Fuck Export/<hash>/, Fuck!!!!!!
 set(EXPORT_PATH "CMakeFiles/Export")
 if(UTILS_DEV_PACKAGE)
-    file(GLOB_RECURSE UTILS_EXPORT_FILES
-        "${CMAKE_BINARY_DIR}/${EXPORT_PATH}/*/${TARGET}Targets.cmake"
-        "${CMAKE_BINARY_DIR}/${EXPORT_PATH}/*/${TARGET}Targets-*.cmake"
-    )
-    list(FILTER UTILS_EXPORT_FILES EXCLUDE REGEX ".*/${TARGET}Targets-noconfig\\.cmake$")
+    # main-headers
+    file(GLOB_RECURSE UTILS_EXPORT_FILES "${CMAKE_BINARY_DIR}/${EXPORT_PATH}/*/${TARGET}Targets.cmake")
     install(
         FILES ${UTILS_EXPORT_FILES}
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
         COMPONENT headers
+    )
+
+    # sub-headers
+    file(GLOB_RECURSE UTILS_EXPORT_FILES "${CMAKE_BINARY_DIR}/${EXPORT_PATH}/*/${TARGET}Targets-debug.cmake")
+    install(
+        FILES ${UTILS_EXPORT_FILES}
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
+        COMPONENT headers-db
+    )
+    file(GLOB_RECURSE UTILS_EXPORT_FILES "${CMAKE_BINARY_DIR}/${EXPORT_PATH}/*/${TARGET}Targets-asan.cmake")
+    install(
+        FILES ${UTILS_EXPORT_FILES}
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
+        COMPONENT headers-as
+    )
+    file(GLOB_RECURSE UTILS_EXPORT_FILES "${CMAKE_BINARY_DIR}/${EXPORT_PATH}/*/${TARGET}Targets-optimized.cmake")
+    install(
+        FILES ${UTILS_EXPORT_FILES}
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
+        COMPONENT headers-op
     )
 endif()
 
@@ -267,12 +284,15 @@ elseif(UTILS_DEV_PACKAGE)
 elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(CPACK_PACKAGE_NAME "libutils-db")
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (debug)")
+    set(PREFIX "db")
 elseif(CMAKE_BUILD_TYPE STREQUAL "Asan")
     set(CPACK_PACKAGE_NAME "libutils-as")
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (asan)")
+    set(PREFIX "as")
 else()
     set(CPACK_PACKAGE_NAME "libutils-op")
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (optimized)")
+    set(PREFIX "op")
 endif()
 
 # Separate headers & lib
@@ -282,22 +302,29 @@ if(UTILS_PACKAGE)
     set(CPACK_COMPONENTS_ALL "")
     set(CPACK_COMPONENT_INCLUDE_TOPLEVEL_DIRECTORY OFF) # In case~
 elseif(UTILS_DEV_PACKAGE)
-    set(CPACK_COMPONENTS_ALL headers)
+    set(CPACK_COMPONENTS_ALL headers headers-db headers-as headers-op)
+
+    set(CPACK_RPM_HEADERS-DB_PACKAGE_NAME "libutils-dev-db")
+    set(CPACK_RPM_HEADERS-AS_PACKAGE_NAME "libutils-dev-as")
+    set(CPACK_RPM_HEADERS-OP_PACKAGE_NAME "libutils-dev-op")
+
+    set(CPACK_DEBIAN_HEADERS-DB_PACKAGE_NAME "libutils-dev-db")
+    set(CPACK_DEBIAN_HEADERS-AS_PACKAGE_NAME "libutils-dev-as")
+    set(CPACK_DEBIAN_HEADERS-OP_PACKAGE_NAME "libutils-dev-op")
 else()
     set(CPACK_COMPONENTS_ALL lib)
 endif()
 
 # Dependencies
 if(UTILS_PACKAGE)
-    set(CPACK_PACKAGE_REQUIRES "libutils-dev >= ${PROJECT_VERSION}, libutils-op >= ${PROJECT_VERSION}")
-    set(CPACK_RPM_PACKAGE_REQUIRES "${CPACK_PACKAGE_REQUIRES}")
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "${CPACK_PACKAGE_REQUIRES}")
+    set(CPACK_RPM_PACKAGE_REQUIRES "libutils-op >= ${PROJECT_VERSION}")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libutils-op (>= ${PROJECT_VERSION})")
 elseif(UTILS_DEV_PACKAGE)
     set(CPACK_RPM_PACKAGE_REQUIRES "")
     set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
 else()
-    set(CPACK_RPM_PACKAGE_REQUIRES "libutils-dev >= ${PROJECT_VERSION}, openssl-libs")
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libutils-dev (>= ${PROJECT_VERSION}), libssl3")
+    set(CPACK_RPM_PACKAGE_REQUIRES "libutils-dev >= ${PROJECT_VERSION}, libutils-dev-${PREFIX} >= ${PROJECT_VERSION}, openssl-libs")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libutils-dev (>= ${PROJECT_VERSION}), libutils-dev-${PREFIX} (>= ${PROJECT_VERSION}), libssl3")
 endif()
 
 # RPM
@@ -308,7 +335,7 @@ set(CPACK_RPM_HEADERS_PACKAGE_NAME ${CPACK_PACKAGE_NAME})
 # Debian
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "TsukiNi22")
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/TsukiNi22/libutils")
-set(CPACK_DEB_LIB_PACKAGE_NAME ${CPACK_PACKAGE_NAME})
-set(CPACK_DEB_HEADERS_PACKAGE_NAME ${CPACK_PACKAGE_NAME})
+set(CPACK_DEBIAN_LIB_PACKAGE_NAME ${CPACK_PACKAGE_NAME})
+set(CPACK_DEBIAN_HEADERS_PACKAGE_NAME ${CPACK_PACKAGE_NAME})
 
 include(CPack)
