@@ -49,6 +49,9 @@ sudo cmake --build $BUILD_DIR --target install --parallel $(nproc)
 > [!WARNING]
 > Restriction: `fedora-based (rpm)`, `debian-based (deb)`
 
+> [!NOTE]
+> The usage of `sudo` in the script can be remove using `--no-sudo` argument
+
 Run the setup script directly, without cloning the repository manually. It's setup the different file to allow installing tools to handle the different package from libutils.
 
 ```bash

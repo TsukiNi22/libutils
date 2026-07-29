@@ -2,6 +2,31 @@
 set -euo pipefail
 
 BASE_URL="https://tsukini22.github.io/libutils"
+SUDO="sudo"
+
+# =========================
+# Parse arguments
+# =========================
+usage() {
+    echo "Usage: $0 [--no-sudo]"
+    echo "  --no-sudo   Run without sudo (requires the script to be run as root already)"
+    exit 1
+}
+ 
+for arg in "$@"; do
+    case "$arg" in
+        --no-sudo)
+            SUDO=""
+            ;;
+        -h|--help)
+            usage
+            ;;
+        *)²
+            echo "Error: unknown argument '$arg'" >&2
+            usage
+            ;;
+    esac
+done
 
 # =========================
 # Find the os
@@ -29,12 +54,12 @@ is_deb_based() {
 install_rpm_repo() {
     echo "Detected RPM-based system (ID=$OS_ID). Setting up libutils repo..."
 
-    sudo curl -fsSL -o /etc/yum.repos.d/libutils.repo \
+    $SUDO curl -fsSL -o /etc/yum.repos.d/libutils.repo \
         "$BASE_URL/libutils.repo"
 
-    sudo rpm --import "$BASE_URL/RPM-GPG-KEY-tsukini"
+    $SUDO rpm --import "$BASE_URL/RPM-GPG-KEY-tsukini"
 
-    echo "libutils repo installed. You can now run: sudo dnf install libutils"
+    echo "libutils repo installed. You can now run: $SUDO dnf install libutils"
 }
 
 # =========================
@@ -43,20 +68,20 @@ install_rpm_repo() {
 install_deb_repo() {
     echo "Detected DEB-based system (ID=$OS_ID). Setting up libutils repo..."
 
-    sudo install -m 0755 -d /etc/apt/keyrings
+    $SUDO install -m 0755 -d /etc/apt/keyrings
 
     curl -fsSL "$BASE_URL/RPM-GPG-KEY-tsukini" \
-        | gpg --dearmor | sudo tee /etc/apt/keyrings/libutils.gpg > /dev/null
-    sudo chmod a+r /etc/apt/keyrings/libutils.gpg
+        | gpg --dearmor | $SUDO tee /etc/apt/keyrings/libutils.gpg > /dev/null
+    $SUDO chmod a+r /etc/apt/keyrings/libutils.gpg
 
     ARCH="$(dpkg --print-architecture)"
 
     echo "deb [arch=${ARCH} signed-by=/etc/apt/keyrings/libutils.gpg] ${BASE_URL}/debian stable main" \
-        | sudo tee /etc/apt/sources.list.d/libutils.list > /dev/null
+        | $SUDO tee /etc/apt/sources.list.d/libutils.list > /dev/null
 
-    sudo apt-get update
+    $SUDO apt-get update
 
-    echo "libutils repo installed. You can now run: sudo apt install libutils"
+    echo "libutils repo installed. You can now run: $SUDO apt install libutils"
 }
 
 # =========================
