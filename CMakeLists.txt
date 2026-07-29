@@ -37,6 +37,7 @@ add_compile_options(
     -Wshadow
     -Wuninitialized
     -Wno-c++26-extensions
+    -Wno-c++23-extensions
 )
 
 # =========================
