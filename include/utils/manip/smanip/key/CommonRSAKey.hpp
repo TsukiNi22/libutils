@@ -1,0 +1,61 @@
+/**************************************************************\
+
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
+  ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
+  ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
+ ██╔╝ ██╗██║  ██║██║  ██║   ██║   ██║  ██║██║ ╚████║██║██║  ██║
+ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
+
+Edition:
+##  @date 30/07/2026 by @author Tsukini
+
+File Name:
+##  @file CommonRSAKey.hpp
+
+File Description:
+##  Declaration of the key used for the common RSA
+\**************************************************************/
+
+#ifndef COMMOMRSAKEY_H
+    #define COMMOMRSAKEY_H
+
+    //----------------------------------------------------------------//
+    /* INCLUDE */
+
+    /* type */
+    #include "../../../attribute/Attribute.hpp" // _cold, _nodiscard
+    #include "RSAKey.hpp"                       // utils::smanip::key::RSAKey
+    #include <string>                           // std::string
+
+    //----------------------------------------------------------------//
+    /* DEFINE */
+
+    /* default */
+    #define DEFAULT_COMMON_RSA_PATH "~/.ssh/common"
+
+namespace utils::smanip::key { // namespace start
+//----------------------------------------------------------------//
+/* CLASS */
+
+class CommonRSAKey: public utils::smanip::key::RSAKey {
+    public:
+        // ---------- Pre-Function -------- //
+        void loadCommon(std::string path = DEFAULT_COMMON_RSA_PATH);
+
+        // ------------ Operator ---------- //
+        CommonRSAKey& operator=(const CommonRSAKey& other) = delete;
+        CommonRSAKey& operator=(CommonRSAKey&& other) = delete;
+
+        // ---------- Constructor --------- //
+        CommonRSAKey() = default;
+        CommonRSAKey(std::string path) {this->loadCommon(path);};
+        CommonRSAKey(const CommonRSAKey& other) = delete;
+        CommonRSAKey(CommonRSAKey&& other) = delete;
+
+        // ----------- Destructor --------- //
+        virtual ~CommonRSAKey() = default;
+};
+
+} // namespace end
+#endif /* COMMOMRSAKEY_H */

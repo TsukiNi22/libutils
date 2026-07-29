@@ -58,6 +58,11 @@ set(SRC
     ## S - Manip (sub-part: parser)
     src/utils/manip/smanip/parser/EETPParser.cpp
 
+    ## S - Manip (sub-part: key)
+    src/utils/manip/smanip/key/AESKey.cpp
+    src/utils/manip/smanip/key/RSAKey.cpp
+    src/utils/manip/smanip/key/CommonRSAKey.cpp
+
     ## Math (sub-part: geometry)
     src/utils/math/geometry/Point.cpp
     src/utils/math/geometry/Angle.cpp

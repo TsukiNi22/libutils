@@ -65,6 +65,8 @@ enum class InternalCode: std::size_t {
     ANSIMouseEvent = 10836869605783267125ull,
     Codec = 8493933037809394222ull,
     InvalidCodec = 12193574205768740508ull,
+    Encryption = 4252739810962334721ull,
+    Decryption = 2433724839531566893ull,
     MiddlewareCall = 14307232079590726764ull,
     VectorInvalidIndex = 8853479528360895127ull,
     IdOverflow = 1572877478651931508ull,
@@ -109,6 +111,8 @@ inline const std::unordered_map<utils::exception::InternalCode, const char*> Int
     {utils::exception::InternalCode::ANSIMouseEvent, "Error during the read of the mouse event"},
     {utils::exception::InternalCode::Codec, "Error during the encoding/decoding of the given string"},
     {utils::exception::InternalCode::InvalidCodec, "The given codec is invalid and can't be used for the task"},
+    {utils::exception::InternalCode::Encryption, "Error during encryption or call of related methods"},
+    {utils::exception::InternalCode::Decryption, "Error during decryption or call of related methods"},
     {utils::exception::InternalCode::MiddlewareCall, "Error during a middleware call"},
     {utils::exception::InternalCode::VectorInvalidIndex, "Invalid index on a vector"},
     {utils::exception::InternalCode::IdOverflow, "Can't distribute an id, uint32_t limits are reach"},
@@ -153,6 +157,8 @@ inline const std::unordered_map<utils::exception::InternalCode, const char*> Int
     {utils::exception::InternalCode::ANSIMouseEvent, nullptr},
     {utils::exception::InternalCode::Codec, nullptr},
     {utils::exception::InternalCode::InvalidCodec, nullptr},
+    {utils::exception::InternalCode::Encryption, nullptr},
+    {utils::exception::InternalCode::Decryption, nullptr},
     {utils::exception::InternalCode::MiddlewareCall, nullptr},
     {utils::exception::InternalCode::VectorInvalidIndex, "Can't retrieve the value, the VectorX dosen't have this index"},
     {utils::exception::InternalCode::IdOverflow, nullptr},
@@ -202,6 +208,8 @@ inline const std::unordered_map<utils::exception::InternalCode, const std::uint8
     {utils::exception::InternalCode::ANSIMouseEvent, 0b0110}, // allow: Fatal, Error
     {utils::exception::InternalCode::Codec, 0b0110}, // allow: Fatal, Error
     {utils::exception::InternalCode::InvalidCodec, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::Encryption, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::Decryption, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::MiddlewareCall, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::VectorInvalidIndex, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::IdOverflow, 0b0110}, // allow: Fatal, Error
