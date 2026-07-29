@@ -10,7 +10,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Asan")
     if(NOT EXISTS "${_utils_libdir}/libutils_asan.a")
         message(FATAL_ERROR
             "The Asan version of libutils is not installed.\n"
-            "Please install the package 'libutils-as'."
+            "Please install the package 'libutils-as'.\n"
         )
     endif()
 
@@ -18,7 +18,7 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
     if(NOT EXISTS "${_utils_libdir}/libutils_debug.a")
         message(FATAL_ERROR
             "The Debug version of libutils is not installed.\n"
-            "Please install the package 'libutils-db'."
+            "Please install the package 'libutils-db'.\n"
         )
     endif()
 
@@ -27,7 +27,7 @@ else() # Default selection for noconfig
     if(NOT EXISTS "${_utils_libdir}/libutils.a")
         message(FATAL_ERROR
             "The Optimized version of libutils is not installed.\n"
-            "Please install the package 'libutils-op'."
+            "Please install the package 'libutils-op'.\n"
         )
     endif()
 endif()

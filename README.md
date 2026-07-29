@@ -17,8 +17,9 @@
 ## Packages
 
 | File Name | Content |
-| -------------- | ---------- |
-| `libutils-dev` | Contains all includes needed |
+| --------- | ------- |
+| `libutils` | Install the default packages (`libutils-dev`, `libutils-op`) |
+| `libutils-dev` | Contains all includes needed and cmake configuration |
 | `libutils-op` | Compiled with optimization options |
 | `libutils-db` | Compiled with debug options (intended for debugging only) |
 | `libutils-as` | Compiled with asan options (intended for debugging only) |

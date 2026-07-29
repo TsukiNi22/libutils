@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 ## [Unreleased]
+### Added
+- Better package handling with `apt` handling
+
 ### In Progress
 - A parser class to handle formating and parsing of the network communication
 - Network (Codec **OK**, Parser **KO**, Key **KO**, Client **KO**, Server **KO**)
