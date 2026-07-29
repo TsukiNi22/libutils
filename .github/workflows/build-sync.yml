@@ -148,7 +148,7 @@ jobs:
           mkdir -p "$DIST_DIR"
 
           # Generate Packages index
-          dpkg-scanpackages --arch amd64 pool/main > "$DIST_DIR/Packages"
+          dpkg-scanpackages pool/main /dev/null > "$DIST_DIR/Packages"
           gzip -k -f "$DIST_DIR/Packages"
           xz -k -f "$DIST_DIR/Packages"
 
