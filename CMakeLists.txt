@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
 set(TARGET utils)
-project(${TARGET} VERSION 2.0.0 LANGUAGES CXX)
+project(${TARGET} VERSION 2.1.0 LANGUAGES CXX)
 option(UTILS_DEV_PACKAGE "Build development package only" OFF)
+option(UTILS_PACKAGE "Build global package" OFF)
 
 # =========================
 # Compilateur & Standard
@@ -136,6 +137,8 @@ add_custom_target(package_release
     COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target package --parallel
     COMMAND ${CMAKE_COMMAND} -S ${CMAKE_SOURCE_DIR} -B ${CMAKE_BINARY_DIR} -DCMAKE_BUILD_TYPE=Optimized -DUTILS_DEV_PACKAGE=ON
     COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target package --parallel
+    COMMAND ${CMAKE_COMMAND} -S ${CMAKE_SOURCE_DIR} -B ${CMAKE_BINARY_DIR} -DCMAKE_BUILD_TYPE=Optimized -DUTILS_PACKAGE=ON
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target package --parallel
     COMMENT "Building both debug versions Debug & Asan (libutils-db, libutils-as) and Optimized (libutils-op) one with the header (libutils-dev)"
     VERBATIM
 )
@@ -173,6 +176,7 @@ target_link_options(${TARGET} PRIVATE
 # =========================
 # Installation
 # =========================
+if(NOT UTILS_PACKAGE)
 include(GNUInstallDirs) # load variable used for installation
 include(CMakePackageConfigHelpers)
 
@@ -205,12 +209,12 @@ install(EXPORT ${TARGET}Targets
     FILE ${TARGET}Targets.cmake
     NAMESPACE ${TARGET}::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
-    COMPONENT headers
+    COMPONENT lib
 )
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${TARGET}Config.cmake
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
-    COMPONENT headers
+    COMPONENT lib
 )
 
 configure_package_config_file(
@@ -219,6 +223,7 @@ configure_package_config_file(
     INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
 )
 
+endif()
 # =========================
 # Utils
 # =========================
@@ -233,14 +238,15 @@ add_custom_target(get_unregistered_files
 set(CPACK_PACKAGE_VENDOR "TsukiNi22")
 set(CPACK_PACKAGE_CONTACT "xartania.contact@gmail.com")
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
-
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
-set(CPACK_RPM_PACKAGE_LICENSE "MIT")
 
-set(CPACK_GENERATOR "RPM")
+set(CPACK_GENERATOR "RPM;DEB")
 
 # Setup the package name
-if(UTILS_DEV_PACKAGE)
+if(UTILS_PACKAGE)
+    set(CPACK_PACKAGE_NAME "libutils")
+    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (global)")
+elseif(UTILS_DEV_PACKAGE)
     set(CPACK_PACKAGE_NAME "libutils-dev")
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (headers)")
 elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -253,22 +259,57 @@ else()
     set(CPACK_PACKAGE_NAME "libutils-op")
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (optimized)")
 endif()
-set(CPACK_RPM_LIB_PACKAGE_NAME ${CPACK_PACKAGE_NAME})
-set(CPACK_RPM_HEADERS_PACKAGE_NAME ${CPACK_PACKAGE_NAME})
 
 # Separate headers & lib
 set(CPACK_RPM_COMPONENT_INSTALL ON)
-if(UTILS_DEV_PACKAGE)
+set(CPACK_DEB_COMPONENT_INSTALL ON)
+if(UTILS_PACKAGE)
+    set(CPACK_COMPONENTS_ALL "")
+    set(CPACK_COMPONENT_INCLUDE_TOPLEVEL_DIRECTORY OFF) # In case~
+elseif(UTILS_DEV_PACKAGE)
     set(CPACK_COMPONENTS_ALL headers)
 else()
     set(CPACK_COMPONENTS_ALL lib)
 endif()
 
 # Dependencies
-if(UTILS_DEV_PACKAGE)
-    set(CPACK_RPM_PACKAGE_REQUIRES "libutils-op >= ${PROJECT_VERSION}")
-else()
-    set(CPACK_RPM_PACKAGE_REQUIRES "libutils-dev >= ${PROJECT_VERSION}")
+if(UTILS_PACKAGE)
+    set(CPACK_PACKAGE_REQUIRES "libutils-dev >= ${PROJECT_VERSION}, libutils-op >= ${PROJECT_VERSION}, libutils-db >= ${PROJECT_VERSION}, libutils-as >= ${PROJECT_VERSION}")
+elseif(NOT UTILS_DEV_PACKAGE)
+    set(CPACK_PACKAGE_REQUIRES "libutils-dev >= ${PROJECT_VERSION}")
+endif()
+
+# RPM
+set(CPACK_RPM_PACKAGE_LICENSE "MIT")
+set(CPACK_RPM_LIB_PACKAGE_NAME ${CPACK_PACKAGE_NAME})
+set(CPACK_RPM_HEADERS_PACKAGE_NAME ${CPACK_PACKAGE_NAME})
+set(CPACK_RPM_PACKAGE_REQUIRES "${CPACK_PACKAGE_REQUIRES}")
+
+# Debian
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "TsukiNi22")
+set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/TsukiNi22/libutils")
+set(CPACK_DEB_LIB_PACKAGE_NAME ${CPACK_PACKAGE_NAME})
+set(CPACK_DEB_HEADERS_PACKAGE_NAME ${CPACK_PACKAGE_NAME})
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "${CPACK_PACKAGE_REQUIRES}")
+
+# Conflicts
+if(NOT UTILS_PACKAGE AND NOT UTILS_DEV_PACKAGE)
+    set(_ALL_LIB_VARIANTS "libutils-op" "libutils-db" "libutils-as")
+
+    # Remove self
+    set(_OTHER_VARIANTS ${_ALL_LIB_VARIANTS})
+    list(REMOVE_ITEM _OTHER_VARIANTS ${CPACK_PACKAGE_NAME})
+
+    # RPM
+    string(REPLACE ";" " " _OTHER_VARIANTS_RPM "${_OTHER_VARIANTS}")
+    set(CPACK_RPM_PACKAGE_CONFLICTS "${_OTHER_VARIANTS_RPM}")
+    set(CPACK_RPM_PACKAGE_OBSOLETES "${_OTHER_VARIANTS_RPM}")
+
+    # Debian
+    string(REPLACE ";" ", " _OTHER_VARIANTS_DEB "${_OTHER_VARIANTS}")
+    set(CPACK_DEBIAN_PACKAGE_CONFLICTS "${_OTHER_VARIANTS_DEB}")
+    set(CPACK_DEBIAN_PACKAGE_REPLACES "${_OTHER_VARIANTS_DEB}")
 endif()
 
 include(CPack)

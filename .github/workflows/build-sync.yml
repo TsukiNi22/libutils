@@ -58,6 +58,7 @@ jobs:
           name: compiled-packages
           path: |
             build/*.rpm
+            build/*.deb
 
   sync-online-packages:
     needs: build-packages
@@ -117,20 +118,62 @@ jobs:
             rpm -K "$f" | grep -q "signatures OK" || { echo "::error::$f not signed"; exit 1; }
           done
 
-      - name: Sync files into gh-pages
+      - name: Sync files into gh-pages (RPM)
         run: |
           set -euo pipefail
           REPO_DIR="gh-pages/fedora/44/x86_64"
           mkdir -p "$REPO_DIR" # Security
           mv build/*.rpm $REPO_DIR/
 
-      - name: Update metadata and signature
+      - name: Update metadata and signature (RPM)
         working-directory: gh-pages/fedora/44/x86_64
         run: |
           set -e
           createrepo_c --update .
           rm -f repodata/repomd.xml.asc
           gpg --batch --yes --pinentry-mode loopback --passphrase "${{ secrets.GPG_PASSPHRASE }}" --detach-sign --armor repodata/repomd.xml
+
+      - name: Sync files into gh-pages (DEB)
+        run: |
+          set -euo pipefail
+          POOL_DIR="gh-pages/debian/pool/main"
+          mkdir -p "$POOL_DIR"
+          mv build/*.deb "$POOL_DIR/"
+
+      - name: Update metadata and signature (DEB)
+        working-directory: gh-pages/debian
+        run: |
+          set -euo pipefail
+          DIST_DIR="dists/stable/main/binary-amd64"
+          mkdir -p "$DIST_DIR"
+
+          # Generate Packages index
+          dpkg-scanpackages --arch amd64 pool/main > "$DIST_DIR/Packages"
+          gzip -k -f "$DIST_DIR/Packages"
+          xz -k -f "$DIST_DIR/Packages"
+
+          # Generate Release file
+          cat > dists/stable/Release <<EOF
+          Origin: TsukiNi22
+          Label: libutils
+          Suite: stable
+          Codename: stable
+          Architectures: amd64
+          Components: main
+          Description: libutils APT repository
+          Date: $(date -Ru)
+          EOF
+
+          apt-ftparchive release dists/stable >> dists/stable/Release
+
+          # Sign the Release file
+          rm -f dists/stable/Release.gpg dists/stable/InRelease
+          gpg --batch --yes --pinentry-mode loopback --passphrase "${{ secrets.GPG_PASSPHRASE }}" \
+            --default-key "${{ secrets.GPG_KEY_ID }}" \
+            --detach-sign --armor -o dists/stable/Release.gpg dists/stable/Release
+          gpg --batch --yes --pinentry-mode loopback --passphrase "${{ secrets.GPG_PASSPHRASE }}" \
+            --default-key "${{ secrets.GPG_KEY_ID }}" \
+            --clearsign -o dists/stable/InRelease dists/stable/Release
 
       - name: Commit and push
         working-directory: gh-pages
