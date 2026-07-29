@@ -236,7 +236,10 @@ if(UTILS_DEV_PACKAGE)
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
         COMPONENT headers-as
     )
-    file(GLOB_RECURSE UTILS_EXPORT_FILES "${CMAKE_BINARY_DIR}/${EXPORT_PATH}/*/${TARGET}Targets-optimized.cmake")
+    file(GLOB_RECURSE UTILS_EXPORT_FILES
+        "${CMAKE_BINARY_DIR}/${EXPORT_PATH}/*/${TARGET}Targets-optimized.cmake"
+        "${CMAKE_BINARY_DIR}/${EXPORT_PATH}/*/${TARGET}Targets-noconfig.cmake" # No config select optimized by default
+    )
     install(
         FILES ${UTILS_EXPORT_FILES}
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
@@ -280,7 +283,7 @@ if(UTILS_PACKAGE)
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (global)")
 elseif(UTILS_DEV_PACKAGE)
     set(CPACK_PACKAGE_NAME "libutils-dev")
-    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (headers)")
+    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (headers/cmake)")
 elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(CPACK_PACKAGE_NAME "libutils-db")
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (debug)")
