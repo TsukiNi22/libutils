@@ -209,12 +209,26 @@ install(EXPORT ${TARGET}Targets
     FILE ${TARGET}Targets.cmake
     NAMESPACE ${TARGET}::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
-    COMPONENT lib
 )
+
+# Not SECURE!!!!!!!!!! Depends on the 'CMakeFiles/Export' path
+# Fuck EXPORT, Fuck Export/<hash>/, Fuck!!!!!!
+set(EXPORT_PATH "CMakeFiles/Export")
+if(UTILS_DEV_PACKAGE)
+    file(GLOB_RECURSE UTILS_EXPORT_FILES
+        "${CMAKE_BINARY_DIR}/${EXPORT_PATH}/*/${TARGET}Targets.cmake"
+        "${CMAKE_BINARY_DIR}/${EXPORT_PATH}/*/${TARGET}Targets-*.cmake"
+    )
+    install(
+        FILES ${UTILS_EXPORT_FILES}
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
+        COMPONENT headers
+    )
+endif()
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${TARGET}Config.cmake
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
-    COMPONENT lib
+    COMPONENT headers
 )
 
 configure_package_config_file(
@@ -295,24 +309,5 @@ set(CPACK_DEBIAN_PACKAGE_MAINTAINER "TsukiNi22")
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/TsukiNi22/libutils")
 set(CPACK_DEB_LIB_PACKAGE_NAME ${CPACK_PACKAGE_NAME})
 set(CPACK_DEB_HEADERS_PACKAGE_NAME ${CPACK_PACKAGE_NAME})
-
-# Conflicts
-if(NOT UTILS_PACKAGE AND NOT UTILS_DEV_PACKAGE)
-    set(_ALL_LIB_VARIANTS "libutils-op" "libutils-db" "libutils-as")
-
-    # Remove self
-    set(_OTHER_VARIANTS ${_ALL_LIB_VARIANTS})
-    list(REMOVE_ITEM _OTHER_VARIANTS ${CPACK_PACKAGE_NAME})
-
-    # RPM
-    string(REPLACE ";" " " _OTHER_VARIANTS_RPM "${_OTHER_VARIANTS}")
-    set(CPACK_RPM_PACKAGE_CONFLICTS "${_OTHER_VARIANTS_RPM}")
-    set(CPACK_RPM_PACKAGE_OBSOLETES "${_OTHER_VARIANTS_RPM}")
-
-    # Debian
-    string(REPLACE ";" ", " _OTHER_VARIANTS_DEB "${_OTHER_VARIANTS}")
-    set(CPACK_DEBIAN_PACKAGE_CONFLICTS "${_OTHER_VARIANTS_DEB}")
-    set(CPACK_DEBIAN_PACKAGE_REPLACES "${_OTHER_VARIANTS_DEB}")
-endif()
 
 include(CPack)
