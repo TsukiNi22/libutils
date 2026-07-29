@@ -21,7 +21,7 @@ for arg in "$@"; do
         -h|--help)
             usage
             ;;
-        *)²
+        *)
             echo "Error: unknown argument '$arg'" >&2
             usage
             ;;
