@@ -274,7 +274,7 @@ endif()
 
 # Dependencies
 if(UTILS_PACKAGE)
-    set(CPACK_PACKAGE_REQUIRES "libutils-dev >= ${PROJECT_VERSION}, libutils-op >= ${PROJECT_VERSION}, libutils-db >= ${PROJECT_VERSION}, libutils-as >= ${PROJECT_VERSION}")
+    set(CPACK_PACKAGE_REQUIRES "libutils-dev >= ${PROJECT_VERSION}, libutils-op >= ${PROJECT_VERSION}")
     set(CPACK_RPM_PACKAGE_REQUIRES "${CPACK_PACKAGE_REQUIRES}")
     set(CPACK_DEBIAN_PACKAGE_DEPENDS "${CPACK_PACKAGE_REQUIRES}")
 elseif(UTILS_DEV_PACKAGE)
