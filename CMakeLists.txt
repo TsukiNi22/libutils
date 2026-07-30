@@ -218,6 +218,12 @@ install(TARGETS ${TARGET}
 install(DIRECTORY include/
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     COMPONENT headers
+    PATTERN "*.in" EXCLUDE
+)
+
+install(DIRECTORY ${CMAKE_BINARY_DIR}/generated/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    COMPONENT headers
 )
 
 # CMake setup for find_package(utils CONFIG REQUIRED)
