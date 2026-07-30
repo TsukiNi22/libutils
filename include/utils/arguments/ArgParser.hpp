@@ -25,7 +25,7 @@ File Description:
 
     /* type */
     #include "../attribute/Attribute.hpp"               // nodicard, _unused
-    #include "../warning/Observer.hpp"                  // utils::warning::Observer
+    #include "../security/observer/Observer.hpp"                  // utils::security::observer::Observer
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::* (Type)
     #include "ArgParserType.hpp"                        // utils::arguments::* (Type)
@@ -55,7 +55,7 @@ inline std::optional<std::string> defaultTrueParsingHook(_unused const std::stri
 //----------------------------------------------------------------//
 /* CLASS */
 
-class ArgParser: private utils::warning::Observer {
+class ArgParser: private utils::security::observer::Observer {
     private:
         bool _help = true; // Enable/Disable -h default overwrite
         std::string _binary = "[None]";

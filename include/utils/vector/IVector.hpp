@@ -24,7 +24,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../warning/Observer.hpp"  // utils::warning::Observer
+    #include "../security/observer/Observer.hpp"  // utils::security::observer::Observer
     #include <cstddef>                  // std::size_t
 
 namespace utils::vector { // namespace start
@@ -32,7 +32,7 @@ namespace utils::vector { // namespace start
 /* CLASS */
 
 template<typename T>
-class IVector: private utils::warning::Observer {
+class IVector: private utils::security::observer::Observer {
     public:
         // ---------- Pre-Function -------- //
         virtual T get(std::size_t index) const = 0;

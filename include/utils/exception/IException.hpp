@@ -16,7 +16,7 @@ File Description:
     /* INCLUDE */
 
     /* type/class */
-    #include "../warning/UnsafeObserver.hpp"    // utils::warning::UnsafeObserver
+    #include "../security/observer/UnsafeObserver.hpp"    // utils::security::observer::UnsafeObserver
     #include "ExceptionDefine.hpp"              // utils::exception::InternalCode, utils::exception::type
     #include <source_location>                  // std::source_location
     #include <exception>                        // std::exception
@@ -26,7 +26,7 @@ namespace utils::exception { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-class IException: public std::exception, private utils::warning::UnsafeObserver {
+class IException: public std::exception, private utils::security::observer::UnsafeObserver {
     public:
         // --------- Pre-Function --------- //
         virtual utils::exception::Type getType(void) const noexcept = 0;

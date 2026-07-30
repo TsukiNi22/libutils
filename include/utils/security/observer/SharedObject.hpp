@@ -22,7 +22,7 @@ File Description:
     #include <string>           // std::string
     #include <mutex>            // std::mutex
 
-namespace utils::warning { // namespace start
+namespace utils::security::observer{ // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
@@ -56,12 +56,12 @@ class SharedObject {
 };
 } // namespace end
 
-namespace utils::warning::WarningInstance { // namespace start
+namespace utils::security::observer::WarningInstance { // namespace start
 //----------------------------------------------------------------//
 /* PROTOTYPE */
 
 // Global instance declaration
-extern utils::warning::SharedObject SharedObject;
+extern utils::security::observer::SharedObject SharedObject;
 
 } // namespace end
 #endif /* SHAREDOBJECT_H */

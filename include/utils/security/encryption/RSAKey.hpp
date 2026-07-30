@@ -11,52 +11,62 @@ Edition:
 ##  @date 30/07/2026 by @author Tsukini
 
 File Name:
-##  @file IKey.hpp
+##  @file RSAKey.hpp
 
 File Description:
-##  Declaration of the interface used for different key (RSA, AES, ...)
+##  Declaration of the key used for the RSA
 \**************************************************************/
 
-#ifndef IKEY_H
-    #define IKEY_H
+#ifndef RSAKEY_H
+    #define RSAKEY_H
 
     //----------------------------------------------------------------//
     /* INCLUDE */
 
     /* type */
-    #include <cstdint>  // std::uint16_t
-    #include <string>   // std::string
+    #include "../../attribute/Attribute.hpp"    // _cold, _nodiscard
+    #include "AKey.hpp"                         // utils::security::encryption::AKey
+    #include <string>                           // std::string
 
-namespace utils::smanip::key { // namespace start
+namespace utils::security::encryption { // namespace start
+//----------------------------------------------------------------//
+/* STRUCT */
+
+struct KeyPair {
+    std::string priv;
+    std::string pub;
+};
+
 //----------------------------------------------------------------//
 /* CLASS */
 
-template<typename T>
-class IKey {
+class RSAKey: public utils::security::encryption::AKey<utils::security::encryption::KeyPair> {
+    private:
+        utils::security::encryption::KeyPair _keys;
+
     public:
         // ---------- Pre-Function -------- //
-        virtual std::string generateRandomBytes(std::uint16_t size = 32) const = 0;
-        virtual void generate(void) = 0;
-        virtual void set(const T& data) = 0;
-        virtual std::string encrypt(const std::string& s) const = 0;
-        virtual std::string decrypt(const std::string& s) const = 0;
-        virtual std::string encrypt(const std::string& s, T& data) const = 0;
-        virtual std::string decrypt(const std::string& s, T& data) const = 0;
-        virtual bool hasGenerateOverload(void) const = 0;
-        virtual bool hasSetOverload(void) const = 0;
+        void generate(void) final;
+        std::string encrypt(const std::string& s) const final;
+        std::string decrypt(const std::string& s) const final;
+
+        // ------------ Function ---------- //
+        _hot void set(const utils::security::encryption::KeyPair& keys) final {this->_keys = keys;};
+        _cold _nodiscard bool hasGenerateOverload(void) const final {return true;};
+        _cold _nodiscard bool hasSetOverload(void) const final {return true;};
 
         // ------------ Operator ---------- //
-        IKey& operator=(const IKey& other) = delete;
-        IKey& operator=(IKey&& other) = delete;
+        RSAKey& operator=(const RSAKey& other) = delete;
+        RSAKey& operator=(RSAKey&& other) = delete;
 
         // ---------- Constructor --------- //
-        IKey() = default;
-        IKey(const IKey& other) = delete;
-        IKey(IKey&& other) = delete;
+        RSAKey() = default;
+        RSAKey(const RSAKey& other) = delete;
+        RSAKey(RSAKey&& other) = delete;
 
         // ----------- Destructor --------- //
-        virtual ~IKey() = default;
+        virtual ~RSAKey() = default;
 };
 
 } // namespace end
-#endif /* IKEY_H */
+#endif /* RSAKEY_H */

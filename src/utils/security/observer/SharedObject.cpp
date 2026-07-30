@@ -10,7 +10,7 @@ File Description:
 \**************************************************************/
 
 #include "utils/attribute/Attribute.hpp"
-#include "utils/warning/SharedObject.hpp"
+#include "utils/security/observer/SharedObject.hpp"
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/basic/WarningException.hpp"
 #include "utils/exception/basic/ErrorException.hpp"
@@ -22,12 +22,12 @@ File Description:
 #include <mutex>
 
 // Global warning instance
-utils::warning::SharedObject utils::warning::WarningInstance::SharedObject;
+utils::security::observer::SharedObject utils::security::observer::WarningInstance::SharedObject;
 
 // Used to locate the code
 static void fn(void) {/* Nothing */};
 
-_nodiscard std::string utils::warning::SharedObject::getOrigin(void)
+_nodiscard std::string utils::security::observer::SharedObject::getOrigin(void)
 {
     Dl_info info{};
 
@@ -44,7 +44,7 @@ _nodiscard std::string utils::warning::SharedObject::getOrigin(void)
     }
 }
 
-_nodiscard bool utils::warning::SharedObject::isSharedObject(void)
+_nodiscard bool utils::security::observer::SharedObject::isSharedObject(void)
 {
     // Try to get the orign
     std::string path = this->getOrigin();
@@ -52,7 +52,7 @@ _nodiscard bool utils::warning::SharedObject::isSharedObject(void)
     return path.ends_with(".so");
 }
 
-void utils::warning::SharedObject::link(const std::string& InstanceName, std::uint32_t& id, bool safe)
+void utils::security::observer::SharedObject::link(const std::string& InstanceName, std::uint32_t& id, bool safe)
 {
     if (!this->_isSharedObject) return;
     std::unique_lock<std::mutex> lock(this->_mutex, std::defer_lock);
@@ -81,7 +81,7 @@ void utils::warning::SharedObject::link(const std::string& InstanceName, std::ui
         throw utils::exception::ErrorException(utils::exception::InternalCode::UnknowId, "Can't attribute the id: 0");
 }
 
-void utils::warning::SharedObject::unlink(std::uint32_t id, bool safe)
+void utils::security::observer::SharedObject::unlink(std::uint32_t id, bool safe)
 {
     if (!this->_isSharedObject) return;
     std::unique_lock<std::mutex> lock(this->_mutex, std::defer_lock);
@@ -104,12 +104,12 @@ void utils::warning::SharedObject::unlink(std::uint32_t id, bool safe)
     this->_availableId.push_back(id);
 }
 
-utils::warning::SharedObject::SharedObject(void) noexcept
-: _isSharedObject{utils::warning::WarningInstance::SharedObject.isSharedObject()},
+utils::security::observer::SharedObject::SharedObject(void) noexcept
+: _isSharedObject{utils::security::observer::WarningInstance::SharedObject.isSharedObject()},
     _origin{this->getOrigin()}
 {}
 
-utils::warning::SharedObject::~SharedObject() noexcept
+utils::security::observer::SharedObject::~SharedObject() noexcept
 {
     if (!this->_isSharedObject) return;
 

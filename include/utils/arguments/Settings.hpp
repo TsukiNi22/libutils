@@ -25,7 +25,7 @@ File Description:
 
     /* type */
     #include "../attribute/Attribute.hpp"   // nodicard
-    #include "../warning/Observer.hpp"      // utils::warning::Observer
+    #include "../security/observer/Observer.hpp"      // utils::security::observer::Observer
     #include "SettingsDefine.hpp"           // utils::arguments::CastType
     #include "Setting.hpp"                  // utils::arguments::Setting
     #include <unordered_map>                // std::unordered_map
@@ -39,7 +39,7 @@ namespace utils::arguments { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-class Settings: private utils::warning::Observer {
+class Settings: private utils::security::observer::Observer {
     private:
         std::unordered_map<std::string, utils::arguments::Setting> _settings;
 

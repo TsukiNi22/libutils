@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 20/07/2026 by @author Tsukini
+##  @date 30/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Observer.hpp
@@ -16,12 +16,12 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"   // _nodiscard
-    #include "SharedObject.hpp"             // utils::warning::WarningInstance::SharedObject
-    #include <cstdint>                      // std::uint32_t
-    #include <string>                       // std::string
+    #include "../../attribute/Attribute.hpp"    // _nodiscard
+    #include "SharedObject.hpp"                 // utils::security::observer::WarningInstance::SharedObject
+    #include <cstdint>                          // std::uint32_t
+    #include <string>                           // std::string
 
-namespace utils::warning { // namespace start
+namespace utils::security::observer { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 

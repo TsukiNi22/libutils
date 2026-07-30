@@ -11,54 +11,52 @@ Edition:
 ##  @date 30/07/2026 by @author Tsukini
 
 File Name:
-##  @file AESKey.hpp
+##  @file IKey.hpp
 
 File Description:
-##  Declaration of the key used for the AES
+##  Declaration of the interface used for different key (RSA, AES, ...)
 \**************************************************************/
 
-#ifndef AESKEY_H
-    #define AESKEY_H
+#ifndef IKEY_H
+    #define IKEY_H
 
     //----------------------------------------------------------------//
     /* INCLUDE */
 
     /* type */
-    #include "../../../attribute/Attribute.hpp" // _cold, _nodiscard
-    #include "AKey.hpp"                         // utils::smanip::key::AKey
-    #include <string>                           // std::string
+    #include <cstdint>  // std::uint16_t
+    #include <string>   // std::string
 
-namespace utils::smanip::key { // namespace start
-//----------------------------------------------------------------//
-/* STRUCT */
-
-struct KeyAES {
-    std::string AES;
-    std::string iv;
-    std::string tag;
-};
-
+namespace utils::security::encryption { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-class AESKey: public utils::smanip::key::AKey<utils::smanip::key::KeyAES> {
+template<typename T>
+class IKey {
     public:
         // ---------- Pre-Function -------- //
-        std::string encrypt(const std::string& s, utils::smanip::key::KeyAES& key) const final;
-        std::string decrypt(const std::string& s, utils::smanip::key::KeyAES& key) const final;
+        virtual std::string generateRandomBytes(std::uint16_t size = 32) const = 0;
+        virtual void generate(void) = 0;
+        virtual void set(const T& data) = 0;
+        virtual std::string encrypt(const std::string& s) const = 0;
+        virtual std::string decrypt(const std::string& s) const = 0;
+        virtual std::string encrypt(const std::string& s, T& data) const = 0;
+        virtual std::string decrypt(const std::string& s, T& data) const = 0;
+        virtual bool hasGenerateOverload(void) const = 0;
+        virtual bool hasSetOverload(void) const = 0;
 
         // ------------ Operator ---------- //
-        AESKey& operator=(const AESKey& other) = delete;
-        AESKey& operator=(AESKey&& other) = delete;
+        IKey& operator=(const IKey& other) = delete;
+        IKey& operator=(IKey&& other) = delete;
 
         // ---------- Constructor --------- //
-        AESKey() = default;
-        AESKey(const AESKey& other) = delete;
-        AESKey(AESKey&& other) = delete;
+        IKey() = default;
+        IKey(const IKey& other) = delete;
+        IKey(IKey&& other) = delete;
 
         // ----------- Destructor --------- //
-        virtual ~AESKey() = default;
+        virtual ~IKey() = default;
 };
 
 } // namespace end
-#endif /* AESKEY_H */
+#endif /* IKEY_H */

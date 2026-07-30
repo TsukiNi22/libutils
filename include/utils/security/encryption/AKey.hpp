@@ -24,17 +24,17 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../../exception/ExceptionDefine.hpp"       // utils::exception::InternalCode::*
-    #include "../../../exception/basic/ErrorException.hpp"  // utils::exception::ErrorException
-    #include "../../../exception/custom/FatalException.hpp" // utils::exception::FatalException
-    #include "../../../attribute/Attribute.hpp"             // _cold, _nodiscard, _unused
-    #include "IKey.hpp"                                     // utils::smanip::key::IKey
+    #include "../../exception/ExceptionDefine.hpp"          // utils::exception::InternalCode::*
+    #include "../../exception/basic/ErrorException.hpp"     // utils::exception::ErrorException
+    #include "../../exception/custom/FatalException.hpp"    // utils::exception::FatalException
+    #include "../../attribute/Attribute.hpp"                // _cold, _nodiscard, _unused
+    #include "IKey.hpp"                                     // utils::security::encryption::IKey
     #include <openssl/rand.h>                               // RAND_bytes
     #include <cstdint>                                      // std::uint16_t, std::uint8_t
     #include <vector>                                       // std::vector
     #include <string>                                       // std::string
 
-namespace utils::smanip::key { // namespace start
+namespace utils::security::encryption { // namespace start
 //----------------------------------------------------------------//
 /* STATIC */
 
@@ -47,7 +47,7 @@ _hot _nodiscard static inline std::vector<std::uint8_t> stringToKey(const std::s
 
 // Definition of the AKey in case of no given definition for the one with or without 'key'
 template<typename T>
-class AKey: public utils::smanip::key::IKey<T> {
+class AKey: public utils::security::encryption::IKey<T> {
     public:
         /* tools */
         _hot _nodiscard std::string generateRandomBytes(std::uint16_t size) const final

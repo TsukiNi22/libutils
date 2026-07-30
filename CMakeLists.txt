@@ -59,11 +59,6 @@ set(SRC
     ## S - Manip (sub-part: parser)
     src/utils/manip/smanip/parser/EETPParser.cpp
 
-    ## S - Manip (sub-part: key)
-    src/utils/manip/smanip/key/AESKey.cpp
-    src/utils/manip/smanip/key/RSAKey.cpp
-    src/utils/manip/smanip/key/CommonRSAKey.cpp
-
     ## Math (sub-part: geometry)
     src/utils/math/geometry/Point.cpp
     src/utils/math/geometry/Angle.cpp
@@ -81,10 +76,15 @@ set(SRC
     src/utils/arguments/Hooks.cpp
     src/utils/arguments/Settings.cpp
 
-    ## Warning
-    src/utils/warning/Observer.cpp
-    src/utils/warning/UnsafeObserver.cpp
-    src/utils/warning/SharedObject.cpp
+    ## Security (sub-part: encryption)
+    src/utils/security/encryption/AESKey.cpp
+    src/utils/security/encryption/RSAKey.cpp
+    src/utils/security/encryption/CommonRSAKey.cpp
+
+    ## Security (sub-part: observer)
+    src/utils/security/observer/Observer.cpp
+    src/utils/security/observer/UnsafeObserver.cpp
+    src/utils/security/observer/SharedObject.cpp
 )
 add_library(${TARGET} STATIC ${SRC})
 #add_library(${TARGET} SHARED ${SRC})

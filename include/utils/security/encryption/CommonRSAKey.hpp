@@ -24,8 +24,8 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../../attribute/Attribute.hpp" // _cold, _nodiscard
-    #include "RSAKey.hpp"                       // utils::smanip::key::RSAKey
+    #include "../../attribute/Attribute.hpp"    // _cold, _nodiscard
+    #include "RSAKey.hpp"                       // utils::security::encryption::RSAKey
     #include <string>                           // std::string
 
     //----------------------------------------------------------------//
@@ -34,11 +34,11 @@ File Description:
     /* default */
     #define DEFAULT_COMMON_RSA_PATH "~/.ssh/common"
 
-namespace utils::smanip::key { // namespace start
+namespace utils::security::encryption { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-class CommonRSAKey: public utils::smanip::key::RSAKey {
+class CommonRSAKey: public utils::security::encryption::RSAKey {
     public:
         // ---------- Pre-Function -------- //
         void loadCommon(std::string path = DEFAULT_COMMON_RSA_PATH);

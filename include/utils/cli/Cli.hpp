@@ -24,7 +24,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../warning/Observer.hpp"          // utils::warning::Observer
+    #include "../security/observer/Observer.hpp"          // utils::security::observer::Observer
     #include "../middleware/Middlewares.hpp"    // utils::middleware::Middlewares
     #include "Flags.hpp"                        // utils::cli::Flag, flag preset macro
     #include <termios.h>                        // termios
@@ -73,7 +73,7 @@ bool defaultGetCHook(char& c);
 //----------------------------------------------------------------//
 /* CLASS */
 
-class Cli: private utils::warning::Observer {
+class Cli: private utils::security::observer::Observer {
     private:
         /* global data */
         termios _orig;

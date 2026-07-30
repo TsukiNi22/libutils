@@ -11,24 +11,32 @@ Edition:
 ##  @date 30/07/2026 by @author Tsukini
 
 File Name:
-##  @file Key.hpp
+##  @file RSAKey.hpp
 
 File Description:
-##  Include for all the different key
+##  Definition of the CommomRSA key methods
 \**************************************************************/
 
-#ifndef KEY_H
-    #define KEY_H
+#include "utils/attribute/Attribute.hpp"
+#include "utils/exception/ExceptionDefine.hpp"
+#include "utils/exception/basic/ErrorException.hpp"
+#include "utils/security/encryption/CommonRSAKey.hpp"
+#include <fstream>
+#include <sstream>
 
-    //----------------------------------------------------------------//
-    /* INCLUDE */
+_cold void utils::security::encryption::CommonRSAKey::loadCommon(std::string path)
+{
+    KeyPair keys;
 
-    /* interface */
-    #include "IKey.hpp" // utils::smanip::key::IKey
+    // Open the file
+    std::ifstream file(path, std::ios::binary);
+    if (!file)
+        throw utils::exception::ErrorException(utils::exception::InternalCode::Encryption, "Can't open the common RSA file: " + path);
 
-    /* keys */
-    #include "CommonRSAKey.hpp" // utils::smanip::key::CommonRSAKey
-    #include "RSAKey.hpp"       // utils::smanip::key::RSAKey
-    #include "AESKey.hpp"       // utils::smanip::key::AESKey
+    // Read the file
+    std::ostringstream ss;
+    ss << file.rdbuf();
+    keys.pub = ss.str();
 
-#endif /* KEY_H */
+    this->set(keys);
+}

@@ -20,16 +20,16 @@ File Description:
 #include "utils/attribute/Attribute.hpp"
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/basic/ErrorException.hpp"
-#include "utils/manip/smanip/key/AESKey.hpp"
+#include "utils/security/encryption/AESKey.hpp"
 #include <openssl/evp.h>
 #include <vector>
 #include <string>
 
-_hot _nodiscard std::string utils::smanip::key::AESKey::encrypt(const std::string& s, utils::smanip::key::KeyAES& key) const
+_hot _nodiscard std::string utils::security::encryption::AESKey::encrypt(const std::string& s, utils::security::encryption::KeyAES& key) const
 {
-    std::vector<std::uint8_t> data = utils::smanip::key::stringToKey(s);
-    std::vector<std::uint8_t> AES = utils::smanip::key::stringToKey(key.AES);
-    std::vector<std::uint8_t> iv = utils::smanip::key::stringToKey(key.iv);
+    std::vector<std::uint8_t> data = utils::security::encryption::stringToKey(s);
+    std::vector<std::uint8_t> AES = utils::security::encryption::stringToKey(key.AES);
+    std::vector<std::uint8_t> iv = utils::security::encryption::stringToKey(key.iv);
     std::vector<std::uint8_t> tag(16);
     std::vector<std::uint8_t> encryptedData(data.size() + 16);
     int total = 0, len = 0;
@@ -62,7 +62,7 @@ _hot _nodiscard std::string utils::smanip::key::AESKey::encrypt(const std::strin
         EVP_CIPHER_CTX_free(context);
         throw utils::exception::ErrorException(utils::exception::InternalCode::Encryption, "Tag error on AES encryption");
     }
-    key.tag = utils::smanip::key::keyToString(tag);
+    key.tag = utils::security::encryption::keyToString(tag);
 
     // Reduce the size of the vector to the right size
     encryptedData.resize(total);
@@ -70,15 +70,15 @@ _hot _nodiscard std::string utils::smanip::key::AESKey::encrypt(const std::strin
     // Clear
     EVP_CIPHER_CTX_free(context);
 
-    return utils::smanip::key::keyToString(encryptedData);
+    return utils::security::encryption::keyToString(encryptedData);
 }
 
-_hot _nodiscard std::string utils::smanip::key::AESKey::decrypt(const std::string& s, utils::smanip::key::KeyAES& key) const
+_hot _nodiscard std::string utils::security::encryption::AESKey::decrypt(const std::string& s, utils::security::encryption::KeyAES& key) const
 {
-    std::vector<std::uint8_t> encryptedData = utils::smanip::key::stringToKey(s);
-    std::vector<std::uint8_t> AES = utils::smanip::key::stringToKey(key.AES);
-    std::vector<std::uint8_t> iv = utils::smanip::key::stringToKey(key.iv);
-    std::vector<std::uint8_t> tag = utils::smanip::key::stringToKey(key.tag);
+    std::vector<std::uint8_t> encryptedData = utils::security::encryption::stringToKey(s);
+    std::vector<std::uint8_t> AES = utils::security::encryption::stringToKey(key.AES);
+    std::vector<std::uint8_t> iv = utils::security::encryption::stringToKey(key.iv);
+    std::vector<std::uint8_t> tag = utils::security::encryption::stringToKey(key.tag);
     std::vector<std::uint8_t> data(encryptedData.size());
     int total = 0, len = 0;
     
@@ -117,5 +117,5 @@ _hot _nodiscard std::string utils::smanip::key::AESKey::decrypt(const std::strin
     // Clear
     EVP_CIPHER_CTX_free(context);
     
-    return utils::smanip::key::keyToString(data);
+    return utils::security::encryption::keyToString(data);
 }

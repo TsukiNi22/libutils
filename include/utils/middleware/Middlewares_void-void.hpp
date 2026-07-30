@@ -24,7 +24,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../warning/Observer.hpp"                  // utils::warning::Observer
+    #include "../security/observer/Observer.hpp"                  // utils::security::observer::Observer
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::Type, utils::exception::InternalCode
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "MiddlewaresType.hpp"                      // utils::middleware::Middleware<...>
@@ -37,7 +37,7 @@ namespace utils::middleware { // namespace
 /* CLASS */
 
 template<>
-class Middlewares<void, void>: private utils::warning::Observer {
+class Middlewares<void, void>: private utils::security::observer::Observer {
     public:
         mutable std::shared_mutex _lock;
         std::vector<utils::middleware::Middleware<void>> before;

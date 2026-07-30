@@ -25,7 +25,7 @@ File Description:
 
     /* type */
     #include "../attribute/Attribute.hpp"               // _nodiscard, _unused
-    #include "../warning/Observer.hpp"                  // utils::warning::Observer
+    #include "../security/observer/Observer.hpp"                  // utils::security::observer::Observer
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "../exception/basic/WarningException.hpp"  // utils::exception::WarningException
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::* (Type)
@@ -45,7 +45,7 @@ template<
     typename EqualL = std::equal_to<L>,
     typename EqualR = std::equal_to<R>
 >
-class BidirectionalLookupTable: private utils::warning::Observer {
+class BidirectionalLookupTable: private utils::security::observer::Observer {
     private:
         bool _freezed = false; // Freeze the data edition (can't be disabled after being enable)
         std::unordered_map<L, R, HashL, EqualL> _left;

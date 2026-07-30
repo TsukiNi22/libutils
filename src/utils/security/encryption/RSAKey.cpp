@@ -11,16 +11,16 @@ Edition:
 ##  @date 30/07/2026 by @author Tsukini
 
 File Name:
-##  @file RSAKey.cpp
+##  @file RSAKey.hpp
 
 File Description:
-##  Definition of the RSA key methods (OpenSSL 3.0 EVP_PKEY API)
+##  Definition of the RSA key methods
 \**************************************************************/
 
 #include "utils/attribute/Attribute.hpp"
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/basic/ErrorException.hpp"
-#include "utils/manip/smanip/key/RSAKey.hpp"
+#include "utils/security/encryption/RSAKey.hpp"
 #include <openssl/evp.h>
 #include <openssl/bio.h>
 #include <openssl/pem.h>
@@ -30,30 +30,16 @@ File Description:
 #include <vector>
 #include <string>
 
-namespace {
-
+/* encapsulation using unique_ptr */
 using BioPtr = std::unique_ptr<BIO, decltype(&BIO_free)>;
 using PkeyPtr = std::unique_ptr<EVP_PKEY, decltype(&EVP_PKEY_free)>;
 using PkeyCtxPtr = std::unique_ptr<EVP_PKEY_CTX, decltype(&EVP_PKEY_CTX_free)>;
 
-inline BioPtr makeBio(BIO* bio)
-{
-    return BioPtr(bio, BIO_free);
-}
+inline BioPtr makeBio(BIO* bio) {return BioPtr(bio, BIO_free);}
+inline PkeyPtr makePkey(EVP_PKEY* pkey) {return PkeyPtr(pkey, EVP_PKEY_free);}
+inline PkeyCtxPtr makePkeyCtx(EVP_PKEY_CTX* ctx) {return PkeyCtxPtr(ctx, EVP_PKEY_CTX_free);}
 
-inline PkeyPtr makePkey(EVP_PKEY* pkey)
-{
-    return PkeyPtr(pkey, EVP_PKEY_free);
-}
-
-inline PkeyCtxPtr makePkeyCtx(EVP_PKEY_CTX* ctx)
-{
-    return PkeyCtxPtr(ctx, EVP_PKEY_CTX_free);
-}
-
-} // namespace
-
-_cold void utils::smanip::key::RSAKey::generate(void)
+_cold void utils::security::encryption::RSAKey::generate(void)
 {
     char* privData = nullptr;
     char* pubData = nullptr;
@@ -95,9 +81,9 @@ _cold void utils::smanip::key::RSAKey::generate(void)
     this->_keys.pub.assign(pubData, pubLen);
 }
 
-_hot _nodiscard std::string utils::smanip::key::RSAKey::encrypt(const std::string& s) const
+_hot _nodiscard std::string utils::security::encryption::RSAKey::encrypt(const std::string& s) const
 {
-    std::vector<std::uint8_t> data = utils::smanip::key::stringToKey(s);
+    std::vector<std::uint8_t> data = utils::security::encryption::stringToKey(s);
 
     // Convert the key string in PEM
     BioPtr pubBio = makeBio(BIO_new_mem_buf(this->_keys.pub.data(), static_cast<int>(this->_keys.pub.size())));
@@ -125,12 +111,12 @@ _hot _nodiscard std::string utils::smanip::key::RSAKey::encrypt(const std::strin
         throw utils::exception::ErrorException(utils::exception::InternalCode::Encryption, "Error during the RSA encryption of the data");
 
     encryptedData.resize(outLen);
-    return utils::smanip::key::keyToString(encryptedData);
+    return utils::security::encryption::keyToString(encryptedData);
 }
 
-_hot _nodiscard std::string utils::smanip::key::RSAKey::decrypt(const std::string& s) const
+_hot _nodiscard std::string utils::security::encryption::RSAKey::decrypt(const std::string& s) const
 {
-    std::vector<std::uint8_t> encryptedData = utils::smanip::key::stringToKey(s);
+    std::vector<std::uint8_t> encryptedData = utils::security::encryption::stringToKey(s);
 
     // Convert the key string in PEM
     BioPtr privBio = makeBio(BIO_new_mem_buf(this->_keys.priv.data(), static_cast<int>(this->_keys.priv.size())));
@@ -158,5 +144,5 @@ _hot _nodiscard std::string utils::smanip::key::RSAKey::decrypt(const std::strin
         throw utils::exception::ErrorException(utils::exception::InternalCode::Decryption, "Error during the RSA decryption of the data");
 
     data.resize(outLen);
-    return utils::smanip::key::keyToString(data);
+    return utils::security::encryption::keyToString(data);
 }

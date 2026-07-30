@@ -25,7 +25,7 @@ File Description:
 
     /* type */
     #include "../attribute/Attribute.hpp"               // nodicard
-    #include "../warning/Observer.hpp"                  // utils::warning::Observer
+    #include "../security/observer/Observer.hpp"                  // utils::security::observer::Observer
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::* (Type)
     #include <cxxabi.h>                                 // abi::__cxa_demangle
@@ -51,7 +51,7 @@ namespace utils::arguments { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-class Setting: private utils::warning::Observer {
+class Setting: private utils::security::observer::Observer {
     private:
         std::any _setting;
 

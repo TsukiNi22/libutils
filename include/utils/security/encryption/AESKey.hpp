@@ -11,62 +11,54 @@ Edition:
 ##  @date 30/07/2026 by @author Tsukini
 
 File Name:
-##  @file RSAKey.hpp
+##  @file AESKey.hpp
 
 File Description:
-##  Declaration of the key used for the RSA
+##  Declaration of the key used for the AES
 \**************************************************************/
 
-#ifndef RSAKEY_H
-    #define RSAKEY_H
+#ifndef AESKEY_H
+    #define AESKEY_H
 
     //----------------------------------------------------------------//
     /* INCLUDE */
 
     /* type */
-    #include "../../../attribute/Attribute.hpp" // _cold, _nodiscard
-    #include "AKey.hpp"                         // utils::smanip::key::AKey
+    #include "../../attribute/Attribute.hpp"    // _cold, _nodiscard
+    #include "AKey.hpp"                         // utils::security::encryption::AKey
     #include <string>                           // std::string
 
-namespace utils::smanip::key { // namespace start
+namespace utils::security::encryption { // namespace start
 //----------------------------------------------------------------//
 /* STRUCT */
 
-struct KeyPair {
-    std::string priv;
-    std::string pub;
+struct KeyAES {
+    std::string AES;
+    std::string iv;
+    std::string tag;
 };
 
 //----------------------------------------------------------------//
 /* CLASS */
 
-class RSAKey: public utils::smanip::key::AKey<utils::smanip::key::KeyPair> {
-    private:
-        utils::smanip::key::KeyPair _keys;
-
+class AESKey: public utils::security::encryption::AKey<utils::security::encryption::KeyAES> {
     public:
         // ---------- Pre-Function -------- //
-        void generate(void) final;
-        std::string encrypt(const std::string& s) const final;
-        std::string decrypt(const std::string& s) const final;
-
-        // ------------ Function ---------- //
-        _hot void set(const utils::smanip::key::KeyPair& keys) final {this->_keys = keys;};
-        _cold _nodiscard bool hasGenerateOverload(void) const final {return true;};
-        _cold _nodiscard bool hasSetOverload(void) const final {return true;};
+        std::string encrypt(const std::string& s, utils::security::encryption::KeyAES& key) const final;
+        std::string decrypt(const std::string& s, utils::security::encryption::KeyAES& key) const final;
 
         // ------------ Operator ---------- //
-        RSAKey& operator=(const RSAKey& other) = delete;
-        RSAKey& operator=(RSAKey&& other) = delete;
+        AESKey& operator=(const AESKey& other) = delete;
+        AESKey& operator=(AESKey&& other) = delete;
 
         // ---------- Constructor --------- //
-        RSAKey() = default;
-        RSAKey(const RSAKey& other) = delete;
-        RSAKey(RSAKey&& other) = delete;
+        AESKey() = default;
+        AESKey(const AESKey& other) = delete;
+        AESKey(AESKey&& other) = delete;
 
         // ----------- Destructor --------- //
-        virtual ~RSAKey() = default;
+        virtual ~AESKey() = default;
 };
 
 } // namespace end
-#endif /* RSAKEY_H */
+#endif /* AESKEY_H */
