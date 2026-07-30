@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 27/04/2026 by @author Tsukini
+##  @date 30/07/2026 by @author Tsukini
 
 File Name:
 ##  @file SharedObject.hpp
@@ -56,7 +56,7 @@ class SharedObject {
 };
 } // namespace end
 
-namespace utils::security::observer::WarningInstance { // namespace start
+namespace utils::security::observer::Instance { // namespace start
 //----------------------------------------------------------------//
 /* PROTOTYPE */
 

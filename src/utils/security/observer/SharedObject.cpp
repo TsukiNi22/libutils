@@ -22,7 +22,7 @@ File Description:
 #include <mutex>
 
 // Global warning instance
-utils::security::observer::SharedObject utils::security::observer::WarningInstance::SharedObject;
+utils::security::observer::SharedObject utils::security::observer::Instance::SharedObject;
 
 // Used to locate the code
 static void fn(void) {/* Nothing */};
@@ -105,7 +105,7 @@ void utils::security::observer::SharedObject::unlink(std::uint32_t id, bool safe
 }
 
 utils::security::observer::SharedObject::SharedObject(void) noexcept
-: _isSharedObject{utils::security::observer::WarningInstance::SharedObject.isSharedObject()},
+: _isSharedObject{utils::security::observer::Instance::SharedObject.isSharedObject()},
     _origin{this->getOrigin()}
 {}
 

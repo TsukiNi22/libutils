@@ -17,7 +17,7 @@ File Description:
 
     /* type */
     #include "../../attribute/Attribute.hpp"    // _nodiscard, _deprecated
-    #include "SharedObject.hpp"                 // utils::security::observer::WarningInstance::SharedObject
+    #include "SharedObject.hpp"                 // utils::security::observer::Instance::SharedObject
     #include <cstdint>                          // std::uint32_t
     #include <string>                           // std::string
 

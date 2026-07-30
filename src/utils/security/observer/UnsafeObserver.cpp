@@ -14,12 +14,12 @@ File Description:
 
 void utils::security::observer::UnsafeObserver::link(void)
 {
-    utils::security::observer::WarningInstance::SharedObject.link(this->getInstanceName(), this->_id, false);
+    utils::security::observer::Instance::SharedObject.link(this->getInstanceName(), this->_id, false);
 }
 
 void utils::security::observer::UnsafeObserver::unlink(void)
 {
-    utils::security::observer::WarningInstance::SharedObject.unlink(this->_id, false);
+    utils::security::observer::Instance::SharedObject.unlink(this->_id, false);
 }
 
 utils::security::observer::UnsafeObserver& utils::security::observer::UnsafeObserver::operator=(_unused const UnsafeObserver& other)

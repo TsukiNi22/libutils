@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 set(TARGET utils)
-project(${TARGET} VERSION 2.1.0 LANGUAGES CXX)
+project(${TARGET} VERSION 2.2.0 LANGUAGES CXX)
 option(UTILS_DEV_PACKAGE "Build development package only" OFF)
 option(UTILS_PACKAGE "Build global package" OFF)
 
@@ -161,6 +161,13 @@ target_link_libraries(${TARGET} PRIVATE OpenSSL::SSL OpenSSL::Crypto) # Network 
 target_include_directories(${TARGET} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
+
+# =========================
+# Macro/Define injection
+# =========================
+target_compile_definitions(${TARGET} PUBLIC
+    "__LIBUTILS_VERSION__=\"v${PROJECT_VERSION}\""
 )
 
 # =========================
