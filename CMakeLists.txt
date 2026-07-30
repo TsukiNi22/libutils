@@ -215,12 +215,10 @@ install(TARGETS ${TARGET}
 )
 
 # header
-if (CMAKE_BUILD_TYPE STREQUAL "Optimized" OR UTILS_DEV_PACKAGE)
-    install(DIRECTORY include/
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-        COMPONENT headers
-    )
-endif()
+install(DIRECTORY include/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    COMPONENT headers
+)
 
 # CMake setup for find_package(utils CONFIG REQUIRED)
 install(EXPORT ${TARGET}Targets
