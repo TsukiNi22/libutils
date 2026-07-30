@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 25/07/2026 by @author Tsukini
+##  @date 30/07/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -29,11 +29,15 @@ File Description:
 /* default: if nothing is defined - include everything */
 #if !defined(_Handling) && !defined(_Attribute) && !defined(_Tools) && \
     /* _Handling */\
-    !defined(_Exception) && !defined(_Write) && !defined(_Verbose) && !defined(_Arguments) && !defined(_Cli) && \
+    !defined(_Exception) && !defined(_Verbose) && !defined(_Arguments) && \
     /* _Tools */\
-    !defined(_BLT) && !defined(_Vector) && !defined(_Concepts) && !defined(_Middleware) && !defined(_Algorithms) && \
+    !defined(_BLT) && !defined(_Vector) && !defined(_Concepts) && !defined(_Middleware) && !defined(_Manip) && !defined(_Algorithms) && !defined(_Cli) && !defined(_Security) && \
+    /* _Manip */\
+    !defined(_IOManip) && !defined(_SManip) && \
     /* _Algorithms */\
-    !defined(_C2DMP) && !defined(_SOS)
+    !defined(_C2DMP) && !defined(_SOS) && \
+    /* _Security */\
+    !defined(_Encryption) && !defined(_Observer)
 
     #define _Utils
 #endif
@@ -48,10 +52,8 @@ File Description:
 /* Activate all handling include */
 #ifdef _Handling
     #define _Exception
-    #define _Manip
     #define _Verbose
     #define _Arguments
-    #define _Cli
 #endif
 
 /* Activate all tool include */
@@ -60,7 +62,10 @@ File Description:
     #define _Vector
     #define _Concepts
     #define _Middleware
+    #define _Manip
     #define _Algorithms
+    #define _Cli
+    #define _Security
 #endif
 
 /* Activate all manip include */
@@ -73,6 +78,12 @@ File Description:
 #ifdef _Algorithms
     #define _C2DMP
     #define _SOS
+#endif
+
+/* Activate all the security tools */
+#ifdef _Security
+    #define _Encryption
+    #define _Observer // This define is just to show the obervers exist (need hard import to use)
 #endif
 
 //----------------------------------------------------------------//
@@ -88,24 +99,6 @@ File Description:
     #include "exception/basic/WarningException.hpp" // utils::exception::WarningException
     #include "exception/custom/CustomException.hpp" // utils::exception::CustomException
     #include "exception/custom/FatalException.hpp"  // utils::exception::FatalException
-#endif
-
-/* Input/Output - Manip */
-#ifdef _IOManip
-    // -> Handling of input/output manipulation
-    // -> Define some special char & other, ANSI escape sequences, ...
-    #include "manip/iomanip/Color.hpp" // utils::iomanip::Color, utils::iomanip::BackColor
-    #include "manip/iomanip/Char.hpp"  // utils::iomanip::Char
-    #include "manip/iomanip/Style.hpp" // utils::iomanip::Style, utils::iomanip::ResetStyle
-    #include "manip/iomanip/ANSI.hpp"  // different inline function for ANSI escape sequences
-#endif
-
-/* String - Manip */
-#ifdef _SManip
-    // -> Handling of string manipulation
-    #include "manip/smanip/format.hpp"        // utils::smanip::format
-    #include "manip/smanip/codec/Codec.hpp"   // utils::smanip::codec::ICodec, utils::smanip::codec::*Codec
-    #include "manip/smanip/parser/Parser.hpp" // utils::smanip::parser::IParser, utils::smanip::parser::*Parser
 #endif
 
 /* Cli */
@@ -177,6 +170,24 @@ File Description:
     #include "arguments/SettingsDefine.hpp" // utils::arguments::CastType
 #endif
 
+/* Input/Output - Manip */
+#ifdef _IOManip
+    // -> Handling of input/output manipulation
+    // -> Define some special char & other, ANSI escape sequences, ...
+    #include "manip/iomanip/Color.hpp" // utils::iomanip::Color, utils::iomanip::BackColor
+    #include "manip/iomanip/Char.hpp"  // utils::iomanip::Char
+    #include "manip/iomanip/Style.hpp" // utils::iomanip::Style, utils::iomanip::ResetStyle
+    #include "manip/iomanip/ANSI.hpp"  // different inline function for ANSI escape sequences
+#endif
+
+/* String - Manip */
+#ifdef _SManip
+    // -> Handling of string manipulation
+    #include "manip/smanip/format.hpp"        // utils::smanip::format
+    #include "manip/smanip/codec/Codec.hpp"   // utils::smanip::codec::ICodec, utils::smanip::codec::*Codec
+    #include "manip/smanip/parser/Parser.hpp" // utils::smanip::parser::IParser, utils::smanip::parser::*Parser
+#endif
+
 /* c2dmp-hsm */
 #ifdef _C2DMP
     // -> c2dmp-hsm: heuristic string matching
@@ -195,3 +206,10 @@ File Description:
     #include "algorithms/sos/algorithm/extract_optimized.hpp"   // utils::algorithms::sos::sos_extract_optimized
     #include "algorithms/sos/tools/convert.hpp"                 // utils::algorithms::sos::to_bytes, utils::algorithms::sos::bytes_to
 #endif
+
+/* Security - Encryption */
+#ifdef _Encryption
+    // -> Handling of multiple encryption tools
+    #include "security/encryption/Key.hpp"  // utils::security::encryption::IKey<t>, utils::security::encryption::RSAKey/CommonRSAKey, utils::security::encryption::AESKey
+#endif
+
