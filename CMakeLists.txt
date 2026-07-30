@@ -164,10 +164,15 @@ target_include_directories(${TARGET} PUBLIC
 )
 
 # =========================
-# Macro/Define injection
+# Headers configuration
 # =========================
-target_compile_definitions(${TARGET} PUBLIC
-    "__LIBUTILS_VERSION__=\"v${PROJECT_VERSION}\""
+
+# version injection using @VAR@
+set(LIBUTILS_VERSION "v${PROJECT_VERSION}")
+configure_file(
+    ${CMAKE_SOURCE_DIR}/include/utils/version.hpp.in
+    ${CMAKE_BINARY_DIR}/generated/utils/version.hpp
+    @ONLY
 )
 
 # =========================
