@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 25/07/2026 by @author Tsukini
+##  @date 31/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Base64Codec.hpp

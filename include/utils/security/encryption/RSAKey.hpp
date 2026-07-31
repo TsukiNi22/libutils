@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 30/07/2026 by @author Tsukini
+##  @date 31/07/2026 by @author Tsukini
 
 File Name:
 ##  @file RSAKey.hpp
@@ -40,6 +40,9 @@ struct KeyPair {
 //----------------------------------------------------------------//
 /* CLASS */
 
+#ifndef NO_LINKER_WARNING
+    #warning "The -lssl and -lcrypto are needed to use the RSAKey"
+#endif
 class RSAKey: public utils::security::encryption::AKey<utils::security::encryption::KeyPair> {
     private:
         utils::security::encryption::KeyPair _keys;
