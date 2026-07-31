@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 25/07/2026 by @author Tsukini
+##  @date 31/07/2026 by @author Tsukini
 
 File Name:
 ##  @file BidirectionalLookupTable.hpp
@@ -25,7 +25,7 @@ File Description:
 
     /* type */
     #include "../attribute/Attribute.hpp"               // _nodiscard, _unused
-    #include "../security/observer/Observer.hpp"                  // utils::security::observer::Observer
+    #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
     #include "../exception/basic/WarningException.hpp"  // utils::exception::WarningException
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::* (Type)

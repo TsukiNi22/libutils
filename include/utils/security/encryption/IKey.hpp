@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 30/07/2026 by @author Tsukini
+##  @date 31/07/2026 by @author Tsukini
 
 File Name:
 ##  @file IKey.hpp
@@ -24,15 +24,16 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include <cstdint>  // std::uint16_t
-    #include <string>   // std::string
+    #include "../observer/Observer.hpp" // utils::security::observer::Observer
+    #include <cstdint>                  // std::uint16_t
+    #include <string>                   // std::string
 
 namespace utils::security::encryption { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
 template<typename T>
-class IKey {
+class IKey: private utils::security::observer::Observer {
     public:
         // ---------- Pre-Function -------- //
         virtual std::string generateRandomBytes(std::uint16_t size = 32) const = 0;

@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 26/07/2026 by @author Tsukini
+##  @date 31/07/2026 by @author Tsukini
 
 File Name:
 ##  @file IParser.hpp
@@ -24,14 +24,15 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include <string>   // std::string
+    #include "../../../security/observer/Observer.hpp"  // utils::security::observer::Observer
+    #include <string>                                   // std::string
 
 namespace utils::smanip::parser { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
 template<typename T>
-class IParser {
+class IParser: private utils::security::observer::Observer {
     public:
         // ---------- Pre-Function -------- //
         virtual std::string format(T content) const = 0;

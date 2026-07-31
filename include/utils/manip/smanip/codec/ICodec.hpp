@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 25/07/2026 by @author Tsukini
+##  @date 31/07/2026 by @author Tsukini
 
 File Name:
 ##  @file ICodec.hpp
@@ -24,13 +24,14 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include <string>   // std::string
+    #include "../../../security/observer/Observer.hpp"  // utils::security::observer::Observer
+    #include <string>                                   // std::string
 
 namespace utils::smanip::codec { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-class ICodec {
+class ICodec: private utils::security::observer::Observer {
     public:
         // ---------- Pre-Function -------- //
         // Could also be declared as 'static' but doesn't support polymorphism
