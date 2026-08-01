@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 31/07/2026 by @author Tsukini
+##  @date 01/08/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -214,6 +214,13 @@ File Description:
     #include "algorithms/sos/algorithm/embed_optimized.hpp"     // utils::algorithms::sos::sos_embed_optimized
     #include "algorithms/sos/algorithm/extract_optimized.hpp"   // utils::algorithms::sos::sos_extract_optimized
     #include "algorithms/sos/tools/convert.hpp"                 // utils::algorithms::sos::to_bytes, utils::algorithms::sos::bytes_to
+#endif
+
+
+/* Security */
+#ifdef _Security
+    // -> Handling of multiple security tools
+    #include "security/IdHandler.hpp"  // utils::security::IdHandler<t>
 #endif
 
 /* Security - Encryption */

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 set(TARGET utils)
-project(${TARGET} VERSION 2.2.0 LANGUAGES CXX)
+project(${TARGET} VERSION 2.3.0 LANGUAGES CXX)
 option(UTILS_DEV_PACKAGE "Build development package only" OFF)
 option(UTILS_PACKAGE "Build global package" OFF)
 
