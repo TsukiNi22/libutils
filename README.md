@@ -47,6 +47,11 @@ sudo cmake --build $BUILD_DIR --target install --parallel $(nproc)
 > Setup into `/usr`
 
 > [!WARNING]
+> If during the installation using tools like `dnf`, `apt`... you see an `invalid hash` error, reset the cache of the tool or relaunch the `setup.sh` script
+> 
+> If the error still persists, it might be due to an error in the repository
+
+> [!WARNING]
 > Restriction: `fedora-based (rpm)`, `debian-based (deb)`
 
 > [!NOTE]
