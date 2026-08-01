@@ -11,45 +11,40 @@ Edition:
 ##  @date 01/08/2026 by @author Tsukini
 
 File Name:
-##  @file ICodec.hpp
+##  @file fixed_string.hpp
 
 File Description:
-##  Declaration of the interface used for different codec (base64, ...)
+##  Fixed string used in template definition
 \**************************************************************/
 
-#ifndef ICODEC_H
-    #define ICODEC_H
+#ifndef FIXED_STRING_H
+    #define FIXED_STRING_H
 
     //----------------------------------------------------------------//
     /* INCLUDE */
 
     /* type */
-    #include "../../../security/observer/Observer.hpp"  // utils::security::observer::Observer
-    #include <string>                                   // std::string
+    #include "../../attribute/Attribute.hpp"    // _nodiscard
+    #include <string_view>                      // std::string_view
+    #include <algorithm>                        // std::copy_n
+    #include <cstddef>                          // std::size_t
 
-namespace utils::smanip::codec { // namespace start
+namespace utils::smanip { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-class ICodec: private utils::security::observer::Observer<"ICodec"> {
-    public:
-        // ---------- Pre-Function -------- //
-        // Could also be declared as 'static' but doesn't support polymorphism
-        virtual std::string encode(std::string s) const = 0;
-        virtual std::string decode(std::string s) const = 0;
-
-        // ------------ Operator ---------- //
-        ICodec& operator=(const ICodec& other) = delete;
-        ICodec& operator=(ICodec&& other) = delete;
-
-        // ---------- Constructor --------- //
-        ICodec() = default;
-        ICodec(const ICodec& other) = delete;
-        ICodec(ICodec&& other) = delete;
-
-        // ----------- Destructor --------- //
-        virtual ~ICodec() = default;
+template<std::size_t N>
+struct fixed_string
+{
+    char value[N]{};
+    consteval fixed_string(const char (&str)[N]) {std::copy_n(str, N, value);}
+    _nodiscard constexpr std::string_view view(void) const noexcept {return std::string_view(value, N - 1);}
+    _nodiscard constexpr std::size_t size(void) const noexcept {return N - 1;}
 };
 
+// Needed to deduce N without <...>
+template<std::size_t N>
+fixed_string(const char (&)[N]) -> fixed_string<N>;
+
 } // namespace end
-#endif /* ICODEC_H */
+#endif /* FIXED_STRING_H */

@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 06/07/2026 by @author Tsukini
+##  @date 01/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Cli.hpp
@@ -24,22 +24,22 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../security/observer/Observer.hpp"          // utils::security::observer::Observer
-    #include "../middleware/Middlewares.hpp"    // utils::middleware::Middlewares
-    #include "Flags.hpp"                        // utils::cli::Flag, flag preset macro
-    #include <termios.h>                        // termios
-    #include <unordered_map>                    // std::unordered_map
-    #include <shared_mutex>                     // std::shared_mutex, std::unique_lock, std::shared_lock
-    #include <functional>                       // std::function
-    #include <optional>                         // std::optional
-    #include <cstdint>                          // std::uint8_t, std::uint32_t
-    #include <thread>                           // std::thread
-    #include <atomic>                           // std::atomic
-    #include <vector>                           // std::vector
-    #include <string>                           // std::string
-    #include <mutex>                            // std::mutex, std::lock_guard
-    #include <tuple>                            // std::tuple
-    #include <queue>                            // std::queue
+    #include "../security/observer/Observer.hpp"    // utils::security::observer::Observer
+    #include "../middleware/Middlewares.hpp"        // utils::middleware::Middlewares
+    #include "Flags.hpp"                            // utils::cli::Flag, flag preset macro
+    #include <termios.h>                            // termios
+    #include <unordered_map>                        // std::unordered_map
+    #include <shared_mutex>                         // std::shared_mutex, std::unique_lock, std::shared_lock
+    #include <functional>                           // std::function
+    #include <optional>                             // std::optional
+    #include <cstdint>                              // std::uint8_t, std::uint32_t
+    #include <thread>                               // std::thread
+    #include <atomic>                               // std::atomic
+    #include <vector>                               // std::vector
+    #include <string>                               // std::string
+    #include <mutex>                                // std::mutex, std::lock_guard
+    #include <tuple>                                // std::tuple
+    #include <queue>                                // std::queue
 
     //----------------------------------------------------------------//
     /* DEFINE */
@@ -73,7 +73,7 @@ bool defaultGetCHook(char& c);
 //----------------------------------------------------------------//
 /* CLASS */
 
-class Cli: private utils::security::observer::Observer {
+class Cli: private utils::security::observer::Observer<"Cli"> {
     private:
         /* global data */
         termios _orig;

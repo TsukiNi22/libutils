@@ -82,9 +82,9 @@ set(SRC
     src/utils/security/encryption/CommonRSAKey.cpp
 
     ## Security (sub-part: observer)
-    src/utils/security/observer/Observer.cpp
-    src/utils/security/observer/UnsafeObserver.cpp
-    src/utils/security/observer/SharedObject.cpp
+    src/utils/security/observer/Instances.cpp
+    src/utils/security/observer/ANotifier.cpp
+    src/utils/security/observer/MemoryLeakNotifier.cpp
 )
 add_library(${TARGET} STATIC ${SRC})
 #add_library(${TARGET} SHARED ${SRC})

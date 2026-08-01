@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 30/07/2026 by @author Tsukini
+##  @date 31/07/2026 by @author Tsukini
 
 File Name:
 ##  @file Observer.hpp
@@ -16,38 +16,28 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../attribute/Attribute.hpp"    // _nodiscard
-    #include "SharedObject.hpp"                 // utils::security::observer::Instance::SharedObject
-    #include <cstdint>                          // std::uint32_t
-    #include <string>                           // std::string
+    #include "../../manip/smanip/fixed_string.hpp"  // utils::smanip::fixed_string
+    #include "AObserver.hpp"                        // utils::security::observer::AObserver
+    #include <string>                               // std::string
 
 namespace utils::security::observer { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-class Observer {
-    private:
-        std::uint32_t _id = 0;
-
-        // ---------- Pre-Function -------- //
-        void link(void);
-        void unlink(void);
-
-        // ------------ Function ---------- //
-        _nodiscard inline const std::string getInstanceName(void) const noexcept {return "[Unknow]";};
-
+template<utils::smanip::fixed_string __instance__>
+class Observer: public utils::security::observer::AObserver<__instance__, true> {
     public:
         // ------------ Operator ---------- //
-        Observer& operator=(const Observer& other);
-        Observer& operator=(Observer&& other);
+        Observer& operator=(const Observer& other) = default;
+        Observer& operator=(Observer&& other) = default;
 
         // ---------- Constructor --------- //
-        explicit Observer();
-        Observer(const Observer& other);
-        Observer(Observer&& other);
+        Observer() = default;
+        Observer(const Observer& other) = default;
+        Observer(Observer&& other) = default;
 
         // ----------- Destructor --------- //
-        ~Observer();
+        ~Observer() = default;
 };
 
 } // namespace end

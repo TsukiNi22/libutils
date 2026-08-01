@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 31/07/2026 by @author Tsukini
+##  @date 01/08/2026 by @author Tsukini
 
 File Name:
 ##  @file IKey.hpp
@@ -33,7 +33,7 @@ namespace utils::security::encryption { // namespace start
 /* CLASS */
 
 template<typename T>
-class IKey: private utils::security::observer::Observer {
+class IKey: private utils::security::observer::Observer<"IKey"> {
     public:
         // ---------- Pre-Function -------- //
         virtual std::string generateRandomBytes(std::uint16_t size = 32) const = 0;

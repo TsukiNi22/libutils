@@ -9,7 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### In Progress
 - A parser class to handle formating and parsing of the network communication
-- Network (Codec **OK**, Key **OK**, Parser **KO**, Socket **OK**, Client **KO**, Server **KO**)
+- Network (Codec **OK**, Key **OK**, Parser **OK**, Socket **OK**, Client **KO**, Server **KO**)
+
+## [v2.2.0] - 2026-08-01
+### Changed
+- **[MAJOR]** Rework the whole `observer` system
+- The section `warning` became `security`
 
 ## [v2.1.0] - 2026-07-29
 ### Added
@@ -37,7 +42,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial version of the utils library with multiple tools (see [README-1.0.0](https://github.com/TsukiNi22/libutils/blob/v1.0.0/README.md) for more details)
 
-[Unreleased]: https://github.com/TsukiNi22/libutils/compare/v2.1.0...HEAD
+[Unreleased]: https://github.com/TsukiNi22/libutils/compare/v2.2.0...HEAD
+[v2.2.0]: https://github.com/TsukiNi22/libutils/compare/v2.1.0...v2.2.0
 [v2.1.0]: https://github.com/TsukiNi22/libutils/compare/v2.0.0...v2.1.0
 [v2.0.0]: https://github.com/TsukiNi22/libutils/compare/v1.0.0...v2.0.0
 [v1.0.0]: https://github.com/TsukiNi22/libutils/releases/tag/v1.0.0

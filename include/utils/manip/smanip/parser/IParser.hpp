@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 31/07/2026 by @author Tsukini
+##  @date 01/08/2026 by @author Tsukini
 
 File Name:
 ##  @file IParser.hpp
@@ -32,7 +32,7 @@ namespace utils::smanip::parser { // namespace start
 /* CLASS */
 
 template<typename T>
-class IParser: private utils::security::observer::Observer {
+class IParser: private utils::security::observer::Observer<"IParser"> {
     public:
         // ---------- Pre-Function -------- //
         virtual std::string format(T content) const = 0;

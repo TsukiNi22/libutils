@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 06/07/2026 by @author Tsukini
+##  @date 01/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Middlewares.hpp
@@ -24,7 +24,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../security/observer/Observer.hpp"                  // utils::security::observer::Observer
+    #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::Type, utils::exception::InternalCode
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "MiddlewaresType.hpp"                      // utils::middleware::Middleware<...>
@@ -37,7 +37,7 @@ namespace utils::middleware { // namespace
 /* CLASS */
 
 template<typename T>
-class Middlewares<T, void>: private utils::security::observer::Observer {
+class Middlewares<T, void>: private utils::security::observer::Observer<"Middlewares"> {
     public:
         mutable std::shared_mutex _lock;
         std::vector<utils::middleware::Middleware<T>> before;

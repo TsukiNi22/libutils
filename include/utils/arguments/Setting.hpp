@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 20/07/2026 by @author Tsukini
+##  @date 01/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Setting.hpp
@@ -25,7 +25,7 @@ File Description:
 
     /* type */
     #include "../attribute/Attribute.hpp"               // nodicard
-    #include "../security/observer/Observer.hpp"                  // utils::security::observer::Observer
+    #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::* (Type)
     #include <cxxabi.h>                                 // abi::__cxa_demangle
@@ -51,7 +51,7 @@ namespace utils::arguments { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-class Setting: private utils::security::observer::Observer {
+class Setting: private utils::security::observer::Observer<"Setting"> {
     private:
         std::any _setting;
 

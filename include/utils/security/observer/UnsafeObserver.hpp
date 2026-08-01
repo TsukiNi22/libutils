@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 30/07/2026 by @author Tsukini
+##  @date 01/08/2026 by @author Tsukini
 
 File Name:
 ##  @file UnsafeObserver.hpp
@@ -16,39 +16,27 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../attribute/Attribute.hpp"    // _nodiscard, _deprecated
-    #include "SharedObject.hpp"                 // utils::security::observer::Instance::SharedObject
-    #include <cstdint>                          // std::uint32_t
-    #include <string>                           // std::string
+    #include "../../manip/smanip/fixed_string.hpp"  // utils::smanip::fixed_string
+    #include "AObserver.hpp"                        // utils::security::observer::AObserver
 
-namespace utils::security::observer{ // namespace start
+namespace utils::security::observer { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-//class _deprecated("UnsafeObserver dosen't have any memory safty (Be careful!!!)") UnsafeObserver {
-class UnsafeObserver {
-    private:
-        std::uint32_t _id = 0;
-
-        // ---------- Pre-Function -------- //
-        void link(void);
-        void unlink(void);
-
-        // ------------ Function ---------- //
-        _nodiscard inline const std::string getInstanceName(void) const noexcept {return "[Unknow]";};
-
+template<utils::smanip::fixed_string __instance__>
+class UnsafeObserver: public utils::security::observer::AObserver<__instance__, false> {
     public:
         // ------------ Operator ---------- //
-        UnsafeObserver& operator=(const UnsafeObserver& other);
-        UnsafeObserver& operator=(UnsafeObserver&& other);
+        UnsafeObserver& operator=(const UnsafeObserver& other) = default;
+        UnsafeObserver& operator=(UnsafeObserver&& other) = default;
 
         // ---------- Constructor --------- //
-        explicit UnsafeObserver();
-        UnsafeObserver(const UnsafeObserver& other);
-        UnsafeObserver(UnsafeObserver&& other);
+        UnsafeObserver() = default;
+        UnsafeObserver(const UnsafeObserver& other) = default;
+        UnsafeObserver(UnsafeObserver&& other) = default;
 
         // ----------- Destructor --------- //
-        ~UnsafeObserver();
+        ~UnsafeObserver() = default;
 };
 
 } // namespace end

@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 31/07/2026 by @author Tsukini
+##  @date 01/08/2026 by @author Tsukini
 
 File Name:
 ##  @file BidirectionalLookupTable.hpp
@@ -48,7 +48,7 @@ template<
     typename Hash,
     typename Equal
 >
-class BidirectionalLookupTable<T, T, Hash, Hash, Equal, Equal>: private utils::security::observer::Observer {
+class BidirectionalLookupTable<T, T, Hash, Hash, Equal, Equal>: private utils::security::observer::Observer<"BidirectionalLookupTable"> {
     private:
         bool _freezed = false; // Freeze the data edition (can't be disabled after being enable)
         std::unordered_map<T, T, Hash, Equal> _table;

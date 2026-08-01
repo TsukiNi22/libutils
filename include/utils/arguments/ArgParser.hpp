@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 16/07/2026 by @author Tsukini
+##  @date 01/08/2026 by @author Tsukini
 
 File Name:
 ##  @file ArgParser.hpp
@@ -25,7 +25,7 @@ File Description:
 
     /* type */
     #include "../attribute/Attribute.hpp"               // nodicard, _unused
-    #include "../security/observer/Observer.hpp"                  // utils::security::observer::Observer
+    #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::* (Type)
     #include "ArgParserType.hpp"                        // utils::arguments::* (Type)
@@ -55,7 +55,7 @@ inline std::optional<std::string> defaultTrueParsingHook(_unused const std::stri
 //----------------------------------------------------------------//
 /* CLASS */
 
-class ArgParser: private utils::security::observer::Observer {
+class ArgParser: private utils::security::observer::Observer<"ArgParser"> {
     private:
         bool _help = true; // Enable/Disable -h default overwrite
         std::string _binary = "[None]";

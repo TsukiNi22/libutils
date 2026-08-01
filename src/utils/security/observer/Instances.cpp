@@ -11,44 +11,24 @@ Edition:
 ##  @date 01/08/2026 by @author Tsukini
 
 File Name:
-##  @file IVector.hpp
+##  @file Instances.cpp
 
 File Description:
-##  Interface for the cutomized vector
+##  Declaration fo the physic version for the observer statique instances
 \**************************************************************/
 
-#ifndef IVECTOR_H
-    #define IVECTOR_H
+#include "utils/security/observer/Instances.hpp"
+#include "utils/security/observer/INotifier.hpp"
+#include "utils/security/observer/MemoryLeakNotifier.hpp"
+#include "utils/security/IdHandler.hpp"
+#include <cstdint>
+#include <memory>
+#include <array>
 
-    //----------------------------------------------------------------//
-    /* INCLUDE */
+/* id distributor */
+utils::security::IdHandler<std::uint64_t> utils::security::observer::instances::IdHandler;
 
-    /* type */
-    #include "../security/observer/Observer.hpp"    // utils::security::observer::Observer
-    #include <cstddef>                              // std::size_t
-
-namespace utils::vector { // namespace start
-//----------------------------------------------------------------//
-/* CLASS */
-
-template<typename T>
-class IVector: private utils::security::observer::Observer<"IVector"> {
-    public:
-        // ---------- Pre-Function -------- //
-        virtual T get(std::size_t index) const = 0;
-
-        // ------------ Operator ---------- //
-        IVector& operator=(const IVector& other) = default;
-        IVector& operator=(IVector&& other) = default;
-
-        // ---------- Constructor --------- //
-        IVector() = default;
-        IVector(const IVector& other) = default;
-        IVector(IVector&& other) = default;
-
-        // ----------- Destructor --------- //
-        virtual ~IVector() = default;
+/* different notifiers to link/unlink */
+std::array<std::unique_ptr<utils::security::observer::INotifier>, 1> utils::security::observer::instances::Notifiers = {
+        std::make_unique<utils::security::observer::MemoryLeakNotifier>(),
 };
-
-} // namespace end
-#endif /* IVECTOR_H */

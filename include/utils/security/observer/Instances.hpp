@@ -11,45 +11,34 @@ Edition:
 ##  @date 01/08/2026 by @author Tsukini
 
 File Name:
-##  @file ICodec.hpp
+##  @file Instances.hpp
 
 File Description:
-##  Declaration of the interface used for different codec (base64, ...)
+##  Different static instance used by the observer
 \**************************************************************/
 
-#ifndef ICODEC_H
-    #define ICODEC_H
+#ifndef INSTANCES_H
+    #define INSTANCES_H
 
     //----------------------------------------------------------------//
     /* INCLUDE */
 
     /* type */
-    #include "../../../security/observer/Observer.hpp"  // utils::security::observer::Observer
-    #include <string>                                   // std::string
+    #include "../IdHandler.hpp" // utils::security::IdHandler
+    #include "INotifier.hpp"    // utils::security::observer::INotifier
+    #include <cstdint>          // std::uint64_t
+    #include <memory>           // std::unique_ptr, std::make_unique
+    #include <array>            // std::array
 
-namespace utils::smanip::codec { // namespace start
+namespace utils::security::observer::instances { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-class ICodec: private utils::security::observer::Observer<"ICodec"> {
-    public:
-        // ---------- Pre-Function -------- //
-        // Could also be declared as 'static' but doesn't support polymorphism
-        virtual std::string encode(std::string s) const = 0;
-        virtual std::string decode(std::string s) const = 0;
+/* id distributor */
+extern utils::security::IdHandler<std::uint64_t> IdHandler;
 
-        // ------------ Operator ---------- //
-        ICodec& operator=(const ICodec& other) = delete;
-        ICodec& operator=(ICodec&& other) = delete;
-
-        // ---------- Constructor --------- //
-        ICodec() = default;
-        ICodec(const ICodec& other) = delete;
-        ICodec(ICodec&& other) = delete;
-
-        // ----------- Destructor --------- //
-        virtual ~ICodec() = default;
-};
+/* different notifiers to link/unlink */
+extern std::array<std::unique_ptr<utils::security::observer::INotifier>, 1> Notifiers;
 
 } // namespace end
-#endif /* ICODEC_H */
+#endif /* INSTANCES_H */

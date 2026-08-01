@@ -32,16 +32,8 @@ File Description:
     #define NO_DEPRECATED_WARNING // _deprecated(...)
     #define NO_LINKER_WARNING // Linker requirement
     #define NO_USAGE_WARNING // Things that should be used carfully
-    //#define NO_SHARED_OBJECT_WARNING // shared object
     //#warning "All warnings from 'utils/utils.hpp' are disable"
 #endif
-
-/*
-// Disabling of the auto warning for shared other
-#if defined(NO_SHARED_OBJECT_WARNING) && !defined(_NoWarning)
-    #warning "Automatic shared object warnings from 'utils/utils.hpp' are disable"
-#endif
-*/
 
 /* default: if nothing is defined - include everything */
 #if !defined(_Handling) && !defined(_Attribute) && !defined(_Tools) && \

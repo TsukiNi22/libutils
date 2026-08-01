@@ -14,16 +14,6 @@
             "code": "InvalidCodec",
             "message": "The given codec is invalid and can't be used for the task",
             "restrictions": ["Fatal", "Error", "Warning"]
-        },
-        {
-            "code": "Encryption",
-            "message": "Error during encryption or call of related methods",
-            "restrictions": ["Fatal", "Error", "Warning"]
-        },
-        {
-            "code": "Decryption",
-            "message": "Error during decryption or call of related methods",
-            "restrictions": ["Fatal", "Error", "Warning"]
         }
     ]
 }

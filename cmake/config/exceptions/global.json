@@ -26,6 +26,16 @@
             "restrictions": ["Fatal", "Error", "Warning"]
         },
         {
+            "code": "IdOverflow",
+            "message": "Can't distribute an id, type's limits are reach",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "InvalidId",
+            "message": "Try to do thing with an invalid id",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
             "code": "UnknowId",
             "message": "Try to do thing with an unknow id",
             "restrictions": ["Fatal", "Error", "Warning"]
@@ -53,12 +63,12 @@
         {
             "code": "BadCast",
             "message": "Invalid cast between from a type to another",
-            "restrictions": ["Fatal", "Error"]
+            "restrictions": ["Fatal", "Error", "Warning"]
         },
         {
             "code": "UnknowCast",
             "message": "Unknow cast type, can't proceed",
-            "restrictions": ["Fatal", "Error"]
+            "restrictions": ["Fatal", "Error", "Warning"]
         }
     ]
 }

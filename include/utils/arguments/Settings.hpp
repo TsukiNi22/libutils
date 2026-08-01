@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 31/07/2026 by @author Tsukini
+##  @date 01/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Settings.hpp
@@ -24,22 +24,22 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"   // nodicard
-    #include "../security/observer/Observer.hpp"      // utils::security::observer::Observer
-    #include "SettingsDefine.hpp"           // utils::arguments::CastType
-    #include "Setting.hpp"                  // utils::arguments::Setting
-    #include <unordered_map>                // std::unordered_map
-    #include <filesystem>                   // std::filesystem::path
+    #include "../attribute/Attribute.hpp"           // _nodicard
+    #include "../security/observer/Observer.hpp"    // utils::security::observer::Observer
+    #include "SettingsDefine.hpp"                   // utils::arguments::CastType
+    #include "Setting.hpp"                          // utils::arguments::Setting
+    #include <unordered_map>                        // std::unordered_map
+    #include <filesystem>                           // std::filesystem::path
     //#include <cstdfloat> -> handled by SettingsDefine
-    #include <cstddef>                      // std::* (type)
-    #include <cstdint>                      // std::* (type)
-    #include <string>                       // std::string
+    #include <cstddef>                              // std::* (type)
+    #include <cstdint>                              // std::* (type)
+    #include <string>                               // std::string
 
 namespace utils::arguments { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-class Settings: private utils::security::observer::Observer {
+class Settings: private utils::security::observer::Observer<"Settings"> {
     private:
         std::unordered_map<std::string, utils::arguments::Setting> _settings;
 

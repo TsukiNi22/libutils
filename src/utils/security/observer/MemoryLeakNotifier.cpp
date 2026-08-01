@@ -11,44 +11,29 @@ Edition:
 ##  @date 01/08/2026 by @author Tsukini
 
 File Name:
-##  @file IVector.hpp
+##  @file MemoryLeakNotifier.cpp
 
 File Description:
-##  Interface for the cutomized vector
+##  Declaration of the memory leak notifier destructor
 \**************************************************************/
 
-#ifndef IVECTOR_H
-    #define IVECTOR_H
+#include "utils/attribute/Attribute.hpp"
+#include "utils/security/observer/MemoryLeakNotifier.hpp"
+#include <iostream>
+#include <sstream>
 
-    //----------------------------------------------------------------//
-    /* INCLUDE */
+_cold utils::security::observer::MemoryLeakNotifier::~MemoryLeakNotifier() noexcept
+{
+    // Check for instance existance
+    if (this->_links.empty()) return;
 
-    /* type */
-    #include "../security/observer/Observer.hpp"    // utils::security::observer::Observer
-    #include <cstddef>                              // std::size_t
+    // Build the warning message
+    std::ostringstream oss;
+    oss << "[WARNING] Memory leak detected (origin: " << this->_origin << ")" << std::endl;
+    oss << "-- At least one instance wasn't properly closed --" << std::endl;
+    for (const auto& [id, instance]: this->_links)
+        oss << "  " << id << " - " << instance << std::endl;
 
-namespace utils::vector { // namespace start
-//----------------------------------------------------------------//
-/* CLASS */
-
-template<typename T>
-class IVector: private utils::security::observer::Observer<"IVector"> {
-    public:
-        // ---------- Pre-Function -------- //
-        virtual T get(std::size_t index) const = 0;
-
-        // ------------ Operator ---------- //
-        IVector& operator=(const IVector& other) = default;
-        IVector& operator=(IVector&& other) = default;
-
-        // ---------- Constructor --------- //
-        IVector() = default;
-        IVector(const IVector& other) = default;
-        IVector(IVector&& other) = default;
-
-        // ----------- Destructor --------- //
-        virtual ~IVector() = default;
-};
-
-} // namespace end
-#endif /* IVECTOR_H */
+    // Display warning
+    std::cerr << oss.str();
+}

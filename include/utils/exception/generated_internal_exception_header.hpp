@@ -35,6 +35,8 @@ enum class InternalCode: std::size_t {
     UndefinedCall = 15097308567882920903ull,
     UnauthorizedCall = 3720002318170871484ull,
     InvalidArgument = 14302005046670700621ull,
+    IdOverflow = 1572877478651931508ull,
+    InvalidId = 10375048954888942450ull,
     UnknowId = 17915614998283872035ull,
     UnknowKey = 4176992470892457883ull,
     Override = 6821003438930377415ull,
@@ -65,12 +67,11 @@ enum class InternalCode: std::size_t {
     ANSIMouseEvent = 10836869605783267125ull,
     Codec = 8493933037809394222ull,
     InvalidCodec = 12193574205768740508ull,
-    Encryption = 4252739810962334721ull,
-    Decryption = 2433724839531566893ull,
     MiddlewareCall = 14307232079590726764ull,
     VectorInvalidIndex = 8853479528360895127ull,
-    IdOverflow = 1572877478651931508ull,
     SharedObject = 2691419733905123322ull,
+    Encryption = 4252739810962334721ull,
+    Decryption = 2433724839531566893ull,
 };
 
 /* Corresponding exception message for each code */
@@ -81,6 +82,8 @@ inline const std::unordered_map<utils::exception::InternalCode, const char*> Int
     {utils::exception::InternalCode::UndefinedCall, "This function is not defined and was left as-is"},
     {utils::exception::InternalCode::UnauthorizedCall, "Can't allow the call to this function"},
     {utils::exception::InternalCode::InvalidArgument, "Invalid argument value"},
+    {utils::exception::InternalCode::IdOverflow, "Can't distribute an id, type's limits are reach"},
+    {utils::exception::InternalCode::InvalidId, "Try to do thing with an invalid id"},
     {utils::exception::InternalCode::UnknowId, "Try to do thing with an unknow id"},
     {utils::exception::InternalCode::UnknowKey, "Try to do thing with an unknow key"},
     {utils::exception::InternalCode::Override, "The override is desactivated"},
@@ -111,12 +114,11 @@ inline const std::unordered_map<utils::exception::InternalCode, const char*> Int
     {utils::exception::InternalCode::ANSIMouseEvent, "Error during the read of the mouse event"},
     {utils::exception::InternalCode::Codec, "Error during the encoding/decoding of the given string"},
     {utils::exception::InternalCode::InvalidCodec, "The given codec is invalid and can't be used for the task"},
-    {utils::exception::InternalCode::Encryption, "Error during encryption or call of related methods"},
-    {utils::exception::InternalCode::Decryption, "Error during decryption or call of related methods"},
     {utils::exception::InternalCode::MiddlewareCall, "Error during a middleware call"},
     {utils::exception::InternalCode::VectorInvalidIndex, "Invalid index on a vector"},
-    {utils::exception::InternalCode::IdOverflow, "Can't distribute an id, uint32_t limits are reach"},
     {utils::exception::InternalCode::SharedObject, "An object created with dynamic code that was free is still alive"},
+    {utils::exception::InternalCode::Encryption, "Error during encryption or call of related methods"},
+    {utils::exception::InternalCode::Decryption, "Error during decryption or call of related methods"},
 };
 
 /* Potential default info: nullptr same as "[None]" */
@@ -127,6 +129,8 @@ inline const std::unordered_map<utils::exception::InternalCode, const char*> Int
     {utils::exception::InternalCode::UndefinedCall, nullptr},
     {utils::exception::InternalCode::UnauthorizedCall, nullptr},
     {utils::exception::InternalCode::InvalidArgument, nullptr},
+    {utils::exception::InternalCode::IdOverflow, nullptr},
+    {utils::exception::InternalCode::InvalidId, nullptr},
     {utils::exception::InternalCode::UnknowId, nullptr},
     {utils::exception::InternalCode::UnknowKey, nullptr},
     {utils::exception::InternalCode::Override, nullptr},
@@ -157,12 +161,11 @@ inline const std::unordered_map<utils::exception::InternalCode, const char*> Int
     {utils::exception::InternalCode::ANSIMouseEvent, nullptr},
     {utils::exception::InternalCode::Codec, nullptr},
     {utils::exception::InternalCode::InvalidCodec, nullptr},
-    {utils::exception::InternalCode::Encryption, nullptr},
-    {utils::exception::InternalCode::Decryption, nullptr},
     {utils::exception::InternalCode::MiddlewareCall, nullptr},
     {utils::exception::InternalCode::VectorInvalidIndex, "Can't retrieve the value, the VectorX dosen't have this index"},
-    {utils::exception::InternalCode::IdOverflow, nullptr},
     {utils::exception::InternalCode::SharedObject, nullptr},
+    {utils::exception::InternalCode::Encryption, nullptr},
+    {utils::exception::InternalCode::Decryption, nullptr},
 };
 
 /* Potential restriction on exception code */
@@ -178,13 +181,15 @@ inline const std::unordered_map<utils::exception::InternalCode, const std::uint8
     {utils::exception::InternalCode::UndefinedCall, 0b0110}, // allow: Fatal, Error
     {utils::exception::InternalCode::UnauthorizedCall, 0b0110}, // allow: Fatal, Error
     {utils::exception::InternalCode::InvalidArgument, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::IdOverflow, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::InvalidId, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::UnknowId, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::UnknowKey, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::Override, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::OutOfBounds, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::Freezed, 0b1110}, // allow: Fatal, Error, Warning
-    {utils::exception::InternalCode::BadCast, 0b0110}, // allow: Fatal, Error
-    {utils::exception::InternalCode::UnknowCast, 0b0110}, // allow: Fatal, Error
+    {utils::exception::InternalCode::BadCast, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::UnknowCast, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::ArgumentsNumber, 0b0110}, // allow: Fatal, Error
     {utils::exception::InternalCode::OptionIngored, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::UnknowFlag, 0b1110}, // allow: Fatal, Error, Warning
@@ -208,12 +213,11 @@ inline const std::unordered_map<utils::exception::InternalCode, const std::uint8
     {utils::exception::InternalCode::ANSIMouseEvent, 0b0110}, // allow: Fatal, Error
     {utils::exception::InternalCode::Codec, 0b0110}, // allow: Fatal, Error
     {utils::exception::InternalCode::InvalidCodec, 0b1110}, // allow: Fatal, Error, Warning
-    {utils::exception::InternalCode::Encryption, 0b1110}, // allow: Fatal, Error, Warning
-    {utils::exception::InternalCode::Decryption, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::MiddlewareCall, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::VectorInvalidIndex, 0b1110}, // allow: Fatal, Error, Warning
-    {utils::exception::InternalCode::IdOverflow, 0b0110}, // allow: Fatal, Error
     {utils::exception::InternalCode::SharedObject, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::Encryption, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::Decryption, 0b1110}, // allow: Fatal, Error, Warning
 };
 
 // Check at the compile time the correspondece between the message & code
