@@ -1,0 +1,49 @@
+{
+    "errors": [
+        {
+            "code": "InvalidFd",
+            "message": "Invalid file descriptor was used",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "SocketInit",
+            "message": "Error during the socket initialisation",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "Socket",
+            "message": "Error during the socket execution",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "SocketClosed",
+            "message": "Socket closed",
+            "restrictions": ["None"]
+        },
+        {
+            "code": "Communication",
+            "message": "Error during the communication process",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "InvalidAction",
+            "message": "This action isn't allowed has this user",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "Handshake",
+            "message": "Error during the handshake",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "Poll",
+            "message": "Error during the poll call",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "ServerAccept",
+            "message": "Error during the accept call",
+            "restrictions": ["Fatal", "Error"]
+        }
+    ]
+}

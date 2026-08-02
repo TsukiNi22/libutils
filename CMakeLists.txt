@@ -76,6 +76,10 @@ set(SRC
     src/utils/arguments/Hooks.cpp
     src/utils/arguments/Settings.cpp
 
+    ## Network (sub-part: socket)
+    src/utils/network/socket/ASocket.cpp
+    src/utils/network/socket/TCPSocket.cpp
+
     ## Security (sub-part: encryption)
     src/utils/security/encryption/AESKey.cpp
     src/utils/security/encryption/RSAKey.cpp

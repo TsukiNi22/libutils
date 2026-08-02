@@ -72,6 +72,15 @@ enum class InternalCode: std::size_t {
     SharedObject = 2691419733905123322ull,
     Encryption = 4252739810962334721ull,
     Decryption = 2433724839531566893ull,
+    InvalidFd = 5356102046450859601ull,
+    SocketInit = 17411882895864781294ull,
+    Socket = 11431498909535298487ull,
+    SocketClosed = 13843876870238713071ull,
+    Communication = 10242704490233558186ull,
+    InvalidAction = 475142727023128836ull,
+    Handshake = 8506078914172758669ull,
+    Poll = 10479593496226847378ull,
+    ServerAccept = 7692696117884009656ull,
 };
 
 /* Corresponding exception message for each code */
@@ -119,6 +128,15 @@ inline const std::unordered_map<utils::exception::InternalCode, const char*> Int
     {utils::exception::InternalCode::SharedObject, "An object created with dynamic code that was free is still alive"},
     {utils::exception::InternalCode::Encryption, "Error during encryption or call of related methods"},
     {utils::exception::InternalCode::Decryption, "Error during decryption or call of related methods"},
+    {utils::exception::InternalCode::InvalidFd, "Invalid file descriptor was used"},
+    {utils::exception::InternalCode::SocketInit, "Error during the socket initialisation"},
+    {utils::exception::InternalCode::Socket, "Error during the socket execution"},
+    {utils::exception::InternalCode::SocketClosed, "Socket closed"},
+    {utils::exception::InternalCode::Communication, "Error during the communication process"},
+    {utils::exception::InternalCode::InvalidAction, "This action isn't allowed has this user"},
+    {utils::exception::InternalCode::Handshake, "Error during the handshake"},
+    {utils::exception::InternalCode::Poll, "Error during the poll call"},
+    {utils::exception::InternalCode::ServerAccept, "Error during the accept call"},
 };
 
 /* Potential default info: nullptr same as "[None]" */
@@ -166,6 +184,15 @@ inline const std::unordered_map<utils::exception::InternalCode, const char*> Int
     {utils::exception::InternalCode::SharedObject, nullptr},
     {utils::exception::InternalCode::Encryption, nullptr},
     {utils::exception::InternalCode::Decryption, nullptr},
+    {utils::exception::InternalCode::InvalidFd, nullptr},
+    {utils::exception::InternalCode::SocketInit, nullptr},
+    {utils::exception::InternalCode::Socket, nullptr},
+    {utils::exception::InternalCode::SocketClosed, nullptr},
+    {utils::exception::InternalCode::Communication, nullptr},
+    {utils::exception::InternalCode::InvalidAction, nullptr},
+    {utils::exception::InternalCode::Handshake, nullptr},
+    {utils::exception::InternalCode::Poll, nullptr},
+    {utils::exception::InternalCode::ServerAccept, nullptr},
 };
 
 /* Potential restriction on exception code */
@@ -218,6 +245,15 @@ inline const std::unordered_map<utils::exception::InternalCode, const std::uint8
     {utils::exception::InternalCode::SharedObject, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::Encryption, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::Decryption, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::InvalidFd, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::SocketInit, 0b0110}, // allow: Fatal, Error
+    {utils::exception::InternalCode::Socket, 0b0110}, // allow: Fatal, Error
+    {utils::exception::InternalCode::SocketClosed, 0b0001}, // allow: None
+    {utils::exception::InternalCode::Communication, 0b0110}, // allow: Fatal, Error
+    {utils::exception::InternalCode::InvalidAction, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::Handshake, 0b0110}, // allow: Fatal, Error
+    {utils::exception::InternalCode::Poll, 0b0110}, // allow: Fatal, Error
+    {utils::exception::InternalCode::ServerAccept, 0b0110}, // allow: Fatal, Error
 };
 
 // Check at the compile time the correspondece between the message & code

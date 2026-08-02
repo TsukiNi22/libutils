@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 01/08/2026 by @author Tsukini
+##  @date 02/08/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -38,9 +38,11 @@ File Description:
 /* default: if nothing is defined - include everything */
 #if !defined(_Handling) && !defined(_Attribute) && !defined(_Tools) && \
     /* _Handling */\
-    !defined(_Exception) && !defined(_Verbose) && !defined(_Arguments) && \
+    !defined(_Exception) && !defined(_Verbose) && !defined(_Arguments) && !defined(_Network) && \
     /* _Tools */\
     !defined(_BLT) && !defined(_Vector) && !defined(_Concepts) && !defined(_Middleware) && !defined(_Manip) && !defined(_Algorithms) && !defined(_Cli) && !defined(_Security) && \
+    /* _Network */\
+    !defined(_Socket) && \
     /* _Manip */\
     !defined(_IOManip) && !defined(_SManip) && \
     /* _Algorithms */\
@@ -63,6 +65,7 @@ File Description:
     #define _Exception
     #define _Verbose
     #define _Arguments
+    #define _Network
 #endif
 
 /* Activate all tool include */
@@ -77,7 +80,12 @@ File Description:
     #define _Security
 #endif
 
-/* Activate all manip include */
+/* Activate all network sub-include */
+#ifdef _Network
+    #define _Socket
+#endif
+
+/* Activate all manip sub-include */
 #ifdef _Manip
     #define _IOManip
     #define _SManip
@@ -160,13 +168,6 @@ File Description:
 #ifdef _Middleware
     // -> Middlewares handling
     #include "middleware/Middlewares.hpp"   // utils::middleware::Middleware<...>, utils::middleware::Middlewares<...>
-    /*
-    #include "middleware/MiddlewaresType.hpp"       // utils::middleware::Middleware<...>
-    #include "middleware/Middlewares_t-t.hpp"       // utils::middleware::Middlewares<T, U>
-    #include "middleware/Middlewares_t-void.hpp"    // utils::middleware::Middlewares<T, void>
-    #include "middleware/Middlewares_void-t.hpp"    // utils::middleware::Middlewares<void, T>
-    #include "middleware/Middlewares_void-void.hpp" // utils::middleware::Middlewares<void, void>
-    */
 #endif
 
 /* Arguments */
@@ -177,6 +178,20 @@ File Description:
     #include "arguments/ArgParserType.hpp"  // utils::arguments::* (Type)
     #include "arguments/Settings.hpp"       // utils::arguments::Settings (Setting are sub class not public and indidualy used)
     #include "arguments/SettingsDefine.hpp" // utils::arguments::CastType
+#endif
+
+/* Network */
+#ifdef _Network
+    // -> Handling of global network handling
+    // -> Define some special limits and default values
+    #include "network/NetworkDefine.hpp"    // different macro et define
+    #include "network/NetworkType.hpp"      // different type used for network
+#endif
+
+/* Network - Socket */
+#ifdef _Socket
+    // -> Handling of socket handling
+    #include "network/socket/Socket.hpp"    // utils::network::socket::ISocket, utils::network::socket::TCPSocket
 #endif
 
 /* Input/Output - Manip */
@@ -215,7 +230,6 @@ File Description:
     #include "algorithms/sos/algorithm/extract_optimized.hpp"   // utils::algorithms::sos::sos_extract_optimized
     #include "algorithms/sos/tools/convert.hpp"                 // utils::algorithms::sos::to_bytes, utils::algorithms::sos::bytes_to
 #endif
-
 
 /* Security */
 #ifdef _Security

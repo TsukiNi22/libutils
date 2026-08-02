@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 16/07/2026 by @author Tsukini
+##  @date 02/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Verbose.hpp
@@ -40,14 +40,14 @@ File Description:
     /* verbose display */
     #define onBasicVerbose(info)    {LOCK_STDOUT; if (static_cast<std::size_t>(utils::verbose::verbose) >= static_cast<std::size_t>(utils::verbose::Verbose::Basic))    std::cout << info << std::endl;}
     #define onAdvancedVerbose(info) {LOCK_STDOUT; if (static_cast<std::size_t>(utils::verbose::verbose) >= static_cast<std::size_t>(utils::verbose::Verbose::Advanced)) std::cout << info << std::endl;}
-    #define onDebugVerbose(info)    {LOCK_STDOUT; if (static_cast<std::size_t>(utils::verbose::verbose) >= static_cast<std::size_t>(utils::verbose::Verbose::Debug))    std::cout << "debug: " <<  info << std::endl;}
-    #define onVerbose(level, info)  {LOCK_STDOUT; if (static_cast<std::size_t>(utils::verbose::verbose) >= static_cast<std::size_t>(level))                    std::cout << info << std::endl;}
+    #define onDebugVerbose(info)    {LOCK_STDOUT; if (static_cast<std::size_t>(utils::verbose::verbose) >= static_cast<std::size_t>(utils::verbose::Verbose::Debug))    std::cout << "debug: " << info << std::endl;}
+    #define onVerbose(level, info)  {LOCK_STDOUT; if (static_cast<std::size_t>(utils::verbose::verbose) >= static_cast<std::size_t>(level))                             std::cout << info << std::endl;}
 
     /* verbose execution */
     #define onBasicVerboseFn(fn)    {LOCK_STDOUT; if (static_cast<std::size_t>(utils::verbose::verbose) >= static_cast<std::size_t>(utils::verbose::Verbose::Basic))    {fn}}
     #define onAdvancedVerboseFn(fn) {LOCK_STDOUT; if (static_cast<std::size_t>(utils::verbose::verbose) >= static_cast<std::size_t>(utils::verbose::Verbose::Advanced)) {fn}}
     #define onDebugVerboseFn(fn)    {LOCK_STDOUT; if (static_cast<std::size_t>(utils::verbose::verbose) >= static_cast<std::size_t>(utils::verbose::Verbose::Debug))    {fn}}
-    #define onVerboseFn(level, fn)  {LOCK_STDOUT; if (static_cast<std::size_t>(utils::verbose::verbose) >= static_cast<std::size_t>(level))                    {fn}}
+    #define onVerboseFn(level, fn)  {LOCK_STDOUT; if (static_cast<std::size_t>(utils::verbose::verbose) >= static_cast<std::size_t>(level))                             {fn}}
 
 namespace utils::verbose { // namespace start
 //----------------------------------------------------------------//
