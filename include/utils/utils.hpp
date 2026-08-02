@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 02/08/2026 by @author Tsukini
+##  @date 03/08/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -33,6 +33,17 @@ File Description:
     #define NO_LINKER_WARNING // Linker requirement
     #define NO_USAGE_WARNING // Things that should be used carfully
     //#warning "All warnings from 'utils/utils.hpp' are disable"
+#endif
+
+#ifdef NO_LINKER_WARNING
+    #define NO_BASE64CODEC_LINKER_WARNING
+    #define NO_RSAKEY_LINKER_WARNING
+    #define NO_AESKEY_LINKER_WARNING
+#endif
+
+#ifdef NO_USAGE_WARNING
+    #define NO_FATALEXCEPTION_USAGE_WARNING
+    #define NO_EETPPARSER_USAGE_WARNING
 #endif
 
 /* default: if nothing is defined - include everything */

@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 27/07/2026 by @author Tsukini
+##  @date 03/08/2026 by @author Tsukini
 
 File Name:
 ##  @file EETPParser.hpp
@@ -24,15 +24,18 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../../attribute/Attribute.hpp" // _cold, _nodiscard
-    #include "../codec/ICodec.hpp"              // // utils::smanip::codec::ICodec
-    #include "../codec/Base64Codec.hpp"         // utils::smanip::codec::Base64Codec
-    #include "AParser.hpp"                      // utils::smanip::parser::AParser
-    #include <cstddef>                          // std::size_t
-    #include <cstdint>                          // std::uint16_t
-    #include <memory>                           // std::unique_ptr, std::make_unique
-    #include <vector>                           // std::vector
-    #include <string>                           // std::string
+    #include "../../../attribute/Attribute.hpp"                 // _cold, _nodiscard
+    #include "../codec/ICodec.hpp"                              // utils::smanip::codec::ICodec
+    #include "../codec/Base64Codec.hpp"                         // utils::smanip::codec::Base64Codec
+    #include "../../../security/encryption/CommonRSAKey.hpp"    // utils::security::encryption::CommonRSAKey
+    #include "../../../security/encryption/RSAKey.hpp"          // utils::security::encryption::RSAKey
+    #include "../../../security/encryption/AESKey.hpp"          // utils::security::encryption::AESKey
+    #include "AParser.hpp"                                      // utils::smanip::parser::AParser
+    #include <cstddef>                                          // std::size_t
+    #include <cstdint>                                          // std::uint16_t
+    #include <memory>                                           // std::unique_ptr, std::make_unique
+    #include <vector>                                           // std::vector
+    #include <string>                                           // std::string
 
 namespace utils::smanip::parser { // namespace start
 //----------------------------------------------------------------//
@@ -46,10 +49,19 @@ struct EETPContent {
 //----------------------------------------------------------------//
 /* CLASS */
 
+#ifndef NO_EETPPARSER_USAGE_WARNING
+    #warning "[USAGE] Custom ICodec implementations must guarantee that ETB (0x17) and EOT (0x04) never appear in their encoded output, as these bytes are reserved for protocol framing [-DNO_EETPPARSER_USAGE_WARNING]"
+#endif
 class EETPParser: public utils::smanip::parser::AParser<utils::smanip::parser::EETPContent> {
     private:
+        /* global data */
         std::unique_ptr<utils::smanip::codec::ICodec> _codec = std::make_unique<utils::smanip::codec::Base64Codec>();
         std::size_t _codeSize = 1;
+        utils::security::encryption::CommonRSAKey _commonKey;
+
+        /* id data */
+        std::unordered_map<std::string, utils::security::encryption::RSAKey> _RSAKeys;
+        std::unordered_map<std::string, utils::security::encryption::AESKey> _AESKeys;
 
     public:
         // ---------- Pre-Function -------- //

@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 28/07/2026 by @author Tsukini
+##  @date 03/08/2026 by @author Tsukini
 
 File Name:
 ##  @file FatalException.hpp
@@ -34,8 +34,8 @@ namespace utils::exception { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-#ifndef NO_USAGE_WARNING
-    #warning "The FatalException can't be catch"
+#ifndef NO_FATALEXCEPTION_USAGE_WARNING
+    #warning "[USAGE] FatalException calls std::abort() internally and cannot be caught [-DNO_FATALEXCEPTION_USAGE_WARNING]"
 #endif
 class FatalException: public utils::exception::AException {
     public:
