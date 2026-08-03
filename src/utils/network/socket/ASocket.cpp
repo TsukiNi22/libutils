@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 02/08/2026 by @author Tsukini
+##  @date 03/08/2026 by @author Tsukini
 
 File Name:
 ##  @file ASocket.cpp
@@ -163,7 +163,7 @@ _hot _nodiscard std::string utils::network::socket::ASocket::recv(int fd)
 
     // Extract the first data section until '\n'
     std::string line = storage.substr(0, pos); // exclude '\n'
-    storage.erase(0, pos + 1);
+    storage.erase(0, pos + this->_separator.size());
 
     return line;
 }

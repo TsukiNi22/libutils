@@ -3,16 +3,21 @@
         {
             "code": "ANSIMouseEvent",
             "message": "Error during the read of the mouse event",
-            "restrictions": ["Fatal", "Error"]
+            "restrictions": ["Fatal", "Error", "Warning"]
         },
         {
             "code": "Codec",
             "message": "Error during the encoding/decoding of the given string",
-            "restrictions": ["Fatal", "Error"]
+            "restrictions": ["Fatal", "Error", "Warning"]
         },
         {
             "code": "InvalidCodec",
             "message": "The given codec is invalid and can't be used for the task",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "Parser",
+            "message": "Error during the formating/parsing of the given string",
             "restrictions": ["Fatal", "Error", "Warning"]
         }
     ]

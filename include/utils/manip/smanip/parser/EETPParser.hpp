@@ -27,6 +27,8 @@ File Description:
     #include "../../../attribute/Attribute.hpp"                 // _cold, _nodiscard
     #include "../codec/ICodec.hpp"                              // utils::smanip::codec::ICodec
     #include "../codec/Base64Codec.hpp"                         // utils::smanip::codec::Base64Codec
+    #include "../../../exception/ExceptionDefine.hpp"           // utils::exception::InternalCode::*
+    #include "../../../exception/basic/ErrorException.hpp"      // utils::exception::ErrorException
     #include "../../../security/encryption/CommonRSAKey.hpp"    // utils::security::encryption::CommonRSAKey
     #include "../../../security/encryption/RSAKey.hpp"          // utils::security::encryption::RSAKey
     #include "../../../security/encryption/AESKey.hpp"          // utils::security::encryption::AESKey
@@ -42,7 +44,7 @@ namespace utils::smanip::parser { // namespace start
 /* STRUCT */
 
 struct EETPContent {
-    std::uint16_t type = 0;
+    std::string type;
     std::vector<std::string> data;
 };
 
@@ -56,12 +58,13 @@ class EETPParser: public utils::smanip::parser::AParser<utils::smanip::parser::E
     private:
         /* global data */
         std::unique_ptr<utils::smanip::codec::ICodec> _codec = std::make_unique<utils::smanip::codec::Base64Codec>();
-        std::size_t _codeSize = 1;
+        std::size_t _typeSize = 1;
         utils::security::encryption::CommonRSAKey _commonKey;
+        utils::security::encryption::AESKey _AESKey;
 
         /* id data */
-        std::unordered_map<std::string, utils::security::encryption::RSAKey> _RSAKeys;
-        std::unordered_map<std::string, utils::security::encryption::AESKey> _AESKeys;
+        std::unordered_map<std::string, utils::security::encryption::RSAKey> _RSAKeys; // Class
+        std::unordered_map<std::string, utils::security::encryption::KeyAES> _KeysAES; // Storage
 
     public:
         // ---------- Pre-Function -------- //
@@ -70,7 +73,11 @@ class EETPParser: public utils::smanip::parser::AParser<utils::smanip::parser::E
 
         // ------------ Function ---------- //
         _cold void setCodec(std::unique_ptr<utils::smanip::codec::ICodec> codec) {this->_codec = std::move(codec);}; // default: Base64Codec
-        _cold void setCodeSize(std::size_t codeSize) {this->_codeSize = codeSize;}; // default: 1 (0-127)
+        _cold void setTypeSize(std::size_t typeSize) { // default: 1 (0-127)
+            if (typeSize < 1)
+                throw utils::exception::ErrorException(utils::exception::InternalCode::Parser, "The <type> should always be at least one char");
+            this->_typeSize = typeSize;
+        };
         _cold _nodiscard inline bool hasIdOverload(void) const final {return true;};
 
         // ------------ Operator ---------- //
@@ -78,8 +85,8 @@ class EETPParser: public utils::smanip::parser::AParser<utils::smanip::parser::E
         EETPParser& operator=(EETPParser&& other) = delete;
 
         // ---------- Constructor --------- //
-        EETPParser() = default;
-        EETPParser(std::unique_ptr<utils::smanip::codec::ICodec> codec, std::size_t codeSize = 1): _codec{std::move(codec)}, _codeSize{codeSize} {};
+        EETPParser() {this->_commonKey.loadCommon();};
+        EETPParser(std::unique_ptr<utils::smanip::codec::ICodec> codec, std::size_t typeSize = 1): _codec{std::move(codec)}, _typeSize{typeSize} {this->_commonKey.loadCommon();};
         EETPParser(const EETPParser& other) = delete;
         EETPParser(EETPParser&& other) = delete;
 

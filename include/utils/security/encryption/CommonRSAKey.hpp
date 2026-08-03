@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 30/07/2026 by @author Tsukini
+##  @date 03/08/2026 by @author Tsukini
 
 File Name:
 ##  @file CommonRSAKey.hpp
@@ -32,7 +32,7 @@ File Description:
     /* DEFINE */
 
     /* default */
-    #define DEFAULT_COMMON_RSA_PATH "~/.ssh/common"
+    #define DEFAULT_COMMON_RSA_PATH "~/.ssh/common" // common (priv) | common.pub (pub)
 
 namespace utils::security::encryption { // namespace start
 //----------------------------------------------------------------//

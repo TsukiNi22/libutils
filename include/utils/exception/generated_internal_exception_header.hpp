@@ -67,6 +67,7 @@ enum class InternalCode: std::size_t {
     ANSIMouseEvent = 10836869605783267125ull,
     Codec = 8493933037809394222ull,
     InvalidCodec = 12193574205768740508ull,
+    Parser = 14379873028469948062ull,
     MiddlewareCall = 14307232079590726764ull,
     VectorInvalidIndex = 8853479528360895127ull,
     SharedObject = 2691419733905123322ull,
@@ -123,6 +124,7 @@ inline const std::unordered_map<utils::exception::InternalCode, const char*> Int
     {utils::exception::InternalCode::ANSIMouseEvent, "Error during the read of the mouse event"},
     {utils::exception::InternalCode::Codec, "Error during the encoding/decoding of the given string"},
     {utils::exception::InternalCode::InvalidCodec, "The given codec is invalid and can't be used for the task"},
+    {utils::exception::InternalCode::Parser, "Error during the formating/parsing of the given string"},
     {utils::exception::InternalCode::MiddlewareCall, "Error during a middleware call"},
     {utils::exception::InternalCode::VectorInvalidIndex, "Invalid index on a vector"},
     {utils::exception::InternalCode::SharedObject, "An object created with dynamic code that was free is still alive"},
@@ -179,6 +181,7 @@ inline const std::unordered_map<utils::exception::InternalCode, const char*> Int
     {utils::exception::InternalCode::ANSIMouseEvent, nullptr},
     {utils::exception::InternalCode::Codec, nullptr},
     {utils::exception::InternalCode::InvalidCodec, nullptr},
+    {utils::exception::InternalCode::Parser, nullptr},
     {utils::exception::InternalCode::MiddlewareCall, nullptr},
     {utils::exception::InternalCode::VectorInvalidIndex, "Can't retrieve the value, the VectorX dosen't have this index"},
     {utils::exception::InternalCode::SharedObject, nullptr},
@@ -237,9 +240,10 @@ inline const std::unordered_map<utils::exception::InternalCode, const std::uint8
     {utils::exception::InternalCode::CliAlreadyRunning, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::CliKilled, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::ExceptionCodeRestriction, 0b0110}, // allow: Fatal, Error
-    {utils::exception::InternalCode::ANSIMouseEvent, 0b0110}, // allow: Fatal, Error
-    {utils::exception::InternalCode::Codec, 0b0110}, // allow: Fatal, Error
-    {utils::exception::InternalCode::InvalidCodec, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::ANSIMouseEvent, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::Codec, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::InvalidCodec, 0b0110}, // allow: Fatal, Error
+    {utils::exception::InternalCode::Parser, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::MiddlewareCall, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::VectorInvalidIndex, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::SharedObject, 0b1110}, // allow: Fatal, Error, Warning

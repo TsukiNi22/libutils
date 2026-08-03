@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 03/08/2026 by @author Tsukini
+##  @date 04/08/2026 by @author Tsukini
 
 File Name:
 ##  @file RSAKey.hpp
@@ -55,8 +55,10 @@ class RSAKey: public utils::security::encryption::AKey<utils::security::encrypti
 
         // ------------ Function ---------- //
         _hot void set(const utils::security::encryption::KeyPair& keys) final {this->_keys = keys;};
+        _hot _nodiscard const utils::security::encryption::KeyPair& get(void) const final {return this->_keys;};
         _cold _nodiscard bool hasGenerateOverload(void) const final {return true;};
         _cold _nodiscard bool hasSetOverload(void) const final {return true;};
+        _cold _nodiscard bool hasGetOverload(void) const final {return true;};
 
         // ------------ Operator ---------- //
         RSAKey& operator=(const RSAKey& other) = delete;

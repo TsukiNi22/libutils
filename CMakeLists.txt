@@ -12,7 +12,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_COMPILER clang++)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON) # Moderne compilation -fPIE
-add_definitions(-D_NoWarning -DNO_LINKER_WARNING -DNO_USAGE_WARNING # (useless for hard import)
+add_definitions(
+    # (useless for hard import)
+    -D_NoWarning
+
+    # [WARNING] # (useless for hard import)
+    -DNO_LINKER_WARNING
+    -DNO_USAGE_WARNING
+
     # [LINKER] #
     -DNO_BASE64CODEC_LINKER_WARNING
     -DNO_RSAKEY_LINKER_WARNING

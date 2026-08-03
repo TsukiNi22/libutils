@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 01/08/2026 by @author Tsukini
+##  @date 04/08/2026 by @author Tsukini
 
 File Name:
 ##  @file AKey.hpp
@@ -63,6 +63,8 @@ class AKey: public utils::security::encryption::IKey<T> {
         {throw utils::exception::FatalException(utils::exception::InternalCode::UndefinedCall);};
         _cold void set(_unused const T& data) override
         {throw utils::exception::FatalException(utils::exception::InternalCode::UndefinedCall);};
+        _cold const T& get(void) const override
+        {throw utils::exception::FatalException(utils::exception::InternalCode::UndefinedCall);};
         _cold std::string encrypt(_unused const std::string& s) const override
         {throw utils::exception::FatalException(utils::exception::InternalCode::UndefinedCall);};
         _cold std::string decrypt(_unused const std::string& s) const override
@@ -72,6 +74,7 @@ class AKey: public utils::security::encryption::IKey<T> {
         _cold std::string decrypt(const std::string& s, _unused T& data) const override {return this->decrypt(s);};
         _cold _nodiscard bool hasGenerateOverload(void) const override {return false;};
         _cold _nodiscard bool hasSetOverload(void) const override {return false;};
+        _cold _nodiscard bool hasGetOverload(void) const override {return false;};
 
         // ------------ Operator ---------- //
         AKey& operator=(const AKey& other) = delete;

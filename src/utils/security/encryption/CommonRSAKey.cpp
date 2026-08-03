@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 30/07/2026 by @author Tsukini
+##  @date 03/08/2026 by @author Tsukini
 
 File Name:
 ##  @file RSAKey.hpp
@@ -28,15 +28,28 @@ _cold void utils::security::encryption::CommonRSAKey::loadCommon(std::string pat
 {
     KeyPair keys;
 
-    // Open the file
-    std::ifstream file(path, std::ios::binary);
-    if (!file)
-        throw utils::exception::ErrorException(utils::exception::InternalCode::Encryption, "Can't open the common RSA file: " + path);
+    // Open the file (pub)
+    std::ifstream filePub(path + ".pub", std::ios::binary);
+    if (filePub) {
+        // Read the file
+        std::ostringstream ss;
+        ss << filePub.rdbuf();
+        keys.pub = ss.str();
+    }
 
-    // Read the file
-    std::ostringstream ss;
-    ss << file.rdbuf();
-    keys.pub = ss.str();
+    // Open the file (priv)
+    std::ifstream filePriv(path, std::ios::binary);
+    if (filePriv) {
+        // Read the file
+        std::ostringstream ss;
+        ss << filePriv.rdbuf();
+        keys.priv = ss.str();
+    }
+
+    // Check if any of the 2 file where found
+    if (keys.pub.empty() && keys.priv.empty()) _unlikely {
+        throw utils::exception::ErrorException(utils::exception::InternalCode::Encryption, "Can't open any common RSA files: " + path);
+    }
 
     this->set(keys);
 }

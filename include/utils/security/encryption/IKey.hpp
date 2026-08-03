@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 01/08/2026 by @author Tsukini
+##  @date 04/08/2026 by @author Tsukini
 
 File Name:
 ##  @file IKey.hpp
@@ -39,12 +39,14 @@ class IKey: private utils::security::observer::Observer<"IKey"> {
         virtual std::string generateRandomBytes(std::uint16_t size = 32) const = 0;
         virtual void generate(void) = 0;
         virtual void set(const T& data) = 0;
+        virtual const T& get(void) const = 0;
         virtual std::string encrypt(const std::string& s) const = 0;
         virtual std::string decrypt(const std::string& s) const = 0;
         virtual std::string encrypt(const std::string& s, T& data) const = 0;
         virtual std::string decrypt(const std::string& s, T& data) const = 0;
         virtual bool hasGenerateOverload(void) const = 0;
         virtual bool hasSetOverload(void) const = 0;
+        virtual bool hasGetOverload(void) const = 0;
 
         // ------------ Operator ---------- //
         IKey& operator=(const IKey& other) = delete;
