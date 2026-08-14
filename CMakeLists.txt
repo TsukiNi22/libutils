@@ -388,9 +388,9 @@ endif()
 if(DEFINED PACKAGE_RELEASE)
     set(CPACK_RPM_PACKAGE_RELEASE "${PACKAGE_RELEASE}")
     set(CPACK_DEBIAN_PACKAGE_RELEASE "${PACKAGE_RELEASE}")
-else()
-    set(CPACK_RPM_PACKAGE_RELEASE "1")
-    set(CPACK_DEBIAN_PACKAGE_RELEASE "1")
+else() # 0 is impossible for github.run_number
+    set(CPACK_RPM_PACKAGE_RELEASE "0")
+    set(CPACK_DEBIAN_PACKAGE_RELEASE "0")
 endif()
 
 # RPM
