@@ -1,8 +1,13 @@
 cmake_minimum_required(VERSION 3.20)
 set(TARGET utils)
 project(${TARGET} VERSION 2.3.0 LANGUAGES CXX)
+
+# =========================
+# Options
+# =========================
 option(UTILS_DEV_PACKAGE "Build development package only" OFF)
 option(UTILS_PACKAGE "Build global package" OFF)
+option(UTILS_STABLE_RELEASE "Channel as stable release" OFF)
 
 # =========================
 # Compilateur & Standard
@@ -319,23 +324,30 @@ set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
 
 set(CPACK_GENERATOR "RPM;DEB")
 
+# Setup the channel name
+if(UTILS_STABLE_RELEASE)
+    set(CHANNEL "")
+else()
+    set(CHANNEL "-pre")
+endif()
+
 # Setup the package name
 if(UTILS_PACKAGE)
-    set(CPACK_PACKAGE_NAME "libutils")
+    set(CPACK_PACKAGE_NAME "libutils${CHANNEL}")
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (global)")
 elseif(UTILS_DEV_PACKAGE)
-    set(CPACK_PACKAGE_NAME "libutils-dev")
+    set(CPACK_PACKAGE_NAME "libutils-dev${CHANNEL}")
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (headers/cmake)")
 elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(CPACK_PACKAGE_NAME "libutils-db")
+    set(CPACK_PACKAGE_NAME "libutils-db${CHANNEL}")
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (debug)")
     set(PREFIX "db")
 elseif(CMAKE_BUILD_TYPE STREQUAL "Asan")
-    set(CPACK_PACKAGE_NAME "libutils-as")
+    set(CPACK_PACKAGE_NAME "libutils-as${CHANNEL}")
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (asan)")
     set(PREFIX "as")
 else()
-    set(CPACK_PACKAGE_NAME "libutils-op")
+    set(CPACK_PACKAGE_NAME "libutils-op${CHANNEL}")
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (optimized)")
     set(PREFIX "op")
 endif()
@@ -349,27 +361,27 @@ if(UTILS_PACKAGE)
 elseif(UTILS_DEV_PACKAGE)
     set(CPACK_COMPONENTS_ALL headers headers-db headers-as headers-op)
 
-    set(CPACK_RPM_HEADERS-DB_PACKAGE_NAME "libutils-dev-db")
-    set(CPACK_RPM_HEADERS-AS_PACKAGE_NAME "libutils-dev-as")
-    set(CPACK_RPM_HEADERS-OP_PACKAGE_NAME "libutils-dev-op")
+    set(CPACK_RPM_HEADERS-DB_PACKAGE_NAME "libutils-dev-db${CHANNEL}")
+    set(CPACK_RPM_HEADERS-AS_PACKAGE_NAME "libutils-dev-as${CHANNEL}")
+    set(CPACK_RPM_HEADERS-OP_PACKAGE_NAME "libutils-dev-op${CHANNEL}")
 
-    set(CPACK_DEBIAN_HEADERS-DB_PACKAGE_NAME "libutils-dev-db")
-    set(CPACK_DEBIAN_HEADERS-AS_PACKAGE_NAME "libutils-dev-as")
-    set(CPACK_DEBIAN_HEADERS-OP_PACKAGE_NAME "libutils-dev-op")
+    set(CPACK_DEBIAN_HEADERS-DB_PACKAGE_NAME "libutils-dev-db${CHANNEL}")
+    set(CPACK_DEBIAN_HEADERS-AS_PACKAGE_NAME "libutils-dev-as${CHANNEL}")
+    set(CPACK_DEBIAN_HEADERS-OP_PACKAGE_NAME "libutils-dev-op${CHANNEL}")
 else()
     set(CPACK_COMPONENTS_ALL lib)
 endif()
 
 # Dependencies
 if(UTILS_PACKAGE)
-    set(CPACK_RPM_PACKAGE_REQUIRES "libutils-op >= ${PROJECT_VERSION}")
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libutils-op (>= ${PROJECT_VERSION})")
+    set(CPACK_RPM_PACKAGE_REQUIRES "libutils-op${CHANNEL} >= ${PROJECT_VERSION}")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libutils-op${CHANNEL} (>= ${PROJECT_VERSION})")
 elseif(UTILS_DEV_PACKAGE)
     set(CPACK_RPM_PACKAGE_REQUIRES "")
     set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
 else()
-    set(CPACK_RPM_PACKAGE_REQUIRES "libutils-dev >= ${PROJECT_VERSION}, libutils-dev-${PREFIX} >= ${PROJECT_VERSION}, openssl-libs")
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libutils-dev (>= ${PROJECT_VERSION}), libutils-dev-${PREFIX} (>= ${PROJECT_VERSION}), libssl3")
+    set(CPACK_RPM_PACKAGE_REQUIRES "libutils-dev${CHANNEL} >= ${PROJECT_VERSION}, libutils-dev-${PREFIX}${CHANNEL} >= ${PROJECT_VERSION}, openssl-libs")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libutils-dev${CHANNEL} (>= ${PROJECT_VERSION}), libutils-dev-${PREFIX}${CHANNEL} (>= ${PROJECT_VERSION}), libssl3")
 endif()
 
 # RPM

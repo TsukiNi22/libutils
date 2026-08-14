@@ -17,6 +17,9 @@ See internal wiki for more details [...]() (not setup for now)
 
 ## Packages
 
+> [!NOTE]
+> Most of the packages have a pre-release/unstable version named: `<package_name>-pre`
+
 | File Name | Content |
 | --------- | ------- |
 | `libutils` | Install the default packages (`libutils-dev`, `libutils-op`) |

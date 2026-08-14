@@ -3,6 +3,7 @@ name: CI/CD - Library
 on:
   push:
     branches: [main]
+    tags: ['v*']
 
 env:
   LIBRARYS: "libutils.a libutils_debug.a libutils_asan.a"
@@ -31,10 +32,23 @@ jobs:
           restore-keys: |
             ccache-${{ runner.os }}-
 
+      - name: Determine release channel
+        id: channel
+        run: |
+          set -e
+          if [[ "${{ github.ref_type }}" == "tag" && "${{ github.ref_name }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-.*)?$ ]]; then
+            echo "stable=ON" >> "$GITHUB_OUTPUT"
+            echo "channel=stable" >> "$GITHUB_OUTPUT"
+          else
+            echo "stable=OFF" >> "$GITHUB_OUTPUT"
+            echo "channel=unstable" >> "$GITHUB_OUTPUT"
+          fi
+          echo "Channel: $(tail -n1 "$GITHUB_OUTPUT")"
+
       - name: Build packages (Release)
         run: |
           set -e
-          cmake -S . -B build
+          cmake -S . -B build -DUTILS_STABLE_RELEASE=${{ steps.channel.outputs.stable }}
           cmake --build build --target package_release --parallel $(nproc)
         timeout-minutes: 2
 
@@ -95,7 +109,7 @@ jobs:
           echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
           echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
 
-      - name: Sign packages
+      - name: Sign packages (RPM)
         run: |
           set -e
           cat > ~/.rpmmacros <<EOF
