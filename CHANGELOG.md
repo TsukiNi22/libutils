@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### In Progress
 - A parser class to handle formating and parsing of the network communication
-- Network (Codec **OK**, Key **OK**, Parser **OK**, Socket **OK**, Client **OK**, Server **KO**, Testing **KO**)
+- Network (Codec **OK**, Key **OK**, Parser **OK**, Socket **OK**, Client **OK**, Server **OK**, Testing **KO**)
 
 ## [v2.2.0] - 2026-08-01
 ### Changed
