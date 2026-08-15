@@ -375,18 +375,6 @@ else()
     set(CPACK_COMPONENTS_ALL lib)
 endif()
 
-# Dependencies
-if(UTILS_PACKAGE)
-    set(CPACK_RPM_PACKAGE_REQUIRES "libutils-op${CHANNEL} >= ${PROJECT_VERSION}")
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libutils-op${CHANNEL} (>= ${PROJECT_VERSION})")
-elseif(UTILS_DEV_PACKAGE)
-    set(CPACK_RPM_PACKAGE_REQUIRES "")
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
-else()
-    set(CPACK_RPM_PACKAGE_REQUIRES "libutils-dev${CHANNEL} >= ${PROJECT_VERSION}, libutils-dev-${PREFIX}${CHANNEL} >= ${PROJECT_VERSION}, openssl-libs")
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libutils-dev${CHANNEL} (>= ${PROJECT_VERSION}), libutils-dev-${PREFIX}${CHANNEL} (>= ${PROJECT_VERSION}), libssl3")
-endif()
-
 # Edit release value (run count)
 if(UTILS_STABLE_RELEASE)
     # A stable version should never have to be rebuild and should always be removed or marked as depreacted
@@ -398,6 +386,28 @@ elseif(DEFINED PACKAGE_RELEASE)
 else() # 0 is impossible for github.run_number
     set(CPACK_RPM_PACKAGE_RELEASE "0")
     set(CPACK_DEBIAN_PACKAGE_RELEASE "0")
+endif()
+
+# Dependencies
+if(UTILS_PACKAGE)
+    if(UTILS_STABLE_RELEASE)
+        set(CPACK_RPM_PACKAGE_REQUIRES "libutils-op${CHANNEL} >= ${PROJECT_VERSION}")
+        set(CPACK_DEBIAN_PACKAGE_DEPENDS "libutils-op${CHANNEL} (>= ${PROJECT_VERSION})")
+    else()
+        set(CPACK_RPM_PACKAGE_REQUIRES "libutils-op${CHANNEL} = ${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}")
+        set(CPACK_DEBIAN_PACKAGE_DEPENDS "libutils-op${CHANNEL} (= ${PROJECT_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE})")
+    endif()
+elseif(UTILS_DEV_PACKAGE)
+    set(CPACK_RPM_PACKAGE_REQUIRES "")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
+else()
+    if(UTILS_STABLE_RELEASE)
+        set(CPACK_RPM_PACKAGE_REQUIRES "libutils-dev${CHANNEL} >= ${PROJECT_VERSION}, libutils-dev-${PREFIX}${CHANNEL} >= ${PROJECT_VERSION}, openssl-libs")
+        set(CPACK_DEBIAN_PACKAGE_DEPENDS "libutils-dev${CHANNEL} (>= ${PROJECT_VERSION}), libutils-dev-${PREFIX}${CHANNEL} (>= ${PROJECT_VERSION}), libssl3")
+    else()
+        set(CPACK_RPM_PACKAGE_REQUIRES "libutils-dev${CHANNEL} = ${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}, libutils-dev-${PREFIX}${CHANNEL} = ${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}, openssl-libs")
+        set(CPACK_DEBIAN_PACKAGE_DEPENDS "libutils-dev${CHANNEL} (= ${PROJECT_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE}), libutils-dev-${PREFIX}${CHANNEL} (= ${PROJECT_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE}), libssl3")
+    endif()
 endif()
 
 # RPM
