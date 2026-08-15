@@ -7,6 +7,7 @@ See internal wiki for more details [...]() (not setup for now)
  - [Packages](#packages)
  - [Quick Setup 1 (All)](#quick-setup---1-all)
  - [Quick Setup 2 (Limited)](#quick-setup---2-limited)
+ - [Workflows/Release](#workflowsrelease)
 
 ## Dependencies
 
@@ -72,3 +73,22 @@ or with `curl`:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/TsukiNi22/libutils/main/setup.sh | bash -s
 ```
+
+## Workflows/Release
+
+### Workflows
+
+ - The workflow `CI/CD - Library` builds the packages and releases them
+ - The workflow `CI - Library` builds the libraries and checks the compilation
+> [!NOTE]
+> Only when the `CI/CD - Library` workflow isn't triggered, the `CI - Library` workflow will run to check the compilation
+
+### Pre-Release (unstable)
+
+The pre-release of the packages can be triggered by 2 events:
+ - Pushing a tag that matches the regex `vx.x.x-pre` (`x` stands for the version number: `major`, `minor`, `fix`)
+ - Or pushing a commit containing the string `[build]`, preferably in the description
+
+### Release (stable)
+
+The release can only be triggered by pushing a tag that matches the regex `vx.x.x-release` (`x` stands for the version number: `major`, `minor`, `fix`)
