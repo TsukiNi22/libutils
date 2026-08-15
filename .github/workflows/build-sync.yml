@@ -48,7 +48,8 @@ jobs:
       - name: Build packages (Release)
         run: |
           set -e
-          cmake -S . -B build -DUTILS_STABLE_RELEASE=${{ steps.channel.outputs.stable }} -DPACKAGE_RELEASE=${{ github.run_number }}
+          # github.run_number -> github.run_id (in case of workflow renaming, more secure but less readable)
+          cmake -S . -B build -DUTILS_STABLE_RELEASE=${{ steps.channel.outputs.stable }} -DPACKAGE_RELEASE=${{ github.run_id }}
           cmake --build build --target package_release --parallel $(nproc)
         timeout-minutes: 2
 

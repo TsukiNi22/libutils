@@ -97,6 +97,9 @@ set(SRC
     src/utils/arguments/Hooks.cpp
     src/utils/arguments/Settings.cpp
 
+    ## Network
+    src/utils/network/Client.cpp
+
     ## Network (sub-part: socket)
     src/utils/network/socket/ASocket.cpp
     src/utils/network/socket/TCPSocket.cpp
@@ -385,7 +388,11 @@ else()
 endif()
 
 # Edit release value (run count)
-if(DEFINED PACKAGE_RELEASE)
+if(NOT UTILS_STABLE_RELEASE)
+    # A stable version should never have to be rebuild and should always be removed or marked as depreacted
+    set(CPACK_RPM_PACKAGE_RELEASE "1")
+    set(CPACK_DEBIAN_PACKAGE_RELEASE "1")
+elseif(DEFINED PACKAGE_RELEASE)
     set(CPACK_RPM_PACKAGE_RELEASE "${PACKAGE_RELEASE}")
     set(CPACK_DEBIAN_PACKAGE_RELEASE "${PACKAGE_RELEASE}")
 else() # 0 is impossible for github.run_number

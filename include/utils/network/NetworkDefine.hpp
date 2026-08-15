@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 01/08/2026 by @author Tsukini
+##  @date 14/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Define.hpp
@@ -25,4 +25,16 @@ File Description:
     #define SOCKET_TIMEOUT 7 // Timeout in seconds
     #define SOCKET_CHUNK_SIZE 4096 // Size of the chunck readed at recv call
 
+namespace utils::network { // namespace start
+//----------------------------------------------------------------//
+/* ENUM */
+
+enum class Status {
+    Up,
+    Down,
+    Terminated,
+    Crashed,
+};
+
+} // namespace end
 #endif /* DEFINE_H */

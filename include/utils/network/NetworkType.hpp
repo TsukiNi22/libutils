@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 01/08/2026 by @author Tsukini
+##  @date 14/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Type.hpp
@@ -19,6 +19,7 @@ File Description:
     /* type */
     #include "NetworkDefine.hpp"    // DEFAULT_IP, DEFAULT_PORT, zappy::Action, zappy::Direction
     #include <cstdint>              // std::uint16_t
+    #include <vector>               // std::vector
     #include <string>               // std::string
 
 namespace utils::network { // namespace start
@@ -31,6 +32,9 @@ struct Address {
     utils::network::Ip ip = {DEFAULT_IP, ""}; // Ignored on server side
     std::uint16_t port = DEFAULT_PORT;
 };
+
+using Payload = std::string; // Not parsed (raw from the socket)
+using Payloads = std::vector<utils::network::Payload>;
 
 } // namespace end
 #endif /* TYPE_H */

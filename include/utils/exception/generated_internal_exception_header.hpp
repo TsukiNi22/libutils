@@ -44,6 +44,9 @@ enum class InternalCode: std::size_t {
     Freezed = 4235146037744797477ull,
     BadCast = 13996216691997858231ull,
     UnknowCast = 1638341191902573621ull,
+    AlreadyRunning = 16434076516824692129ull,
+    NotRunning = 15176019100705961478ull,
+    Killed = 3109759896820498762ull,
     ArgumentsNumber = 12018782069274677273ull,
     OptionIngored = 4645627411356026889ull,
     UnknowFlag = 12987297349800392442ull,
@@ -61,18 +64,12 @@ enum class InternalCode: std::size_t {
     CliParser = 13204459558341697298ull,
     CliExecution = 5908385312673045195ull,
     CliUndefined = 11441856432723067089ull,
-    CliAlreadyRunning = 16477862314081875021ull,
-    CliKilled = 15290329562365419020ull,
     ExceptionCodeRestriction = 6695002857475997726ull,
     ANSIMouseEvent = 10836869605783267125ull,
     Codec = 8493933037809394222ull,
     InvalidCodec = 12193574205768740508ull,
     Parser = 14379873028469948062ull,
     MiddlewareCall = 14307232079590726764ull,
-    VectorInvalidIndex = 8853479528360895127ull,
-    SharedObject = 2691419733905123322ull,
-    Encryption = 4252739810962334721ull,
-    Decryption = 2433724839531566893ull,
     InvalidFd = 5356102046450859601ull,
     SocketInit = 17411882895864781294ull,
     Socket = 11431498909535298487ull,
@@ -82,6 +79,10 @@ enum class InternalCode: std::size_t {
     Handshake = 8506078914172758669ull,
     Poll = 10479593496226847378ull,
     ServerAccept = 7692696117884009656ull,
+    SharedObject = 2691419733905123322ull,
+    Encryption = 4252739810962334721ull,
+    Decryption = 2433724839531566893ull,
+    VectorInvalidIndex = 8853479528360895127ull,
 };
 
 /* Corresponding exception message for each code */
@@ -101,6 +102,9 @@ inline const std::unordered_map<utils::exception::InternalCode, const char*> Int
     {utils::exception::InternalCode::Freezed, "Can't edit a freezed things"},
     {utils::exception::InternalCode::BadCast, "Invalid cast between from a type to another"},
     {utils::exception::InternalCode::UnknowCast, "Unknow cast type, can't proceed"},
+    {utils::exception::InternalCode::AlreadyRunning, "Can't start something that is already running"},
+    {utils::exception::InternalCode::NotRunning, "Can't execute the action with something that is not running"},
+    {utils::exception::InternalCode::Killed, "Can't start or restart a something that was killed/terminated"},
     {utils::exception::InternalCode::ArgumentsNumber, "Invalid number of argument(s) given, use '-h' for more information"},
     {utils::exception::InternalCode::OptionIngored, "Option ignored, can't determine it's ownership"},
     {utils::exception::InternalCode::UnknowFlag, "Unknow flag"},
@@ -118,18 +122,12 @@ inline const std::unordered_map<utils::exception::InternalCode, const char*> Int
     {utils::exception::InternalCode::CliParser, "Error during the parsing"},
     {utils::exception::InternalCode::CliExecution, "Error during the command execution"},
     {utils::exception::InternalCode::CliUndefined, "An undefined error has append"},
-    {utils::exception::InternalCode::CliAlreadyRunning, "Can't start a cli that is already running"},
-    {utils::exception::InternalCode::CliKilled, "Can't start or restart a cli that was killed"},
     {utils::exception::InternalCode::ExceptionCodeRestriction, "Error during the setup of an exception"},
     {utils::exception::InternalCode::ANSIMouseEvent, "Error during the read of the mouse event"},
     {utils::exception::InternalCode::Codec, "Error during the encoding/decoding of the given string"},
     {utils::exception::InternalCode::InvalidCodec, "The given codec is invalid and can't be used for the task"},
     {utils::exception::InternalCode::Parser, "Error during the formating/parsing of the given string"},
     {utils::exception::InternalCode::MiddlewareCall, "Error during a middleware call"},
-    {utils::exception::InternalCode::VectorInvalidIndex, "Invalid index on a vector"},
-    {utils::exception::InternalCode::SharedObject, "An object created with dynamic code that was free is still alive"},
-    {utils::exception::InternalCode::Encryption, "Error during encryption or call of related methods"},
-    {utils::exception::InternalCode::Decryption, "Error during decryption or call of related methods"},
     {utils::exception::InternalCode::InvalidFd, "Invalid file descriptor was used"},
     {utils::exception::InternalCode::SocketInit, "Error during the socket initialisation"},
     {utils::exception::InternalCode::Socket, "Error during the socket execution"},
@@ -139,6 +137,10 @@ inline const std::unordered_map<utils::exception::InternalCode, const char*> Int
     {utils::exception::InternalCode::Handshake, "Error during the handshake"},
     {utils::exception::InternalCode::Poll, "Error during the poll call"},
     {utils::exception::InternalCode::ServerAccept, "Error during the accept call"},
+    {utils::exception::InternalCode::SharedObject, "An object created with dynamic code that was free is still alive"},
+    {utils::exception::InternalCode::Encryption, "Error during encryption or call of related methods"},
+    {utils::exception::InternalCode::Decryption, "Error during decryption or call of related methods"},
+    {utils::exception::InternalCode::VectorInvalidIndex, "Invalid index on a vector"},
 };
 
 /* Potential default info: nullptr same as "[None]" */
@@ -158,6 +160,9 @@ inline const std::unordered_map<utils::exception::InternalCode, const char*> Int
     {utils::exception::InternalCode::Freezed, nullptr},
     {utils::exception::InternalCode::BadCast, nullptr},
     {utils::exception::InternalCode::UnknowCast, nullptr},
+    {utils::exception::InternalCode::AlreadyRunning, nullptr},
+    {utils::exception::InternalCode::NotRunning, nullptr},
+    {utils::exception::InternalCode::Killed, nullptr},
     {utils::exception::InternalCode::ArgumentsNumber, nullptr},
     {utils::exception::InternalCode::OptionIngored, nullptr},
     {utils::exception::InternalCode::UnknowFlag, nullptr},
@@ -175,18 +180,12 @@ inline const std::unordered_map<utils::exception::InternalCode, const char*> Int
     {utils::exception::InternalCode::CliParser, nullptr},
     {utils::exception::InternalCode::CliExecution, nullptr},
     {utils::exception::InternalCode::CliUndefined, nullptr},
-    {utils::exception::InternalCode::CliAlreadyRunning, nullptr},
-    {utils::exception::InternalCode::CliKilled, nullptr},
     {utils::exception::InternalCode::ExceptionCodeRestriction, "Restriction trigerred on a code & type combination"},
     {utils::exception::InternalCode::ANSIMouseEvent, nullptr},
     {utils::exception::InternalCode::Codec, nullptr},
     {utils::exception::InternalCode::InvalidCodec, nullptr},
     {utils::exception::InternalCode::Parser, nullptr},
     {utils::exception::InternalCode::MiddlewareCall, nullptr},
-    {utils::exception::InternalCode::VectorInvalidIndex, "Can't retrieve the value, the VectorX dosen't have this index"},
-    {utils::exception::InternalCode::SharedObject, nullptr},
-    {utils::exception::InternalCode::Encryption, nullptr},
-    {utils::exception::InternalCode::Decryption, nullptr},
     {utils::exception::InternalCode::InvalidFd, nullptr},
     {utils::exception::InternalCode::SocketInit, nullptr},
     {utils::exception::InternalCode::Socket, nullptr},
@@ -196,6 +195,10 @@ inline const std::unordered_map<utils::exception::InternalCode, const char*> Int
     {utils::exception::InternalCode::Handshake, nullptr},
     {utils::exception::InternalCode::Poll, nullptr},
     {utils::exception::InternalCode::ServerAccept, nullptr},
+    {utils::exception::InternalCode::SharedObject, nullptr},
+    {utils::exception::InternalCode::Encryption, nullptr},
+    {utils::exception::InternalCode::Decryption, nullptr},
+    {utils::exception::InternalCode::VectorInvalidIndex, "Can't retrieve the value, the VectorX dosen't have this index"},
 };
 
 /* Potential restriction on exception code */
@@ -220,6 +223,9 @@ inline const std::unordered_map<utils::exception::InternalCode, const std::uint8
     {utils::exception::InternalCode::Freezed, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::BadCast, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::UnknowCast, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::AlreadyRunning, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::NotRunning, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::Killed, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::ArgumentsNumber, 0b0110}, // allow: Fatal, Error
     {utils::exception::InternalCode::OptionIngored, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::UnknowFlag, 0b1110}, // allow: Fatal, Error, Warning
@@ -237,18 +243,12 @@ inline const std::unordered_map<utils::exception::InternalCode, const std::uint8
     {utils::exception::InternalCode::CliParser, 0b0000}, // allow: All
     {utils::exception::InternalCode::CliExecution, 0b0110}, // allow: Fatal, Error
     {utils::exception::InternalCode::CliUndefined, 0b0110}, // allow: Fatal, Error
-    {utils::exception::InternalCode::CliAlreadyRunning, 0b1110}, // allow: Fatal, Error, Warning
-    {utils::exception::InternalCode::CliKilled, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::ExceptionCodeRestriction, 0b0110}, // allow: Fatal, Error
     {utils::exception::InternalCode::ANSIMouseEvent, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::Codec, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::InvalidCodec, 0b0110}, // allow: Fatal, Error
     {utils::exception::InternalCode::Parser, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::MiddlewareCall, 0b1110}, // allow: Fatal, Error, Warning
-    {utils::exception::InternalCode::VectorInvalidIndex, 0b1110}, // allow: Fatal, Error, Warning
-    {utils::exception::InternalCode::SharedObject, 0b1110}, // allow: Fatal, Error, Warning
-    {utils::exception::InternalCode::Encryption, 0b1110}, // allow: Fatal, Error, Warning
-    {utils::exception::InternalCode::Decryption, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::InvalidFd, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::SocketInit, 0b0110}, // allow: Fatal, Error
     {utils::exception::InternalCode::Socket, 0b0110}, // allow: Fatal, Error
@@ -258,6 +258,10 @@ inline const std::unordered_map<utils::exception::InternalCode, const std::uint8
     {utils::exception::InternalCode::Handshake, 0b0110}, // allow: Fatal, Error
     {utils::exception::InternalCode::Poll, 0b0110}, // allow: Fatal, Error
     {utils::exception::InternalCode::ServerAccept, 0b0110}, // allow: Fatal, Error
+    {utils::exception::InternalCode::SharedObject, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::Encryption, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::Decryption, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::VectorInvalidIndex, 0b1110}, // allow: Fatal, Error, Warning
 };
 
 // Check at the compile time the correspondece between the message & code

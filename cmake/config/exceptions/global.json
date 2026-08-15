@@ -69,6 +69,21 @@
             "code": "UnknowCast",
             "message": "Unknow cast type, can't proceed",
             "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "AlreadyRunning",
+            "message": "Can't start something that is already running",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "NotRunning",
+            "message": "Can't execute the action with something that is not running",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "Killed",
+            "message": "Can't start or restart a something that was killed/terminated",
+            "restrictions": ["Fatal", "Error", "Warning"]
         }
     ]
 }

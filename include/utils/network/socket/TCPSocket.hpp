@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 02/08/2026 by @author Tsukini
+##  @date 14/08/2026 by @author Tsukini
 
 File Name:
 ##  @file TCPSocket.hpp
@@ -40,6 +40,11 @@ namespace utils::network::socket { // namespace start
 
 class TCPSocket: public utils::network::socket::ASocket {
     public:
+        // ---------- Pre-Function -------- //
+        // Can only be call one time, otherwise throw
+        void connect(const utils::network::Address& address) final; // build a connection as a client
+        void listen(const utils::network::Address& address) final; // build a connection as a server
+
         // ------------ Function ---------- //
         /* getter */
         _hot _nodiscard bool hasAcceptOverload(void) const final {return true;};
@@ -53,11 +58,6 @@ class TCPSocket: public utils::network::socket::ASocket {
         {return ::recv(fd, buf, len, 0);};
         _hot _nodiscard ssize_t send(int fd, const char* buf, std::size_t len) const final
         {return ::send(fd, buf, len, 0);};
-
-        // ---------- Pre-Function -------- //
-        // Can only be call one time, otherwise throw
-        void connect(const utils::network::Address& address) final; // build a connection as a client
-        void listen(const utils::network::Address& address) final; // build a connection as a server
 
         // ------------ Operator ---------- //
         TCPSocket& operator=(const TCPSocket& other) = delete;

@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 03/08/2026 by @author Tsukini
+##  @date 15/08/2026 by @author Tsukini
 
 File Name:
 ##  @file ASocket.cpp
@@ -78,7 +78,7 @@ _cold void utils::network::socket::resolveAddress(utils::network::Address& addre
     }
 }
 
-_cold void utils::network::socket::ASocket::close(void)
+_cold void utils::network::socket::ASocket::close(void) noexcept
 {
     if (this->_fd == -1) return; // Ignore invalid socket
 
@@ -87,6 +87,13 @@ _cold void utils::network::socket::ASocket::close(void)
     ::close(this->_fd);
     this->_fd = -1;
     onBasicVerbose((this->_mode ? "Server closed!" : "Client closed!"));
+}
+
+_cold void utils::network::socket::ASocket::reset(void)
+{
+    this->_fd = -1;
+    this->_buffersSend.clear();
+    this->_buffersRecv.clear();
 }
 
 _hot _nodiscard bool utils::network::socket::ASocket::empty(int fd) const
@@ -155,11 +162,13 @@ _hot _nodiscard std::string utils::network::socket::ASocket::recv(int fd)
 
         // Search for any '\n'
         pos = storage.find(this->_separator);
-    }
 
-    // Detect 'overflow'
-    if (std::min(pos, storage.size()) > this->_overflow)
-        throw utils::exception::ErrorException(utils::exception::InternalCode::Socket, "Overflow detected, maximum char accepted by payload is '" + std::to_string(OVERFLOW_LIMIT) + "', but got: " + std::to_string(std::min(pos, storage.size())));
+        // Detect 'overflow'
+        std::size_t size = (pos == std::string::npos) ? storage.size() : pos;
+        if (size > this->_overflow) _unlikely {
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Socket, "Overflow detected, maximum char accepted by payload is '" + std::to_string(this->_overflow) + "', but got: " + std::to_string(size));
+        }
+    }
 
     // Extract the first data section until '\n'
     std::string line = storage.substr(0, pos); // exclude '\n'
@@ -183,7 +192,7 @@ _hot _nodiscard std::vector<std::string> utils::network::socket::ASocket::recvAl
     return lines;
 }
 
-_hot void utils::network::socket::ASocket::send(const std::string& s, int fd)
+_hot void utils::network::socket::ASocket::flush(int fd)
 {
     // Automatic redirection on self
     if (fd == -1) {
@@ -192,34 +201,38 @@ _hot void utils::network::socket::ASocket::send(const std::string& s, int fd)
         }
     }
 
-    // Ensure separator
-    std::string sub = s;
-    if (sub.empty() || !sub.ends_with(this->_separator)) sub += this->_separator;
-
-    // Store the new payload
+    // Get the buffer
     std::string& buffer = this->_buffersSend[fd];
-    buffer += sub;
 
     // While the data wasn't fully sended
     ssize_t total = 0;
     ssize_t size = buffer.size();
     while (total < size) {
         ssize_t sent = this->send(fd, buffer.data() + total, size - total);
-        if (sent < 0)
+        if (sent < 0) _unlikely {
             throw utils::exception::ErrorException(utils::exception::InternalCode::Socket, strerror(errno));
-        if (sent == 0)
+        } else if (sent == 0) _unlikely {
             throw utils::exception::NoneException(utils::exception::InternalCode::SocketClosed);
+        }
         total += sent;
     }
+
+    // Clear the internal buffer after sending it's content
+    buffer.clear();
 }
 
-_hot void utils::network::socket::ASocket::sendBuffered(const std::string& s, int fd)
+_hot void utils::network::socket::ASocket::buffered(const std::string& s, int fd)
 {
     // Automatic redirection on self
     if (fd == -1) {
         if ((fd = this->_fd) == -1) _unlikely { // Check if the redirect fd is valid
             throw utils::exception::ErrorException(utils::exception::InternalCode::InvalidFd);
         }
+    }
+
+    // Check overflow
+    if (s.size() > this->_overflow) _unlikely {
+        throw utils::exception::ErrorException(utils::exception::InternalCode::Socket, "Overflow detected, maximum char accepted by payload is '" + std::to_string(this->_overflow) + "', but got: " + std::to_string(s.size()));
     }
 
     // Ensure separator

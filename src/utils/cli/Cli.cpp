@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 25/07/2026 by @author Tsukini
+##  @date 14/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Cli.cpp
@@ -174,10 +174,10 @@ std::optional<std::thread> utils::cli::Cli::start(const std::size_t call, const 
         throw utils::exception::ErrorException(utils::exception::InternalCode::CliTTY);
     } else if (this->_running) {
         if (failsafe) return std::nullopt;
-        throw utils::exception::WarningException(utils::exception::InternalCode::CliAlreadyRunning);
+        throw utils::exception::WarningException(utils::exception::InternalCode::AlreadyRunning);
     } else if (this->_killed) {
         if (failsafe) return std::nullopt;
-        throw utils::exception::WarningException(utils::exception::InternalCode::CliKilled);
+        throw utils::exception::WarningException(utils::exception::InternalCode::Killed);
     }
 
     this->_interrupted = false; // Reset interrupt status

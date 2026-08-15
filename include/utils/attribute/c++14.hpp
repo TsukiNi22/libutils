@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 19/07/2026 by @author Tsukini
+##  @date 14/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Attribute-c++14.hpp
@@ -33,9 +33,9 @@ File Description:
     /* branch prediction */
     #define _likely         // Not defined in this version
     #define _unlikely       // Not defined in this version
-    #define likely_c(c)     __builtin_expect(!!(c), 1)  // Signal a condition that has a bigger probability of appening
-    #define unlikely_c(c)   __builtin_expect(!!(c), 0)  // Signal a condition that has a smallest probability of appening
-    #define expect(c, v)    __builtin_expect(c, v)      // Signal a condition that has a high probability of having the given value
+    #define _likely_c(c)    __builtin_expect(!!(c), 1)  // Signal a condition that has a bigger probability of appening
+    #define _unlikely_c(c)  __builtin_expect(!!(c), 0)  // Signal a condition that has a smallest probability of appening
+    #define _expect(c, v)   __builtin_expect(c, v)      // Signal a condition that has a high probability of having the given value
     
     /* optimisation */
     #define _assume(expr)   __builtin_assume(expr)  // Assume a given expr as true

@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 02/08/2026 by @author Tsukini
+##  @date 15/08/2026 by @author Tsukini
 
 File Name:
 ##  @file ASocket.hpp
@@ -62,9 +62,28 @@ class ASocket: public utils::network::socket::ISocket {
         std::size_t _chunk = SOCKET_CHUNK_SIZE;
         std::size_t _overflow = OVERFLOW_LIMIT;
 
+        // ---------- Pre-Function -------- //
+        void buffered(const std::string& s, int fd) final; // store the given string into the internal buffer
+
     public:
+        // ---------- Pre-Function -------- //
+        // Only in server mode, otherwise throw
+        int accept(void) final; // accept a new connection (only server mode), fd is used as an id in server
+
+        void close(void) noexcept final; // reallow the use of connect/listen
+        void reset(void) final; // reset fd and buffers (DOES NOT CLOSE FD!!!)
+
+        // fd = -1 -> redirect on self (default value)
+        bool empty(int fd = -1) const final; // is there no valid payload in the stored buffer ?
+        std::string recv(int fd = -1) final; // (default) read by chunck of 4096, store the payload overflow into a buffer
+        std::vector<std::string> recvAll(int fd = -1) final; // read by chunck of 4096, return all valid payloads, store the overflow into a buffer
+        void flush(int fd = -1) final; // send the internal buffer
+
         // ------------ Function ---------- //
-        _cold void reset(void) final {this->_fd = -1;}; // reset fd (DOES NOT CLOSE!!!)
+
+        /* sender */
+        _hot void send(const std::string& s, int fd = -1) final {this->buffered(s, fd); this->flush(fd);}; // (default) send it now
+        _hot void sendBuffered(const std::string& s, int fd = -1) final {this->buffered(s, fd);}; // store in a buffer
 
         /* setter */
         _cold void setPayloadSeparator(char c = '\n') final {this->_separator = std::to_string(c);}; // default: '\n'
@@ -86,19 +105,6 @@ class ASocket: public utils::network::socket::ISocket {
         _hot _nodiscard ssize_t send(_unused int fd, _unused const char* buf, _unused std::size_t len) const override
         {throw utils::exception::FatalException(utils::exception::InternalCode::UndefinedCall);};
 
-        // ---------- Pre-Function -------- //
-        // Only in server mode, otherwise throw
-        int accept(void) final; // accept a new connection (only server mode), fd is used as an id in server
-
-        void close(void) final; // reallow the use of connect/listen
-
-        // fd = -1 -> redirect on self (default value)
-        bool empty(int fd = -1) const final; // is there no valid payload in the stored buffer ?
-        std::string recv(int fd) final; // (default) read by chunck of 4096, store the payload overflow into a buffer
-        std::vector<std::string> recvAll(int fd) final; // read by chunck of 4096, return all valid payloads, store the overflow into a buffer
-        void send(const std::string& s, int fd) final; // (default) send it now
-        void sendBuffered(const std::string& s, int fd) final; // store in a buffer
-
         // ------------ Operator ---------- //
         ASocket& operator=(const ASocket& other) = delete;
         ASocket& operator=(ASocket&& other) = delete;
@@ -109,7 +115,7 @@ class ASocket: public utils::network::socket::ISocket {
         ASocket(ASocket&& other) = delete;
 
         // ----------- Destructor --------- //
-        ~ASocket() = default;
+        ~ASocket() noexcept {this->close();};
 };
 
 } // namespace end

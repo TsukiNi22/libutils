@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 19/07/2026 by @author Tsukini
+##  @date 14/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Attribute-fallback.hpp
@@ -29,9 +29,9 @@ File Description:
     /* branch prediction */
     #define _likely
     #define _unlikely
-    #define likely_c(c)     (c)
-    #define unlikely_c(c)   (c)
-    #define expect(c, v)    (c)
+    #define _likely_c(c)    (c)
+    #define _unlikely_c(c)  (c)
+    #define _expect(c, v)   (c)
 
     /* optimisation */
     #define _assume(expr)

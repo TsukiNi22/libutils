@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 02/08/2026 by @author Tsukini
+##  @date 15/08/2026 by @author Tsukini
 
 File Name:
 ##  @file ISocket.hpp
@@ -37,6 +37,10 @@ namespace utils::network::socket { // namespace start
 
 // Any fd that equal to -1 is an undefined fd
 class ISocket {
+    protected:
+        // ---------- Pre-Function -------- //
+        virtual void buffered(const std::string& s, int fd) = 0; // store the given string into the internal buffer
+
     public:
         // ---------- Pre-Function -------- //
         /* setter */
@@ -46,7 +50,7 @@ class ISocket {
         virtual void setOverflow(std::size_t overflow) = 0; // size without a valid payload before throw, default: 4096 (0 = unlimited)
 
         /* getter */
-        virtual int getFd(void) const = 0; // fd of the socket
+        virtual int getFd(void) const = 0; // fd of the socket (-1 == closed)
         virtual bool hasAcceptOverload(void) const = 0;
         virtual bool hasRecvOverload(void) const = 0;
         virtual bool hasSendOverload(void) const = 0;
@@ -56,7 +60,7 @@ class ISocket {
         virtual void listen(const utils::network::Address& address) = 0; // build a connection as a server
 
         virtual void reset(void) = 0; // reset fd (DOES NOT CLOSE!!!)
-        virtual void close(void) = 0; // reallow the use of connect/listen
+        virtual void close(void) noexcept = 0; // reallow the use of connect/listen
 
         // Only in server mode, otherwise throw
         virtual int accept(void); // accept a new connection (only server mode), fd is used as an id in server
@@ -67,11 +71,12 @@ class ISocket {
         virtual ssize_t send(int fd, const char* buf, std::size_t len) const = 0;
 
         // fd = -1 -> redirect on self (default value)
-        virtual bool empty(int fd) const = 0; // is there no valid payload in the stored buffer ?
-        virtual std::string recv(int fd) = 0; // (default) read by chunck of 4096, store the payload overflow into a buffer
-        virtual std::vector<std::string> recvAll(int fd) = 0; // read by chunck of 4096, return all valid payloads, store the overflow into a buffer
-        virtual void send(const std::string& s, int fd) = 0; // (default) send it now
-        virtual void sendBuffered(const std::string& s, int fd) = 0; // store in a buffer
+        virtual bool empty(int fd = -1) const = 0; // is there no valid payload in the stored buffer ?
+        virtual std::string recv(int fd = -1) = 0; // (default) read by chunck of 4096, store the payload overflow into a buffer
+        virtual std::vector<std::string> recvAll(int fd = -1) = 0; // read by chunck of 4096, return all valid payloads from the buffer, store the overflow into a buffer
+        virtual void flush(int fd = -1) = 0; // send the internal buffer
+        virtual void send(const std::string& s, int fd = -1) = 0; // (default) send it now
+        virtual void sendBuffered(const std::string& s, int fd = -1) = 0; // store in a buffer
 
         // ------------ Operator ---------- //
         ISocket& operator=(const ISocket& other) = delete;
