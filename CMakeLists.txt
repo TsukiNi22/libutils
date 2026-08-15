@@ -388,7 +388,7 @@ else()
 endif()
 
 # Edit release value (run count)
-if(NOT UTILS_STABLE_RELEASE)
+if(UTILS_STABLE_RELEASE)
     # A stable version should never have to be rebuild and should always be removed or marked as depreacted
     set(CPACK_RPM_PACKAGE_RELEASE "1")
     set(CPACK_DEBIAN_PACKAGE_RELEASE "1")
