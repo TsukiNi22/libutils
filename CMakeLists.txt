@@ -99,6 +99,7 @@ set(SRC
 
     ## Network
     src/utils/network/Client.cpp
+    src/utils/network/Server.cpp
 
     ## Network (sub-part: socket)
     src/utils/network/socket/ASocket.cpp

@@ -37,6 +37,7 @@ _cold void utils::network::Client::start(void)
     } else if (this->_status == utils::network::Status::Terminated) {
         throw utils::exception::WarningException(utils::exception::InternalCode::Killed);
     }
+    onBasicVerbose("Starting client...");
 
     // Start the socket
     if constexpr (initsafe) {if (this->_socket->getFd() != -1) return;}
@@ -50,10 +51,14 @@ _cold void utils::network::Client::start(void)
         if (this->_epfd < 0) _unlikely {
             throw utils::exception::ErrorException(utils::exception::InternalCode::Poll, strerror(errno));
         }
+
+        // Init the socket fd
         struct epoll_event ev{};
         ev.events = EPOLLIN;
         ev.data.fd = fd;
-        epoll_ctl(this->_epfd, EPOLL_CTL_ADD, fd, &ev);
+        if (epoll_ctl(this->_epfd, EPOLL_CTL_ADD, fd, &ev) < 0) _unlikely {
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Poll, strerror(errno));
+        }
 
         this->_status = utils::network::Status::Up;
     } catch (...) {
@@ -65,6 +70,7 @@ _cold void utils::network::Client::start(void)
 _cold void utils::network::Client::stop(void)
 {
     if (this->_status != utils::network::Status::Up) return;
+    onBasicVerbose("Stopping client...");
     this->_socket->close();
     ::close(this->_epfd);
     this->_epfd = -1;
@@ -73,6 +79,7 @@ _cold void utils::network::Client::stop(void)
 
 _cold void utils::network::Client::kill(void)
 {
+    onBasicVerbose("Killing client...");
     this->_socket->close();
     if (this->_epfd != -1) ::close(this->_epfd);
     this->_epfd = -1;
@@ -97,9 +104,7 @@ _hot const utils::network::Payloads& utils::network::Client::listen(void)
 
         if (res < 0) _unlikely {
             if (errno == EINTR) return this->_payloads; // handle the ctrl-c before the first connection
-            this->_socket->close();
-            ::close(this->_epfd);
-            this->_epfd = -1;
+            this->kill();
             this->_status = utils::network::Status::Crashed;
             throw utils::exception::ErrorException(utils::exception::InternalCode::Poll, strerror(errno));
         }
@@ -114,9 +119,7 @@ _hot const utils::network::Payloads& utils::network::Client::listen(void)
         */
         if (events[0].events & (EPOLLERR | EPOLLHUP)) _unlikely {
             onBasicVerbose("Detected invalid epoll event, exiting...");
-            this->_socket->close();
-            ::close(this->_epfd);
-            this->_epfd = -1;
+            this->kill();
             this->_status = utils::network::Status::Crashed;
             throw utils::exception::ErrorException(utils::exception::InternalCode::Poll);
         }
@@ -134,8 +137,9 @@ _hot const utils::network::Payloads& utils::network::Client::listen(void)
                 onBasicVerbose("Socket closed...");
                 this->_status = utils::network::Status::Down;
             } else {
-                onBasicVerbose("Error during handling: " << std::endl << e.formated());
-                this->_socket->close();
+                onBasicVerbose("Error during the client request handling...");
+                onBasicVerbose(e.formated());
+                this->kill();
                 this->_status = utils::network::Status::Crashed;
             }
             ::close(this->_epfd);
@@ -166,9 +170,7 @@ _hot void utils::network::Client::join(void)
 
         if (res < 0) _unlikely {
             if (errno == EINTR) return; // handle the ctrl-c before the first connection
-            this->_socket->close();
-            ::close(this->_epfd);
-            this->_epfd = -1;
+            this->kill();
             this->_status = utils::network::Status::Crashed;
             throw utils::exception::ErrorException(utils::exception::InternalCode::Poll, strerror(errno));
         }
@@ -183,9 +185,7 @@ _hot void utils::network::Client::join(void)
         */
         if (events[0].events & (EPOLLERR | EPOLLHUP)) _unlikely {
             onBasicVerbose("Detected invalid epoll event, exiting...");
-            this->_socket->close();
-            ::close(this->_epfd);
-            this->_epfd = -1;
+            this->kill();
             this->_status = utils::network::Status::Crashed;
             throw utils::exception::ErrorException(utils::exception::InternalCode::Poll);
         }
@@ -207,6 +207,7 @@ _hot inline void utils::network::Client::flush(void)
 
     try {this->_socket->flush();}
     catch (...) {
+        this->kill();
         this->_status = utils::network::Status::Crashed;
         throw;
     }
@@ -221,6 +222,7 @@ _hot inline void utils::network::Client::send<false>(const utils::network::Paylo
     }   try {this->_socket->send(payload);}
 
     catch (...) {
+        this->kill();
         this->_status = utils::network::Status::Crashed;
         throw;
     }
@@ -236,6 +238,7 @@ _hot inline void utils::network::Client::send<true>(const utils::network::Payloa
 
     try {this->_socket->sendBuffered(payload);}
     catch (...) {
+        this->kill();
         this->_status = utils::network::Status::Crashed;
         throw;
     }
