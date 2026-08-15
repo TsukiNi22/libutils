@@ -339,23 +339,36 @@ endif()
 # Setup the package name
 if(UTILS_PACKAGE)
     set(CPACK_PACKAGE_NAME "libutils${CHANNEL}")
+    set(MIRROR_PACKAGE_NAME "libutils${MIRROR_CHANNEL}")
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (global)")
 elseif(UTILS_DEV_PACKAGE)
     set(CPACK_PACKAGE_NAME "libutils-dev${CHANNEL}")
+    set(MIRROR_PACKAGE_NAME "libutils-dev${MIRROR_CHANNEL}")
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (headers/cmake)")
 elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(CPACK_PACKAGE_NAME "libutils-db${CHANNEL}")
+    set(MIRROR_PACKAGE_NAME "libutils-db${MIRROR_CHANNEL}")
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (debug)")
     set(PREFIX "db")
 elseif(CMAKE_BUILD_TYPE STREQUAL "Asan")
     set(CPACK_PACKAGE_NAME "libutils-as${CHANNEL}")
+    set(MIRROR_PACKAGE_NAME "libutils-as${MIRROR_CHANNEL}")
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (asan)")
     set(PREFIX "as")
 else()
     set(CPACK_PACKAGE_NAME "libutils-op${CHANNEL}")
+    set(MIRROR_PACKAGE_NAME "libutils-op${MIRROR_CHANNEL}")
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (optimized)")
     set(PREFIX "op")
 endif()
+
+# Setup the conflict between stable & unstable packages
+set(CPACK_RPM_PACKAGE_OBSOLETES "${MIRROR_PACKAGE_NAME}")
+set(CPACK_RPM_PACKAGE_CONFLICTS "${MIRROR_PACKAGE_NAME}")
+
+set(CPACK_DEBIAN_PACKAGE_REPLACES "${MIRROR_PACKAGE_NAME}")
+set(CPACK_DEBIAN_PACKAGE_BREAKS "${MIRROR_PACKAGE_NAME}")
+set(CPACK_DEBIAN_PACKAGE_CONFLICTS "${MIRROR_PACKAGE_NAME}")
 
 # Separate headers & lib
 set(CPACK_RPM_COMPONENT_INSTALL ON)
@@ -373,6 +386,24 @@ elseif(UTILS_DEV_PACKAGE)
     set(CPACK_DEBIAN_HEADERS-DB_PACKAGE_NAME "libutils-dev-db${CHANNEL}")
     set(CPACK_DEBIAN_HEADERS-AS_PACKAGE_NAME "libutils-dev-as${CHANNEL}")
     set(CPACK_DEBIAN_HEADERS-OP_PACKAGE_NAME "libutils-dev-op${CHANNEL}")
+
+    # Setup the conflict between stable & unstable packages
+    set(CPACK_RPM_HEADERS-DB_PACKAGE_OBSOLETES "libutils-dev-db${MIRROR_CHANNEL}")
+    set(CPACK_RPM_HEADERS-DB_PACKAGE_CONFLICTS "libutils-dev-db${MIRROR_CHANNEL}")
+    set(CPACK_RPM_HEADERS-AS_PACKAGE_OBSOLETES "libutils-dev-as${MIRROR_CHANNEL}")
+    set(CPACK_RPM_HEADERS-AS_PACKAGE_CONFLICTS "libutils-dev-as${MIRROR_CHANNEL}")
+    set(CPACK_RPM_HEADERS-OP_PACKAGE_OBSOLETES "libutils-dev-op${MIRROR_CHANNEL}")
+    set(CPACK_RPM_HEADERS-OP_PACKAGE_CONFLICTS "libutils-dev-op${MIRROR_CHANNEL}")
+
+    set(CPACK_DEBIAN_HEADERS-DB_PACKAGE_REPLACES "libutils-dev-db${MIRROR_CHANNEL}")
+    set(CPACK_DEBIAN_HEADERS-DB_PACKAGE_BREAKS "libutils-dev-db${MIRROR_CHANNEL}")
+    set(CPACK_DEBIAN_HEADERS-DB_PACKAGE_CONFLICTS "libutils-dev-db${MIRROR_CHANNEL}")
+    set(CPACK_DEBIAN_HEADERS-AS_PACKAGE_REPLACES "libutils-dev-as${MIRROR_CHANNEL}")
+    set(CPACK_DEBIAN_HEADERS-AS_PACKAGE_BREAKS "libutils-dev-as${MIRROR_CHANNEL}")
+    set(CPACK_DEBIAN_HEADERS-AS_PACKAGE_CONFLICTS "libutils-dev-as${MIRROR_CHANNEL}")
+    set(CPACK_DEBIAN_HEADERS-OP_PACKAGE_REPLACES "libutils-dev-op${MIRROR_CHANNEL}")
+    set(CPACK_DEBIAN_HEADERS-OP_PACKAGE_BREAKS "libutils-dev-op${MIRROR_CHANNEL}")
+    set(CPACK_DEBIAN_HEADERS-OP_PACKAGE_CONFLICTS "libutils-dev-op${MIRROR_CHANNEL}")
 else()
     set(CPACK_COMPONENTS_ALL lib)
 endif()
@@ -410,18 +441,13 @@ else()
         set(CPACK_RPM_PACKAGE_REQUIRES "libutils-dev${CHANNEL} = ${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}, libutils-dev-${PREFIX}${CHANNEL} = ${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}, openssl-libs")
         set(CPACK_DEBIAN_PACKAGE_DEPENDS "libutils-dev${CHANNEL} (= ${PROJECT_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE}), libutils-dev-${PREFIX}${CHANNEL} (= ${PROJECT_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE}), libssl3")
     endif()
+
+    # Suggests the installation of gdb along side the debug version
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(CPACK_RPM_PACKAGE_SUGGESTS "gdb")
+        set(CPACK_DEBIAN_PACKAGE_SUGGESTS "gdb")
+    endif()
 endif()
-
-
-# Setup the conflict between stable & unstable packages
-string(REPLACE "${CHANNEL}" "${MIRROR_CHANNEL}" MIRROR_PACKAGE_NAME "${CPACK_PACKAGE_NAME}")
-
-set(CPACK_RPM_PACKAGE_OBSOLETES "${MIRROR_PACKAGE_NAME}")
-set(CPACK_RPM_PACKAGE_CONFLICTS "${MIRROR_PACKAGE_NAME}")
-
-set(CPACK_DEBIAN_PACKAGE_REPLACES "${MIRROR_PACKAGE_NAME}")
-set(CPACK_DEBIAN_PACKAGE_BREAKS "${MIRROR_PACKAGE_NAME}")
-set(CPACK_DEBIAN_PACKAGE_CONFLICTS "${MIRROR_PACKAGE_NAME}")
 
 # RPM
 set(CPACK_RPM_PACKAGE_LICENSE "MIT")
