@@ -41,7 +41,7 @@ jobs:
           fi
 
   build-release:
-    needs: actions
+    needs: should-build
     if: needs.should-build.outputs.build == 'true'
 
     runs-on: ${{ vars.RUNNER }}
