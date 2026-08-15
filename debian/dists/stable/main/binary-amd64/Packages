@@ -31,18 +31,18 @@ Homepage: https://github.com/TsukiNi22/libutils
 Description: C++20 utility library (asan)
 
 Package: libutils-as-pre
-Version: 2.3.0-94
+Version: 2.3.0-98
 Architecture: amd64
 Maintainer: TsukiNi22
 Installed-Size: 35807
-Depends: libutils-dev-pre (= 2.3.0-94), libutils-dev-as-pre (= 2.3.0-94), libssl3
+Depends: libutils-dev-pre (= 2.3.0-98), libutils-dev-as-pre (= 2.3.0-98), libssl3
 Conflicts: libutils-as
 Breaks: libutils-as
 Filename: pool/main/libutils-as-pre-2.3.0-Linux-lib.deb
-Size: 6446566
-MD5sum: a01e6dbdc666c9fc5c14a3de4851916e
-SHA1: 8f73c4a6d88a38793f56d421465f5eb8c2572de8
-SHA256: 20c8935b9b19d20a4b43bde283e93f8e251749194a9a4e57a83250f6cd87b295
+Size: 6446564
+MD5sum: 206959027753c0a82694c4e9a132d3a3
+SHA1: 844d1df243d4f573aafc1f802aa2ff2072752b30
+SHA256: 18f93fee249985735fb08d9df4d7e5d463115384cce204abfd9256acd28149ee
 Section: devel
 Priority: optional
 Homepage: https://github.com/TsukiNi22/libutils
@@ -65,19 +65,19 @@ Homepage: https://github.com/TsukiNi22/libutils
 Description: C++20 utility library (debug)
 
 Package: libutils-db-pre
-Version: 2.3.0-94
+Version: 2.3.0-98
 Architecture: amd64
 Maintainer: TsukiNi22
 Installed-Size: 29727
-Depends: libutils-dev-pre (= 2.3.0-94), libutils-dev-db-pre (= 2.3.0-94), libssl3
+Depends: libutils-dev-pre (= 2.3.0-98), libutils-dev-db-pre (= 2.3.0-98), libssl3
 Suggests: gdb
 Conflicts: libutils-db
 Breaks: libutils-db
 Filename: pool/main/libutils-db-pre-2.3.0-Linux-lib.deb
-Size: 5305670
-MD5sum: ce4819c7e14d5b313a555e4bea8c6bd5
-SHA1: c140ec72757425a60e6afc8a0a0b9fc643a02567
-SHA256: 78c70fbf264dd969c6ab0294582381560dfcb1d4aa4346c2cdde9ee6213fdebd
+Size: 5305648
+MD5sum: 3a1b8b0e0daba3205f4ec6dde321c1bd
+SHA1: eedeb50c976bd6bcd5c37e406d631583cb1f6e6c
+SHA256: 40d27fa6df1f5544f6e8260aa46a8156c7de8b55d088e579de21bee8967755cb
 Section: devel
 Priority: optional
 Homepage: https://github.com/TsukiNi22/libutils
@@ -114,7 +114,7 @@ Homepage: https://github.com/TsukiNi22/libutils
 Description: C++20 utility library (headers/cmake)
 
 Package: libutils-dev-as-pre
-Version: 2.3.0-94
+Version: 2.3.0-98
 Architecture: amd64
 Maintainer: TsukiNi22
 Installed-Size: 17
@@ -122,9 +122,9 @@ Conflicts: libutils-dev-as
 Breaks: libutils-dev-as
 Filename: pool/main/libutils-dev-pre-2.3.0-Linux-headers-as.deb
 Size: 1118
-MD5sum: bf41af3bcaafe66f96cfbda4af0f3051
-SHA1: 20c3db0230531158e4c881150d30b447f84fd2fc
-SHA256: 6ac674f4d59262cf4072d3950b526eca06a5f981380e0603350103553cd57b5d
+MD5sum: c611c62179835f783656132bc397a549
+SHA1: da393297bcda19eca4f1302843dc5d87ea404251
+SHA256: d70de78d204c6b3ea2c80216b9c7ac54bb961c829b73ab8a37a32d9ea74b28d1
 Section: devel
 Priority: optional
 Homepage: https://github.com/TsukiNi22/libutils
@@ -146,17 +146,17 @@ Homepage: https://github.com/TsukiNi22/libutils
 Description: C++20 utility library (headers/cmake)
 
 Package: libutils-dev-db-pre
-Version: 2.3.0-94
+Version: 2.3.0-98
 Architecture: amd64
 Maintainer: TsukiNi22
 Installed-Size: 17
 Conflicts: libutils-dev-db
 Breaks: libutils-dev-db
 Filename: pool/main/libutils-dev-pre-2.3.0-Linux-headers-db.deb
-Size: 1124
-MD5sum: d83c61443fa08cb36cfae110bb3610ea
-SHA1: fb4dd9db1eaf332a969fa32746c063b9501c3284
-SHA256: b7f548a93dee8b7dae4d9a29e111f0c3f82b9ef2b439618c7a7307ce3fe83962
+Size: 1122
+MD5sum: a8dece2cb0a9d81a82ed594506dbbc0b
+SHA1: 627b5362e4762371b42d1dfdd26f36fbeeb9a34f
+SHA256: 3a7869399bc54d520ed2426beb32f28e523c937f0dac892a827657806734e730
 Section: devel
 Priority: optional
 Homepage: https://github.com/TsukiNi22/libutils
@@ -178,34 +178,34 @@ Homepage: https://github.com/TsukiNi22/libutils
 Description: C++20 utility library (headers/cmake)
 
 Package: libutils-dev-op-pre
-Version: 2.3.0-94
+Version: 2.3.0-98
 Architecture: amd64
 Maintainer: TsukiNi22
 Installed-Size: 18
 Conflicts: libutils-dev-op
 Breaks: libutils-dev-op
 Filename: pool/main/libutils-dev-pre-2.3.0-Linux-headers-op.deb
-Size: 1228
-MD5sum: f1123ca02955a4a3d7ea51a271d44c8d
-SHA1: ddf08d350db0868308988fd66141bb8802e04cc0
-SHA256: aded917be1f34d4f7f4acd7b03cb4a5ef5c22e41af2bbec2fd75ca8b46ebbd00
+Size: 1226
+MD5sum: b941c5a25ae43884e23833022c6e03a6
+SHA1: 6a1e59cd235533a5ee8d0c46255beb575fd655ff
+SHA256: 6ddb245868a184fb0b386629075d752844e33a6d62652a0332156571b60a37ea
 Section: devel
 Priority: optional
 Homepage: https://github.com/TsukiNi22/libutils
 Description: C++20 utility library (headers/cmake)
 
 Package: libutils-dev-pre
-Version: 2.3.0-94
+Version: 2.3.0-98
 Architecture: amd64
 Maintainer: TsukiNi22
 Installed-Size: 562
 Conflicts: libutils-dev
 Breaks: libutils-dev
 Filename: pool/main/libutils-dev-pre-2.3.0-Linux-headers.deb
-Size: 58408
-MD5sum: c884388af7d43b26b71df7eee22beae2
-SHA1: fa1a792c0a3b6678592347c478a5b504fea4e5b5
-SHA256: 2110d40176939405897b8056c60313c42f6f571b59ab764758590fdbdc61115f
+Size: 58428
+MD5sum: 92b6ae145db33bdc18b0c4ba9e8ed1e9
+SHA1: 0bb266e191841c84bdaa9ceeaa22128f5be8079c
+SHA256: bc14bf724434aed713d753c55b2e38e42c14d350689f54403bf37da3a323f619
 Section: devel
 Priority: optional
 Homepage: https://github.com/TsukiNi22/libutils
@@ -228,36 +228,36 @@ Homepage: https://github.com/TsukiNi22/libutils
 Description: C++20 utility library (optimized)
 
 Package: libutils-op-pre
-Version: 2.3.0-94
+Version: 2.3.0-98
 Architecture: amd64
 Maintainer: TsukiNi22
 Installed-Size: 3315
-Depends: libutils-dev-pre (= 2.3.0-94), libutils-dev-op-pre (= 2.3.0-94), libssl3
+Depends: libutils-dev-pre (= 2.3.0-98), libutils-dev-op-pre (= 2.3.0-98), libssl3
 Conflicts: libutils-op
 Breaks: libutils-op
 Filename: pool/main/libutils-op-pre-2.3.0-Linux-lib.deb
-Size: 764186
-MD5sum: 995d7a84bc9615698e7c6424d57e6ee7
-SHA1: 720b9cfd70a75ded3fde6564988860552d3e6baa
-SHA256: 0169ec5a6c2230435ec44209773dfab2c618d0182f73326ea7029239f153f76b
+Size: 764184
+MD5sum: e7ccfbcd8f6fdf1991d8e72b47c9d576
+SHA1: 3d7799930cf2180a30989746f5228ab7b236c4ff
+SHA256: 20531ffe2401719c3598c571d80e9495cfa10984f50ebaf25807d093b2e2d922
 Section: devel
 Priority: optional
 Homepage: https://github.com/TsukiNi22/libutils
 Description: C++20 utility library (optimized)
 
 Package: libutils-pre
-Version: 2.3.0-94
+Version: 2.3.0-98
 Architecture: amd64
 Maintainer: TsukiNi22
 Installed-Size: 4
-Depends: libutils-op-pre (= 2.3.0-94)
+Depends: libutils-op-pre (= 2.3.0-98)
 Conflicts: libutils
 Breaks: libutils
 Filename: pool/main/libutils-pre-2.3.0-Linux.deb
-Size: 612
-MD5sum: 6b416ada840036e28a902aa0509b1db5
-SHA1: 8b374aaafc409b40544e1bc8c4518a449f1fd297
-SHA256: 1d3dd487b22a51cbc4ed13073335a2aaca9e68635eacd252a61ec15bb4bc81de
+Size: 606
+MD5sum: 2f92f0d0445daf3ebe84e8ebb51138d9
+SHA1: 2aab99ecbe83aea767eb0469652f99ab6f3035fd
+SHA256: 2bf4d0fc5d654acb884f9ef04c51e92d0979534eb02d7d6d21a1d5aa9d83a7a6
 Section: devel
 Priority: optional
 Homepage: https://github.com/TsukiNi22/libutils
