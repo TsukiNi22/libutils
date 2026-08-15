@@ -9,7 +9,47 @@ env:
   LIBRARYS: "libutils.a libutils_debug.a libutils_asan.a"
 
 jobs:
+  should-build:
+    runs-on: ${{ vars.RUNNER }}
+    defaults:
+      run:
+        shell: bash
+
+    outputs:
+      build: ${{ steps.decide.outputs.build }}
+      stable: ${{ steps.decide.outputs.stable }}
+
+    steps:
+      - name: Decide whether to build and on witch branch
+        id: decide
+        run: |
+          set -e
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+            if [[ "${{ github.ref_name }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?-release$ ]]; then
+              echo "build=true" >> "$GITHUB_OUTPUT"
+              echo "stable=ON" >> "$GITHUB_OUTPUT"
+            elif [[ "${{ github.ref_name }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?-pre$ ]]; then
+              echo "build=true" >> "$GITHUB_OUTPUT"
+              echo "stable=OFF" >> "$GITHUB_OUTPUT"
+            else
+              echo "build=false" >> "$GITHUB_OUTPUT"
+              echo "stable=OFF" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            if [[ "${{ contains(github.event.head_commit.message, '[build]') }}" == "true" ]]; then
+              echo "build=true" >> "$GITHUB_OUTPUT"
+              echo "stable=OFF" >> "$GITHUB_OUTPUT"
+            else
+              echo "build=false" >> "$GITHUB_OUTPUT"
+              echo "stable=OFF" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+          echo "Decision: $(tail -n2 "$GITHUB_OUTPUT")"
+
   build-packages:
+    needs: should-build
+    if: needs.should-build.outputs.build == 'true'
+
     runs-on: ${{ vars.RUNNER }}
     defaults:
       run:
@@ -32,24 +72,11 @@ jobs:
           restore-keys: |
             ccache-${{ runner.os }}-
 
-      - name: Determine release channel
-        id: channel
-        run: |
-          set -e
-          if [[ "${{ github.ref_type }}" == "tag" && "${{ github.ref_name }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-.*)?$ ]]; then
-            echo "stable=ON" >> "$GITHUB_OUTPUT"
-            echo "channel=stable" >> "$GITHUB_OUTPUT"
-          else
-            echo "stable=OFF" >> "$GITHUB_OUTPUT"
-            echo "channel=unstable" >> "$GITHUB_OUTPUT"
-          fi
-          echo "Channel: $(tail -n1 "$GITHUB_OUTPUT")"
-
       - name: Build packages (Release)
         run: |
           set -e
           # github.run_number -> github.run_id (in case of workflow renaming, more secure but less readable)
-          cmake -S . -B build -DUTILS_STABLE_RELEASE=${{ steps.channel.outputs.stable }} -DPACKAGE_RELEASE=${{ github.run_number }}
+          cmake -S . -B build -DUTILS_STABLE_RELEASE=${{ needs.should-build.outputs.stable }} -DPACKAGE_RELEASE=${{ github.run_number }}
           cmake --build build --target package_release --parallel $(nproc)
         timeout-minutes: 2
 
@@ -76,8 +103,8 @@ jobs:
             build/*.deb
 
   sync-online-packages:
-    needs: build-packages
-    if: github.event_name == 'push' && needs.build-packages.result == 'success'
+    needs: [should-build, build-packages]
+    if: github.event_name == 'push' && needs.build-packages.result == 'success' && needs.should-build.outputs.build == 'true'
     permissions:
       contents: write
 
