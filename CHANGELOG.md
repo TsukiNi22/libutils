@@ -13,8 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `Fixed`       | Bugs or issues that have been resolved |
 
 > [!NOTE]
-> The `(unofficial)` version are sub-version (such has fix typically) that don't have associated tag.
-> A packaged builded at this version is not guaranteed.
+> The `(unofficial)` version are sub-version (such has fix typically) that don't have associated tag. The version often includes other sub-versions that weren't documented separately.
+> A packaged builded at this version is not guaranteed!
 
 ---
 
