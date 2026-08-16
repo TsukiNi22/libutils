@@ -198,7 +198,7 @@ _hot void utils::network::Client::join(void)
     }
 }
 
-_hot inline void utils::network::Client::flush(void)
+_hot void utils::network::Client::flush(void)
 {
     // Check status
     if (this->_status != utils::network::Status::Up) _unlikely {return;}
@@ -212,7 +212,7 @@ _hot inline void utils::network::Client::flush(void)
 }
 
 template<>
-_hot inline void utils::network::Client::send<false>(const utils::network::Payload& payload)
+_hot void utils::network::Client::send<false>(const utils::network::Payload& payload)
 { 
     // Check status
     if (this->_status != utils::network::Status::Up) _unlikely {return;}
@@ -226,7 +226,7 @@ _hot inline void utils::network::Client::send<false>(const utils::network::Paylo
 }
 
 template<>
-_hot inline void utils::network::Client::send<true>(const utils::network::Payload& payload)
+_hot void utils::network::Client::send<true>(const utils::network::Payload& payload)
 {
     // Check status
     if (this->_status != utils::network::Status::Up) _unlikely {return;}

@@ -30,22 +30,23 @@ namespace utils::exception { // namespace start
 /* Definition of the different exception code */
 enum class InternalCode: std::size_t {
     Undefined = 0,
-    Exit = 15614930120812299184ull,
-    Empty = 16272772101656282407ull,
     UndefinedCall = 15097308567882920903ull,
     UnauthorizedCall = 3720002318170871484ull,
     InvalidArgument = 14302005046670700621ull,
+    Exit = 15614930120812299184ull,
+    Empty = 16272772101656282407ull,
     IdOverflow = 1572877478651931508ull,
     InvalidId = 10375048954888942450ull,
     UnknowId = 17915614998283872035ull,
     UnknowKey = 4176992470892457883ull,
-    Override = 6821003438930377415ull,
     OutOfBounds = 13386363433973582997ull,
-    Freezed = 4235146037744797477ull,
     BadCast = 13996216691997858231ull,
     UnknowCast = 1638341191902573621ull,
+    Override = 6821003438930377415ull,
+    Freezed = 4235146037744797477ull,
     AlreadyRunning = 16434076516824692129ull,
     NotRunning = 15176019100705961478ull,
+    Crashed = 17323165390157572917ull,
     Killed = 3109759896820498762ull,
     ArgumentsNumber = 12018782069274677273ull,
     OptionIngored = 4645627411356026889ull,
@@ -88,22 +89,23 @@ enum class InternalCode: std::size_t {
 /* Corresponding exception message for each code */
 inline const std::unordered_map<utils::exception::InternalCode, const char*> InternalMessages = {
     {utils::exception::InternalCode::Undefined, "An undefined error has occured"},
-    {utils::exception::InternalCode::Exit, "Exit"},
-    {utils::exception::InternalCode::Empty, "Empty"},
     {utils::exception::InternalCode::UndefinedCall, "This function is not defined and was left as-is"},
     {utils::exception::InternalCode::UnauthorizedCall, "Can't allow the call to this function"},
-    {utils::exception::InternalCode::InvalidArgument, "Invalid argument value"},
+    {utils::exception::InternalCode::InvalidArgument, "Invalid argument given"},
+    {utils::exception::InternalCode::Exit, "Exit"},
+    {utils::exception::InternalCode::Empty, "Empty"},
     {utils::exception::InternalCode::IdOverflow, "Can't distribute an id, type's limits are reach"},
     {utils::exception::InternalCode::InvalidId, "Try to do thing with an invalid id"},
     {utils::exception::InternalCode::UnknowId, "Try to do thing with an unknow id"},
     {utils::exception::InternalCode::UnknowKey, "Try to do thing with an unknow key"},
-    {utils::exception::InternalCode::Override, "The override is desactivated"},
     {utils::exception::InternalCode::OutOfBounds, "Bounds have been oversteapaded"},
-    {utils::exception::InternalCode::Freezed, "Can't edit a freezed things"},
     {utils::exception::InternalCode::BadCast, "Invalid cast between from a type to another"},
     {utils::exception::InternalCode::UnknowCast, "Unknow cast type, can't proceed"},
+    {utils::exception::InternalCode::Override, "The override is desactivated"},
+    {utils::exception::InternalCode::Freezed, "Can't edit a freezed things"},
     {utils::exception::InternalCode::AlreadyRunning, "Can't start something that is already running"},
     {utils::exception::InternalCode::NotRunning, "Can't execute the action with something that is not running"},
+    {utils::exception::InternalCode::Crashed, "Can't execute the action with something that is crashed"},
     {utils::exception::InternalCode::Killed, "Can't start or restart a something that was killed/terminated"},
     {utils::exception::InternalCode::ArgumentsNumber, "Invalid number of argument(s) given, use '-h' for more information"},
     {utils::exception::InternalCode::OptionIngored, "Option ignored, can't determine it's ownership"},
@@ -146,22 +148,23 @@ inline const std::unordered_map<utils::exception::InternalCode, const char*> Int
 /* Potential default info: nullptr same as "[None]" */
 inline const std::unordered_map<utils::exception::InternalCode, const char*> InternalInfo = {
     {utils::exception::InternalCode::Undefined, nullptr},
-    {utils::exception::InternalCode::Exit, "Exit"},
-    {utils::exception::InternalCode::Empty, nullptr},
     {utils::exception::InternalCode::UndefinedCall, nullptr},
     {utils::exception::InternalCode::UnauthorizedCall, nullptr},
     {utils::exception::InternalCode::InvalidArgument, nullptr},
+    {utils::exception::InternalCode::Exit, "Exit"},
+    {utils::exception::InternalCode::Empty, nullptr},
     {utils::exception::InternalCode::IdOverflow, nullptr},
     {utils::exception::InternalCode::InvalidId, nullptr},
     {utils::exception::InternalCode::UnknowId, nullptr},
     {utils::exception::InternalCode::UnknowKey, nullptr},
-    {utils::exception::InternalCode::Override, nullptr},
     {utils::exception::InternalCode::OutOfBounds, nullptr},
-    {utils::exception::InternalCode::Freezed, nullptr},
     {utils::exception::InternalCode::BadCast, nullptr},
     {utils::exception::InternalCode::UnknowCast, nullptr},
+    {utils::exception::InternalCode::Override, nullptr},
+    {utils::exception::InternalCode::Freezed, nullptr},
     {utils::exception::InternalCode::AlreadyRunning, nullptr},
     {utils::exception::InternalCode::NotRunning, nullptr},
+    {utils::exception::InternalCode::Crashed, nullptr},
     {utils::exception::InternalCode::Killed, nullptr},
     {utils::exception::InternalCode::ArgumentsNumber, nullptr},
     {utils::exception::InternalCode::OptionIngored, nullptr},
@@ -209,22 +212,23 @@ inline const std::unordered_map<utils::exception::InternalCode, const char*> Int
 // 0b1000 = Warning			(allow Warning)
 inline const std::unordered_map<utils::exception::InternalCode, const std::uint8_t> InternalRestriction = {
     {utils::exception::InternalCode::Undefined, 0b0000}, // allow: All
-    {utils::exception::InternalCode::Exit, 0b0001}, // allow: None
-    {utils::exception::InternalCode::Empty, 0b0000}, // allow: All
     {utils::exception::InternalCode::UndefinedCall, 0b0110}, // allow: Fatal, Error
     {utils::exception::InternalCode::UnauthorizedCall, 0b0110}, // allow: Fatal, Error
     {utils::exception::InternalCode::InvalidArgument, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::Exit, 0b0001}, // allow: None
+    {utils::exception::InternalCode::Empty, 0b0000}, // allow: All
     {utils::exception::InternalCode::IdOverflow, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::InvalidId, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::UnknowId, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::UnknowKey, 0b1110}, // allow: Fatal, Error, Warning
-    {utils::exception::InternalCode::Override, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::OutOfBounds, 0b1110}, // allow: Fatal, Error, Warning
-    {utils::exception::InternalCode::Freezed, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::BadCast, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::UnknowCast, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::Override, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::Freezed, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::AlreadyRunning, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::NotRunning, 0b1110}, // allow: Fatal, Error, Warning
+    {utils::exception::InternalCode::Crashed, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::Killed, 0b1110}, // allow: Fatal, Error, Warning
     {utils::exception::InternalCode::ArgumentsNumber, 0b0110}, // allow: Fatal, Error
     {utils::exception::InternalCode::OptionIngored, 0b1110}, // allow: Fatal, Error, Warning

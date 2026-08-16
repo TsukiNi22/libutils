@@ -42,9 +42,6 @@ _cold void utils::network::Server::start(void)
     }
     onBasicVerbose("Starting server...");
 
-    // Reset buffers
-    this->_payloads.clear();
-
     // Start the socket
     try {
         // Open the socket (doesn't restart open already open)
@@ -58,9 +55,6 @@ _cold void utils::network::Server::start(void)
         if (this->_epfd < 0) _unlikely {
             throw utils::exception::ErrorException(utils::exception::InternalCode::Poll, strerror(errno));
         }
-
-        // Ensure server buffer
-        this->_payloads[this->_fd];
 
         // Init the socket fd (server)
         struct epoll_event ev{};
@@ -82,6 +76,7 @@ _cold void utils::network::Server::stop(void)
     if (this->_status != utils::network::Status::Up) return;
     onBasicVerbose("Stopping server...");
     for (const auto& [fd, _]: this->_payloads) ::close(fd);
+    this->_payloads.clear();
     this->_socket->close();
     ::close(this->_epfd);
     this->_epfd = -1;
@@ -93,6 +88,7 @@ _cold void utils::network::Server::kill(void)
     if (this->_status == utils::network::Status::Terminated) return;
     onBasicVerbose("Killing server...");
     for (const auto& [fd, _]: this->_payloads) ::close(fd);
+    this->_payloads.clear();
     this->_socket->close();
     if (this->_epfd != -1) ::close(this->_epfd);
     this->_epfd = -1;
@@ -113,7 +109,7 @@ _hot _nodiscard const std::unordered_map<int, utils::network::Payloads>& utils::
     this->_to_clean = fd;
 
     // Read the events
-    std::vector<struct epoll_event> events(this->_payloads.size());
+    std::vector<struct epoll_event> events(this->_payloads.size() + 1);
     while (this->_status == utils::network::Status::Up) {
         std::this_thread::yield(); // To not fully take the cpu computing
         int res = epoll_wait(this->_epfd, events.data(), events.size(), 0);
@@ -230,7 +226,7 @@ _hot void utils::network::Server::join(const int fd)
     }
 
     // Read the events
-    std::vector<struct epoll_event> events(this->_payloads.size());
+    std::vector<struct epoll_event> events(this->_payloads.size() + 1);
     while (this->_status == utils::network::Status::Up) {
         std::this_thread::yield(); // To not fully take the cpu computing
         int res = epoll_wait(this->_epfd, events.data(), events.size(), 10); // wake up at least evry 10ms
@@ -279,7 +275,7 @@ _hot void utils::network::Server::join(const int fd)
     }
 }
 
-_hot inline void utils::network::Server::flush(void)
+_hot void utils::network::Server::flush(void)
 {
     // Check status
     if (this->_status != utils::network::Status::Up) _unlikely {return;}
@@ -287,7 +283,7 @@ _hot inline void utils::network::Server::flush(void)
     for (const auto& [fd, _]: this->_payloads) this->flush(fd);
 }
 
-_hot inline void utils::network::Server::flush(const int fd)
+_hot void utils::network::Server::flush(const int fd)
 {
     // Check status
     if (this->_status != utils::network::Status::Up) _unlikely {return;}
@@ -302,7 +298,7 @@ _hot inline void utils::network::Server::flush(const int fd)
 }
 
 template<>
-_hot inline void utils::network::Server::send<false>(const int fd, const utils::network::Payload& payload)
+_hot void utils::network::Server::send<false>(const int fd, const utils::network::Payload& payload)
 { 
     // Check status
     if (this->_status != utils::network::Status::Up) _unlikely {return;}
@@ -317,7 +313,7 @@ _hot inline void utils::network::Server::send<false>(const int fd, const utils::
 }
 
 template<>
-_hot inline void utils::network::Server::send<true>(const int fd, const utils::network::Payload& payload)
+_hot void utils::network::Server::send<true>(const int fd, const utils::network::Payload& payload)
 {
     // Check status
     if (this->_status != utils::network::Status::Up) _unlikely {return;}
