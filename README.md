@@ -19,7 +19,8 @@ See internal wiki for more details [...]() (not setup for now)
 ## Packages
 
 > [!NOTE]
-> Most of the packages have a pre-release/unstable version named: `<package_name>-pre`
+> Most packages have a pre-release/unstable version named `<package_name>-pre`.
+> The `-pre` packages are marked as obsolete by any release/stable package (without `-pre`) of the same version or higher.
 
 | File Name | Content |
 | --------- | ------- |
