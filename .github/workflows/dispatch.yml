@@ -41,11 +41,7 @@ jobs:
               BUILD=false; STABLE=OFF; RELEASE=false
             fi
           else # On normal push
-            if [[ "$MESSAGE_HAS_BUILD" == "true" || "$MESSAGE_HAS_RELEASE" == "true" ]]; then
-              BUILD=true
-            else
-              BUILD=false
-            fi
+            [[ "$MESSAGE_HAS_BUILD" == "true" ]] && BUILD=true || BUILD=false
             [[ "$MESSAGE_HAS_RELEASE" == "true" ]] && RELEASE=true || RELEASE=false
             STABLE=OFF
           fi
