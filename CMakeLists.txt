@@ -366,8 +366,8 @@ endif()
 # Setup the conflict between stable & unstable packages
 if(UTILS_STABLE_RELEASE)
     # If a recent stable version exist the libutils-*-pre installation will result in the stable version
-    set(CPACK_RPM_PACKAGE_OBSOLETES "${MIRROR_PACKAGE_NAME}")
-    set(CPACK_DEBIAN_PACKAGE_REPLACES "${MIRROR_PACKAGE_NAME}")
+    set(CPACK_RPM_PACKAGE_OBSOLETES "${MIRROR_PACKAGE_NAME} <= ${PROJECT_VERSION}")
+    set(CPACK_DEBIAN_PACKAGE_REPLACES "${MIRROR_PACKAGE_NAME} (<= ${PROJECT_VERSION})")
 endif()
 
 set(CPACK_RPM_PACKAGE_CONFLICTS "${MIRROR_PACKAGE_NAME}")
@@ -393,13 +393,13 @@ elseif(UTILS_DEV_PACKAGE)
 
     # Setup the conflict between stable & unstable packages
     if(UTILS_STABLE_RELEASE)
-        set(CPACK_RPM_HEADERS-DB_PACKAGE_OBSOLETES "libutils-dev-db${MIRROR_CHANNEL}")
-        set(CPACK_RPM_HEADERS-AS_PACKAGE_OBSOLETES "libutils-dev-as${MIRROR_CHANNEL}")
-        set(CPACK_RPM_HEADERS-OP_PACKAGE_OBSOLETES "libutils-dev-op${MIRROR_CHANNEL}")
+        set(CPACK_RPM_HEADERS-DB_PACKAGE_OBSOLETES "libutils-dev-db${MIRROR_CHANNEL} <= ${PROJECT_VERSION}")
+        set(CPACK_RPM_HEADERS-AS_PACKAGE_OBSOLETES "libutils-dev-as${MIRROR_CHANNEL} <= ${PROJECT_VERSION}")
+        set(CPACK_RPM_HEADERS-OP_PACKAGE_OBSOLETES "libutils-dev-op${MIRROR_CHANNEL} <= ${PROJECT_VERSION}")
 
-        set(CPACK_DEBIAN_HEADERS-DB_PACKAGE_REPLACES "libutils-dev-db${MIRROR_CHANNEL}")
-        set(CPACK_DEBIAN_HEADERS-AS_PACKAGE_REPLACES "libutils-dev-as${MIRROR_CHANNEL}")
-        set(CPACK_DEBIAN_HEADERS-OP_PACKAGE_REPLACES "libutils-dev-op${MIRROR_CHANNEL}")
+        set(CPACK_DEBIAN_HEADERS-DB_PACKAGE_REPLACES "libutils-dev-db${MIRROR_CHANNEL} (<= ${PROJECT_VERSION})")
+        set(CPACK_DEBIAN_HEADERS-AS_PACKAGE_REPLACES "libutils-dev-as${MIRROR_CHANNEL} (<= ${PROJECT_VERSION})")
+        set(CPACK_DEBIAN_HEADERS-OP_PACKAGE_REPLACES "libutils-dev-op${MIRROR_CHANNEL} (<= ${PROJECT_VERSION})")
     endif()
 
     set(CPACK_RPM_HEADERS-DB_PACKAGE_CONFLICTS "libutils-dev-db${MIRROR_CHANNEL}")
