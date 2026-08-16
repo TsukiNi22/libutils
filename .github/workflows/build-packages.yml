@@ -10,6 +10,7 @@ on:
         default: 'OFF'
 
 env:
+  LIBRARIES: "libutils.a libutils_debug.a libutils_asan.a"
   PACKAGES: "libutils libutils-dev libutils-dev-op libutils-dev-db libutils-dev-as libutils-op libutils-db libutils-as"
 
 jobs:

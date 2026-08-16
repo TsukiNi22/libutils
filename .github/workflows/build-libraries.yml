@@ -4,7 +4,7 @@ on:
   workflow_dispatch: # Triggered by Dispatch (CI/CD)
 
 env:
-  LIBRARYS: "libutils.a libutils_debug.a libutils_asan.a"
+  LIBRARIES: "libutils.a libutils_debug.a libutils_asan.a"
 
 jobs:
   build-libraries:
