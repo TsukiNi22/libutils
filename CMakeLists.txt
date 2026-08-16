@@ -8,6 +8,7 @@ project(${TARGET} VERSION 2.4.0 LANGUAGES CXX)
 option(UTILS_DEV_PACKAGE "Build development package only" OFF)
 option(UTILS_PACKAGE "Build global package" OFF)
 option(UTILS_STABLE_RELEASE "Channel as stable release" OFF)
+option(BUILD_TESTS "Build unit tests" OFF)
 
 # =========================
 # Compilateur & Standard
@@ -104,6 +105,11 @@ add_library(${TARGET} STATIC ${SRC})
 # =========================
 # Special Targets
 # =========================
+if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
+
 file(GLOB_RECURSE EXCEPTION_CONFIG_FILES
     CONFIGURE_DEPENDS
     "${CMAKE_SOURCE_DIR}/cmake/config/exceptions/*.json"

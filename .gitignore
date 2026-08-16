@@ -21,6 +21,7 @@ z
 
 ## CMake
 /build
+/test/build
 __pycache__
 
 ## Other
