@@ -1,4 +1,4 @@
-name: Build - Libraries (CI/CD)
+name: Build - Packages (CI/CD)
 
 on:
   workflow_dispatch: # Triggered by Dispatch (CI/CD)

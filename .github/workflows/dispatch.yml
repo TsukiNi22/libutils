@@ -49,7 +49,7 @@ jobs:
           fi
           echo "Decision: $(tail -n2 "$GITHUB_OUTPUT")"
       
-  notify-build:
+  notify-build-packages:
     needs: dispatch
     if: needs.dispatch.outputs.build == 'true'
  
@@ -59,15 +59,15 @@ jobs:
         shell: bash
  
     steps:
-      - name: Trigger build-sync.yml (workflow_dispatch)
+      - name: Trigger build-packages.yml (workflow_dispatch)
         run: |
           curl -sf -X POST \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/build-sync.yml/dispatches" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/build-packages.yml/dispatches" \
             -d '{"ref":"${{ github.ref_name }}","inputs":{"stable":"${{ needs.dispatch.outputs.stable }}"}}'
 
-  notify-build-fallback:
+  notify-build-libraries:
     needs: dispatch
     if: needs.dispatch.outputs.build == 'false'
   
@@ -77,12 +77,12 @@ jobs:
         shell: bash
   
     steps:
-      - name: Trigger build-fallback.yml (workflow_dispatch)
+      - name: Trigger build-libraries.yml (workflow_dispatch)
         run: |
           curl -sf -X POST \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/build-fallback.yml/dispatches" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflowsbuild-libraries.yml/dispatches" \
             -d '{"ref":"${{ github.ref_name }}"}'
   
   notify-release:

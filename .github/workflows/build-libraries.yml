@@ -1,4 +1,4 @@
-name: Build (fallback) - Libraries (CI)
+name: Build - Libraries (CI)
 
 on:
   workflow_dispatch: # Triggered by Dispatch (CI/CD)
@@ -7,7 +7,7 @@ env:
   LIBRARYS: "libutils.a libutils_debug.a libutils_asan.a"
 
 jobs:
-  build-release:
+  build-libraries:
     runs-on: ${{ vars.RUNNER }}
     defaults:
       run:
