@@ -21,34 +21,41 @@ jobs:
     outputs:
       build: ${{ steps.decide.outputs.build }}
       stable: ${{ steps.decide.outputs.stable }}
+      release: ${{ steps.decide.outputs.release }}
 
     steps:
-      - name: Decide whether to build and on witch branch
+      - name: Determine branches
         id: decide
         run: |
           set -e
-          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+          MESSAGE_HAS_BUILD='${{ contains(github.event.head_commit.message, '[build]') }}'
+          MESSAGE_HAS_RELEASE='${{ contains(github.event.head_commit.message, '[release]') }}'
+
+          # Determine branches
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then # On tag push
             if [[ "${{ github.ref_name }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?-release$ ]]; then
-              echo "build=true" >> "$GITHUB_OUTPUT"
-              echo "stable=ON" >> "$GITHUB_OUTPUT"
+              BUILD=true; STABLE=ON; RELEASE=true
             elif [[ "${{ github.ref_name }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?-pre$ ]]; then
-              echo "build=true" >> "$GITHUB_OUTPUT"
-              echo "stable=OFF" >> "$GITHUB_OUTPUT"
+              BUILD=true; STABLE=OFF; RELEASE=false
             else
-              echo "build=false" >> "$GITHUB_OUTPUT"
-              echo "stable=OFF" >> "$GITHUB_OUTPUT"
+              BUILD=false; STABLE=OFF; RELEASE=false
             fi
-          else
-            if [[ "${{ contains(github.event.head_commit.message, '[build]') }}" == "true" ]]; then
-              echo "build=true" >> "$GITHUB_OUTPUT"
-              echo "stable=OFF" >> "$GITHUB_OUTPUT"
+          else # On normal push
+            if [[ "$MESSAGE_HAS_BUILD" == "true" || "$MESSAGE_HAS_RELEASE" == "true" ]]; then
+              BUILD=true
             else
-              echo "build=false" >> "$GITHUB_OUTPUT"
-              echo "stable=OFF" >> "$GITHUB_OUTPUT"
+              BUILD=false
             fi
+            [[ "$MESSAGE_HAS_RELEASE" == "true" ]] && RELEASE=true || RELEASE=false
+            STABLE=OFF
           fi
-          echo "Decision: $(tail -n2 "$GITHUB_OUTPUT")"
-      
+
+          # Store result & display them
+          echo "build=$BUILD" >> "$GITHUB_OUTPUT"
+          echo "stable=$STABLE" >> "$GITHUB_OUTPUT"
+          echo "release=$RELEASE" >> "$GITHUB_OUTPUT"
+          echo "Decision: build=$BUILD stable=$STABLE release=$RELEASE"
+
   notify-build-packages:
     needs: dispatch
     if: needs.dispatch.outputs.build == 'true'
@@ -87,7 +94,7 @@ jobs:
   
   notify-release:
     needs: dispatch
-    if: needs.dispatch.outputs.build == 'true' && needs.dispatch.outputs.stable == 'ON'
+    if: needs.dispatch.outputs.release == 'true'
   
     runs-on: ${{ vars.RUNNER }}
     defaults:

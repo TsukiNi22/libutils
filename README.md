@@ -76,20 +76,23 @@ curl -fsSL https://raw.githubusercontent.com/TsukiNi22/libutils/main/setup.sh | 
 ```
 
 ## Workflows/Release
-
 ### Workflows
+- The workflow `Dispatch (CI/CD)` runs on every push (branch `main` or tag `v*`) and decides what to trigger based on the ref/commit message
+- The workflow `Build - Packages (CI/CD)` builds the packages (RPM/DEB) and syncs/releases them
+- The workflow `Build - Libraries (CI)` only builds the libraries and checks the compilation, without producing or releasing packages
 
- - The workflow `CI/CD - Library` builds the packages and releases them
- - The workflow `CI - Library` builds the libraries and checks the compilation
 > [!NOTE]
-> Only when the `CI/CD - Library` workflow isn't triggered, the `CI - Library` workflow will run to check the compilation
+> Only when `Dispatch (CI/CD)` decides **not** to build packages, the `Build - Libraries (CI)` workflow runs instead, to validate that the code still compiles
 
 ### Pre-Release (unstable)
-
 The pre-release of the packages can be triggered by 2 events:
- - Pushing a tag that matches the regex `vx.x.x-pre` (`x` stands for the version number: `major`, `minor`, `fix`)
- - Or pushing a commit containing the string `[build]`, preferably in the description
+- Pushing a tag that matches the regex `vx.x.x-pre` (`x` stands for the version number: `major`, `minor`, `fix`)
+- Or pushing a commit containing the string `[build]`, preferably in the description
 
 ### Release (stable)
+The release of the packages (channel `stable`) can only be triggered by pushing a tag that matches the regex `vx.x.x-release` (`x` stands for the version number: `major`, `minor`, `fix`)
 
-The release can only be triggered by pushing a tag that matches the regex `vx.x.x-release` (`x` stands for the version number: `major`, `minor`, `fix`)
+### Downstream notification
+In addition to building/publishing, `Dispatch (CI/CD)` notifies the `docker-image` repository (via `repository_dispatch`) whenever a release is decided:
+- Pushing a tag matching `vx.x.x-release`
+- Or pushing a commit containing the string `[release]`, preferably in the description
