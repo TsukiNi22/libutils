@@ -4,18 +4,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+| Scope | Content |
+| ----- | ------- |
+| `In Progress` | Work that hasn't been completed yet (typically listed under [pre-release]) |
+| `Added`       | New features, files, or sections introduced in this release |
+| `Removed`     | Existing features, files, or sections that have been deleted |
+| `Changed`     | Existing features or sections that were modified (behavior, structure, or content) |
+| `Fixed`       | Bugs or issues that have been resolved |
+
+> [!NOTE]
+> The `(unofficial)` version are sub-version (such has fix typically) that don't have associated tag.
+> A packaged builded at this version is not guaranteed.
+
 ---
 
-## [pre-release]
-### In Progress
-- A parser class to handle formating and parsing of the network communication
-- Network/Manip (Codec **OK**, Key **OK**, Parser **OK**, Socket **OK**, Client **OK**, Server **OK**, Testing **KO**)
+## [pre-release] (empty)
 
-## [v2.3.2] - 2026-08-16 (unofficial)
+## [v2.3.3] - 2026-08-16
+### Added
+- A parser class to handle formating and parsing of the network communication
+- Network/Manip (Codec **OK**, Key **OK**, Parser **OK**, Socket **OK**, Client **OK**, Server **OK**, Testing **OK**)
+
+### Fixed
+- Fix 2etp parser with wrong framing
+- Remove 
+
+## v2.3.2 - 2026-08-16 (unofficial)
 ### Added
 - Add custom output for verbose macro (mutex lock standart output -> global ouput)
 
-### Changed
+### Fixed
 - Multiple fix/testing for the network handling that will be on the official release for `v2.3.x`
 
 ## [v2.2.0] - 2026-08-01
@@ -49,7 +67,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial version of the utils library with multiple tools (see [README-1.0.0](https://github.com/TsukiNi22/libutils/blob/v1.0.0/README.md) for more details)
 
-[pre-release]: https://github.com/TsukiNi22/libutils/compare/v2.2.0...HEAD
+[pre-release]: https://github.com/TsukiNi22/libutils/compare/v2.3.3-release...HEAD
+[v2.3.3]: https://github.com/TsukiNi22/libutils/compare/v2.2.0...v2.3.3-release
 [v2.2.0]: https://github.com/TsukiNi22/libutils/compare/v2.1.0...v2.2.0
 [v2.1.0]: https://github.com/TsukiNi22/libutils/compare/v2.0.0...v2.1.0
 [v2.0.0]: https://github.com/TsukiNi22/libutils/compare/v1.0.0...v2.0.0

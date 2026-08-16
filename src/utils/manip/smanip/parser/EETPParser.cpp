@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 03/08/2026 by @author Tsukini
+##  @date 16/08/2026 by @author Tsukini
 
 File Name:
 ##  @file EETPParser.hpp
@@ -99,11 +99,9 @@ _hot _nodiscard std::string utils::smanip::parser::EETPParser::format(std::strin
 
     // Encapsule the string
     std::string framed;
-    framed += static_cast<char>(utils::iomanip::Char::ENQ);
     if (!keyAES.tag.empty()) _likely {framed += this->_codec->encode(keyAES.tag);}
     framed += static_cast<char>(utils::iomanip::Char::ETB);
     framed += this->_codec->encode(s);
-    framed += static_cast<char>(utils::iomanip::Char::EOT);
 
     return framed;
 }
@@ -167,7 +165,7 @@ _hot _nodiscard utils::smanip::parser::EETPContent utils::smanip::parser::EETPPa
     while (true) {
         pos = s.find(static_cast<char>(utils::iomanip::Char::ETB), begin);
         if (pos == std::string::npos) {
-            data.emplace_back(s.substr(begin));
+            if (!s.empty()) data.emplace_back(s.substr(begin));
             break;
         }
         data.emplace_back(s.substr(begin, pos - begin));

@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 15/08/2026 by @author Tsukini
+##  @date 16/08/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -204,7 +204,7 @@ File Description:
 /* Network - Socket */
 #ifdef _Socket
     // -> Handling of socket and tools
-    #include "network/socket/Socket.hpp"    // utils::network::socket::ISocket, utils::network::socket::TCPSocket, utils::network::socket::* (tools)
+    #include "network/socket/Socket.hpp"    // utils::network::socket::ISocket, utils::network::socket::*Socket, utils::network::socket::* (tools)
 #endif
 
 /* Input/Output - Manip */
