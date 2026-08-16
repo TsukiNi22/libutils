@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 01/08/2026 by @author Tsukini
+##  @date 16/08/2026 by @author Tsukini
 
 File Name:
 ##  @file ANotifier.hpp
@@ -41,13 +41,19 @@ class ANotifier: public utils::security::observer::INotifier {
         {throw utils::exception::FatalException(utils::exception::InternalCode::UndefinedCall);};
         void unlink_(_unused const std::uint64_t id, _unused const bool safe_mode) override
         {throw utils::exception::FatalException(utils::exception::InternalCode::UndefinedCall);};
+        void clear_(_unused const bool safe_mode) override
+        {throw utils::exception::FatalException(utils::exception::InternalCode::UndefinedCall);};
         _hot _nodiscard bool hasLinkOverload(void) const override {return false;};
         _hot _nodiscard bool hasUnlinkOverload(void) const override {return false;};
+        _hot _nodiscard bool hasClearOverload(void) const override {return false;};
 
     public:
         // ---------- Pre-Function -------- //
         void link(const std::uint64_t id, std::string_view instance, const bool safe_mode) final;
         void unlink(const std::uint64_t id, const bool safe_mode) final;
+    
+        // !!! Should only be used if all the linked instances where vanished from existance !!!
+        void clear(const bool safe_mode) final;
 
         // ------------ Operator ---------- //
         ANotifier& operator=(const ANotifier& other) = delete;

@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 01/08/2026 by @author Tsukini
+##  @date 16/08/2026 by @author Tsukini
 
 File Name:
 ##  @file ANotifier.cpp
@@ -21,6 +21,7 @@ File Description:
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/basic/ErrorException.hpp"
 #include "utils/exception/basic/WarningException.hpp"
+#include "utils/security/observer/Instances.hpp"
 #include "utils/security/observer/ANotifier.hpp"
 #include <dlfcn.h>
 #include <string_view>
@@ -66,7 +67,7 @@ _hot void utils::security::observer::ANotifier::link(const std::uint64_t id, std
 }
 
 _hot void utils::security::observer::ANotifier::unlink(const std::uint64_t id, const bool safe_mode)
-{    
+{
     // Lock the internal edition
     std::unique_lock<std::mutex> lock(this->_lock, std::defer_lock);
     if (safe_mode) lock.lock();
@@ -86,4 +87,22 @@ _hot void utils::security::observer::ANotifier::unlink(const std::uint64_t id, c
 
     // Internal sub-call
     if (this->hasUnlinkOverload()) {this->unlink_(id, safe_mode);}
+}
+
+_cold void utils::security::observer::ANotifier::clear(const bool safe_mode)
+{
+    // Lock the internal edition
+    std::unique_lock<std::mutex> lock(this->_lock, std::defer_lock);
+    if (safe_mode) lock.lock();
+    else (void)lock.try_lock();
+
+    // Free all the link
+    std::uint64_t subId = 0;
+    for (const auto& [id, _]: this->_links) {
+        utils::security::observer::instances::IdHandler.free((subId = id), safe_mode);
+    }
+    this->_links.clear();
+
+    // Internal sub-call
+    if (this->hasClearOverload()) {this->clear_(safe_mode);}
 }

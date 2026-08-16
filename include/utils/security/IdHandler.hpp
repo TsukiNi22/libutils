@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 01/08/2026 by @author Tsukini
+##  @date 16/08/2026 by @author Tsukini
 
 File Name:
 ##  @file IdHandler.hpp
@@ -24,12 +24,13 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"               // _hot, _unlikely, _likely
+    #include "../attribute/Attribute.hpp"               // _hot, _cold, _unlikely, _likely, _nodiscard
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::InternalCode
+    #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "../exception/custom/FatalException.hpp"   // utils::exception::FatalException
     #include <limits>                                   // std::numeric_limits<T>
-    #include <vector>                                   // std::vector
     #include <mutex>                                    // std::mutex
+    #include <set>                                      // std::set
 
 namespace utils::security { // namespace start
 //----------------------------------------------------------------//
@@ -40,13 +41,40 @@ class IdHandler {
     static_assert(std::is_integral_v<T>, "T must be an integral type");
 
     private:
-        std::mutex _lock; // Handling of multithreading
+        mutable std::mutex _lock; // Handling of multithreading
         // 0 is reserved for unallocated ones / default value
         T _id = std::numeric_limits<T>::min();
-        std::vector<T> _freeIds;
+        std::set<T> _freeIds;
 
     public:
         // ------------ Function ---------- //
+        _cold _nodiscard inline T id(void) const {return this->_id;};
+        _cold _nodiscard inline T actual(const bool safe_mode = true) const
+        {
+            std::unique_lock<std::mutex> lock(this->_lock, std::defer_lock);
+            if (safe_mode) lock.lock();
+            else (void)lock.try_lock();
+
+            if (this->_freeIds.size() > 0) _likely {return *this->_freeIds.begin();}
+            else _unlikely {return this->_id;}
+        };
+        _cold _nodiscard T preview(const bool safe_mode = true) const
+        {
+            std::unique_lock<std::mutex> lock(this->_lock, std::defer_lock);
+            if (safe_mode) lock.lock();
+            else (void)lock.try_lock();
+
+            if (this->_freeIds.size() > 0) {
+                return *this->_freeIds.begin();
+            } else _likely {
+                if (this->_id == std::numeric_limits<T>::max()) _unlikely {
+                    throw utils::exception::FatalException(utils::exception::InternalCode::IdOverflow);
+                }
+                if (this->_id + 1 == 0) _unlikely {return this->_id + 2;}
+                else _likely {return this->_id + 1;}
+            }
+            return 0;
+        };
         _hot void allocate(T& id, const bool safe_mode = true)
         {
             std::unique_lock<std::mutex> lock(this->_lock, std::defer_lock);
@@ -54,8 +82,9 @@ class IdHandler {
             else (void)lock.try_lock();
 
             if (this->_freeIds.size() > 0) {
-                id = this->_freeIds.back();
-                this->_freeIds.pop_back();
+                auto it = this->_freeIds.begin();
+                id = *it;
+                this->_freeIds.erase(id);
             } else _likely {
                 if (this->_id == std::numeric_limits<T>::max()) _unlikely {
                     throw utils::exception::FatalException(utils::exception::InternalCode::IdOverflow);
@@ -70,7 +99,10 @@ class IdHandler {
             if (safe_mode) lock.lock();
             else (void)lock.try_lock();
 
-            this->_freeIds.push_back(id);
+            // Only if the id wasn't already free
+            if (!this->_freeIds.insert(id).second) _unlikely {
+                throw utils::exception::ErrorException(utils::exception::InternalCode::DoubleFree);
+            }
             id = 0;
         };
 

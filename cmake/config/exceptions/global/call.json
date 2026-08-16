@@ -14,6 +14,11 @@
             "code": "InvalidArgument",
             "message": "Invalid argument given",
             "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "DoubleFree",
+            "message": "Try to free somthing that was already free",
+            "restrictions": ["Fatal", "Error", "Warning"]
         }
     ]
 }

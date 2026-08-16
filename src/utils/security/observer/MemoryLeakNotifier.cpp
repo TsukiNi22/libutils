@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 01/08/2026 by @author Tsukini
+##  @date 16/08/2026 by @author Tsukini
 
 File Name:
 ##  @file MemoryLeakNotifier.cpp
@@ -22,7 +22,7 @@ File Description:
 #include <iostream>
 #include <sstream>
 
-_cold utils::security::observer::MemoryLeakNotifier::~MemoryLeakNotifier() noexcept
+_cold void utils::security::observer::MemoryLeakNotifier::trigger(void)
 {
     // Check for instance existance
     if (this->_links.empty()) return;

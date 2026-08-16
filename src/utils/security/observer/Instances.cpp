@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 01/08/2026 by @author Tsukini
+##  @date 16/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Instances.cpp
@@ -30,5 +30,5 @@ utils::security::IdHandler<std::uint64_t> utils::security::observer::instances::
 
 /* different notifiers to link/unlink */
 std::array<std::unique_ptr<utils::security::observer::INotifier>, 1> utils::security::observer::instances::Notifiers = {
-        std::make_unique<utils::security::observer::MemoryLeakNotifier>(),
+    std::make_unique<utils::security::observer::MemoryLeakNotifier>(),
 };

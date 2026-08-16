@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 01/08/2026 by @author Tsukini
+##  @date 16/08/2026 by @author Tsukini
 
 File Name:
 ##  @file MemoryLeakNotifier.hpp
@@ -24,6 +24,9 @@ namespace utils::security::observer { // namespace start
 
 class MemoryLeakNotifier: public utils::security::observer::ANotifier {
     public:
+        // ---------- Pre-Function -------- //
+        void trigger(void) final;
+
         // ------------ Operator ---------- //
         MemoryLeakNotifier& operator=(const MemoryLeakNotifier& other) = delete;
         MemoryLeakNotifier& operator=(MemoryLeakNotifier&& other) = delete;
@@ -34,7 +37,7 @@ class MemoryLeakNotifier: public utils::security::observer::ANotifier {
         MemoryLeakNotifier(MemoryLeakNotifier&& other) = delete;
 
         // ----------- Destructor --------- //
-        ~MemoryLeakNotifier() noexcept;
+        ~MemoryLeakNotifier() noexcept {this->trigger();};
 };
 
 } // namespace end
