@@ -51,7 +51,7 @@ struct EETPContent {
 //----------------------------------------------------------------//
 /* CLASS */
 
-#ifndef NO_EETPPARSER_USAGE_WARNING
+#if defined(EETPPARSER_USAGE_WARNING) && !defined(NO_EETPPARSER_USAGE_WARNING)
     #warning "[USAGE] Custom ICodec implementations must guarantee that ETB (0x17) and EOT (0x04) never appear in their encoded output, as these bytes are reserved for protocol framing [-DNO_EETPPARSER_USAGE_WARNING]"
 #endif
 class EETPParser: public utils::smanip::parser::AParser<utils::smanip::parser::EETPContent> {

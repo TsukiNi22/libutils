@@ -27,6 +27,25 @@ File Description:
 //----------------------------------------------------------------//
 /* DEFINE */
 
+/* Activate all automatic warning & _deprecated message */
+#ifdef _Warning
+    #define DEPRECATED_WARNING // _deprecated(...)
+    #define LINKER_WARNING // Linker requirement
+    #define USAGE_WARNING // Things that should be used carfully
+    //#warning "All warnings from 'utils/utils.hpp' are disable"
+#endif
+
+#ifdef LINKER_WARNING
+    #define BASE64CODEC_LINKER_WARNING
+    #define RSAKEY_LINKER_WARNING
+    #define AESKEY_LINKER_WARNING
+#endif
+
+#ifdef USAGE_WARNING
+    #define FATALEXCEPTION_USAGE_WARNING
+    #define EETPPARSER_USAGE_WARNING
+#endif
+
 /* Desactivate all automatic warning & _deprecated message */
 #ifdef _NoWarning
     #define NO_DEPRECATED_WARNING // _deprecated(...)

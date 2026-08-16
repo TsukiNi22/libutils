@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 set(TARGET utils)
-project(${TARGET} VERSION 2.3.3 LANGUAGES CXX)
+project(${TARGET} VERSION 2.4.0 LANGUAGES CXX)
 
 # =========================
 # Options
@@ -17,23 +17,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_COMPILER clang++)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON) # Moderne compilation -fPIE
-add_definitions(
-    # (useless for hard import)
-    -D_NoWarning
-
-    # [WARNING] # (useless for hard import)
-    -DNO_LINKER_WARNING
-    -DNO_USAGE_WARNING
-
-    # [LINKER] #
-    -DNO_BASE64CODEC_LINKER_WARNING
-    -DNO_RSAKEY_LINKER_WARNING
-    -DNO_AESKEY_LINKER_WARNING
-
-    # [USAGE] #
-    -DNO_FATALEXCEPTION_USAGE_WARNING
-    -DNO_EETPPARSER_USAGE_WARNING
-) # Remove warnings from utils
 
 # =========================
 # Requirement

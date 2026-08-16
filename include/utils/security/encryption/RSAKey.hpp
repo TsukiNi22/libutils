@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 04/08/2026 by @author Tsukini
+##  @date 16/08/2026 by @author Tsukini
 
 File Name:
 ##  @file RSAKey.hpp
@@ -40,7 +40,7 @@ struct KeyPair {
 //----------------------------------------------------------------//
 /* CLASS */
 
-#ifndef NO_RSAKEY_LINKER_WARNING
+#if defined(RSAKEY_LINKER_WARNING) && !defined(NO_RSAKEY_LINKER_WARNING)
     #warning "[LINKER] The -lssl and -lcrypto are needed to use the RSAKey [-DNO_RSAKEY_LINKER_WARNING]"
 #endif
 class RSAKey: public utils::security::encryption::AKey<utils::security::encryption::KeyPair> {

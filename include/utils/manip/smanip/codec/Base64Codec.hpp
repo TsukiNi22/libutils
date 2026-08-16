@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 03/08/2026 by @author Tsukini
+##  @date 16/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Base64Codec.hpp
@@ -31,7 +31,7 @@ namespace utils::smanip::codec { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-#ifndef NO_BASE64CODEC_LINKER_WARNING
+#if defined(BASE64CODEC_LINKER_WARNING) && !defined(NO_BASE64CODEC_LINKER_WARNING)
     #warning "[LINKER] The -lssl and -lcrypto are needed to use the Base64Codec [-DNO_BASE64CODEC_LINKER_WARNING]"
 #endif
 class Base64Codec: public utils::smanip::codec::ICodec {

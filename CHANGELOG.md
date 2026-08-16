@@ -18,7 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [pre-release] (empty)
+## [pre-release]
+### Changed
+- Rework the warning, now all are desactivated and can be activated/desactivated such has global/group/solo
 
 ## [v2.3.3] - 2026-08-16
 ### Added

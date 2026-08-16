@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 03/08/2026 by @author Tsukini
+##  @date 16/08/2026 by @author Tsukini
 
 File Name:
 ##  @file AESKey.hpp
@@ -41,7 +41,7 @@ struct KeyAES {
 //----------------------------------------------------------------//
 /* CLASS */
 
-#ifndef NO_AESKEY_LINKER_WARNING
+#if defined(AESKEY_LINKER_WARNING) && !defined(NO_AESKEY_LINKER_WARNING)
     #warning "[LINKER] The -lssl and -lcrypto are needed to use the AESKey [-DNO_AESKEY_LINKER_WARNING]"
 #endif
 class AESKey: public utils::security::encryption::AKey<utils::security::encryption::KeyAES> {
