@@ -392,6 +392,16 @@ elseif(UTILS_DEV_PACKAGE)
     set(CPACK_DEBIAN_HEADERS-OP_PACKAGE_NAME "libutils-dev-op${CHANNEL}")
 
     # Setup the conflict between stable & unstable packages
+    if(UTILS_STABLE_RELEASE)
+        set(CPACK_RPM_HEADERS-DB_PACKAGE_OBSOLETES "libutils-dev-db${MIRROR_CHANNEL}")
+        set(CPACK_RPM_HEADERS-AS_PACKAGE_OBSOLETES "libutils-dev-as${MIRROR_CHANNEL}")
+        set(CPACK_RPM_HEADERS-OP_PACKAGE_OBSOLETES "libutils-dev-op${MIRROR_CHANNEL}")
+
+        set(CPACK_DEBIAN_HEADERS-DB_PACKAGE_REPLACES "libutils-dev-db${MIRROR_CHANNEL}")
+        set(CPACK_DEBIAN_HEADERS-AS_PACKAGE_REPLACES "libutils-dev-as${MIRROR_CHANNEL}")
+        set(CPACK_DEBIAN_HEADERS-OP_PACKAGE_REPLACES "libutils-dev-op${MIRROR_CHANNEL}")
+    endif()
+
     set(CPACK_RPM_HEADERS-DB_PACKAGE_CONFLICTS "libutils-dev-db${MIRROR_CHANNEL}")
     set(CPACK_RPM_HEADERS-AS_PACKAGE_CONFLICTS "libutils-dev-as${MIRROR_CHANNEL}")
     set(CPACK_RPM_HEADERS-OP_PACKAGE_CONFLICTS "libutils-dev-op${MIRROR_CHANNEL}")
