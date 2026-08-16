@@ -1,58 +1,19 @@
-name: CI/CD - Library
+name: Build - Libraries (CI/CD)
 
 on:
-  push:
-    branches: [main]
-    tags: ['v*']
-    paths-ignore:
-      - '**.md'
-      - '**.txt'
+  workflow_dispatch: # Triggered by Dispatch (CI/CD)
+    inputs:
+      stable:
+        description: 'Stable release build'
+        required: true
+        type: string
+        default: 'OFF'
 
 env:
-  LIBRARYS: "libutils.a libutils_debug.a libutils_asan.a"
+  PACKAGES: "libutils libutils-dev libutils-dev-op libutils-dev-db libutils-dev-as libutils-op libutils-db libutils-as"
 
 jobs:
-  should-build:
-    runs-on: ${{ vars.RUNNER }}
-    defaults:
-      run:
-        shell: bash
-
-    outputs:
-      build: ${{ steps.decide.outputs.build }}
-      stable: ${{ steps.decide.outputs.stable }}
-
-    steps:
-      - name: Decide whether to build and on witch branch
-        id: decide
-        run: |
-          set -e
-          if [[ "${{ github.ref_type }}" == "tag" ]]; then
-            if [[ "${{ github.ref_name }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?-release$ ]]; then
-              echo "build=true" >> "$GITHUB_OUTPUT"
-              echo "stable=ON" >> "$GITHUB_OUTPUT"
-            elif [[ "${{ github.ref_name }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?-pre$ ]]; then
-              echo "build=true" >> "$GITHUB_OUTPUT"
-              echo "stable=OFF" >> "$GITHUB_OUTPUT"
-            else
-              echo "build=false" >> "$GITHUB_OUTPUT"
-              echo "stable=OFF" >> "$GITHUB_OUTPUT"
-            fi
-          else
-            if [[ "${{ contains(github.event.head_commit.message, '[build]') }}" == "true" ]]; then
-              echo "build=true" >> "$GITHUB_OUTPUT"
-              echo "stable=OFF" >> "$GITHUB_OUTPUT"
-            else
-              echo "build=false" >> "$GITHUB_OUTPUT"
-              echo "stable=OFF" >> "$GITHUB_OUTPUT"
-            fi
-          fi
-          echo "Decision: $(tail -n2 "$GITHUB_OUTPUT")"
-
   build-packages:
-    needs: should-build
-    if: needs.should-build.outputs.build == 'true'
-
     runs-on: ${{ vars.RUNNER }}
     defaults:
       run:
@@ -79,7 +40,7 @@ jobs:
         run: |
           set -e
           # github.run_number -> github.run_id (in case of workflow renaming, more secure but less readable)
-          cmake -S . -B build -DUTILS_STABLE_RELEASE=${{ needs.should-build.outputs.stable }} -DPACKAGE_RELEASE=${{ github.run_number }}
+          cmake -S . -B build -DUTILS_STABLE_RELEASE=${{ inputs.stable }} -DPACKAGE_RELEASE=${{ github.run_number }}
           cmake --build build --target package_release --parallel $(nproc)
         timeout-minutes: 2
 
@@ -97,6 +58,26 @@ jobs:
             echo "✓ Library '$library' ok"
           done
 
+      - name: Check packages
+        run: |
+          set -euo pipefail
+          for package in $(echo $PACKAGES | tr ',' ' ' | xargs); do
+            RPM_FILE=$(find ./build -maxdepth 1 -name "${package}-*.rpm" -print -quit)
+            DEB_FILE=$(find ./build -maxdepth 1 -name "${package}_*.deb" -print -quit)
+
+            if [ -z "$RPM_FILE" ]; then
+              echo "::error title=Missing package (RPM)::Package '$package' (.rpm) not found"
+              exit 1
+            fi
+            echo "✓ Package '$package' (.rpm) ok -> $(basename "$RPM_FILE")"
+
+            if [ -z "$DEB_FILE" ]; then
+              echo "::error title=Missing package (DEB)::Package '$package' (.deb) not found"
+              exit 1
+            fi
+            echo "✓ Package '$package' (.deb) ok -> $(basename "$DEB_FILE")"
+          done
+
       - name: Upload compiled packages
         uses: actions/upload-artifact@v6
         with:
@@ -106,8 +87,8 @@ jobs:
             build/*.deb
 
   sync-online-packages:
-    needs: [should-build, build-packages]
-    if: github.event_name == 'push' && needs.build-packages.result == 'success' && needs.should-build.outputs.build == 'true'
+    needs: build-packages
+    if: needs.build-packages.result == 'success'
     permissions:
       contents: write
 

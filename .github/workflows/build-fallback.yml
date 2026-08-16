@@ -1,49 +1,13 @@
-name: CI - Library
+name: Build (fallback) - Libraries (CI)
 
 on:
-  workflow_run:
-    workflows: ["CI/CD - Library"]
-    types: [completed]
+  workflow_dispatch: # Triggered by Dispatch (CI/CD)
 
 env:
   LIBRARYS: "libutils.a libutils_debug.a libutils_asan.a"
- 
-permissions:
-  actions: read
 
 jobs:
-  should-build:
-    runs-on: ${{ vars.RUNNER }}
-    defaults:
-      run:
-        shell: bash
-
-    outputs:
-      build: ${{ steps.decide.outputs.build }}
-
-    steps:
-      - name: Get build-packages result from triggering run
-        id: decide
-        run: |
-          set -e
-          CONCLUSION=$(curl -s \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/jobs" \
-            | jq -r '.jobs[] | select(.name=="build-packages") | .conclusion')
-
-          echo "build-packages conclusion: $CONCLUSION"
-
-          if [[ "$CONCLUSION" == "skipped" ]]; then
-            echo "build=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "build=false" >> "$GITHUB_OUTPUT"
-          fi
-
   build-release:
-    needs: should-build
-    if: needs.should-build.outputs.build == 'true'
-
     runs-on: ${{ vars.RUNNER }}
     defaults:
       run:

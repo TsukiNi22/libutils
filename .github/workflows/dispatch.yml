@@ -1,0 +1,109 @@
+name: Dispatch (CI/CD)
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+    paths-ignore:
+      - '**.md'
+      - '**.txt'
+
+permissions:
+  actions: write
+
+jobs:
+  dispatch:
+    runs-on: ${{ vars.RUNNER }}
+    defaults:
+      run:
+        shell: bash
+
+    outputs:
+      build: ${{ steps.decide.outputs.build }}
+      stable: ${{ steps.decide.outputs.stable }}
+
+    steps:
+      - name: Decide whether to build and on witch branch
+        id: decide
+        run: |
+          set -e
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+            if [[ "${{ github.ref_name }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?-release$ ]]; then
+              echo "build=true" >> "$GITHUB_OUTPUT"
+              echo "stable=ON" >> "$GITHUB_OUTPUT"
+            elif [[ "${{ github.ref_name }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?-pre$ ]]; then
+              echo "build=true" >> "$GITHUB_OUTPUT"
+              echo "stable=OFF" >> "$GITHUB_OUTPUT"
+            else
+              echo "build=false" >> "$GITHUB_OUTPUT"
+              echo "stable=OFF" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            if [[ "${{ contains(github.event.head_commit.message, '[build]') }}" == "true" ]]; then
+              echo "build=true" >> "$GITHUB_OUTPUT"
+              echo "stable=OFF" >> "$GITHUB_OUTPUT"
+            else
+              echo "build=false" >> "$GITHUB_OUTPUT"
+              echo "stable=OFF" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+          echo "Decision: $(tail -n2 "$GITHUB_OUTPUT")"
+      
+  notify-build:
+    needs: dispatch
+    if: needs.dispatch.outputs.build == 'true'
+ 
+    runs-on: ${{ vars.RUNNER }}
+    defaults:
+      run:
+        shell: bash
+ 
+    steps:
+      - name: Trigger build-sync.yml (workflow_dispatch)
+        run: |
+          curl -sf -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/build-sync.yml/dispatches" \
+            -d '{"ref":"${{ github.ref_name }}","inputs":{"stable":"${{ needs.dispatch.outputs.stable }}"}}'
+
+  notify-build-fallback:
+    needs: dispatch
+    if: needs.dispatch.outputs.build == 'false'
+  
+    runs-on: ${{ vars.RUNNER }}
+    defaults:
+      run:
+        shell: bash
+  
+    steps:
+      - name: Trigger build-fallback.yml (workflow_dispatch)
+        run: |
+          curl -sf -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/build-fallback.yml/dispatches" \
+            -d '{"ref":"${{ github.ref_name }}"}'
+  
+  notify-release:
+    needs: dispatch
+    if: needs.dispatch.outputs.build == 'true' && needs.dispatch.outputs.stable == 'ON'
+  
+    runs-on: ${{ vars.RUNNER }}
+    defaults:
+      run:
+        shell: bash
+  
+    steps:
+      - name: Trigger docker-image (repository_dispatch)
+        run: |
+          curl -sf -X POST \
+            -H "Authorization: Bearer ${{ secrets.DOCKER_IMAGE_REPO_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/TsukiNi22/docker-image/dispatches" \
+            -d '{
+              "event_type": "libutils-released",
+              "client_payload": {
+                "ref": "${{ github.ref_name }}"
+              }
+            }'
