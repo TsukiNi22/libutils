@@ -11,7 +11,7 @@ jobs:
         shell: bash
 
     container:
-      image: ghcr.io/tsukini22/ci:latest
+      image: ghcr.io/tsukini22/unit-tests:latest
 
     steps:
       - name: Checkout repository
