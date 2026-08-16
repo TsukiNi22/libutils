@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 15/08/2026 by @author Tsukini
+##  @date 16/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Client.hpp
@@ -24,12 +24,13 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"   // _cold, _hot 
+    #include "../attribute/Attribute.hpp"   // _cold, _hot, _nodiscard
     #include "NetworkDefine.hpp"            // utils::network::Status
     #include "NetworkType.hpp"              // utils::network::Address, utils::network::Payload, utils::network::Payloads
-    #include "socket/Socket.hpp"            // utils::network::socket::ISocket, utils::network::socket::TCPSocket
+    #include "socket/Socket.hpp"            // utils::network::socket::ISocket, utils::network::socket::TCPSocket, utils::network::socket::resolveAddress
     #include <cstddef>                      // std::size_t
     #include <memory>                       // std::shared_ptr, std::make_shared
+    #include <atomic>                       // std::atomic
 
 namespace utils::network { // namespace start
 //----------------------------------------------------------------//
@@ -37,7 +38,7 @@ namespace utils::network { // namespace start
 
 class Client {
     private:
-        utils::network::Status _status = utils::network::Status::Down;
+        std::atomic<utils::network::Status> _status = utils::network::Status::Down;
 
         /* connection */
         std::shared_ptr<utils::network::socket::ISocket> _socket = std::make_shared<utils::network::socket::TCPSocket>();
@@ -49,8 +50,8 @@ class Client {
 
     public:
         // ---------- Pre-Function -------- //
-        template<bool initsafe = false> // doesn't init when the socket is already open
-        void start(void); // start/restart the client (buffer not reset)
+        /* thread safe */
+        void start(void); // start/restart the client
         void stop(void); // stop the client (can be restarted, same has error)
         void kill(void); // terminate the client (can't be restarted)
 
@@ -58,13 +59,14 @@ class Client {
         const utils::network::Payloads& listen(void);
         void join(void); // Await until the next listen event
 
-        // ------------ Function ---------- //
-        utils::network::Status getStatus(void) const {return this->_status;};
         void flush(void); // send all the stack
         template<bool buffered = false>
         void send(const utils::network::Payload& payload);
         // <false> -> by default send directly
         // <true>  -> store the payload in a stack and send them when a send<false> is call or flush
+
+        // ------------ Function ---------- //
+        _nodiscard inline utils::network::Status getStatus(void) const {return this->_status;};
 
         // ------------ Operator ---------- //
         Client& operator=(const Client& other) = delete;
@@ -72,7 +74,7 @@ class Client {
 
         // ---------- Constructor --------- //
         Client() = default;
-        Client(const std::shared_ptr<utils::network::socket::ISocket>& socket, const utils::network::Address& address = {}): _socket{socket}, _address{address} {};
+        Client(const std::shared_ptr<utils::network::socket::ISocket>& socket, const utils::network::Address& address = {}): _socket{socket}, _address{address} {utils::network::socket::resolveAddress(this->_address);};
         Client(const Client& other) = delete;
         Client(Client&& other) = delete;
 

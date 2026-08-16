@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 15/08/2026 by @author Tsukini
+##  @date 16/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Client.cpp
@@ -29,7 +29,6 @@ File Description:
 #include <string.h>
 #include <thread>
 
-template<bool initsafe>
 _cold void utils::network::Client::start(void)
 {
     if (this->_status == utils::network::Status::Up) {
@@ -39,11 +38,15 @@ _cold void utils::network::Client::start(void)
     }
     onBasicVerbose("Starting client...");
 
+    // Reset buffers
+    this->_payloads.clear();
+
     // Start the socket
-    if constexpr (initsafe) {if (this->_socket->getFd() != -1) return;}
     try {
-        // Open the socket
-        this->_socket->listen(this->_address);
+        // Open the socket (doesn't restart open already open)
+        if (this->_socket->getFd() == -1) _likely {
+            this->_socket->connect(this->_address);
+        }
 
         // Setup the epoll
         const int fd = this->_socket->getFd();
@@ -79,6 +82,7 @@ _cold void utils::network::Client::stop(void)
 
 _cold void utils::network::Client::kill(void)
 {
+    if (this->_status == utils::network::Status::Terminated) return;
     onBasicVerbose("Killing client...");
     this->_socket->close();
     if (this->_epfd != -1) ::close(this->_epfd);
@@ -86,19 +90,17 @@ _cold void utils::network::Client::kill(void)
     this->_status = utils::network::Status::Terminated;
 }
 
-_hot const utils::network::Payloads& utils::network::Client::listen(void)
+_hot _nodiscard const utils::network::Payloads& utils::network::Client::listen(void)
 {
     // Check status
-    if (this->_status != utils::network::Status::Up) _unlikely {
-        throw utils::exception::WarningException(utils::exception::InternalCode::NotRunning);
-    }
+    if (this->_status != utils::network::Status::Up) _unlikely {return this->_payloads;}
 
     // Clear the last events
     this->_payloads.clear();
 
     // Read the events
     struct epoll_event events[1];
-    while (true) {
+    while (this->_status == utils::network::Status::Up) {
         std::this_thread::yield(); // To not fully take the cpu computing
         int res = epoll_wait(this->_epfd, events, 1, 0);
 
@@ -158,15 +160,13 @@ _hot const utils::network::Payloads& utils::network::Client::listen(void)
 _hot void utils::network::Client::join(void)
 {
     // Check status
-    if (this->_status != utils::network::Status::Up) _unlikely {
-        throw utils::exception::WarningException(utils::exception::InternalCode::NotRunning);
-    }
+    if (this->_status != utils::network::Status::Up) _unlikely {return;}
 
     // Read the events
     struct epoll_event events[1];
-    while (true) {
+    while (this->_status == utils::network::Status::Up) {
         std::this_thread::yield(); // To not fully take the cpu computing
-        int res = epoll_wait(this->_epfd, events, 1, 0);
+        int res = epoll_wait(this->_epfd, events, 1, 10); // wake up at least evry 10ms
 
         if (res < 0) _unlikely {
             if (errno == EINTR) return; // handle the ctrl-c before the first connection
@@ -201,9 +201,7 @@ _hot void utils::network::Client::join(void)
 _hot inline void utils::network::Client::flush(void)
 {
     // Check status
-    if (this->_status != utils::network::Status::Up) _unlikely {
-        throw utils::exception::WarningException(utils::exception::InternalCode::NotRunning);
-    }
+    if (this->_status != utils::network::Status::Up) _unlikely {return;}
 
     try {this->_socket->flush();}
     catch (...) {
@@ -217,10 +215,9 @@ template<>
 _hot inline void utils::network::Client::send<false>(const utils::network::Payload& payload)
 { 
     // Check status
-    if (this->_status != utils::network::Status::Up) _unlikely {
-        throw utils::exception::WarningException(utils::exception::InternalCode::NotRunning);
-    }   try {this->_socket->send(payload);}
+    if (this->_status != utils::network::Status::Up) _unlikely {return;}
 
+    try {this->_socket->send(payload);}
     catch (...) {
         this->kill();
         this->_status = utils::network::Status::Crashed;
@@ -232,9 +229,7 @@ template<>
 _hot inline void utils::network::Client::send<true>(const utils::network::Payload& payload)
 {
     // Check status
-    if (this->_status != utils::network::Status::Up) _unlikely {
-        throw utils::exception::WarningException(utils::exception::InternalCode::NotRunning);
-    }
+    if (this->_status != utils::network::Status::Up) _unlikely {return;}
 
     try {this->_socket->sendBuffered(payload);}
     catch (...) {

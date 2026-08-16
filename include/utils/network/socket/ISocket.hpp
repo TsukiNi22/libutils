@@ -63,7 +63,7 @@ class ISocket {
         virtual void close(void) noexcept = 0; // reallow the use of connect/listen
 
         // Only in server mode, otherwise throw
-        virtual int accept(void); // accept a new connection (only server mode), fd is used as an id in server
+        virtual int accept(void) = 0; // accept a new connection (only server mode), fd is used as an id in server
 
         /* raw */
         virtual int accept(int fd, sockaddr* addr, socklen_t* len) const = 0;

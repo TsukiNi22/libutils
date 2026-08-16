@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 03/08/2026 by @author Tsukini
+##  @date 15/08/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -193,16 +193,18 @@ File Description:
 
 /* Network */
 #ifdef _Network
-    // -> Handling of global network handling
+    // -> Handling of global network handling and client/server
     // -> Define some special limits and default values
     #include "network/NetworkDefine.hpp"    // different macro et define
     #include "network/NetworkType.hpp"      // different type used for network
+    #include "network/Client.hpp"           // utils::network::Client
+    #include "network/Server.hpp"           // utils::network::Server
 #endif
 
 /* Network - Socket */
 #ifdef _Socket
-    // -> Handling of socket handling
-    #include "network/socket/Socket.hpp"    // utils::network::socket::ISocket, utils::network::socket::TCPSocket
+    // -> Handling of socket and tools
+    #include "network/socket/Socket.hpp"    // utils::network::socket::ISocket, utils::network::socket::TCPSocket, utils::network::socket::* (tools)
 #endif
 
 /* Input/Output - Manip */

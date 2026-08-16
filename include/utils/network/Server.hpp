@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 15/08/2026 by @author Tsukini
+##  @date 16/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Server.hpp
@@ -24,12 +24,13 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"   // _cold, _hot 
+    #include "../attribute/Attribute.hpp"   // _cold, _hot , _nodiscard
     #include "NetworkDefine.hpp"            // utils::network::Status
     #include "NetworkType.hpp"              // utils::network::Address, utils::network::Payload, utils::network::Payloads
     #include "socket/Socket.hpp"            // utils::network::socket::ISocket, utils::network::socket::TCPSocket
     #include <unordered_map>                // std::unordered_map
     #include <memory>                       // std::shared_ptr, std::make_shared
+    #include <atomic>                       // std::atomic
     #include <vector>                       // std::vector
 
 namespace utils::network { // namespace start
@@ -38,7 +39,7 @@ namespace utils::network { // namespace start
 
 class Server {
     private:
-        utils::network::Status _status = utils::network::Status::Down;
+        std::atomic<utils::network::Status> _status = utils::network::Status::Down;
 
         /* connection */
         std::shared_ptr<utils::network::socket::ISocket> _socket = std::make_shared<utils::network::socket::TCPSocket>();
@@ -52,17 +53,15 @@ class Server {
 
         // ---------- Pre-Function -------- //
         void remove(const int fd);
+        const std::unordered_map<int, utils::network::Payloads>& listen_(const int fd = -1);
 
     public:
         // ---------- Pre-Function -------- //
-        template<bool initsafe = false> // doesn't init when the socket is already open
-        void start(void); // start/restart the server (buffer not reset)
+        /* thread safe */
+        void start(void); // start/restart the server
         void stop(void); // stop the server (can be restarted, same has error)
         void kill(void); // terminate the server (can't be restarted)
 
-        // Allways return the same reference and clean between each call
-        const std::unordered_map<int, utils::network::Payloads>& listen(void);
-        const utils::network::Payloads& listen(const int fd);
         void join(const int fd = -1); // Await until the next listen event on this precise fd or every one (-1)
 
         void flush(void); // send all the stack
@@ -76,7 +75,12 @@ class Server {
         std::vector<int> getFds(void) const;
 
         // ------------ Function ---------- //
-        utils::network::Status getStatus(void) const {return this->_status;};
+        // Allways return the same reference and clean between each call
+        _hot _nodiscard inline const std::unordered_map<int, utils::network::Payloads>& listen(void) {return this->listen_();};
+        _hot _nodiscard inline const utils::network::Payloads& listen(const int fd) {return this->listen_(fd).at(fd);};
+
+        /* getter */
+        _nodiscard inline utils::network::Status getStatus(void) const {return this->_status;};
 
         // ------------ Operator ---------- //
         Server& operator=(const Server& other) = delete;

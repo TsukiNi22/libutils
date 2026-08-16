@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 15/08/2026 by @author Tsukini
+##  @date 16/08/2026 by @author Tsukini
 
 File Name:
 ##  @file ASocket.cpp
@@ -106,8 +106,8 @@ _hot _nodiscard bool utils::network::socket::ASocket::empty(int fd) const
     }
 
     // Try to know if there is still a valid payload in the fd's buffer
-    if (!this->_buffersRecv.contains(fd)) return false;
-    return (this->_buffersRecv.at(fd).find(this->_separator) != std::string::npos);
+    if (!this->_buffersRecv.contains(fd)) return true;
+    return (this->_buffersRecv.at(fd).find(this->_separator) == std::string::npos);
 }
 
 _hot _nodiscard int utils::network::socket::ASocket::accept(void)
