@@ -52,27 +52,26 @@ jobs:
           echo "release=$RELEASE" >> "$GITHUB_OUTPUT"
           echo "Decision: build=$BUILD stable=$STABLE release=$RELEASE"
 
-  notify-build-packages:
+  notify-unit-tests:
     needs: dispatch
-    if: needs.dispatch.outputs.build == 'true'
- 
+
     runs-on: ${{ vars.RUNNER }}
-    defaults:
-      run:
-        shell: bash
- 
+
     steps:
-      - name: Trigger build-packages.yml (workflow_dispatch)
-        run: |
-          curl -sf -X POST \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/build-packages.yml/dispatches" \
-            -d '{"ref":"${{ github.ref_name }}","inputs":{"stable":"${{ needs.dispatch.outputs.stable }}"}}'
+      - name: Trigger unit-tests.yml and wait
+        uses: convictional/trigger-workflow-and-wait@v1.6.5
+        with:
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          workflow_file_name: unit-tests.yml
+          ref: ${{ github.ref_name }}
+          wait_interval: 4
+          propagate_failure: true
 
   notify-build-libraries:
-    needs: dispatch
-    if: needs.dispatch.outputs.build == 'false'
+    needs: [dispatch, notify-unit-tests]
+    if: needs.dispatch.outputs.build == 'false' && needs.notify-unit-tests.result == 'success'
   
     runs-on: ${{ vars.RUNNER }}
     defaults:
@@ -87,11 +86,30 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             "https://api.github.com/repos/${{ github.repository }}/actions/workflows/build-libraries.yml/dispatches" \
             -d '{"ref":"${{ github.ref_name }}"}'
-  
+
+  notify-build-packages:
+    needs: [dispatch, notify-unit-tests]
+    if: needs.dispatch.outputs.build == 'true' && needs.notify-unit-tests.result == 'success'
+
+    runs-on: ${{ vars.RUNNER }}
+
+    steps:
+      - name: Trigger build-packages.yml (workflow_dispatch) and wait 
+        uses: convictional/trigger-workflow-and-wait@v1.6.5
+        with:
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          workflow_file_name: build-packages.yml
+          ref: ${{ github.ref_name }}
+          wait_interval: 4
+          propagate_failure: true
+          client_payload: '{"stable": "${{ needs.dispatch.outputs.stable }}"}'
+
   notify-release:
-    needs: dispatch
-    if: needs.dispatch.outputs.release == 'true'
-  
+    needs: [dispatch, notify-build-packages]
+    if: needs.dispatch.outputs.release == 'true' && (needs.notify-build-packages.result == 'success' || needs.notify-build-packages.result == 'skipped')
+
     runs-on: ${{ vars.RUNNER }}
     defaults:
       run:

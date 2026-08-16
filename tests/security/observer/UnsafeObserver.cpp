@@ -25,6 +25,7 @@ File Description:
 #include <functional>
 #include <memory>
 #include <string>
+#include <regex>
 
 struct UnsafeObserverLeakCase {
     std::string name;
@@ -36,7 +37,7 @@ std::ostream& operator<<(std::ostream& os, const UnsafeObserverLeakCase& c) {ret
 class UnsafeObserverTest : public ::testing::TestWithParam<UnsafeObserverLeakCase> {};
 
 TEST_P(UnsafeObserverTest, DetectsLeak) {
-    const auto& testCase = GetParam();
+    const UnsafeObserverLeakCase& testCase = GetParam();
 
     ASSERT_GT(utils::security::observer::instances::Notifiers.size(), 0) << "See test: MemoryLeakNotifer::GlobalNotifiersArrayEmplacement";
     testing::internal::CaptureStderr();
@@ -45,12 +46,13 @@ TEST_P(UnsafeObserverTest, DetectsLeak) {
     testCase.generateLeak();
 
     // Trigger & Reset MemoryLeakNotifer instances
-    auto& notifier = utils::security::observer::instances::Notifiers[0];
+    std::unique_ptr<utils::security::observer::INotifier>& notifier = utils::security::observer::instances::Notifiers[0];
     notifier->trigger();
     notifier->clear(true);
 
     std::string output = testing::internal::GetCapturedStderr();
-    ASSERT_EQ(output, testCase.expectedOutput);
+    static const std::regex originRegex(R"(\(origin: [^)]*\))");
+    ASSERT_EQ(std::regex_replace(output, originRegex, "(origin: X)"), testCase.expectedOutput);
 }
 
 class SimpleClass: private utils::security::observer::UnsafeObserver<"SimpleClass"> {};
@@ -69,7 +71,7 @@ INSTANTIATE_TEST_SUITE_P(LeakCases, UnsafeObserverTest,
                 void* ptr = new SimpleClass();
                 (void)ptr;
             },
-            "[WARNING] Memory leak detected (origin: ./unit_tests)\n"
+            "[WARNING] Memory leak detected (origin: X)\n"
             "-- At least one instance wasn't properly closed --\n"
             "  1 - SimpleClass\n"
         },
@@ -81,7 +83,7 @@ INSTANTIATE_TEST_SUITE_P(LeakCases, UnsafeObserverTest,
                 *ptr = simp;
                 (void)ptr;
             },
-            "[WARNING] Memory leak detected (origin: ./unit_tests)\n"
+            "[WARNING] Memory leak detected (origin: X)\n"
             "-- At least one instance wasn't properly closed --\n"
             "  1 - SimpleClass\n"
         },
@@ -93,7 +95,7 @@ INSTANTIATE_TEST_SUITE_P(LeakCases, UnsafeObserverTest,
                 *ptr = std::move(simp);
                 (void)ptr;
             },
-            "[WARNING] Memory leak detected (origin: ./unit_tests)\n"
+            "[WARNING] Memory leak detected (origin: X)\n"
             "-- At least one instance wasn't properly closed --\n"
             "  2 - SimpleClass\n"
         },
@@ -104,7 +106,7 @@ INSTANTIATE_TEST_SUITE_P(LeakCases, UnsafeObserverTest,
                 SimpleClass* ptr = new SimpleClass(simp);
                 (void)ptr;
             },
-            "[WARNING] Memory leak detected (origin: ./unit_tests)\n"
+            "[WARNING] Memory leak detected (origin: X)\n"
             "-- At least one instance wasn't properly closed --\n"
             "  2 - SimpleClass\n"
         },
@@ -115,7 +117,7 @@ INSTANTIATE_TEST_SUITE_P(LeakCases, UnsafeObserverTest,
                 SimpleClass* ptr = new SimpleClass(std::move(simp));
                 (void)ptr;
             },
-            "[WARNING] Memory leak detected (origin: ./unit_tests)\n"
+            "[WARNING] Memory leak detected (origin: X)\n"
             "-- At least one instance wasn't properly closed --\n"
             "  1 - SimpleClass\n"
         },
@@ -125,7 +127,7 @@ INSTANTIATE_TEST_SUITE_P(LeakCases, UnsafeObserverTest,
                 void* ptr = new SubClass();
                 (void)ptr;
             },
-            "[WARNING] Memory leak detected (origin: ./unit_tests)\n"
+            "[WARNING] Memory leak detected (origin: X)\n"
             "-- At least one instance wasn't properly closed --\n"
             "  3 - SimpleClass\n"
             "  2 - SimpleClass\n"
@@ -139,7 +141,7 @@ INSTANTIATE_TEST_SUITE_P(LeakCases, UnsafeObserverTest,
                 *ptr = sub;
                 (void)ptr;
             },
-            "[WARNING] Memory leak detected (origin: ./unit_tests)\n"
+            "[WARNING] Memory leak detected (origin: X)\n"
             "-- At least one instance wasn't properly closed --\n"
             "  3 - SimpleClass\n"
             "  2 - SimpleClass\n"
@@ -153,7 +155,7 @@ INSTANTIATE_TEST_SUITE_P(LeakCases, UnsafeObserverTest,
                 *ptr = std::move(sub);
                 (void)ptr;
             },
-            "[WARNING] Memory leak detected (origin: ./unit_tests)\n"
+            "[WARNING] Memory leak detected (origin: X)\n"
             "-- At least one instance wasn't properly closed --\n"
             "  6 - SimpleClass\n"
             "  5 - SimpleClass\n"
@@ -166,7 +168,7 @@ INSTANTIATE_TEST_SUITE_P(LeakCases, UnsafeObserverTest,
                 SubClass* ptr = new SubClass(sub);
                 (void)ptr;
             },
-            "[WARNING] Memory leak detected (origin: ./unit_tests)\n"
+            "[WARNING] Memory leak detected (origin: X)\n"
             "-- At least one instance wasn't properly closed --\n"
             "  6 - SimpleClass\n"
             "  5 - SimpleClass\n"
@@ -179,7 +181,7 @@ INSTANTIATE_TEST_SUITE_P(LeakCases, UnsafeObserverTest,
                 SubClass* ptr = new SubClass(std::move(sub));
                 (void)ptr;
             },
-            "[WARNING] Memory leak detected (origin: ./unit_tests)\n"
+            "[WARNING] Memory leak detected (origin: X)\n"
             "-- At least one instance wasn't properly closed --\n"
             "  3 - SimpleClass\n"
             "  2 - SimpleClass\n"
