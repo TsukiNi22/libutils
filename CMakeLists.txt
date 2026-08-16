@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 set(TARGET utils)
-project(${TARGET} VERSION 2.3.1 LANGUAGES CXX)
+project(${TARGET} VERSION 2.3.2 LANGUAGES CXX)
 
 # =========================
 # Options
@@ -364,6 +364,12 @@ else()
 endif()
 
 # Setup the conflict between stable & unstable packages
+if(UTILS_STABLE_RELEASE)
+    # If a recent stable version exist the libutils-*-pre installation will result in the stable version
+    set(CPACK_RPM_PACKAGE_OBSOLETES "${MIRROR_PACKAGE_NAME}")
+    set(CPACK_DEBIAN_PACKAGE_REPLACES "${MIRROR_PACKAGE_NAME}")
+endif()
+
 set(CPACK_RPM_PACKAGE_CONFLICTS "${MIRROR_PACKAGE_NAME}")
 set(CPACK_DEBIAN_PACKAGE_BREAKS "${MIRROR_PACKAGE_NAME}")
 set(CPACK_DEBIAN_PACKAGE_CONFLICTS "${MIRROR_PACKAGE_NAME}")
