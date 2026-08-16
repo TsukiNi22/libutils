@@ -16,6 +16,10 @@ find_package(GTest REQUIRED)
 set(SRC
     # Security
     security/IdHandler.cpp
+    
+    # Security (sub-part: encryption)
+    security/encryption/RSAKey.cpp
+    security/encryption/AESKey.cpp
 
     # Security (sub-part: observer)
     security/observer/MemoryLeakNotifer.cpp
