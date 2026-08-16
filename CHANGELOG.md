@@ -6,10 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased]
+## [pre-release]
 ### In Progress
 - A parser class to handle formating and parsing of the network communication
-- Network (Codec **OK**, Key **OK**, Parser **OK**, Socket **OK**, Client **OK**, Server **OK**, Testing **KO**)
+- Network/Manip (Codec **OK**, Key **OK**, Parser **OK**, Socket **OK**, Client **OK**, Server **OK**, Testing **KO**)
+
+## [v2.3.2] - 2026-08-16 (unofficial)
+### Added
+- Add custom output for verbose macro (mutex lock standart output -> global ouput)
+
+### Changed
+- Multiple fix/testing for the network handling that will be on the official release for `v2.3.x`
 
 ## [v2.2.0] - 2026-08-01
 ### Changed
@@ -42,7 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial version of the utils library with multiple tools (see [README-1.0.0](https://github.com/TsukiNi22/libutils/blob/v1.0.0/README.md) for more details)
 
-[Unreleased]: https://github.com/TsukiNi22/libutils/compare/v2.2.0...HEAD
+[pre-release]: https://github.com/TsukiNi22/libutils/compare/v2.2.0...HEAD
 [v2.2.0]: https://github.com/TsukiNi22/libutils/compare/v2.1.0...v2.2.0
 [v2.1.0]: https://github.com/TsukiNi22/libutils/compare/v2.0.0...v2.1.0
 [v2.0.0]: https://github.com/TsukiNi22/libutils/compare/v1.0.0...v2.0.0

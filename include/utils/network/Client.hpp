@@ -24,19 +24,20 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"   // _cold, _hot, _nodiscard
-    #include "NetworkDefine.hpp"            // utils::network::Status
-    #include "NetworkType.hpp"              // utils::network::Address, utils::network::Payload, utils::network::Payloads
-    #include "socket/Socket.hpp"            // utils::network::socket::ISocket, utils::network::socket::TCPSocket, utils::network::socket::resolveAddress
-    #include <cstddef>                      // std::size_t
-    #include <memory>                       // std::shared_ptr, std::make_shared
-    #include <atomic>                       // std::atomic
+    #include "../security/observer/Observer.hpp"    // utils::security::observer::Observer
+    #include "../attribute/Attribute.hpp"           // _cold, _hot, _nodiscard
+    #include "NetworkDefine.hpp"                    // utils::network::Status
+    #include "NetworkType.hpp"                      // utils::network::Address, utils::network::Payload, utils::network::Payloads
+    #include "socket/Socket.hpp"                    // utils::network::socket::ISocket, utils::network::socket::TCPSocket, utils::network::socket::resolveAddress
+    #include <cstddef>                              // std::size_t
+    #include <memory>                               // std::shared_ptr, std::make_shared
+    #include <atomic>                               // std::atomic
 
 namespace utils::network { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-class Client {
+class Client: private utils::security::observer::Observer<"Client"> {
     private:
         std::atomic<utils::network::Status> _status = utils::network::Status::Down;
 
@@ -50,8 +51,9 @@ class Client {
 
     public:
         // ---------- Pre-Function -------- //
-        /* thread safe */
         void start(void); // start/restart the client
+
+        /* thread safe */
         void stop(void); // stop the client (can be restarted, same has error)
         void kill(void); // terminate the client (can't be restarted)
 

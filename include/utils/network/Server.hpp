@@ -24,20 +24,21 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"   // _cold, _hot , _nodiscard
-    #include "NetworkDefine.hpp"            // utils::network::Status
-    #include "NetworkType.hpp"              // utils::network::Address, utils::network::Payload, utils::network::Payloads
-    #include "socket/Socket.hpp"            // utils::network::socket::ISocket, utils::network::socket::TCPSocket
-    #include <unordered_map>                // std::unordered_map
-    #include <memory>                       // std::shared_ptr, std::make_shared
-    #include <atomic>                       // std::atomic
-    #include <vector>                       // std::vector
+    #include "../security/observer/Observer.hpp"    // utils::security::observer::Observer
+    #include "../attribute/Attribute.hpp"           // _cold, _hot , _nodiscard
+    #include "NetworkDefine.hpp"                    // utils::network::Status
+    #include "NetworkType.hpp"                      // utils::network::Address, utils::network::Payload, utils::network::Payloads
+    #include "socket/Socket.hpp"                    // utils::network::socket::ISocket, utils::network::socket::TCPSocket
+    #include <unordered_map>                        // std::unordered_map
+    #include <memory>                               // std::shared_ptr, std::make_shared
+    #include <atomic>                               // std::atomic
+    #include <vector>                               // std::vector
 
 namespace utils::network { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-class Server {
+class Server: private utils::security::observer::Observer<"Server"> {
     private:
         std::atomic<utils::network::Status> _status = utils::network::Status::Down;
 
@@ -57,8 +58,9 @@ class Server {
 
     public:
         // ---------- Pre-Function -------- //
-        /* thread safe */
         void start(void); // start/restart the server
+
+        /* thread safe */
         void stop(void); // stop the server (can be restarted, same has error)
         void kill(void); // terminate the server (can't be restarted)
 

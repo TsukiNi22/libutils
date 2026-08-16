@@ -21,6 +21,7 @@ File Description:
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/basic/ErrorException.hpp"
 #include "utils/exception/basic/WarningException.hpp"
+#include "utils/exception/basic/NoneException.hpp"
 #include "utils/network/NetworkDefine.hpp"
 #include "utils/network/Server.hpp"
 #include "utils/verbose/Verbose.hpp"
@@ -30,17 +31,23 @@ File Description:
 #include <sys/epoll.h>
 #include <unistd.h>
 #include <string.h>
+#include <iostream>
 #include <thread>
 #include <format>
+#include <mutex>
 
 _cold void utils::network::Server::start(void)
 {
+    // Check status
     if (this->_status == utils::network::Status::Up) {
         throw utils::exception::WarningException(utils::exception::InternalCode::AlreadyRunning);
     } else if (this->_status == utils::network::Status::Terminated) {
         throw utils::exception::WarningException(utils::exception::InternalCode::Killed);
     }
     onBasicVerbose("Starting server...");
+
+    // Reset buffers
+    this->_payloads.clear();
 
     // Start the socket
     try {
@@ -65,18 +72,19 @@ _cold void utils::network::Server::start(void)
         }
 
         this->_status = utils::network::Status::Up;
-    } catch (...) {
+    } catch (const utils::exception::IException& e) {
         this->_status = utils::network::Status::Crashed;
         throw;
     }
 }
 
 _cold void utils::network::Server::stop(void)
-{
+{ 
+    // Check status
     if (this->_status != utils::network::Status::Up) return;
+
     onBasicVerbose("Stopping server...");
     for (const auto& [fd, _]: this->_payloads) ::close(fd);
-    this->_payloads.clear();
     this->_socket->close();
     ::close(this->_epfd);
     this->_epfd = -1;
@@ -85,10 +93,11 @@ _cold void utils::network::Server::stop(void)
 
 _cold void utils::network::Server::kill(void)
 {
+    // Check status
     if (this->_status == utils::network::Status::Terminated) return;
+
     onBasicVerbose("Killing server...");
     for (const auto& [fd, _]: this->_payloads) ::close(fd);
-    this->_payloads.clear();
     this->_socket->close();
     if (this->_epfd != -1) ::close(this->_epfd);
     this->_epfd = -1;
@@ -116,7 +125,7 @@ _hot _nodiscard const std::unordered_map<int, utils::network::Payloads>& utils::
 
         if (res < 0) _unlikely {
             if (errno == EINTR) return this->_payloads; // handle the ctrl-c before the first connection
-            this->kill();
+            this->stop();
             this->_status = utils::network::Status::Crashed;
             throw utils::exception::ErrorException(utils::exception::InternalCode::Poll, strerror(errno));
         }
@@ -137,9 +146,13 @@ _hot _nodiscard const std::unordered_map<int, utils::network::Payloads>& utils::
                 onDebugVerbose("Error detected on epoll events");
                 if (actualFd == this->_fd) _unlikely {
                     onBasicVerbose("Detected invalid epoll events, exiting...");
-                    this->kill();
+                    this->stop();
                     this->_status = utils::network::Status::Crashed;
-                    throw utils::exception::ErrorException(utils::exception::InternalCode::Poll);
+                    if (events[i].events & EPOLLHUP) _likely {
+                        onBasicVerbose("Socket closed, remove client...");
+                        this->remove(actualFd);
+                        continue;
+                    } else _unlikely {throw utils::exception::ErrorException(utils::exception::InternalCode::Poll);}
                 } else {
                     onBasicVerbose("Detected invalid epoll events, remove client...");
                     this->remove(actualFd);
@@ -173,7 +186,7 @@ _hot _nodiscard const std::unordered_map<int, utils::network::Payloads>& utils::
                         onBasicVerbose("Socket closed, remove client...");
                     } else {
                         onBasicVerbose("Error during the client request handling, remove client...");
-                        onBasicVerbose(e.formated());
+                        onDebugVerboseC(std::cerr, e.formated());
                     }
                     this->remove(actualFd);
                     continue;
@@ -193,7 +206,7 @@ _hot _nodiscard const std::unordered_map<int, utils::network::Payloads>& utils::
                     onBasicVerbose("Socket closed, remove client...");
                 } else {
                     onBasicVerbose("Error during the client request handling, remove client...");
-                    onBasicVerbose(e.formated());
+                    onDebugVerboseC(std::cerr, e.formated());
                 }
                 this->remove(actualFd);
             }
@@ -208,7 +221,7 @@ _hot _nodiscard const std::unordered_map<int, utils::network::Payloads>& utils::
                 onBasicVerbose("Socket closed, remove client...");
             } else {
                 onBasicVerbose("Error during the client request handling, remove client...");
-                onBasicVerbose(e.formated());
+                onDebugVerboseC(std::cerr, e.formated());
             }
             this->remove(fd);
         }
@@ -233,7 +246,7 @@ _hot void utils::network::Server::join(const int fd)
 
         if (res < 0) _unlikely {
             if (errno == EINTR) return; // handle the ctrl-c before the first connection
-            this->kill();
+            this->stop();
             this->_status = utils::network::Status::Crashed;
             throw utils::exception::ErrorException(utils::exception::InternalCode::Poll, strerror(errno));
         }
@@ -253,9 +266,13 @@ _hot void utils::network::Server::join(const int fd)
                 onDebugVerbose("Error detected on epoll events");
                 if (actualFd == this->_fd) _unlikely {
                     onBasicVerbose("Detected invalid epoll events, exiting...");
-                    this->kill();
+                    this->stop();
                     this->_status = utils::network::Status::Crashed;
-                    throw utils::exception::ErrorException(utils::exception::InternalCode::Poll);
+                    if (events[i].events & EPOLLHUP) _likely {
+                        onBasicVerbose("Socket closed, remove client...");
+                        this->remove(actualFd);
+                        continue;
+                    } else _unlikely {throw utils::exception::ErrorException(utils::exception::InternalCode::Poll);}
                 } else {
                     onBasicVerbose("Detected invalid epoll events, remove client...");
                     this->remove(actualFd);
@@ -292,7 +309,13 @@ _hot void utils::network::Server::flush(const int fd)
     }
 
     try {this->_socket->flush(fd);}
-    catch (...) {
+    catch (const utils::exception::IException& e) {
+        if (e.isNone() && e.getCode() == utils::exception::InternalCode::SocketClosed) _likely {
+            onBasicVerbose("Socket closed, remove client...");
+        } else _unlikely {
+            onBasicVerbose("Error detected, remove client...");
+            onDebugVerboseC(std::cerr, e.formated());
+        }
         this->remove(fd);
     }
 }
@@ -307,7 +330,13 @@ _hot void utils::network::Server::send<false>(const int fd, const utils::network
     }
 
     try {this->_socket->send(payload, fd);}
-    catch (...) {
+    catch (const utils::exception::IException& e) {
+        if (e.isNone() && e.getCode() == utils::exception::InternalCode::SocketClosed) _likely {
+            onBasicVerbose("Socket closed, remove client...");
+        } else _unlikely {
+            onBasicVerbose("Error detected, remove client...");
+            onDebugVerboseC(std::cerr, e.formated());
+        }
         this->remove(fd);
     }
 }
@@ -322,7 +351,13 @@ _hot void utils::network::Server::send<true>(const int fd, const utils::network:
     }
 
     try {this->_socket->sendBuffered(payload, fd);}
-    catch (...) {
+    catch (const utils::exception::IException& e) {
+        if (e.isNone() && e.getCode() == utils::exception::InternalCode::SocketClosed) _likely {
+            onBasicVerbose("Socket closed, remove client...");
+        } else _unlikely {
+            onBasicVerbose("Error detected, remove client...");
+            onDebugVerboseC(std::cerr, e.formated());
+        }
         this->remove(fd);
     }
 }

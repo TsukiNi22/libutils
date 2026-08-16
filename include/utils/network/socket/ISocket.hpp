@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 15/08/2026 by @author Tsukini
+##  @date 16/08/2026 by @author Tsukini
 
 File Name:
 ##  @file ISocket.hpp
@@ -24,19 +24,20 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../NetworkType.hpp"   // utils::network::Address
-    #include <sys/socket.h>         // socklen_t
-    #include <sys/types.h>          // ssize_t
-    #include <cstddef>              // std::size_t
-    #include <vector>               // std::vector
-    #include <string>               // std::string
+    #include "../../security/observer/Observer.hpp" // utils::security::observer::Observer
+    #include "../NetworkType.hpp"                   // utils::network::Address
+    #include <sys/socket.h>                         // socklen_t
+    #include <sys/types.h>                          // ssize_t
+    #include <cstddef>                              // std::size_t
+    #include <vector>                               // std::vector
+    #include <string>                               // std::string
 
 namespace utils::network::socket { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
 // Any fd that equal to -1 is an undefined fd
-class ISocket {
+class ISocket: private utils::security::observer::Observer<"ISocket"> {
     protected:
         // ---------- Pre-Function -------- //
         virtual void buffered(const std::string& s, int fd) = 0; // store the given string into the internal buffer
