@@ -14,6 +14,9 @@ find_package(GTest REQUIRED)
 # Sources
 # =========================
 set(SRC
+    # Verbose
+    verbose/Verbose.cpp
+
     # Security
     security/IdHandler.cpp
     
