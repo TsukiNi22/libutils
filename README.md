@@ -11,6 +11,9 @@ See internal wiki for more details [...]() (not setup for now)
 
 ## Dependencies
 
+> [!CAUTION]
+> This project's license does not apply to the content of the dependencies included in `libutils`.
+
 | Name + Link | Status | Last Update |
 | ----------- | ------ | ----------- |
 | [c2dmp-hsm](https://github.com/TsukiNi22/c2dmp-hsm) | ![CD - Algorithm](https://github.com/TsukiNi22/c2dmp-hsm/actions/workflows/sync.yml/badge.svg) | ![](https://img.shields.io/github/last-commit/TsukiNi22/c2dmp-hsm) |
