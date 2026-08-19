@@ -24,9 +24,9 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../concepts/OperationConcepts.hpp"        // Operation Concepts
-    #include "../exception/ExceptionDefine.hpp"         // utils::exception::InternalCode
-    #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
+    #include "../../concepts/OperationConcepts.hpp"     // Operation Concepts
+    #include "../../exception/ExceptionDefine.hpp"      // utils::exception::InternalCode
+    #include "../../exception/basic/ErrorException.hpp" // utils::exception::ErrorException
     #include "IVector.hpp"                              // utils::math::vector::IVector
     #include <algorithm>                                // std::clamp
     #include <ostream>                                  // std::ostream

@@ -40,7 +40,7 @@ namespace utils::exception { // namespace start
 class FatalException: public utils::exception::AException {
     public:
         // ------------ Function ---------- //
-        _cold display(void) const
+        _cold void display(void) const noexcept
         {
             std::cerr
             << EXCEPTION_ABORTED_HEADER  << std::endl
@@ -48,7 +48,7 @@ class FatalException: public utils::exception::AException {
             << EXCEPTION_ABORTED_MESSAGE << std::endl;
             std::abort();
         }
-        _cold display(const utils::exception::IException& e) const
+        _cold void display(const utils::exception::IException& e) const noexcept
         {
             std::cerr
             << EXCEPTION_ABORTED_HEADER  << std::endl
