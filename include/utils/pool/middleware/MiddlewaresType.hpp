@@ -8,26 +8,40 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 04/06/2026 by @author Tsukini
+##  @date 19/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Middlewares.hpp
 
 File Description:
-##  Global middlewares include
+##  Declaration of the Middleware type for void & non void function
 \**************************************************************/
 
-#ifndef MIDDLEWARES_H
-    #define MIDDLEWARES_H
+#ifndef MIDDLEWARESTYPE_H
+    #define MIDDLEWARESTYPE_H
 
     //----------------------------------------------------------------//
     /* INCLUDE */
 
     /* type */
-    #include "MiddlewaresType.hpp"          // utils::middleware::Middleware<...>
-    #include "Middlewares_t-t.hpp"          // utils::middleware::Middlewares<T, U>
-    #include "Middlewares_t-void.hpp"       // utils::middleware::Middlewares<T, void>
-    #include "Middlewares_void-t.hpp"       // utils::middleware::Middlewares<void, T>
-    #include "Middlewares_void-void.hpp"    // utils::middleware::Middlewares<void, void>
+    #include <functional>   // std::function
 
-#endif /* MIDDLEWARES_H */
+namespace utils::pool::middleware { // namespace
+//----------------------------------------------------------------//
+/* CLASS */
+
+template<typename T>
+struct MiddlewareType {
+    using type = std::function<void(T)>;
+};
+
+template<>
+struct MiddlewareType<void> {
+    using type = std::function<void()>;
+};
+
+template<typename T>
+using Middleware = typename MiddlewareType<T>::type;
+
+} // namespace end
+#endif /* MIDDLEWARESTYPE_H */

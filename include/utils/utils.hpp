@@ -68,9 +68,11 @@ File Description:
 /* default: if nothing is defined - include everything */
 #if !defined(_Handling) && !defined(_Attribute) && !defined(_Tools) && \
     /* _Handling */\
-    !defined(_Exception) && !defined(_Verbose) && !defined(_Middleware) && !defined(_Arguments) && !defined(_Network) && \
+    !defined(_Exception) && !defined(_Verbose) && !defined(_Pool) && !defined(_Cli) && !defined(_Arguments) && !defined(_Network) && \
     /* _Tools */\
-    !defined(_BLT) && !defined(_Concepts) && !defined(_Math) && !defined(_Manip) && !defined(_Algorithms) && !defined(_Cli) && !defined(_Security) && \
+    !defined(_BLT) && !defined(_Concepts) && !defined(_Math) && !defined(_Manip) && !defined(_Algorithms) && !defined(_Security) && \
+    /* _Pool */\
+    !defined(_Middleware) && \
     /* _Network */\
     !defined(_Socket) && \
     /* _Math */\
@@ -96,7 +98,8 @@ File Description:
 #ifdef _Handling
     #define _Exception
     #define _Verbose
-    #define _Middleware
+    #define _Pool
+    #define _Cli
     #define _Arguments
     #define _Network
 #endif
@@ -108,8 +111,12 @@ File Description:
     #define _Concepts
     #define _Manip
     #define _Algorithms
-    #define _Cli
     #define _Security
+#endif
+
+/* Activate all pool sub-include */
+#ifdef _Pool
+    #define _Middleware
 #endif
 
 /* Activate all network sub-include */
@@ -215,10 +222,16 @@ File Description:
     #include "concepts/OperationConcepts.hpp"   // Operation concepts
 #endif
 
+/* Pool */
+#ifdef _Pool
+    // -> Handling for entity group
+    #include "pool/Cluster.hpp" // utils::Cluster<T>
+#endif
+
 /* Middleware */
 #ifdef _Middleware
     // -> Middlewares handling
-    #include "middleware/Middlewares.hpp"   // utils::middleware::Middleware<...>, utils::middleware::Middlewares<...>
+    #include "pool/middleware/Middlewares.hpp"  // utils::middleware::Middleware<...>, utils::middleware::Middlewares<...>
 #endif
 
 /* Arguments */

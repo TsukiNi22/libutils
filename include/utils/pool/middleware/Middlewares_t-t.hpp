@@ -8,63 +8,63 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 01/08/2026 by @author Tsukini
+##  @date 19/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Middlewares.hpp
 
 File Description:
-##  Declaration of the Middlewares<void, T>
+##  Declaration of the Middlewares<T, U>
 \**************************************************************/
 
-#ifndef MIDDLEWARES_VOID_T_H
-    #define MIDDLEWARES_VOID_T_H
+#ifndef MIDDLEWARES_T_T_H
+    #define MIDDLEWARES_T_T_H
 
     //----------------------------------------------------------------//
     /* INCLUDE */
 
     /* type */
-    #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
-    #include "../exception/ExceptionDefine.hpp"         // utils::exception::Type, utils::exception::InternalCode
-    #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
-    #include "MiddlewaresType.hpp"                      // utils::middleware::Middleware<...>
+    #include "../../security/observer/Observer.hpp"     // utils::security::observer::Observer
+    #include "../../exception/ExceptionDefine.hpp"      // utils::exception::Type, utils::exception::InternalCode
+    #include "../../exception/basic/ErrorException.hpp" // utils::exception::ErrorException
+    #include "MiddlewaresType.hpp"                      // utils::pool::middleware::Middleware<...>
     #include <shared_mutex>                             // std::shared_mutex, std::unique_lock, std::shared_lock
     #include <functional>                               // std::function
     #include <exception>                                // std::exception
 
-namespace utils::middleware { // namespace
+namespace utils::pool::middleware { // namespace
 //----------------------------------------------------------------//
 /* CLASS */
 
-template<typename U>
-class Middlewares<void, U>: private utils::security::observer::Observer<"Middlewares"> {
+template<typename T, typename U>
+class Middlewares: private utils::security::observer::Observer<"Middlewares"> {
     public:
         mutable std::shared_mutex _lock;
-        std::vector<utils::middleware::Middleware<void>> before;
-        std::vector<utils::middleware::Middleware<U>> after;
+        std::vector<utils::pool::middleware::Middleware<T>> before;
+        std::vector<utils::pool::middleware::Middleware<U>> after;
 
         // ------------ Function ---------- //
         void clear() {this->before.clear(); this->after.clear();}
 
         /* adder */
-        void addBefore(utils::middleware::Middleware<void>& toAdd)                     {std::unique_lock lock(this->_lock); this->before.push_back(toAdd);}
-        void addBefore(const std::vector<utils::middleware::Middleware<void>>& toAdds) {std::unique_lock lock(this->_lock); this->before.insert(before.end(), toAdds.begin(), toAdds.end());}
-        void addAfter(utils::middleware::Middleware<U>& toAdd)                         {std::unique_lock lock(this->_lock); this->after.push_back(toAdd);}
-        void addAfter(const std::vector<utils::middleware::Middleware<U>>& toAdds)     {std::unique_lock lock(this->_lock); this->after.insert(after.end(), toAdds.begin(), toAdds.end());}
+        void addBefore(utils::pool::middleware::Middleware<T>& toAdd)                     {std::unique_lock lock(this->_lock); this->before.push_back(toAdd);}
+        void addBefore(const std::vector<utils::pool::middleware::Middleware<T>>& toAdds) {std::unique_lock lock(this->_lock); this->before.insert(before.end(), toAdds.begin(), toAdds.end());}
+        void addAfter(utils::pool::middleware::Middleware<U>& toAdd)                      {std::unique_lock lock(this->_lock); this->after.push_back(toAdd);}
+        void addAfter(const std::vector<utils::pool::middleware::Middleware<U>>& toAdds)  {std::unique_lock lock(this->_lock); this->after.insert(after.end(), toAdds.begin(), toAdds.end());}
 
         /* caller */
-        void callBefore() const
+        void callBefore(T arg) const
         {
             std::shared_lock lock(this->_lock);
-            for (const utils::middleware::Middleware<void>& middleware: this->before) {
-                try {middleware();}
+            for (const utils::pool::middleware::Middleware<T>& middleware: this->before) {
+                try {middleware(arg);}
                 catch (const std::exception& e) {throw utils::exception::ErrorException(utils::exception::InternalCode::MiddlewareCall, e.what());}
             }
         }
         void callAfter(U arg) const
         {
             std::shared_lock lock(this->_lock);
-            for (const utils::middleware::Middleware<U>& middleware: this->after) {
+            for (const utils::pool::middleware::Middleware<U>& middleware: this->after) {
                 try {middleware(arg);}
                 catch (const std::exception& e) {throw utils::exception::ErrorException(utils::exception::InternalCode::MiddlewareCall, e.what());}
             }
@@ -110,4 +110,4 @@ class Middlewares<void, U>: private utils::security::observer::Observer<"Middlew
 };
 
 } // namespace end
-#endif /* MIDDLEWARES_VOID_T_H */
+#endif /* MIDDLEWARES_T_T_H */

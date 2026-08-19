@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  31/07/2026 by Tsukini
+##  19/08/2026 by Tsukini
 
 File Name:
 ##  @file version.hpp
@@ -24,3 +24,19 @@ File Description:
 
 // Definition of the library version (set by the cmake)
 #define __LIBUTILS_VERSION__ "@LIBUTILS_VERSION@"
+
+//----------------------------------------------------------------//
+/* GLOBAL */
+
+#if defined(__has_include) && __has_include(<string_view>)
+    // try to setup the version var using string_view (failsafe)
+    #include <string_view>
+    namespace utils {
+        inline constexpr std::string_view version = __LIBUTILS_VERSION__;
+    }
+#else
+    // otherwise, only using native type
+    namespace utils {
+        inline constexpr const char version[] = __LIBUTILS_VERSION__;
+    }
+#endif
