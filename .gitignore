@@ -5,6 +5,7 @@
 *.so
 a.out
 unit_tests
+include/utils/exception/generated_internal_exception_header.hpp
 
 ## Vim
 *.sw*

@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 01/08/2026 by @author Tsukini
+##  @date 19/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Middlewares.hpp
@@ -32,7 +32,7 @@ File Description:
     #include <functional>                               // std::function
     #include <exception>                                // std::exception
 
-namespace utils::poll::middleware { // namespace
+namespace utils::pool::middleware { // namespace
 //----------------------------------------------------------------//
 /* CLASS */
 
