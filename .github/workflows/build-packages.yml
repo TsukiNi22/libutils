@@ -61,21 +61,28 @@ jobs:
       - name: Check packages
         run: |
           set -euo pipefail
+          declare -A PACKAGE_PATTERNS=(
+            ["libutils"]="libutils-*-Linux.@ext@"
+            ["libutils-op"]="libutils-op-*-lib.@ext@"
+            ["libutils-db"]="libutils-db-*-lib.@ext@"
+            ["libutils-as"]="libutils-as-*-lib.@ext@"
+            ["libutils-dev"]="libutils-dev-*-headers.@ext@"
+            ["libutils-dev-op"]="libutils-dev-*-headers-op.@ext@"
+            ["libutils-dev-db"]="libutils-dev-*-headers-db.@ext@"
+            ["libutils-dev-as"]="libutils-dev-*-headers-as.@ext@"
+          )
+
           for package in $(echo $PACKAGES | tr ',' ' ' | xargs); do
-            RPM_FILE=$(find ./build -maxdepth 1 -name "${package}-*.rpm" -print -quit)
-            DEB_FILE=$(find ./build -maxdepth 1 -name "${package}-*.deb" -print -quit)
+            for ext in rpm deb; do
+              pattern="${PACKAGE_PATTERNS[$package]//@ext@/$ext}"
+              FILE=$(find ./build -maxdepth 1 -name "$pattern" -print -quit)
 
-            if [ -z "$RPM_FILE" ]; then
-              echo "::error title=Missing package (RPM)::Package '$package' (.rpm) not found"
-              exit 1
-            fi
-            echo "✓ Package '$package' (.rpm) ok -> $(basename "$RPM_FILE")"
-
-            if [ -z "$DEB_FILE" ]; then
-              echo "::error title=Missing package (DEB)::Package '$package' (.deb) not found"
-              exit 1
-            fi
-            echo "✓ Package '$package' (.deb) ok -> $(basename "$DEB_FILE")"
+              if [ -z "$FILE" ]; then
+                echo "::error title=Missing package (${ext^^})::Package '$package' (.$ext) not found (pattern: $pattern)"
+                exit 1
+              fi
+              echo "✓ Package '$package' (.$ext) ok -> $(basename "$FILE")"
+            done
           done
 
       - name: Upload compiled packages
