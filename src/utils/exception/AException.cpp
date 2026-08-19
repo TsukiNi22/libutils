@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 27/07/2026 by @author Tsukini
+##  @date 19/08/2026 by @author Tsukini
 
 File Name:
 ##  @file AException.cpp
@@ -12,7 +12,7 @@ File Description:
 #include "utils/attribute/Attribute.hpp"
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/AException.hpp"
-#include "utils/exception/basic/ErrorException.hpp"
+#include "utils/exception/custom/FatalException.hpp"
 #include "utils/manip/iomanip/Color.hpp"
 #include "utils/manip/iomanip/ANSI.hpp"
 #include "utils/manip/iomanip/Style.hpp"
@@ -36,7 +36,7 @@ _cold void utils::exception::AException::subinit(void)
     std::uint8_t restriction = this->Restriction.at(this->_code);
     if (this->_code == utils::exception::InternalCode::ExceptionCodeRestriction) return; // Check to counter any mistake and cause a infinit throw loop
     else if (restriction != 0 && (this->_type & restriction) != this->_type)
-        throw utils::exception::ErrorException(utils::exception::InternalCode::ExceptionCodeRestriction, this->_loc);
+        throw utils::exception::FatalException(utils::exception::InternalCode::ExceptionCodeRestriction, this->_loc);
 }
 
 _cold _nodiscard static inline std::string shorten(const std::string &path)

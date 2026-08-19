@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 06/07/2026 by @author Tsukini
+##  @date 19/08/2026 by @author Tsukini
 
 File Name:
 ##  @file OVector3.hpp
@@ -40,7 +40,7 @@ File Description:
     /* limits */
     #define MAX_INDEX_OVECTOR3 3
 
-namespace utils::vector { // namespace start
+namespace utils::math::vector { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
@@ -247,62 +247,62 @@ class OVector3 {
 
 // -------- Basic-Operator (reverse) -------- //
 template<typename T, typename U>
-inline utils::vector::OVector3<T> operator+(const T& lhs, const utils::vector::OVector3<U>& rhs)
+inline utils::math::vector::OVector3<T> operator+(const T& lhs, const utils::math::vector::OVector3<U>& rhs)
 {return {lhs + rhs.x, lhs + rhs.y, lhs + rhs.z};}
 
 template<typename T, typename U>
-inline utils::vector::OVector3<T> operator-(const T& lhs, const utils::vector::OVector3<U>& rhs)
+inline utils::math::vector::OVector3<T> operator-(const T& lhs, const utils::math::vector::OVector3<U>& rhs)
 {return {lhs - rhs.x, lhs - rhs.y, lhs - rhs.z};}
 
 template<typename T, typename U>
-inline utils::vector::OVector3<T> operator*(const T& lhs, const utils::vector::OVector3<U>& rhs)
+inline utils::math::vector::OVector3<T> operator*(const T& lhs, const utils::math::vector::OVector3<U>& rhs)
 {return {lhs * rhs.x, lhs * rhs.y, lhs * rhs.z};}
 
 template<typename T, typename U>
-inline utils::vector::OVector3<T> operator/(const T& lhs, const utils::vector::OVector3<U>& rhs)
+inline utils::math::vector::OVector3<T> operator/(const T& lhs, const utils::math::vector::OVector3<U>& rhs)
 {return {lhs / rhs.x, lhs / rhs.y, lhs / rhs.z};}
 
 // -------- Bitwise-Operator -------- //
 template<typename T, typename U>
-inline utils::vector::OVector3<T> operator&(const T& lhs, const utils::vector::OVector3<U>& rhs)
+inline utils::math::vector::OVector3<T> operator&(const T& lhs, const utils::math::vector::OVector3<U>& rhs)
 {return {lhs & rhs.x, lhs & rhs.y, lhs & rhs.z};}
 
 template<typename T, typename U>
-inline utils::vector::OVector3<T> operator|(const T& lhs, const utils::vector::OVector3<U>& rhs)
+inline utils::math::vector::OVector3<T> operator|(const T& lhs, const utils::math::vector::OVector3<U>& rhs)
 {return {lhs | rhs.x, lhs | rhs.y, lhs | rhs.z};}
 
 template<typename T, typename U>
-inline utils::vector::OVector3<T> operator^(const T& lhs, const utils::vector::OVector3<U>& rhs)
+inline utils::math::vector::OVector3<T> operator^(const T& lhs, const utils::math::vector::OVector3<U>& rhs)
 {return {lhs ^ rhs.x, lhs ^ rhs.y, lhs ^ rhs.z};}
 
 // -------- Comparison (reverse) -------- //
 template<typename T, typename U>
-inline bool operator==(const T& lhs, const utils::vector::OVector3<U>& rhs)
+inline bool operator==(const T& lhs, const utils::math::vector::OVector3<U>& rhs)
 {return (lhs == rhs.x && lhs == rhs.y && lhs == rhs.z);}
 
 template<typename T, typename U>
-inline bool operator!=(const T& lhs, const utils::vector::OVector3<U>& rhs)
+inline bool operator!=(const T& lhs, const utils::math::vector::OVector3<U>& rhs)
 {return (lhs != rhs.x || lhs != rhs.y || lhs != rhs.z);}
 
 template<typename T, typename U>
-inline bool operator<(const T& lhs, const utils::vector::OVector3<U>& rhs)
+inline bool operator<(const T& lhs, const utils::math::vector::OVector3<U>& rhs)
 {return (lhs < rhs.x && lhs < rhs.y && lhs < rhs.z);}
 
 template<typename T, typename U>
-inline bool operator<=(const T& lhs, const utils::vector::OVector3<U>& rhs)
+inline bool operator<=(const T& lhs, const utils::math::vector::OVector3<U>& rhs)
 {return (lhs <= rhs.x && lhs <= rhs.y && lhs <= rhs.z);}
 
 template<typename T, typename U>
-inline bool operator>(const T& lhs, const utils::vector::OVector3<U>& rhs)
+inline bool operator>(const T& lhs, const utils::math::vector::OVector3<U>& rhs)
 {return (lhs > rhs.x && lhs > rhs.y && lhs > rhs.z);}
 
 template<typename T, typename U>
-inline bool operator>=(const T& lhs, const utils::vector::OVector3<U>& rhs)
+inline bool operator>=(const T& lhs, const utils::math::vector::OVector3<U>& rhs)
 {return (lhs >= rhs.x && lhs >= rhs.y && lhs >= rhs.z);}
 
 // -------- Output -------- //
 template<typename T>
-std::ostream& operator<<(std::ostream& os, const utils::vector::OVector3<T>& v)
+std::ostream& operator<<(std::ostream& os, const utils::math::vector::OVector3<T>& v)
 {return os << "(" << v.x << ", " << v.y << ", " << v.z << ")";}
 
 } // namespace end

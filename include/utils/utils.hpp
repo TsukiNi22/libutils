@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 16/08/2026 by @author Tsukini
+##  @date 19/08/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -68,11 +68,13 @@ File Description:
 /* default: if nothing is defined - include everything */
 #if !defined(_Handling) && !defined(_Attribute) && !defined(_Tools) && \
     /* _Handling */\
-    !defined(_Exception) && !defined(_Verbose) && !defined(_Arguments) && !defined(_Network) && \
+    !defined(_Exception) && !defined(_Verbose) && !defined(_Middleware) && !defined(_Arguments) && !defined(_Network) && \
     /* _Tools */\
-    !defined(_BLT) && !defined(_Vector) && !defined(_Concepts) && !defined(_Middleware) && !defined(_Manip) && !defined(_Algorithms) && !defined(_Cli) && !defined(_Security) && \
+    !defined(_BLT) && !defined(_Concepts) && !defined(_Math) && !defined(_Manip) && !defined(_Algorithms) && !defined(_Cli) && !defined(_Security) && \
     /* _Network */\
     !defined(_Socket) && \
+    /* _Math */\
+    !defined(_Vector) && !defined(_Geometry) && !defined(_Trigo) && \
     /* _Manip */\
     !defined(_IOManip) && !defined(_SManip) && \
     /* _Algorithms */\
@@ -94,6 +96,7 @@ File Description:
 #ifdef _Handling
     #define _Exception
     #define _Verbose
+    #define _Middleware
     #define _Arguments
     #define _Network
 #endif
@@ -101,9 +104,8 @@ File Description:
 /* Activate all tool include */
 #ifdef _Tools
     #define _BLT // Bidirectional Lookup Table
-    #define _Vector
+    #define _Math
     #define _Concepts
-    #define _Middleware
     #define _Manip
     #define _Algorithms
     #define _Cli
@@ -113,6 +115,13 @@ File Description:
 /* Activate all network sub-include */
 #ifdef _Network
     #define _Socket
+#endif
+
+/* Activate all math sub-include */
+#ifdef _Math
+    #define _Vector
+    #define _Geometry
+    #define _Trigo
 #endif
 
 /* Activate all manip sub-include */
@@ -180,11 +189,23 @@ File Description:
 /* VectorX */
 #ifdef _Vector
     // -> Customized vector2 & vector3 for respectively 2 & 3 value of undefined type
-    #include "vector/IVector.hpp"   // utils::vector::IVector<T>
-    #include "vector/Vector2.hpp"   // utils::vector::Vector2<T>
-    #include "vector/Vector3.hpp"   // utils::vector::Vector3<T>
-    #include "vector/OVector2.hpp"  // utils::vector::OVector2<T>
-    #include "vector/OVector3.hpp"  // utils::vector::OVector3<T>
+    #include "math/vector/Vector.hpp"   // utils::math::vector::IVector<T>, utils::math::vector::VectorN, utils::math::vector::OVectorN
+#endif
+
+/* Geometry */
+#ifdef _Geometry
+    // -> Multiple function to handle computing for angle/point (2D/3D)
+    #include "math/MathType.hpp"            // utils::math::* (type)
+    #include "math/trigo/Convertion.hpp"    // utils::math::trigo::radToDeg utils::math::trigo::degToRad
+    #include "math/geometry/Angle.hpp"      // utils::math::geometry::toLook
+    #include "math/geometry/Point.hpp"      // utils::math::geometry::rotatePointND
+#endif
+
+/* Trigonometry */
+#ifdef _Trigo
+    // -> Multiple function to handle computing for angle/point (2D/3D)
+    #include "math/MathType.hpp"            // utils::math::* (type)
+    #include "math/trigo/Convertion.hpp"    // utils::math::trigo::radToDeg utils::math::trigo::degToRad
 #endif
 
 /* Concepts */
@@ -274,4 +295,3 @@ File Description:
     // -> Handling of multiple encryption tools
     #include "security/encryption/Key.hpp"  // utils::security::encryption::IKey<t>, utils::security::encryption::RSAKey/CommonRSAKey, utils::security::encryption::AESKey
 #endif
-

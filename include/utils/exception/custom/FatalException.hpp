@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 16/08/2026 by @author Tsukini
+##  @date 19/08/2026 by @author Tsukini
 
 File Name:
 ##  @file FatalException.hpp
@@ -39,6 +39,24 @@ namespace utils::exception { // namespace start
 #endif
 class FatalException: public utils::exception::AException {
     public:
+        // ------------ Function ---------- //
+        _cold display(void) const
+        {
+            std::cerr
+            << EXCEPTION_ABORTED_HEADER  << std::endl
+            << this->formated()          << std::endl
+            << EXCEPTION_ABORTED_MESSAGE << std::endl;
+            std::abort();
+        }
+        _cold display(const utils::exception::IException& e) const
+        {
+            std::cerr
+            << EXCEPTION_ABORTED_HEADER  << std::endl
+            << e.formated()              << std::endl
+            << EXCEPTION_ABORTED_MESSAGE << std::endl;
+            std::abort();
+        }
+
         // ------------ Operator ---------- //
         FatalException& operator=(const FatalException& other) = delete;
         FatalException& operator=(FatalException&& other) = delete;
@@ -46,46 +64,16 @@ class FatalException: public utils::exception::AException {
         // ---------- Constructor --------- //
         #ifdef GENERATED_EXTERNAL_EXCEPTION_HEADER_H
             _cold explicit FatalException(utils::exceptionutils::exception::ExternalCode code, std::source_location loc = std::source_location::current()) noexcept : AException(loc, utils::exception::Type::Error | utils::exception::Type::Fatal, static_cast<utils::exception::InternalCode>(code))
-            {
-                std::cerr
-                << EXCEPTION_ABORTED_HEADER  << std::endl
-                << this->formated()          << std::endl
-                << EXCEPTION_ABORTED_MESSAGE << std::endl;
-                std::abort();
-            };
+            {this->display();};
             _cold FatalException(utils::exception::Type type, utils::exceptionutils::exception::ExternalCode code, std::string info = "[None]", std::source_location loc = std::source_location::current()) noexcept : AException(loc, type | utils::exception::Type::Fatal, static_cast<utils::exception::InternalCode>(code), info)
-            {
-                std::cerr
-                << EXCEPTION_ABORTED_HEADER  << std::endl
-                << this->formated()          << std::endl
-                << EXCEPTION_ABORTED_MESSAGE << std::endl;
-                std::abort();
-            };
+            {this->display();};
         #endif
         _cold explicit FatalException(utils::exception::InternalCode code = utils::exception::InternalCode::Undefined, std::source_location loc = std::source_location::current()) noexcept : AException(loc, utils::exception::Type::Error | utils::exception::Type::Fatal, code)
-        {
-            std::cerr
-            << EXCEPTION_ABORTED_HEADER  << std::endl
-            << this->formated()          << std::endl
-            << EXCEPTION_ABORTED_MESSAGE << std::endl;
-            std::abort();
-        };
+        {this->display();};
         _cold FatalException(utils::exception::Type type = utils::exception::Type::None, utils::exception::InternalCode code = utils::exception::InternalCode::Undefined, std::string info = "[None]", std::source_location loc = std::source_location::current()) noexcept : AException(loc, type | utils::exception::Type::Fatal, code, info)
-        {
-            std::cerr
-            << EXCEPTION_ABORTED_HEADER  << std::endl
-            << this->formated()          << std::endl
-            << EXCEPTION_ABORTED_MESSAGE << std::endl;
-            std::abort();
-        };
+        {this->display();};
         _cold FatalException(const utils::exception::IException& e) noexcept : AException()
-        {
-            std::cerr
-            << EXCEPTION_ABORTED_HEADER  << std::endl
-            << e.formated()              << std::endl
-            << EXCEPTION_ABORTED_MESSAGE << std::endl;
-            std::abort();
-        };
+        {this->display(e);};
         FatalException(const FatalException& other) = delete;
         FatalException(FatalException&& other) = delete;
 

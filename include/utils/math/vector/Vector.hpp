@@ -8,47 +8,28 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 01/08/2026 by @author Tsukini
+##  @date 19/08/2026 by @author Tsukini
 
 File Name:
-##  @file IVector.hpp
+##  @file Vector.hpp
 
 File Description:
-##  Interface for the cutomized vector
+##  Include for all the different vector
 \**************************************************************/
 
-#ifndef IVECTOR_H
-    #define IVECTOR_H
+#ifndef VECTOR_H
+    #define VECTOR_H
 
     //----------------------------------------------------------------//
     /* INCLUDE */
 
-    /* type */
-    #include "../security/observer/Observer.hpp"    // utils::security::observer::Observer
-    #include <cstddef>                              // std::size_t
+    /* interface */
+    #include "IVector.hpp"  // utils::math::vector::IVector
 
-namespace utils::vector { // namespace start
-//----------------------------------------------------------------//
-/* CLASS */
+    /* vector */
+    #include "Vector2.hpp"  // utils::math::vector::Vector2
+    #include "Vector3.hpp"  // utils::math::vector::Vector3
+    #include "OVector2.hpp" // utils::math::vector::OVector2
+    #include "OVector3.hpp" // utils::math::vector::OVector3
 
-template<typename T>
-class IVector: private utils::security::observer::Observer<"IVector"> {
-    public:
-        // ---------- Pre-Function -------- //
-        virtual T get(std::size_t index) const = 0;
-
-        // ------------ Operator ---------- //
-        IVector& operator=(const IVector& other) = default;
-        IVector& operator=(IVector&& other) = default;
-
-        // ---------- Constructor --------- //
-        IVector() = default;
-        IVector(const IVector& other) = default;
-        IVector(IVector&& other) = default;
-
-        // ----------- Destructor --------- //
-        virtual ~IVector() = default;
-};
-
-} // namespace end
-#endif /* IVECTOR_H */
+#endif /* VECTOR_H */
