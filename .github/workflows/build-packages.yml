@@ -63,7 +63,7 @@ jobs:
           set -euo pipefail
           for package in $(echo $PACKAGES | tr ',' ' ' | xargs); do
             RPM_FILE=$(find ./build -maxdepth 1 -name "${package}-*.rpm" -print -quit)
-            DEB_FILE=$(find ./build -maxdepth 1 -name "${package}_*.deb" -print -quit)
+            DEB_FILE=$(find ./build -maxdepth 1 -name "${package}-*.deb" -print -quit)
 
             if [ -z "$RPM_FILE" ]; then
               echo "::error title=Missing package (RPM)::Package '$package' (.rpm) not found"
