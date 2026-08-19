@@ -35,7 +35,7 @@ namespace utils::pool { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-template<T>
+template<typename T>
 class Cluster {
     private:
         std::vector<T> _class;
@@ -43,7 +43,7 @@ class Cluster {
     public:
         // ------------ Function ---------- //
         _cold _nodiscard inline std::size_t size(void) const {return this->_class.size();};
-        _hot void apply(std::function<void(&T)> fn) {for (auto& c: this->_class) fn(c);}
+        _hot void apply(std::function<void(T&)> fn) {for (auto& c: this->_class) fn(c);}
 
         /* spawn */
         template <typename... Args>
