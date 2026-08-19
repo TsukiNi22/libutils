@@ -1,0 +1,19 @@
+{
+    "errors": [
+        {
+            "code": "Dlopen",
+            "message": "Failed to load a dynamic library",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "Dlsym",
+            "message": "Failed to load a function from a dynamic library",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "Dlclose",
+            "message": "Failed to release a loaded dynamic library",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        }
+    ]
+}

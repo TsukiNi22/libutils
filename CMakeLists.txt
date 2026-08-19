@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 set(TARGET utils)
-project(${TARGET} VERSION 2.5.0 LANGUAGES CXX)
+project(${TARGET} VERSION 2.6.0 LANGUAGES CXX)
 
 # =========================
 # Options
@@ -98,6 +98,9 @@ set(SRC
     src/utils/security/observer/Instances.cpp
     src/utils/security/observer/ANotifier.cpp
     src/utils/security/observer/MemoryLeakNotifier.cpp
+
+    # Encapsulation
+    src/utils/encapsulation/SharedObject.cpp
 )
 add_library(${TARGET} STATIC ${SRC})
 #add_library(${TARGET} SHARED ${SRC})
@@ -203,7 +206,7 @@ set_target_properties(${TARGET} PROPERTIES
 target_compile_options(${TARGET} PRIVATE
     $<$<CONFIG:Debug>:-g -ggdb3>
     $<$<CONFIG:Asan>:-fsanitize=address -fno-omit-frame-pointer -g -ggdb3>
-    $<$<CONFIG:Optimized>:-O3 -ffast-math -funroll-loops -pipe -DNDEBUG>
+    $<$<CONFIG:Optimized>:-O3 -ffast-math -funroll-loops -fno-plt -pipe -DNDEBUG>
 )
 target_link_options(${TARGET} PRIVATE
     $<$<CONFIG:Asan>:-fsanitize=address>

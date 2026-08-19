@@ -70,7 +70,7 @@ File Description:
     /* _Handling */\
     !defined(_Exception) && !defined(_Verbose) && !defined(_Pool) && !defined(_Cli) && !defined(_Arguments) && !defined(_Network) && \
     /* _Tools */\
-    !defined(_BLT) && !defined(_Concepts) && !defined(_Math) && !defined(_Manip) && !defined(_Algorithms) && !defined(_Security) && \
+    !defined(_BLT) && !defined(_Concepts) && !defined(_Encapsulation) && !defined(_Math) && !defined(_Manip) && !defined(_Algorithms) && !defined(_Security) && \
     /* _Pool */\
     !defined(_Middleware) && \
     /* _Network */\
@@ -109,6 +109,7 @@ File Description:
     #define _BLT // Bidirectional Lookup Table
     #define _Math
     #define _Concepts
+    #define _Encapsulation
     #define _Manip
     #define _Algorithms
     #define _Security
@@ -220,6 +221,12 @@ File Description:
     // -> Definition of different concepts
     #include "concepts/GlobalConcepts.hpp"      // Global concepts
     #include "concepts/OperationConcepts.hpp"   // Operation concepts
+#endif
+
+/* Encapsulation */
+#ifdef _Encapsulation
+    // -> Different basic tools/comportement encapsulated
+    #include "encapsulation/SharedObject.hpp" // utils::encapsulation::SharedObject
 #endif
 
 /* Pool */

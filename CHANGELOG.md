@@ -19,8 +19,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 ## [pre-release]
+### Added
+- Unit tests for multiple sections (not all sections are covered, only: `security`, `verbose`)
+- Documentation using github wiki (some sections might be missing or not finished)
+- Add of a cluster class to handle groups of entity (new section `pool`)
+- New class to encapsulate the shared object usage (new section `encapsulate`)
+
 ### Changed
 - Rework the warning, now all are desactivated and can be activated/desactivated such has global/group/solo
+- `vector` section moved to `math/vector`
+- `middleware` section moved to `pool/middleware`
+
+### Fixed
+- The `math` section is now avaible on the `utils.hpp` include
 
 ## [v2.3.3] - 2026-08-16
 ### Added
