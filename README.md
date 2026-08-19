@@ -1,6 +1,6 @@
 # Utils
 
-See internal wiki for more details [...]() (not setup for now)
+See internal wiki for more details [here](https://github.com/TsukiNi22/libutils/wiki)
 
 ### Table of Contents
  - [Dependencies](#dependencies)
