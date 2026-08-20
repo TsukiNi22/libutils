@@ -24,15 +24,16 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"   // _cold, _nodiscard
-    #include <unistd.h>                     // ::close
-    #include <array>                        // std::array
+    #include "../security/observer/Observer.hpp"    // utils::security::observer::Observer
+    #include "../attribute/Attribute.hpp"           // _cold, _nodiscard
+    #include <unistd.h>                             // ::close
+    #include <array>                                // std::array
 
 namespace utils::encapsulation { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-class Pipe {
+class Pipe: private utils::security::observer::Observer<"Pipe"> {
     private:
         std::array<int, 2> _fds = {-1, -1}; // {read, write}
 
@@ -47,6 +48,7 @@ class Pipe {
         _cold inline void closeRead(void) noexcept {this->close_(this->_fds[0]);};
         _cold inline void closeWrite(void) noexcept {this->close_(this->_fds[1]);};
         _cold inline void close(void) noexcept {this->closeRead(); this->closeWrite();};
+        _cold inline void clear(void) {this->_fds[0] = -1; this->_fds[1] = -1;};
 
         /* getter */
         _cold _nodiscard inline const std::array<int, 2>& getFds(void) const {return this->_fds;};
@@ -55,19 +57,19 @@ class Pipe {
 
         /* setter */
         _cold inline void setFds(const std::array<int, 2>& fds) {this->_fds = fds;};
-        _cold inline void setRead(int fd = -1) {this->_fds[0] = fd;};
-        _cold inline void setWrite(int fd = -1) {this->_fds[1] = fd;};
+        _cold inline void setRead(const int fd = -1) {this->_fds[0] = fd;};
+        _cold inline void setWrite(const int fd = -1) {this->_fds[1] = fd;};
 
         // ------------ Operator ---------- //
         Pipe& operator=(const Pipe& other) = delete;
-        Pipe& operator=(Pipe&& other) = delete;
+        Pipe& operator=(Pipe&& other) {this->_fds = other._fds; other.clear(); return *this;};
 
         // ---------- Constructor --------- //
-        Pipe(int fds[2]): _fds{fds[0], fds[1]} {};
+        Pipe(const int fds[2]): _fds{fds[0], fds[1]} {};
         Pipe(const std::array<int, 2>& fds): _fds{fds} {};
-        Pipe(int read = -1, int write = -1): _fds{read, write} {};
+        Pipe(const int read = -1, const int write = -1): _fds{read, write} {};
         Pipe(const Pipe& other) = delete;
-        Pipe(Pipe&& other) = delete;
+        Pipe(Pipe&& other): _fds{other._fds} {other.clear();};
 
         // ----------- Destructor --------- //
         ~Pipe() {this->close();};

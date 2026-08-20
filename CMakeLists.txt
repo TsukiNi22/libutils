@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 set(TARGET utils)
-project(${TARGET} VERSION 2.8.0 LANGUAGES CXX)
+project(${TARGET} VERSION 2.9.0 LANGUAGES CXX)
 
 # =========================
 # Options
@@ -102,7 +102,8 @@ set(SRC
     # Encapsulation
     src/utils/encapsulation/SharedObject.cpp
     src/utils/encapsulation/Pipe.cpp
-    src/utils/encapsulation/Dup2.cpp
+    src/utils/encapsulation/Dup.cpp
+    src/utils/encapsulation/Process.cpp
 )
 add_library(${TARGET} STATIC ${SRC})
 #add_library(${TARGET} SHARED ${SRC})

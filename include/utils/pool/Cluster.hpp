@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 19/08/2026 by @author Tsukini
+##  @date 20/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Cluster.hpp
@@ -24,6 +24,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
+    #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::Type, utils::exception::InternalCode
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "../attribute/Attribute.hpp"               // _cold, _hot, _nodiscard
@@ -36,7 +37,7 @@ namespace utils::pool { // namespace start
 /* CLASS */
 
 template<typename T>
-class Cluster {
+class Cluster: private utils::security::observer::Observer<"Cluster"> {
     private:
         std::vector<T> _class;
 

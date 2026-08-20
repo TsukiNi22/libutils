@@ -18,15 +18,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [pre-release]
-### In Progress
-- Process encapsulation (Pipe **OK**, Dup2 **OK**, Process **KO**)
+## [pre-release] (empty)
 
+## [v2.9.0-pre] - 2026-08-20
 ### Added
 - Unit tests for multiple sections (not all sections are covered, only: `security`, `verbose`)
 - Documentation using github wiki (some sections might be missing or not finished)
 - Add of a cluster class to handle groups of entity (new section `pool`)
 - New class to encapsulation the shared object usage (new section `encapsulation`)
+- Process encapsulation (Pipe **OK**, Dup **OK**, Process **OK**)
 
 ### Changed
 - Rework the warning, now all are desactivated and can be activated/desactivated such has global/group/solo
@@ -83,7 +83,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial version of the utils library with multiple tools (see [README-1.0.0](https://github.com/TsukiNi22/libutils/blob/v1.0.0/README.md) for more details)
 
-[pre-release]: https://github.com/TsukiNi22/libutils/compare/v2.3.3-release...HEAD
+[pre-release]: https://github.com/TsukiNi22/libutils/compare/v2.9.0-pre...HEAD
+[v2.9.0-pre]: https://github.com/TsukiNi22/libutils/compare/v2.3.3-release...v2.9.0-pre
 [v2.3.3]: https://github.com/TsukiNi22/libutils/compare/v2.2.0...v2.3.3-release
 [v2.2.0]: https://github.com/TsukiNi22/libutils/compare/v2.1.0...v2.2.0
 [v2.1.0]: https://github.com/TsukiNi22/libutils/compare/v2.0.0...v2.1.0

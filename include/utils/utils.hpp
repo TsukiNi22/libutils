@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 19/08/2026 by @author Tsukini
+##  @date 20/08/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -226,7 +226,10 @@ File Description:
 /* Encapsulation */
 #ifdef _Encapsulation
     // -> Different basic tools/comportement encapsulated
-    #include "encapsulation/SharedObject.hpp" // utils::encapsulation::SharedObject
+    #include "encapsulation/SharedObject.hpp"   // utils::encapsulation::SharedObject
+    #include "encapsulation/Pipe.hpp"           // utils::encapsulation::Pipe
+    #include "encapsulation/Dup.hpp"            // utils::encapsulation::Dup
+    #include "encapsulation/Process.hpp"        // utils::encapsulation::Process
 #endif
 
 /* Pool */

@@ -21,8 +21,28 @@
             "restrictions": ["Fatal", "Error", "Warning"]
         },
         {
-            "code": "Dup2",
-            "message": "Fail during dup2 init",
+            "code": "Dup",
+            "message": "Fail during dup init",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "Process",
+            "message": "Error during process call",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "Fork",
+            "message": "Error during the fork of the process",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "Waitpid",
+            "message": "Error during the wait for the given pid",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "Kill",
+            "message": "Error during call to kill",
             "restrictions": ["Fatal", "Error", "Warning"]
         }
     ]

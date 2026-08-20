@@ -24,6 +24,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
+    #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::Type, utils::exception::InternalCode
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include <dlfcn.h>                                  // dlsym, dlerror
@@ -34,7 +35,7 @@ namespace utils::encapsulation { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-class SharedObject {
+class SharedObject: private utils::security::observer::Observer<"SharedObject"> {
     private:
         void* _lib = nullptr;
         std::string _path;
