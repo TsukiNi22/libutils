@@ -5,37 +5,8 @@ on:
     branches: [gh-pages]
 
 jobs:
-  dispatch:
-    runs-on: ${{ vars.RUNNER }}
-    defaults:
-      run:
-        shell: bash
-    
-    outputs:
-      is_bot: ${{ steps.check.outputs.is_bot }}
-
-    steps:
-      - name: Checkout repository - gh-pages
-        uses: actions/checkout@v5
-        with:
-          ref: gh-pages
-          path: gh-pages
-          fetch-depth: 1
-
-      - name: Check the author
-        id: check
-        working-directory: gh-pages
-        run: |
-          AUTHOR=$(git log -1 --pretty=format:'%ae')
-          if [ "$AUTHOR" = "github-actions[bot]@users.noreply.github.com" ]; then
-            echo "is_bot=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "is_bot=false" >> "$GITHUB_OUTPUT"
-          fi
-
   sync-packages:
-    needs: dispatch
-    if: needs.dispatch.outputs.is_bot != 'true'
+    if: github.event.head_commit.author.email != 'github-actions[bot]@users.noreply.github.com' && !contains(github.event.head_commit.message, '[ignore]')
     permissions:
       contents: write
 
