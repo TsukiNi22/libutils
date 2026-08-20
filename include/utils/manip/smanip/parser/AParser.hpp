@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 26/07/2026 by @author Tsukini
+##  @date 20/08/2026 by @author Tsukini
 
 File Name:
 ##  @file AParser.hpp
@@ -52,12 +52,12 @@ class AParser: public utils::smanip::parser::IParser<T> {
 
         // ------------ Operator ---------- //
         AParser& operator=(const AParser& other) = delete;
-        AParser& operator=(AParser&& other) = delete;
+        AParser& operator=(AParser&& other) = default;
 
         // ---------- Constructor --------- //
         AParser() = default;
         AParser(const AParser& other) = delete;
-        AParser(AParser&& other) = delete;
+        AParser(AParser&& other) = default;
 
         // ----------- Destructor --------- //
         virtual ~AParser() = default;

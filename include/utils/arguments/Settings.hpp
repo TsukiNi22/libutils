@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 01/08/2026 by @author Tsukini
+##  @date 20/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Settings.hpp
@@ -165,14 +165,14 @@ class Settings: private utils::security::observer::Observer<"Settings"> {
 
         // ------------ Operator ---------- //
         Settings& operator=(const Settings& other) = delete;
-        Settings& operator=(Settings&& other) = delete;
+        Settings& operator=(Settings&& other) = default;
         _nodiscard const utils::arguments::Setting& operator[](const std::string& id) {return this->at(id);}
         _nodiscard const utils::arguments::Setting& operator[](const std::string& id) const {return this->at(id);}
 
         // ---------- Constructor --------- //
         Settings() = default;
         Settings(const Settings& other) = delete;
-        Settings(Settings&& other) = delete;
+        Settings(Settings&& other) = default;
 
         // ----------- Destructor --------- //
         ~Settings() = default;

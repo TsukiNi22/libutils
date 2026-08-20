@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 04/08/2026 by @author Tsukini
+##  @date 20/08/2026 by @author Tsukini
 
 File Name:
 ##  @file IKey.hpp
@@ -49,13 +49,13 @@ class IKey: private utils::security::observer::Observer<"IKey"> {
         virtual bool hasGetOverload(void) const = 0;
 
         // ------------ Operator ---------- //
-        IKey& operator=(const IKey& other) = delete;
-        IKey& operator=(IKey&& other) = delete;
+        IKey& operator=(const IKey& other) = default;
+        IKey& operator=(IKey&& other) = default;
 
         // ---------- Constructor --------- //
         IKey() = default;
-        IKey(const IKey& other) = delete;
-        IKey(IKey&& other) = delete;
+        IKey(const IKey& other) = default;
+        IKey(IKey&& other) = default;
 
         // ----------- Destructor --------- //
         virtual ~IKey() = default;

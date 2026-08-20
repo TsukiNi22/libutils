@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 01/08/2026 by @author Tsukini
+##  @date 20/08/2026 by @author Tsukini
 
 File Name:
 ##  @file BidirectionalLookupTable.hpp
@@ -112,7 +112,7 @@ class BidirectionalLookupTable: private utils::security::observer::Observer<"Bid
 
         // ------------ Operator ---------- //
         BidirectionalLookupTable& operator=(const BidirectionalLookupTable& other) = delete;
-        BidirectionalLookupTable& operator=(BidirectionalLookupTable&& other) = delete;
+        BidirectionalLookupTable& operator=(BidirectionalLookupTable&& other) = default;
         const R& operator[](const L& left) const
         {
             if (!this->_left.contains(left))
@@ -129,7 +129,7 @@ class BidirectionalLookupTable: private utils::security::observer::Observer<"Bid
         // ---------- Constructor --------- //
         BidirectionalLookupTable() = default;
         BidirectionalLookupTable(const BidirectionalLookupTable& other) = delete;
-        BidirectionalLookupTable(BidirectionalLookupTable&& other) = delete;
+        BidirectionalLookupTable(BidirectionalLookupTable&& other) = default;
 
         // ----------- Destructor --------- //
         ~BidirectionalLookupTable() = default;

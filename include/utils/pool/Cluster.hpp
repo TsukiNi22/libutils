@@ -71,12 +71,12 @@ class Cluster: private utils::security::observer::Observer<"Cluster"> {
 
         // ------------ Operator ---------- //
         Cluster& operator=(const Cluster& other) = delete;
-        Cluster& operator=(Cluster&& other) = delete;
+        Cluster& operator=(Cluster&& other) = default;
 
         // ---------- Constructor --------- //
         Cluster() = default;
         Cluster(const Cluster& other) = delete;
-        Cluster(Cluster&& other) = delete;
+        Cluster(Cluster&& other) = default;
 
         // ----------- Destructor --------- //
         ~Cluster() = default;

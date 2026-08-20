@@ -82,12 +82,12 @@ class Process: private utils::security::observer::Observer<"Process"> {
 
         // ------------ Operator ---------- //
         Process& operator=(const Process& other) = delete;
-        Process& operator=(Process&& other) = delete;
+        Process& operator=(Process&& other) = default;
 
         // ---------- Constructor --------- //
         Process() = default;
         Process(const Process& other) = delete;
-        Process(Process&& other) = delete;
+        Process(Process&& other) = default;
 
         // ----------- Destructor --------- //
         ~Process() {this->kill(); this->clear();};

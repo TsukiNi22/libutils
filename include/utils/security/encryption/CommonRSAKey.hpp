@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 16/08/2026 by @author Tsukini
+##  @date 20/08/2026 by @author Tsukini
 
 File Name:
 ##  @file CommonRSAKey.hpp
@@ -44,14 +44,14 @@ class CommonRSAKey: public utils::security::encryption::RSAKey {
         void loadCommon(std::string path = DEFAULT_COMMON_RSA_PATH);
 
         // ------------ Operator ---------- //
-        CommonRSAKey& operator=(const CommonRSAKey& other) = delete;
-        CommonRSAKey& operator=(CommonRSAKey&& other) = delete;
+        CommonRSAKey& operator=(const CommonRSAKey& other) = default;
+        CommonRSAKey& operator=(CommonRSAKey&& other) = default;
 
         // ---------- Constructor --------- //
         CommonRSAKey() = default;
         CommonRSAKey(std::string path) {this->loadCommon(path);};
-        CommonRSAKey(const CommonRSAKey& other) = delete;
-        CommonRSAKey(CommonRSAKey&& other) = delete;
+        CommonRSAKey(const CommonRSAKey& other) = default;
+        CommonRSAKey(CommonRSAKey&& other) = default;
 
         // ----------- Destructor --------- //
         virtual ~CommonRSAKey() = default;

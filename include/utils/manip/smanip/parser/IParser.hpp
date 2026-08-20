@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 01/08/2026 by @author Tsukini
+##  @date 20/08/2026 by @author Tsukini
 
 File Name:
 ##  @file IParser.hpp
@@ -45,12 +45,12 @@ class IParser: private utils::security::observer::Observer<"IParser"> {
 
         // ------------ Operator ---------- //
         IParser& operator=(const IParser& other) = delete;
-        IParser& operator=(IParser&& other) = delete;
+        IParser& operator=(IParser&& other) = default;
 
         // ---------- Constructor --------- //
         IParser() = default;
         IParser(const IParser& other) = delete;
-        IParser(IParser&& other) = delete;
+        IParser(IParser&& other) = default;
 
         // ----------- Destructor --------- //
         virtual ~IParser() = default;

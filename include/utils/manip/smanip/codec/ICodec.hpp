@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 01/08/2026 by @author Tsukini
+##  @date 20/08/2026 by @author Tsukini
 
 File Name:
 ##  @file ICodec.hpp
@@ -39,13 +39,13 @@ class ICodec: private utils::security::observer::Observer<"ICodec"> {
         virtual std::string decode(std::string s) const = 0;
 
         // ------------ Operator ---------- //
-        ICodec& operator=(const ICodec& other) = delete;
-        ICodec& operator=(ICodec&& other) = delete;
+        ICodec& operator=(const ICodec& other) = default;
+        ICodec& operator=(ICodec&& other) = default;
 
         // ---------- Constructor --------- //
         ICodec() = default;
-        ICodec(const ICodec& other) = delete;
-        ICodec(ICodec&& other) = delete;
+        ICodec(const ICodec& other) = default;
+        ICodec(ICodec&& other) = default;
 
         // ----------- Destructor --------- //
         virtual ~ICodec() = default;

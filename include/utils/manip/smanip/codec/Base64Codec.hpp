@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 16/08/2026 by @author Tsukini
+##  @date 20/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Base64Codec.hpp
@@ -41,13 +41,13 @@ class Base64Codec: public utils::smanip::codec::ICodec {
         std::string decode(std::string s) const;
 
         // ------------ Operator ---------- //
-        Base64Codec& operator=(const Base64Codec& other) = delete;
-        Base64Codec& operator=(Base64Codec&& other) = delete;
+        Base64Codec& operator=(const Base64Codec& other) = default;
+        Base64Codec& operator=(Base64Codec&& other) = default;
 
         // ---------- Constructor --------- //
         Base64Codec() = default;
-        Base64Codec(const Base64Codec& other) = delete;
-        Base64Codec(Base64Codec&& other) = delete;
+        Base64Codec(const Base64Codec& other) = default;
+        Base64Codec(Base64Codec&& other) = default;
 
         // ----------- Destructor --------- //
         ~Base64Codec() = default;

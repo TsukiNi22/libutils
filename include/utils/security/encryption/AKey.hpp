@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 04/08/2026 by @author Tsukini
+##  @date 20/08/2026 by @author Tsukini
 
 File Name:
 ##  @file AKey.hpp
@@ -77,13 +77,13 @@ class AKey: public utils::security::encryption::IKey<T> {
         _cold _nodiscard bool hasGetOverload(void) const override {return false;};
 
         // ------------ Operator ---------- //
-        AKey& operator=(const AKey& other) = delete;
-        AKey& operator=(AKey&& other) = delete;
+        AKey& operator=(const AKey& other) = default;
+        AKey& operator=(AKey&& other) = default;
 
         // ---------- Constructor --------- //
         AKey() = default;
-        AKey(const AKey& other) = delete;
-        AKey(AKey&& other) = delete;
+        AKey(const AKey& other) = default;
+        AKey(AKey&& other) = default;
 
         // ----------- Destructor --------- //
         virtual ~AKey() = default;

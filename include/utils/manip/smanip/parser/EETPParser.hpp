@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 16/08/2026 by @author Tsukini
+##  @date 20/08/2026 by @author Tsukini
 
 File Name:
 ##  @file EETPParser.hpp
@@ -82,13 +82,13 @@ class EETPParser: public utils::smanip::parser::AParser<utils::smanip::parser::E
 
         // ------------ Operator ---------- //
         EETPParser& operator=(const EETPParser& other) = delete;
-        EETPParser& operator=(EETPParser&& other) = delete;
+        EETPParser& operator=(EETPParser&& other) = default;
 
         // ---------- Constructor --------- //
         EETPParser() {this->_commonKey.loadCommon();};
         EETPParser(std::unique_ptr<utils::smanip::codec::ICodec> codec, std::size_t typeSize = 1): _codec{std::move(codec)}, _typeSize{typeSize} {this->_commonKey.loadCommon();};
         EETPParser(const EETPParser& other) = delete;
-        EETPParser(EETPParser&& other) = delete;
+        EETPParser(EETPParser&& other) = default;
 
         // ----------- Destructor --------- //
         virtual ~EETPParser() = default;

@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 16/08/2026 by @author Tsukini
+##  @date 20/08/2026 by @author Tsukini
 
 File Name:
 ##  @file ANotifier.hpp

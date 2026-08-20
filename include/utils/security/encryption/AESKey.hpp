@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 16/08/2026 by @author Tsukini
+##  @date 20/08/2026 by @author Tsukini
 
 File Name:
 ##  @file AESKey.hpp
@@ -52,12 +52,12 @@ class AESKey: public utils::security::encryption::AKey<utils::security::encrypti
 
         // ------------ Operator ---------- //
         AESKey& operator=(const AESKey& other) = delete;
-        AESKey& operator=(AESKey&& other) = delete;
+        AESKey& operator=(AESKey&& other) = default;
 
         // ---------- Constructor --------- //
         AESKey() = default;
         AESKey(const AESKey& other) = delete;
-        AESKey(AESKey&& other) = delete;
+        AESKey(AESKey&& other) = default;
 
         // ----------- Destructor --------- //
         virtual ~AESKey() = default;

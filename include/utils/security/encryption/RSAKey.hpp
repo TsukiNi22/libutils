@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 16/08/2026 by @author Tsukini
+##  @date 20/08/2026 by @author Tsukini
 
 File Name:
 ##  @file RSAKey.hpp
@@ -61,13 +61,13 @@ class RSAKey: public utils::security::encryption::AKey<utils::security::encrypti
         _cold _nodiscard bool hasGetOverload(void) const final {return true;};
 
         // ------------ Operator ---------- //
-        RSAKey& operator=(const RSAKey& other) = delete;
-        RSAKey& operator=(RSAKey&& other) = delete;
+        RSAKey& operator=(const RSAKey& other) = default;
+        RSAKey& operator=(RSAKey&& other) = default;
 
         // ---------- Constructor --------- //
         RSAKey() = default;
-        RSAKey(const RSAKey& other) = delete;
-        RSAKey(RSAKey&& other) = delete;
+        RSAKey(const RSAKey& other) = default;
+        RSAKey(RSAKey&& other) = default;
 
         // ----------- Destructor --------- //
         virtual ~RSAKey() = default;

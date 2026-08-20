@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 01/08/2026 by @author Tsukini
+##  @date 20/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Setting.hpp
@@ -58,7 +58,7 @@ class Setting: private utils::security::observer::Observer<"Setting"> {
     public:
         // ------------ Operator ---------- //
         Setting& operator=(const Setting& other) = delete;
-        Setting& operator=(Setting&& other) = delete;
+        Setting& operator=(Setting&& other) = default;
         template<typename T>
         operator T(void) const {
             if (this->_setting.type() != typeid(T))
@@ -70,7 +70,7 @@ class Setting: private utils::security::observer::Observer<"Setting"> {
         template<typename T>
         Setting(T setting): _setting(std::move(setting)) {}
         Setting(const Setting& other) = delete;
-        Setting(Setting&& other) = delete;
+        Setting(Setting&& other) = default;
 
         // ----------- Destructor --------- //
         ~Setting() = default;
