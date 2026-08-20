@@ -31,7 +31,7 @@ _cold void utils::encapsulation::Pipe::trigger(void)
         throw utils::exception::ErrorException(utils::exception::InternalCode::Pipe, "The read fd is already open, close it before a new trigger: closeRead()");
     } else if (this->_fds[1] != -1) _unlikely {
         throw utils::exception::ErrorException(utils::exception::InternalCode::Pipe, "The write fd is already open, close it before a new trigger: closeWrite()");
-    } else if (::pipe(this->_fds) == -1) _unlikely {
+    } else if (::pipe(this->_fds.data()) == -1) _unlikely {
         throw utils::exception::ErrorException(utils::exception::InternalCode::Pipe, ::strerror(errno));
     }
 }
