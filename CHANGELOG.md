@@ -87,7 +87,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial version of the utils library with multiple tools (see [README-1.0.0](https://github.com/TsukiNi22/libutils/blob/v1.0.0/README.md) for more details)
 
-[pre-release]: https://github.com/TsukiNi22/libutils/compare/v2.9.0-pre...HEAD
+[pre-release]: https://github.com/TsukiNi22/libutils/compare/v2.9.2-release...HEAD
+[v2.9.2]: https://github.com/TsukiNi22/libutils/compare/v2.9.0-pre...v2.9.2-release
 [v2.9.0-pre]: https://github.com/TsukiNi22/libutils/compare/v2.3.3-release...v2.9.0-pre
 [v2.3.3]: https://github.com/TsukiNi22/libutils/compare/v2.2.0...v2.3.3-release
 [v2.2.0]: https://github.com/TsukiNi22/libutils/compare/v2.1.0...v2.2.0
