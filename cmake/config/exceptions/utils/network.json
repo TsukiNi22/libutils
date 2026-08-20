@@ -34,16 +34,6 @@
             "code": "Handshake",
             "message": "Error during the handshake",
             "restrictions": ["Fatal", "Error"]
-        },
-        {
-            "code": "Poll",
-            "message": "Error during the poll call",
-            "restrictions": ["Fatal", "Error"]
-        },
-        {
-            "code": "ServerAccept",
-            "message": "Error during the accept call",
-            "restrictions": ["Fatal", "Error"]
         }
     ]
 }

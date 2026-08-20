@@ -1,48 +1,8 @@
 {
     "errors": [
         {
-            "code": "Dlopen",
-            "message": "Failed to load a dynamic library",
-            "restrictions": ["Fatal", "Error", "Warning"]
-        },
-        {
-            "code": "Dlsym",
-            "message": "Failed to load a function from a dynamic library",
-            "restrictions": ["Fatal", "Error", "Warning"]
-        },
-        {
-            "code": "Dlclose",
-            "message": "Failed to release a loaded dynamic library",
-            "restrictions": ["Fatal", "Error", "Warning"]
-        },
-        {
-            "code": "Pipe",
-            "message": "Fail during pipe init",
-            "restrictions": ["Fatal", "Error", "Warning"]
-        },
-        {
-            "code": "Dup",
-            "message": "Fail during dup init",
-            "restrictions": ["Fatal", "Error", "Warning"]
-        },
-        {
             "code": "Process",
             "message": "Error during process call",
-            "restrictions": ["Fatal", "Error", "Warning"]
-        },
-        {
-            "code": "Fork",
-            "message": "Error during the fork of the process",
-            "restrictions": ["Fatal", "Error", "Warning"]
-        },
-        {
-            "code": "Waitpid",
-            "message": "Error during the wait for the given pid",
-            "restrictions": ["Fatal", "Error", "Warning"]
-        },
-        {
-            "code": "Kill",
-            "message": "Error during call to kill",
             "restrictions": ["Fatal", "Error", "Warning"]
         }
     ]

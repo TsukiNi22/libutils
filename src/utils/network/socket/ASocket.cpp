@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 16/08/2026 by @author Tsukini
+##  @date 20/08/2026 by @author Tsukini
 
 File Name:
 ##  @file ASocket.cpp
@@ -126,7 +126,7 @@ _hot _nodiscard int utils::network::socket::ASocket::accept(void)
     // Accept the client
     onAdvancedVerbose("Accepting the new connection...");
     if ((fd = this->accept(this->_fd, (sockaddr *)&(storage), &len)) < 0)
-        throw utils::exception::ErrorException(utils::exception::InternalCode::ServerAccept, strerror(errno));
+        throw utils::exception::ErrorException(utils::exception::InternalCode::Accept, strerror(errno));
     const sockaddr_in& in = reinterpret_cast<const sockaddr_in&>(storage);
     onBasicVerbose("New client '" << ::inet_ntoa(in.sin_addr) << ":" << ::ntohs(in.sin_port) << "'");
 
