@@ -48,6 +48,13 @@ jobs:
       image: ghcr.io/tsukini22/package:latest
 
     steps:
+      - name: Checkout repository - gh-pages
+        uses: actions/checkout@v5
+        with:
+          ref: gh-pages
+          path: gh-pages
+          fetch-depth: 1
+
       - name: Import GPG key
         run: |
           set -e
