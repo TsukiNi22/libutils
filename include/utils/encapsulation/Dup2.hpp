@@ -11,63 +11,63 @@ Edition:
 ##  @date 20/08/2026 by @author Tsukini
 
 File Name:
-##  @file SharedObject.hpp
+##  @file Dup2.hpp
 
 File Description:
-##  Definition of the encapsulation for shared object (.so)
+##  Basic encapsulation for pipe
 \**************************************************************/
 
-#ifndef SHAREDOBJECT_H
-    #define SHAREDOBJECT_H
+#ifndef DUP2_H
+    #define DUP2_H
 
     //----------------------------------------------------------------//
     /* INCLUDE */
 
     /* type */
-    #include "../exception/ExceptionDefine.hpp"         // utils::exception::Type, utils::exception::InternalCode
-    #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
-    #include <dlfcn.h>                                  // dlsym, dlerror
-    #include <string_view>                              // std::string_view
-    #include <string>                                   // std::string
+    #include "../attribute/Attribute.hpp"   // _cold, _nodiscard
+    #include <unistd.h>                     // ::close
 
 namespace utils::encapsulation { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-class SharedObject {
+class Dup2 {
     private:
-        void* _lib = nullptr;
-        std::string _path;
+        int _origin = -1;
+        int _clone = -1;
+
+        // ------------ Function ---------- //
+        _cold inline void close_(int& fd) noexcept {if (fd != -1) ::close(fd); fd = -1;};
 
     public:
         // ------------ Function ---------- //
-        _cold _nodiscard inline bool isloaded(void) const {return this->_lib;};
-        _cold _nodiscard inline std::string_view path(void) const {return this->_path;};
-        _cold _nodiscard inline void* get(void) const {return this->_lib;};
+        void trigger(void);
 
-        /* tools */
-        template<typename T>
-        _hot _nodiscard T loadFunction(const std::string& name)
-        {
-            T fn = reinterpret_cast<T>(::dlsym(this->_lib, name.c_str()));
-            if (!fn) _unlikely {
-                throw utils::exception::ErrorException(utils::exception::InternalCode::Dlsym, ::dlerror());
-            }
-            return fn;
-        };
+        /* close */
+        _cold inline void closeOrigin(void) noexcept {this->close_(this->_origin);};
+        _cold inline void closeClone(void) noexcept {this->close_(this->_clone);};
+        _cold inline void close(void) noexcept {this->closeOrigin(); this->closeClone();};
+
+        /* getter */
+        _cold _nodiscard inline int getOrigin(void) const {return this->_origin;};
+        _cold _nodiscard inline int getClone(void) const {return this->_clone;};
+
+        /* setter */
+        _cold inline void setOrigin(int fd = -1) {this->_origin = fd;};
+        _cold inline void setClone(int fd = -1) {this->_clone = fd;};
 
         // ------------ Operator ---------- //
-        SharedObject& operator=(const SharedObject& other) = delete;
-        SharedObject& operator=(SharedObject&& other) = delete;
+        Dup2& operator=(const Dup2& other) = delete;
+        Dup2& operator=(Dup2&& other) = delete;
 
         // ---------- Constructor --------- //
-        SharedObject(const std::string& path);
-        SharedObject(const SharedObject& other) = delete;
-        SharedObject(SharedObject&& other) = delete;
+        Dup2(int origin = -1, int clone = -1): _origin{origin}, _clone{clone} {};
+        Dup2(const Dup2& other) = delete;
+        Dup2(Dup2&& other) = delete;
 
         // ----------- Destructor --------- //
-        ~SharedObject() noexcept;
+        ~Dup2() = default;
 };
 
 } // namespace end
-#endif /* SHAREDOBJECT_H */
+#endif /* DUP2_H */

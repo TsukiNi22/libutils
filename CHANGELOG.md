@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [pre-release]
 ### In Progress
-- Process encapsulation (Pipe **OK**, Dup2 **KO**, Process **KO**)
+- Process encapsulation (Pipe **OK**, Dup2 **OK**, Process **KO**)
 
 ### Added
 - Unit tests for multiple sections (not all sections are covered, only: `security`, `verbose`)

@@ -24,8 +24,9 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include <unistd.h> // ::close
-    #include <array>    // std::array
+    #include "../attribute/Attribute.hpp"   // _cold, _nodiscard
+    #include <unistd.h>                     // ::close
+    #include <array>                        // std::array
 
 namespace utils::encapsulation { // namespace start
 //----------------------------------------------------------------//
@@ -33,24 +34,29 @@ namespace utils::encapsulation { // namespace start
 
 class Pipe {
     private:
-        std::array<int, 2> _fds = {-1, -1};
+        std::array<int, 2> _fds = {-1, -1}; // {read, write}
 
         // ------------ Function ---------- //
-        void close(int& fd) noexcept {if (fd != -1) ::close(fd); fd = -1;};
+        _cold inline void close_(int& fd) noexcept {if (fd != -1) ::close(fd); fd = -1;};
 
     public:
         // ------------ Function ---------- //
         void trigger(void);
 
         /* close */
-        _cold inline void closeRead(void) noexcept {this->close(this->_fds[0]);};
-        _cold inline void closeWrite(void) noexcept {this->close(this->_fds[1]);};
+        _cold inline void closeRead(void) noexcept {this->close_(this->_fds[0]);};
+        _cold inline void closeWrite(void) noexcept {this->close_(this->_fds[1]);};
         _cold inline void close(void) noexcept {this->closeRead(); this->closeWrite();};
 
         /* getter */
-        _cold _nodiscard const std::array<int, 2>& getFd(void) const {return this->_fds;};
-        _cold _nodiscard int getRead(void) const {return this->_fds[0];};
-        _cold _nodiscard int getWrite(void) const {return this->_fds[1];};
+        _cold _nodiscard inline const std::array<int, 2>& getFds(void) const {return this->_fds;};
+        _cold _nodiscard inline int getRead(void) const {return this->_fds[0];};
+        _cold _nodiscard inline int getWrite(void) const {return this->_fds[1];};
+
+        /* setter */
+        _cold inline void setFds(const std::array<int, 2>& fds) {this->_fds = fds;};
+        _cold inline void setRead(int fd = -1) {this->_fds[0] = fd;};
+        _cold inline void setWrite(int fd = -1) {this->_fds[1] = fd;};
 
         // ------------ Operator ---------- //
         Pipe& operator=(const Pipe& other) = delete;
