@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [pre-release] (empty)
 
+## [v2.9.2] - 2026-08-20 (pre-release)
+### Fixed
+- [**MAJOR**] invalid namespace `utils::exceptionutils::exception` -> `utils::exception`
+
 ## [v2.9.0-pre] - 2026-08-20
 ### Added
 - Unit tests for multiple sections (not all sections are covered, only: `security`, `verbose`)

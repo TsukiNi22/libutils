@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 28/07/2026 by @author Tsukini
+##  @date 20/08/2026 by @author Tsukini
 
 File Name:
 ##  @file CustomException.hpp
@@ -33,7 +33,7 @@ class CustomException: public utils::exception::AException {
 
         // ---------- Constructor --------- //
         #ifdef GENERATED_EXTERNAL_EXCEPTION_HEADER_H
-            _cold explicit CustomException(utils::exception::Type type, utils::exceptionutils::exception::ExternalCode code, std::string info = "[None]", std::source_location loc = std::source_location::current()) : AException(loc, type, static_cast<utils::exception::InternalCode>(code), info) {};
+            _cold explicit CustomException(utils::exception::Type type, utils::exception::ExternalCode code, std::string info = "[None]", std::source_location loc = std::source_location::current()) : AException(loc, type, static_cast<utils::exception::InternalCode>(code), info) {};
         #endif
         _cold explicit CustomException(utils::exception::Type type = utils::exception::Type::None, utils::exception::InternalCode code = utils::exception::InternalCode::Undefined, std::string info = "[None]", std::source_location loc = std::source_location::current()) : AException(loc, type, code, info) {};
         _cold CustomException(utils::exception::Type type = utils::exception::Type::None, std::string info = "[None]", std::source_location loc = std::source_location::current()) : AException(loc, type, utils::exception::InternalCode::Undefined, info) {};

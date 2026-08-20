@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 28/07/2026 by @author Tsukini
+##  @date 20/08/2026 by @author Tsukini
 
 File Name:
 ##  @file ErrorException.hpp
@@ -33,7 +33,7 @@ class ErrorException: public utils::exception::AException {
 
         // ---------- Constructor --------- //
         #ifdef GENERATED_EXTERNAL_EXCEPTION_HEADER_H
-            _cold explicit ErrorException(utils::exceptionutils::exception::ExternalCode code, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::Error, static_cast<utils::exception::InternalCode>(code)) {};
+            _cold explicit ErrorException(utils::exception::ExternalCode code, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::Error, static_cast<utils::exception::InternalCode>(code)) {};
         #endif
         _cold explicit ErrorException(utils::exception::InternalCode code = utils::exception::InternalCode::Undefined, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::Error, code) {};
         _cold ErrorException(utils::exception::InternalCode code, std::string info, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::Error, code, info) {};

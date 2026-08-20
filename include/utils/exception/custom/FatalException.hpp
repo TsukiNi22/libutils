@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 19/08/2026 by @author Tsukini
+##  @date 20/08/2026 by @author Tsukini
 
 File Name:
 ##  @file FatalException.hpp
@@ -63,9 +63,9 @@ class FatalException: public utils::exception::AException {
 
         // ---------- Constructor --------- //
         #ifdef GENERATED_EXTERNAL_EXCEPTION_HEADER_H
-            _cold explicit FatalException(utils::exceptionutils::exception::ExternalCode code, std::source_location loc = std::source_location::current()) noexcept : AException(loc, utils::exception::Type::Error | utils::exception::Type::Fatal, static_cast<utils::exception::InternalCode>(code))
+            _cold explicit FatalException(utils::exception::ExternalCode code, std::source_location loc = std::source_location::current()) noexcept : AException(loc, utils::exception::Type::Error | utils::exception::Type::Fatal, static_cast<utils::exception::InternalCode>(code))
             {this->display();};
-            _cold FatalException(utils::exception::Type type, utils::exceptionutils::exception::ExternalCode code, std::string info = "[None]", std::source_location loc = std::source_location::current()) noexcept : AException(loc, type | utils::exception::Type::Fatal, static_cast<utils::exception::InternalCode>(code), info)
+            _cold FatalException(utils::exception::Type type, utils::exception::ExternalCode code, std::string info = "[None]", std::source_location loc = std::source_location::current()) noexcept : AException(loc, type | utils::exception::Type::Fatal, static_cast<utils::exception::InternalCode>(code), info)
             {this->display();};
         #endif
         _cold explicit FatalException(utils::exception::InternalCode code = utils::exception::InternalCode::Undefined, std::source_location loc = std::source_location::current()) noexcept : AException(loc, utils::exception::Type::Error | utils::exception::Type::Fatal, code)
