@@ -92,6 +92,7 @@ jobs:
           path: |
             build/*.rpm
             build/*.deb
+          retention-days: 1
 
   sync-online-packages:
     needs: build-packages
