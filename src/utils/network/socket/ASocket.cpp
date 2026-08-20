@@ -107,7 +107,7 @@ _hot _nodiscard bool utils::network::socket::ASocket::empty(int fd) const
 
     // Try to know if there is still a valid payload in the fd's buffer
     if (!this->_buffersRecv.contains(fd)) return true;
-    return (this->_buffersRecv.at(fd).find(this->_separator) == std::string::npos);
+    return (!this->_separator.empty() && this->_buffersRecv.at(fd).find(this->_separator) == std::string::npos);
 }
 
 _hot _nodiscard int utils::network::socket::ASocket::accept(void)
@@ -146,7 +146,7 @@ _hot _nodiscard std::string utils::network::socket::ASocket::recv(int fd)
     std::string& storage = this->_buffersRecv[fd];
 
     // Read the socket while there is no '\n' encountered
-    std::size_t pos = storage.find(this->_separator);
+    std::size_t pos = (this->_separator.empty() ? storage.size() : storage.find(this->_separator));
     while (pos == std::string::npos) {
 
         // Read the socket
@@ -161,7 +161,7 @@ _hot _nodiscard std::string utils::network::socket::ASocket::recv(int fd)
         storage.append(buffer.begin(), buffer.begin() + bytes);
 
         // Search for any '\n'
-        pos = storage.find(this->_separator);
+        pos = (this->_separator.empty() ? storage.size() : storage.find(this->_separator));
 
         // Detect 'overflow'
         std::size_t size = (pos == std::string::npos) ? storage.size() : pos;
