@@ -19,11 +19,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 ## [pre-release]
+### In Progress
+- Process encapsulation (Pipe **OK**, Dup2 **KO**, Process **KO**)
+
 ### Added
 - Unit tests for multiple sections (not all sections are covered, only: `security`, `verbose`)
 - Documentation using github wiki (some sections might be missing or not finished)
 - Add of a cluster class to handle groups of entity (new section `pool`)
-- New class to encapsulate the shared object usage (new section `encapsulate`)
+- New class to encapsulation the shared object usage (new section `encapsulation`)
 
 ### Changed
 - Rework the warning, now all are desactivated and can be activated/desactivated such has global/group/solo

@@ -14,6 +14,16 @@
             "code": "Dlclose",
             "message": "Failed to release a loaded dynamic library",
             "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "Pipe",
+            "message": "Fail during pipe init",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "Dup2",
+            "message": "Fail during dup2 init",
+            "restrictions": ["Fatal", "Error", "Warning"]
         }
     ]
 }
