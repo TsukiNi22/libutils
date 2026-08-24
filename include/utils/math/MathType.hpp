@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 19/08/2026 by @author Tsukini
+##  @date 21/08/2026 by @author Tsukini
 
 File Name:
 ##  @file SpaceType.hpp
@@ -18,20 +18,25 @@ File Description:
     /* type */
     #include "vector/OVector2.hpp"  // utils::math::vector::OVector2
     #include "vector/OVector3.hpp"  // utils::math::vector::OVector3
-    #include <cstdint>              // std::int32_t
+    #include <cstdint>              // std::int32_t, std::uint64_t
 
 namespace utils::math { // namespace start
 //----------------------------------------------------------------//
 /* TYPE */
 using Type = double; // Type used everywhere for coord, angle, direction, ...
+using UType = std::uint64_t; // Type used everywhere for unsigned coord, angle, direction, ...
 
 /* 2D */
 using V2Type = utils::math::vector::OVector2<utils::math::Type>;
 using Coord2D = utils::math::vector::OVector2<utils::math::Type>;
+using V2UType = utils::math::vector::OVector2<utils::math::UType>;
+using UCoord2D = utils::math::vector::OVector2<utils::math::UType>;
 
 /* 3D */
 using V3Type = utils::math::vector::OVector3<utils::math::Type>;
 using Coord = utils::math::vector::OVector3<utils::math::Type>;
+using V3UType = utils::math::vector::OVector3<utils::math::UType>;
+using UCoord = utils::math::vector::OVector3<utils::math::UType>;
 
 /* global */
 using Angle = utils::math::Type; // Generaly in deg
