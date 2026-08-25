@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 16/08/2026 by @author Tsukini
+##  @date 25/08/2026 by @author Tsukini
 
 File Name:
 ##  @file EETPParser.hpp
@@ -34,7 +34,7 @@ File Description:
  * SYN -> generate local RSA + encrypt with common RSA
  * SO -> store AES + decrypt using local RSA + encrypt with local RSA
  * EM -> not encrypted
- * ACK -> no <data>
+ * ACK -> only one <data>
  * NAK -> only one <data>
  * other -> <type> [<data> *(<data> ETB)]
 */
@@ -90,7 +90,7 @@ _hot _nodiscard std::string utils::smanip::parser::EETPParser::format(std::strin
         s += content.type;
         for (std::size_t i = 0; i < content.data.size(); ++i) {
             if (i != 0) _likely {s += static_cast<char>(utils::iomanip::Char::ETB);}
-            s += content.data[i];
+            s += this->_codec->encode(content.data[i]);
         }
 
         // Encrypt
@@ -168,7 +168,7 @@ _hot _nodiscard utils::smanip::parser::EETPContent utils::smanip::parser::EETPPa
             if (!s.empty()) data.emplace_back(s.substr(begin));
             break;
         }
-        data.emplace_back(s.substr(begin, pos - begin));
+        data.emplace_back(this->_codec->decode(s.substr(begin, pos - begin)));
         begin = pos + 1;
     }
 
@@ -177,7 +177,7 @@ _hot _nodiscard utils::smanip::parser::EETPContent utils::smanip::parser::EETPPa
      * SYN -> RSA (pub) from client
      * SO  -> AES from server
      * EM  -> no <data>
-     * ACK -> no <data>
+     * ACK -> only one <data>
      * NAK -> only one <data>
     */
     switch (type) {
@@ -214,8 +214,8 @@ _hot _nodiscard utils::smanip::parser::EETPContent utils::smanip::parser::EETPPa
             break;
 
         case static_cast<char>(utils::iomanip::Char::ACK): // OK
-            if (data.size() != 0) _unlikely {
-                throw utils::exception::ErrorException(utils::exception::InternalCode::Parser, "Invalid transmission content, expected exactly no part: <type> (ACK)");
+            if (data.size() > 1) _unlikely {
+                throw utils::exception::ErrorException(utils::exception::InternalCode::Parser, "Invalid transmission content, expected exactly 1 part or less: <type> (ACK) [<data> (potential information)]");
             }
             break;
 
