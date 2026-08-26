@@ -26,7 +26,7 @@ File Description:
     /* type */
     #include <functional>   // std::function
 
-namespace utils::pool::middleware { // namespace
+namespace utils::pool { // namespace
 //----------------------------------------------------------------//
 /* CLASS */
 

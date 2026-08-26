@@ -9,6 +9,10 @@ File Description:
 ##  Main include for every part of the utils lib
 \**************************************************************/
 
+/*
+ * _Type/_Types -> _CustomType (already defined/used by the std)
+*/
+
 //----------------------------------------------------------------//
 /* INCLUDE */
 
@@ -70,11 +74,13 @@ File Description:
     /* _Handling */\
     !defined(_Exception) && !defined(_Verbose) && !defined(_Pool) && !defined(_Cli) && !defined(_Arguments) && !defined(_Network) && \
     /* _Tools */\
-    !defined(_BLT) && !defined(_Concepts) && !defined(_Encapsulation) && !defined(_System) && !defined(_Math) && !defined(_Manip) && !defined(_Algorithms) && !defined(_Security) && \
+    !defined(_Concepts) && !defined(_Encapsulation) && !defined(_System) && !defined(_CustomType) && !defined(_Math) && !defined(_Manip) && !defined(_Algorithms) && !defined(_Security) && \
     /* _Pool */\
     !defined(_Middleware) && \
     /* _Network */\
     !defined(_Socket) && \
+    /* _CustomType */\
+    !defined(_BLT) && \
     /* _Math */\
     !defined(_Vector) && !defined(_Geometry) && !defined(_Trigo) && \
     /* _Manip */\
@@ -106,11 +112,11 @@ File Description:
 
 /* Activate all tool include */
 #ifdef _Tools
-    #define _BLT // Bidirectional Lookup Table
     #define _Math
     #define _Concepts
     #define _Encapsulation
     #define _System
+    #define _CustomType
     #define _Manip
     #define _Algorithms
     #define _Security
@@ -124,6 +130,11 @@ File Description:
 /* Activate all network sub-include */
 #ifdef _Network
     #define _Socket
+#endif
+
+/* Activate all type sub-include */
+#ifdef _CustomType
+    #define _BLT // Bidirectional Lookup Table
 #endif
 
 /* Activate all math sub-include */
@@ -185,14 +196,15 @@ File Description:
     #include "verbose/Verbose.hpp"  // different define/macro for verbose usage
 #endif
 
+/* Type */
+#ifdef _CustomType
+    // -> Multiple custom type
+#endif
+
 /* Bidirectional Lookup Table */
 #ifdef _BLT
     // -> Bidirectional lookup table (const)
-    #include "blt/BidirectionalLookupTable.hpp" // utils::blt::BidirectionalLookupTable<L, R, ...>, utils::blt::BidirectionalLookupTable<T, ...>
-    /*
-    #include "blt/BidirectionalLookupTable_t-t.hpp" // utils::blt::BidirectionalLookupTable<L, R, ...>
-    #include "blt/BidirectionalLookupTable_t.hpp"   // utils::blt::BidirectionalLookupTable<T, ...>
-    */
+    #include "type/blt/BidirectionalLookupTable.hpp"    // utils::type::BidirectionalLookupTable<L, R, ...>, utils::type::BidirectionalLookupTable<T, ...>
 #endif
 
 /* VectorX */
@@ -250,7 +262,7 @@ File Description:
 /* Middleware */
 #ifdef _Middleware
     // -> Middlewares handling
-    #include "pool/middleware/Middlewares.hpp"  // utils::middleware::Middleware<...>, utils::middleware::Middlewares<...>
+    #include "pool/middleware/Middlewares.hpp"  // utils::pool::Middleware<...>, utils::pool::Middlewares<...>
 #endif
 
 /* Arguments */

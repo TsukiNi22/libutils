@@ -27,12 +27,12 @@ File Description:
     #include "../../security/observer/Observer.hpp"     // utils::security::observer::Observer
     #include "../../exception/ExceptionDefine.hpp"      // utils::exception::Type, utils::exception::InternalCode
     #include "../../exception/basic/ErrorException.hpp" // utils::exception::ErrorException
-    #include "MiddlewaresType.hpp"                      // utils::pool::middleware::Middleware<...>
+    #include "MiddlewaresType.hpp"                      // utils::pool::Middleware<...>
     #include <shared_mutex>                             // std::shared_mutex, std::unique_lock, std::shared_lock
     #include <functional>                               // std::function
     #include <exception>                                // std::exception
 
-namespace utils::pool::middleware { // namespace
+namespace utils::pool { // namespace
 //----------------------------------------------------------------//
 /* CLASS */
 
@@ -40,23 +40,23 @@ template<>
 class Middlewares<void, void>: private utils::security::observer::Observer<"Middlewares"> {
     public:
         mutable std::shared_mutex _lock;
-        std::vector<utils::pool::middleware::Middleware<void>> before;
-        std::vector<utils::pool::middleware::Middleware<void>> after;
+        std::vector<utils::pool::Middleware<void>> before;
+        std::vector<utils::pool::Middleware<void>> after;
 
         // ------------ Function ---------- //
         void clear() {this->before.clear(); this->after.clear();}
 
         /* adder */
-        void addBefore(utils::pool::middleware::Middleware<void>& toAdd)                     {std::unique_lock lock(this->_lock); this->before.push_back(toAdd);}
-        void addBefore(const std::vector<utils::pool::middleware::Middleware<void>>& toAdds) {std::unique_lock lock(this->_lock); this->before.insert(before.end(), toAdds.begin(), toAdds.end());}
-        void addAfter(utils::pool::middleware::Middleware<void>& toAdd)                      {std::unique_lock lock(this->_lock); this->after.push_back(toAdd);}
-        void addAfter(const std::vector<utils::pool::middleware::Middleware<void>>& toAdds)  {std::unique_lock lock(this->_lock); this->after.insert(after.end(), toAdds.begin(), toAdds.end());}
+        void addBefore(utils::pool::Middleware<void>& toAdd)                     {std::unique_lock lock(this->_lock); this->before.push_back(toAdd);}
+        void addBefore(const std::vector<utils::pool::Middleware<void>>& toAdds) {std::unique_lock lock(this->_lock); this->before.insert(before.end(), toAdds.begin(), toAdds.end());}
+        void addAfter(utils::pool::Middleware<void>& toAdd)                      {std::unique_lock lock(this->_lock); this->after.push_back(toAdd);}
+        void addAfter(const std::vector<utils::pool::Middleware<void>>& toAdds)  {std::unique_lock lock(this->_lock); this->after.insert(after.end(), toAdds.begin(), toAdds.end());}
 
         /* caller */
         void callBefore() const
         {
             std::shared_lock lock(this->_lock);
-            for (const utils::pool::middleware::Middleware<void>& middleware: this->before) {
+            for (const utils::pool::Middleware<void>& middleware: this->before) {
                 try {middleware();}
                 catch (const std::exception& e) {throw utils::exception::ErrorException(utils::exception::InternalCode::MiddlewareCall, e.what());}
             }
@@ -64,7 +64,7 @@ class Middlewares<void, void>: private utils::security::observer::Observer<"Midd
         void callAfter() const
         {
             std::shared_lock lock(this->_lock);
-            for (const utils::pool::middleware::Middleware<void>& middleware: this->after) {
+            for (const utils::pool::Middleware<void>& middleware: this->after) {
                 try {middleware();}
                 catch (const std::exception& e) {throw utils::exception::ErrorException(utils::exception::InternalCode::MiddlewareCall, e.what());}
             }

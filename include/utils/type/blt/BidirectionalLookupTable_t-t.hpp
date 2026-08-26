@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 20/08/2026 by @author Tsukini
+##  @date 26/08/2026 by @author Tsukini
 
 File Name:
 ##  @file BidirectionalLookupTable.hpp
@@ -24,16 +24,16 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"               // _nodiscard, _unused
-    #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
-    #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
-    #include "../exception/basic/WarningException.hpp"  // utils::exception::WarningException
-    #include "../exception/ExceptionDefine.hpp"         // utils::exception::* (Type)
-    #include <unordered_map>                            // std::unordered_map
-    #include <iostream>                                 // std::cerr, std::endl
-    #include <vector>                                   // std::vector
+    #include "../../attribute/Attribute.hpp"                // _nodiscard, _unused
+    #include "../../security/observer/Observer.hpp"         // utils::security::observer::Observer
+    #include "../../exception/basic/WarningException.hpp"   // utils::exception::WarningException
+    #include "../../exception/basic/ErrorException.hpp"     // utils::exception::ErrorException
+    #include "../../exception/ExceptionDefine.hpp"          // utils::exception::* (Type)
+    #include <unordered_map>                                // std::unordered_map
+    #include <iostream>                                     // std::cerr, std::endl
+    #include <vector>                                       // std::vector
 
-namespace utils::blt { // namespace start
+namespace utils::type { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 

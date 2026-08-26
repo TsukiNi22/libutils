@@ -24,10 +24,10 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "MiddlewaresType.hpp"          // utils::pool::middleware::Middleware<...>
-    #include "Middlewares_t-t.hpp"          // utils::pool::middleware::Middlewares<T, U>
-    #include "Middlewares_t-void.hpp"       // utils::pool::middleware::Middlewares<T, void>
-    #include "Middlewares_void-t.hpp"       // utils::pool::middleware::Middlewares<void, T>
-    #include "Middlewares_void-void.hpp"    // utils::pool::middleware::Middlewares<void, void>
+    #include "MiddlewaresType.hpp"          // utils::pool::Middleware<...>
+    #include "Middlewares_t-t.hpp"          // utils::pool::Middlewares<T, U>
+    #include "Middlewares_t-void.hpp"       // utils::pool::Middlewares<T, void>
+    #include "Middlewares_void-t.hpp"       // utils::pool::Middlewares<void, T>
+    #include "Middlewares_void-void.hpp"    // utils::pool::Middlewares<void, void>
 
 #endif /* MIDDLEWARES_H */

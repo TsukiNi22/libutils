@@ -25,7 +25,7 @@ File Description:
 
     /* type */
     #include "../security/observer/Observer.hpp"    // utils::security::observer::Observer
-    #include "../pool/middleware/Middlewares.hpp"   // utils::pool::middleware::Middlewares
+    #include "../pool/middleware/Middlewares.hpp"   // utils::pool::Middlewares
     #include "Flags.hpp"                            // utils::cli::Flag, flag preset macro
     #include <termios.h>                            // termios
     #include <unordered_map>                        // std::unordered_map
@@ -113,13 +113,13 @@ class Cli: private utils::security::observer::Observer<"Cli"> {
 
     public:
         /* middlewares */
-        utils::pool::middleware::Middlewares<void, void> cliMiddlewares; // When the cli start & end
-        utils::pool::middleware::Middlewares<std::uint8_t, std::uint8_t> errorMiddlewares; // When an error is triggered
-        utils::pool::middleware::Middlewares<void, void> promptMiddlewares; // When the prompt is displayed
-        utils::pool::middleware::Middlewares<void, char> inputMiddlewares; // When a key is pressed (only after is used)
-        utils::pool::middleware::Middlewares<const std::string&, const utils::cli::ParsedData&> parserMiddlewares; // When the parser is called
-        utils::pool::middleware::Middlewares<const utils::cli::ParsedData&, const utils::cli::ParsedData&> execMiddlewares; // When the parsed data is executed
-        utils::pool::middleware::Middlewares<const std::string&, const std::string&> commandMiddlewares; // When a command is executed
+        utils::pool::Middlewares<void, void> cliMiddlewares; // When the cli start & end
+        utils::pool::Middlewares<std::uint8_t, std::uint8_t> errorMiddlewares; // When an error is triggered
+        utils::pool::Middlewares<void, void> promptMiddlewares; // When the prompt is displayed
+        utils::pool::Middlewares<void, char> inputMiddlewares; // When a key is pressed (only after is used)
+        utils::pool::Middlewares<const std::string&, const utils::cli::ParsedData&> parserMiddlewares; // When the parser is called
+        utils::pool::Middlewares<const utils::cli::ParsedData&, const utils::cli::ParsedData&> execMiddlewares; // When the parsed data is executed
+        utils::pool::Middlewares<const std::string&, const std::string&> commandMiddlewares; // When a command is executed
 
         // ---------- Pre-Function -------- //
         void join(void) const noexcept; // Yield until the cli stop running

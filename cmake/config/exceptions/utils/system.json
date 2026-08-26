@@ -4,6 +4,16 @@
             "code": "PromiseCanceled",
             "message": "The promise was canceled",
             "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "Freezed",
+            "message": "Can't edit a freezed things",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "ShouldBeFreezed",
+            "message": "Can only do this after freezing the object",
+            "restrictions": ["Fatal", "Error", "Warning"]
         }
     ]
 }

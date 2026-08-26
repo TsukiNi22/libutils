@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 04/06/2026 by @author Tsukini
+##  @date 26/08/2026 by @author Tsukini
 
 File Name:
 ##  @file BidirectionalLookupTable.hpp
@@ -24,7 +24,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "BidirectionalLookupTable_t-t.hpp" // utils::btl::BidirectionalLookupTable<L, R, ...>
-    #include "BidirectionalLookupTable_t.hpp"   // utils::btl::BidirectionalLookupTable<T, ...>
+    #include "BidirectionalLookupTable_t-t.hpp" // utils::type::BidirectionalLookupTable<L, R, ...>
+    #include "BidirectionalLookupTable_t.hpp"   // utils::type::BidirectionalLookupTable<T, ...>
 
 #endif /* BIDIRECTIONALLOOKUPTABLE_H */
