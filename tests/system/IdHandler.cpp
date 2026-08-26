@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 16/08/2026 by @author Tsukini
+##  @date 26/08/2026 by @author Tsukini
 
 File Name:
 ##  @file IdHandler.cpp
@@ -27,7 +27,7 @@ File Description:
 
 template <typename T>
 class IdHandlerTest : public ::testing::Test {
-    protected: utils::security::IdHandler<T> handler;
+    protected: utils::system::IdHandler<T> handler;
 };
 
 using IdTypes = ::testing::Types<std::uint8_t, std::uint16_t, std::uint32_t, std::uint64_t>;
@@ -51,7 +51,7 @@ TYPED_TEST(IdHandlerTest, AllocationBeforeRangeLimitsNoAbort) {
 
 TEST(IdHandler, ReallocationAfterFree) {
     using T = std::uint8_t;
-    utils::security::IdHandler<T> handler;
+    utils::system::IdHandler<T> handler;
     T id;
 
     // Allocate id 1 & 2, free 1 and 1 should be the next given followed by 3
@@ -76,7 +76,7 @@ TEST(IdHandler, ReallocationAfterFree) {
 
 TEST(IdHandler, ReallocationAfterFreeMultiThread) {
     using T = std::uint8_t;
-    utils::security::IdHandler<T> handler;
+    utils::system::IdHandler<T> handler;
     tests::tools::StepSynchronizer sync;
 
     /* Order:
@@ -132,7 +132,7 @@ TEST(IdHandler, ReallocationAfterFreeMultiThread) {
 /* only try on uint8 due to other type high limits */
 TEST(IdHandler, AbortOnOverflow) {
     using T = std::uint8_t;
-    utils::security::IdHandler<T> handler;
+    utils::system::IdHandler<T> handler;
     T id;
 
     for (T i = 0; i < std::numeric_limits<T>::max(); ++i) handler.allocate(id);
