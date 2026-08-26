@@ -25,7 +25,7 @@ File Description:
 
     /* type */
     #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
-    #include "../attribute/Attribute.hpp"               // _cold, _hot, _nodiscard, _unlikely
+    #include "../attribute/Attribute.hpp"               // _cold, _hot, _nodiscard, _unlikely, _likely, _unused
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::Type, utils::exception::InternalCode
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "Scheduler.hpp"                            // utils::system::Scheduler
@@ -57,12 +57,12 @@ class Worker: private utils::security::observer::Observer<"Worker"> {
         _hot _nodiscard inline bool isWorking(void) const {return this->_workingStatus;};
 
         // ------------ Operator ---------- //
-        Worker& operator=(const Worker& other) {return *this;};
+        Worker& operator=(_unused const Worker& other) {this->setWorkingStatus(other.isWorking()); return *this;};
         Worker& operator=(Worker&& other) {this->setWorkingStatus(other.isWorking()); other.setWorkingStatus(false); return *this;};
 
         // ---------- Constructor --------- //
         Worker() = default;
-        Worker(const Worker& other) {};
+        Worker(_unused const Worker& other): _workingStatus{other.isWorking()} {};
         Worker(Worker&& other): _workingStatus{other.isWorking()} {other.setWorkingStatus(false);};
 
         // ----------- Destructor --------- //
