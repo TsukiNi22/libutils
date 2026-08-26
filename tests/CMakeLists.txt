@@ -17,8 +17,8 @@ set(SRC
     # Verbose
     verbose/Verbose.cpp
 
-    # Security
-    security/IdHandler.cpp
+    # System
+    system/IdHandler.cpp
     
     # Security (sub-part: encryption)
     security/encryption/RSAKey.cpp
