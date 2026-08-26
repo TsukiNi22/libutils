@@ -6,12 +6,12 @@
             "restrictions": ["Fatal", "Error", "Warning"]
         },
         {
-            "code": "Freezed",
-            "message": "Can't edit a freezed things",
+            "code": "Frozen",
+            "message": "Can't edit a frozen things",
             "restrictions": ["Fatal", "Error", "Warning"]
         },
         {
-            "code": "ShouldBeFreezed",
+            "code": "ShouldBeFrozen",
             "message": "Can only do this after freezing the object",
             "restrictions": ["Fatal", "Error", "Warning"]
         }

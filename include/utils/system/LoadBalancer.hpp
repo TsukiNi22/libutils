@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 26/08/2026 by @author Tsukini
+##  @date 27/08/2026 by @author Tsukini
 
 File Name:
 ##  @file LoadBalancer.hpp
@@ -28,6 +28,7 @@ File Description:
     #include "../attribute/Attribute.hpp"               // _cold, _hot, _nodiscard, _unlikely, _likely, _unused
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::Type, utils::exception::InternalCode
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
+    #include "../type/Worker.hpp"                       // utils::type::Worker
     #include "Scheduler.hpp"                            // utils::system::Scheduler
     #include "IdHandler.hpp"                            // utils::system::IdHandler
     #include <unordered_map>                            // std::unordered_map
@@ -43,38 +44,11 @@ File Description:
 
 namespace utils::system { // namespace start
 //----------------------------------------------------------------//
-/* SUB-CLASS */
-
-class Worker: private utils::security::observer::Observer<"Worker"> {
-    private:
-        std::atomic<bool> _workingStatus = false; // working status
-        std::atomic<std::chrono::steady_clock::time_point> _stopedWorkingTimestamp = std::chrono::steady_clock::now(); // timestamp when the working status was passed at false
-
-    public:
-        // ------------ Function ---------- //
-        _hot inline void setWorkingStatus(const bool status) {if (!(this->_workingStatus = status)) this->_stopedWorkingTimestamp = std::chrono::steady_clock::now();};
-        _cold _nodiscard inline std::chrono::steady_clock::time_point getStopedWorkingTimestamp(void) const {return this->_stopedWorkingTimestamp;};
-        _hot _nodiscard inline bool isWorking(void) const {return this->_workingStatus;};
-
-        // ------------ Operator ---------- //
-        Worker& operator=(_unused const Worker& other) {this->setWorkingStatus(other.isWorking()); return *this;};
-        Worker& operator=(Worker&& other) {this->setWorkingStatus(other.isWorking()); other.setWorkingStatus(false); return *this;};
-
-        // ---------- Constructor --------- //
-        Worker() = default;
-        Worker(_unused const Worker& other): _workingStatus{other.isWorking()} {};
-        Worker(Worker&& other): _workingStatus{other.isWorking()} {other.setWorkingStatus(false);};
-
-        // ----------- Destructor --------- //
-        ~Worker() = default;
-};
-
-//----------------------------------------------------------------//
 /* CLASS */
 
 template<typename T>
 class LoadBalancer: private utils::security::observer::Observer<"LoadBalancer">  {
-    static_assert(std::is_base_of_v<utils::system::Worker, T>, "T must derive from utils::system::Worker");
+    static_assert(std::is_base_of_v<utils::type::Worker, T>, "T must derive from utils::type::Worker");
     private:
         /* destruction */
         utils::system::Scheduler _scheduler;

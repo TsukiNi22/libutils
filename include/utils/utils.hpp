@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 26/08/2026 by @author Tsukini
+##  @date 27/08/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -199,6 +199,7 @@ File Description:
 /* Type */
 #ifdef _CustomType
     // -> Multiple custom type
+    #include "type/Freezable.hpp"   // utils::type::Freezable
 #endif
 
 /* Bidirectional Lookup Table */

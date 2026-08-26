@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 set(TARGET utils)
-project(${TARGET} VERSION 2.10.4 LANGUAGES CXX)
+project(${TARGET} VERSION 2.11.0 LANGUAGES CXX)
 
 # =========================
 # Options

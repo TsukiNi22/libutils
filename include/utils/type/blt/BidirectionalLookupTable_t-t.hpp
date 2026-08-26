@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 26/08/2026 by @author Tsukini
+##  @date 27/08/2026 by @author Tsukini
 
 File Name:
 ##  @file BidirectionalLookupTable.hpp
@@ -29,6 +29,7 @@ File Description:
     #include "../../exception/basic/WarningException.hpp"   // utils::exception::WarningException
     #include "../../exception/basic/ErrorException.hpp"     // utils::exception::ErrorException
     #include "../../exception/ExceptionDefine.hpp"          // utils::exception::* (Type)
+    #include "../../type/Freezable.hpp"                     // utils::type::Freezable
     #include <unordered_map>                                // std::unordered_map
     #include <iostream>                                     // std::cerr, std::endl
     #include <vector>                                       // std::vector
@@ -45,25 +46,22 @@ template<
     typename EqualL = std::equal_to<L>,
     typename EqualR = std::equal_to<R>
 >
-class BidirectionalLookupTable: private utils::security::observer::Observer<"BidirectionalLookupTable"> {
+class BidirectionalLookupTable: public utils::type::Freezable, private utils::security::observer::Observer<"BidirectionalLookupTable"> {
     private:
-        bool _freezed = false; // Freeze the data edition (can't be disabled after being enable)
         std::unordered_map<L, R, HashL, EqualL> _left;
         std::unordered_map<R, L, HashR, EqualR> _right;
 
     public:
         // ------------ Function ---------- //
-        void freeze(void) {this->_freezed = true;};
-        _nodiscard bool isFreezed(void) {return this->_freezed;};
         void clear(void)
         {
-            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::InternalCode::Freezed);
+            this->requireFrozen();
             this->_left.clear();
             this->_right.clear();
         };
         void removeElement(const L& left)
         {
-            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::InternalCode::Freezed);
+            this->requireFrozen();
             if (!this->_left.contains(left)) {
                 utils::exception::WarningException e(utils::exception::InternalCode::UnknowKey);
                 std::cerr << e.formated() << std::endl;
@@ -75,7 +73,7 @@ class BidirectionalLookupTable: private utils::security::observer::Observer<"Bid
         void removeElements(const std::vector<L>& lefts) {for (const L& left: lefts) this->removeElement(left);};
         void removeElement(const R& right)
         {
-            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::InternalCode::Freezed);
+            this->requireFrozen();
             if (!this->_right.contains(right)) {
                 utils::exception::WarningException e(utils::exception::InternalCode::UnknowKey);
                 std::cerr << e.formated() << std::endl;
@@ -90,7 +88,7 @@ class BidirectionalLookupTable: private utils::security::observer::Observer<"Bid
         template<bool force = false> // Can't override an exiting one by default, throw of error
         void setElement(const L& left, const R& right)
         {
-            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::InternalCode::Freezed);
+            this->requireFrozen();
             if constexpr (!force) {
                 if (this->_left.contains(left) || this->_right.contains(right))
                     throw utils::exception::ErrorException(utils::exception::InternalCode::Override, "The override is disabled for the BidirectionalLookupTable");
@@ -101,7 +99,7 @@ class BidirectionalLookupTable: private utils::security::observer::Observer<"Bid
         template<bool force = false> // Can't override an exiting one by default, throw of error
         void setElement(const R& right, const L& left)
         {
-            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::InternalCode::Freezed);
+            this->requireFrozen();
             if constexpr (!force) {
                 if (this->_right.contains(right) || this->_left.contains(left))
                     throw utils::exception::ErrorException(utils::exception::InternalCode::Override, "The override is disabled for the BidirectionalLookupTable");

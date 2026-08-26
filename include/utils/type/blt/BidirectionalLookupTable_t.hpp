@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 26/08/2026 by @author Tsukini
+##  @date 27/08/2026 by @author Tsukini
 
 File Name:
 ##  @file BidirectionalLookupTable.hpp
@@ -29,6 +29,7 @@ File Description:
     #include "../../exception/basic/WarningException.hpp"   // utils::exception::WarningException
     #include "../../exception/basic/ErrorException.hpp"     // utils::exception::ErrorException
     #include "../../exception/ExceptionDefine.hpp"          // utils::exception::* (Type)
+    #include "../../type/Freezable.hpp"                     // utils::type::Freezable
     #include <unordered_map>                                // std::unordered_map
     #include <iostream>                                     // std::cerr, std::endl
     #include <vector>                                       // std::vector
@@ -48,23 +49,20 @@ template<
     typename Hash,
     typename Equal
 >
-class BidirectionalLookupTable<T, T, Hash, Hash, Equal, Equal>: private utils::security::observer::Observer<"BidirectionalLookupTable"> {
+class BidirectionalLookupTable<T, T, Hash, Hash, Equal, Equal>: public utils::type::Freezable, private utils::security::observer::Observer<"BidirectionalLookupTable"> {
     private:
-        bool _freezed = false; // Freeze the data edition (can't be disabled after being enable)
         std::unordered_map<T, T, Hash, Equal> _table;
 
     public:
         // ------------ Function ---------- //
-        void freeze(void) {this->_freezed = true;};
-        _nodiscard bool isFreezed(void) {return this->_freezed;};
         void clear(void)
         {
-            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::InternalCode::Freezed);
+            this->requireFrozen();
             this->_table.clear();
         };
         void removeElement(const T& element) noexcept
         {
-            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::InternalCode::Freezed);
+            this->requireFrozen();
             if (!this->_table.contains(element)) {
                 utils::exception::WarningException e(utils::exception::InternalCode::UnknowKey);
                 std::cerr << e.formated() << std::endl;
@@ -77,7 +75,7 @@ class BidirectionalLookupTable<T, T, Hash, Hash, Equal, Equal>: private utils::s
         template<bool force = false> // Can't override an exiting one by default, throw of error
         void setElement(const T& left, const T& right)
         {
-            if (this->_freezed) throw utils::exception::ErrorException(utils::exception::InternalCode::Freezed);
+            this->requireFrozen();
             if constexpr (!force) {
                 if (this->_table.contains(left) || this->_table.contains(right))
                     throw utils::exception::ErrorException(utils::exception::InternalCode::Override, "The override is disabled for the BidirectionalLookupTable");
