@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 16/08/2026 by @author Tsukini
+##  @date 26/08/2026 by @author Tsukini
 
 File Name:
 ##  @file ANotifier.cpp
@@ -97,10 +97,7 @@ _cold void utils::security::observer::ANotifier::clear(const bool safe_mode)
     else (void)lock.try_lock();
 
     // Free all the link
-    std::uint64_t subId = 0;
-    for (const auto& [id, _]: this->_links) {
-        utils::security::observer::instances::IdHandler.free((subId = id), safe_mode);
-    }
+    for (const auto& [id, _]: this->_links) utils::security::observer::instances::IdHandler.free(id, safe_mode);
     this->_links.clear();
 
     // Internal sub-call

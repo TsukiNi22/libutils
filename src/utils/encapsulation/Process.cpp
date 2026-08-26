@@ -28,10 +28,10 @@ File Description:
 #include <cerrno>
 #include <vector>
 
-_oht bool utils::encapsulation::Process::is(void) const
+_hot bool utils::encapsulation::Process::is(void) const
 {
     // Check of existance using dull signal: 0
-    if (kill(this->_pid, 0) == 0) _likely {return true;}
+    if (::kill(this->_pid, 0) == 0) _likely {return true;}
     else if (errno == ESRCH) _unlikely {return false;} // No process with this pid
     else if (errno == EPERM) _likely {return true;} // Process exist but invalid perm
     return false; // Error

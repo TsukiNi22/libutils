@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 20/08/2026 by @author Tsukini
+##  @date 26/08/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -70,7 +70,7 @@ File Description:
     /* _Handling */\
     !defined(_Exception) && !defined(_Verbose) && !defined(_Pool) && !defined(_Cli) && !defined(_Arguments) && !defined(_Network) && \
     /* _Tools */\
-    !defined(_BLT) && !defined(_Concepts) && !defined(_Encapsulation) && !defined(_Math) && !defined(_Manip) && !defined(_Algorithms) && !defined(_Security) && \
+    !defined(_BLT) && !defined(_Concepts) && !defined(_Encapsulation) && !defined(_System) && !defined(_Math) && !defined(_Manip) && !defined(_Algorithms) && !defined(_Security) && \
     /* _Pool */\
     !defined(_Middleware) && \
     /* _Network */\
@@ -110,6 +110,7 @@ File Description:
     #define _Math
     #define _Concepts
     #define _Encapsulation
+    #define _System
     #define _Manip
     #define _Algorithms
     #define _Security
@@ -232,6 +233,14 @@ File Description:
     #include "encapsulation/Process.hpp"        // utils::encapsulation::Process
 #endif
 
+/* System */
+#ifdef _System
+    // -> Different basic tools/comportement for global/system use
+    #include "system/IdHandler.hpp"     // utils::system::IdHandler
+    #include "system/Scheduler.hpp"     // utils::system::Scheduler
+    #include "system/LoadBalancer.hpp"  // utils::system::LoadBalancer
+#endif
+
 /* Pool */
 #ifdef _Pool
     // -> Handling for entity group
@@ -310,7 +319,6 @@ File Description:
 /* Security */
 #ifdef _Security
     // -> Handling of multiple security tools
-    #include "security/IdHandler.hpp"  // utils::security::IdHandler<t>
 #endif
 
 /* Security - Encryption */

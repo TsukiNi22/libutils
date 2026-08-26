@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 set(TARGET utils)
-project(${TARGET} VERSION 2.9.4 LANGUAGES CXX)
+project(${TARGET} VERSION 2.10.0 LANGUAGES CXX)
 
 # =========================
 # Options
@@ -104,6 +104,9 @@ set(SRC
     src/utils/encapsulation/Pipe.cpp
     src/utils/encapsulation/Dup.cpp
     src/utils/encapsulation/Process.cpp
+
+    # System
+    src/utils/system/Scheduler.cpp
 )
 add_library(${TARGET} STATIC ${SRC})
 #add_library(${TARGET} SHARED ${SRC})

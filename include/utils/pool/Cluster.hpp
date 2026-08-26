@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 25/08/2026 by @author Tsukini
+##  @date 26/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Cluster.hpp
