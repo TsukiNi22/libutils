@@ -31,7 +31,6 @@ File Description:
     #include <unordered_map>                        // std::unordered_map
     #include <type_traits>                          // std::is_invocable_r_v
     #include <cstddef>                              // std::size_t
-    #include <cstdint>                              // std::uint64_t
     #include <thread>                               // std::jthread
     #include <chrono>                               // std::chrono::milliseconds
     #include <vector>                               // std::vector   
@@ -43,7 +42,7 @@ namespace utils::system { // namespace start
 
 class Scheduler: private utils::security::observer::Observer<"Scheduler"> {
     private:
-        utils::system::IdHandler<std::uint64_t> _idHandler;
+        utils::system::IdHandler<std::size_t> _idHandler;
         std::unordered_map<std::size_t, std::jthread> _tasks;
 
         /* destruction */

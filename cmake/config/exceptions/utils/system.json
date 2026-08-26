@@ -1,0 +1,9 @@
+{
+    "errors": [
+        {
+            "code": "PromiseCanceled",
+            "message": "The promise was canceled",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        }
+    ]
+}

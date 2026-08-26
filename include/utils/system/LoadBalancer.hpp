@@ -38,6 +38,7 @@ File Description:
     #include <future>                                   // std::future, std::promise
     #include <atomic>                                   // std::atomic
     #include <chrono>                                   // std::chrono::time_point, std::chrono::steady_clock::now
+    #include <vector>                                   // std::vector
     #include <mutex>                                    // std::mutex, std::lock_guard
 
 namespace utils::system { // namespace start
@@ -78,13 +79,14 @@ class LoadBalancer: private utils::security::observer::Observer<"LoadBalancer"> 
         /* destruction */
         utils::system::Scheduler _scheduler;
         std::jthread _thread; // Thread start at the construction, every lifespan time it's check the workers elasped time and schedule destruction
-        utils::system::IdHandler<std::uint64_t> _idHandler;
+        utils::system::IdHandler<std::size_t> _idHandler;
 
         /* workers */
         std::size_t _limit = 1; // limit of workers (0 = infinite)
         std::chrono::milliseconds _lifespan{0}; // elasped time (in ms) before killing unused workers (0 = infinite)
         std::mutex _lock; // worker lock
         std::unordered_map<std::size_t, std::pair<T, std::size_t>> _workers;
+        std::vector<std::jthread> _searchThreads;
 
         // ------------ Function ---------- //
         _cold void setup(void) // Setup internal thread
@@ -149,11 +151,15 @@ class LoadBalancer: private utils::security::observer::Observer<"LoadBalancer"> 
             std::shared_ptr<std::promise<T&>> promise = std::make_shared<std::promise<T&>>();
             std::future<T&> future = promise->get_future();
 
+            // Purge any finished thread
+            std::erase_if(this->_searchThreads, [](std::jthread& t) {return (!t.joinable() || t.get_stop_token().stop_requested());});
+
             // Async free worker getting
-            std::jthread([this, promise](std::stop_token stoken) {
+            this->_searchThreads.emplace_back([this, promise](std::stop_token stoken) {
                 std::optional<T&> worker = this->findWorker(stoken); // bloque jusqu'à dispo
-                if (worker.has_value()) promise->set_value(worker);
-            }).detach();
+                if (worker.has_value()) promise->set_value(*worker);
+                else promise->set_exception(std::make_exception_ptr(utils::exception::ErrorException(utils::exception::InternalCode::PromiseCanceled)));
+            }); // Store them to be able to stop the research if the main class is destroy
 
             return future;
         };
