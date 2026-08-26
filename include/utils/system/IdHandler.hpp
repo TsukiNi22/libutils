@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 20/08/2026 by @author Tsukini
+##  @date 26/08/2026 by @author Tsukini
 
 File Name:
 ##  @file IdHandler.hpp
@@ -32,7 +32,7 @@ File Description:
     #include <mutex>                                    // std::mutex
     #include <set>                                      // std::set
 
-namespace utils::security { // namespace start
+namespace utils::system { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
@@ -45,6 +45,39 @@ class IdHandler {
         // 0 is reserved for unallocated ones / default value
         T _id = std::numeric_limits<T>::min();
         std::set<T> _freeIds;
+
+        // ------------ Function ---------- //
+        _hot T allocate_(const bool safe_mode = true)
+        {
+            std::unique_lock<std::mutex> lock(this->_lock, std::defer_lock);
+            if (safe_mode) lock.lock();
+            else (void)lock.try_lock();
+
+            T id;
+            if (this->_freeIds.size() > 0) {
+                auto it = this->_freeIds.begin();
+                id = *it;
+                this->_freeIds.erase(id);
+            } else _likely {
+                if (this->_id == std::numeric_limits<T>::max()) _unlikely {
+                    throw utils::exception::FatalException(utils::exception::InternalCode::IdOverflow);
+                }
+                id = ++this->_id;
+                if (id == 0) _unlikely {id = ++this->_id;}
+            }
+            return id;
+        };
+        _hot void free_(const T id, const bool safe_mode = true)
+        {
+            std::unique_lock<std::mutex> lock(this->_lock, std::defer_lock);
+            if (safe_mode) lock.lock();
+            else (void)lock.try_lock();
+
+            // Only if the id wasn't already free
+            if (!this->_freeIds.insert(id).second) _unlikely {
+                throw utils::exception::ErrorException(utils::exception::InternalCode::DoubleFree);
+            }
+        };
 
     public:
         // ------------ Function ---------- //
@@ -75,35 +108,19 @@ class IdHandler {
             }
             return 0;
         };
-        _hot void allocate(T& id, const bool safe_mode = true)
+        _hot T allocate(T& id, const bool safe_mode = true)     {return (id = this->allocate_(safe_mode));};
+        _hot _nodiscard T allocate(const bool safe_mode = true) {return this->allocate_(safe_mode);};
+        _hot void free(T& id, const bool safe_mode = true)       {this->free_(id, safe_mode); id = 0;}
+        _hot void free(const T& id, const bool safe_mode = true) {this->free_(id, safe_mode);};
+        _cold void free(const bool safe_mode = true)
         {
             std::unique_lock<std::mutex> lock(this->_lock, std::defer_lock);
             if (safe_mode) lock.lock();
             else (void)lock.try_lock();
 
-            if (this->_freeIds.size() > 0) {
-                auto it = this->_freeIds.begin();
-                id = *it;
-                this->_freeIds.erase(id);
-            } else _likely {
-                if (this->_id == std::numeric_limits<T>::max()) _unlikely {
-                    throw utils::exception::FatalException(utils::exception::InternalCode::IdOverflow);
-                }
-                id = ++this->_id;
-                if (id == 0) _unlikely {id = ++this->_id;}
-            }
-        };
-        _hot void free(T& id, const bool safe_mode = true)
-        {
-            std::unique_lock<std::mutex> lock(this->_lock, std::defer_lock);
-            if (safe_mode) lock.lock();
-            else (void)lock.try_lock();
-
-            // Only if the id wasn't already free
-            if (!this->_freeIds.insert(id).second) _unlikely {
-                throw utils::exception::ErrorException(utils::exception::InternalCode::DoubleFree);
-            }
-            id = 0;
+            // Reset value (no id in circulation)
+            this->_id = std::numeric_limits<T>::min();
+            this->_freeIds.clear();
         };
 
         // ------------ Operator ---------- //
