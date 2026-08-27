@@ -80,9 +80,9 @@ File Description:
     /* _Network */\
     !defined(_Socket) && \
     /* _CustomType */\
-    !defined(_BLT) && \
+    !defined(_Vector) && !defined(_BLT) && \
     /* _Math */\
-    !defined(_Vector) && !defined(_Geometry) && !defined(_Trigo) && \
+    !defined(_Geometry) && !defined(_Trigo) && \
     /* _Manip */\
     !defined(_IOManip) && !defined(_SManip) && \
     /* _Algorithms */\
@@ -135,11 +135,11 @@ File Description:
 /* Activate all type sub-include */
 #ifdef _CustomType
     #define _BLT // Bidirectional Lookup Table
+    #define _Vector
 #endif
 
 /* Activate all math sub-include */
 #ifdef _Math
-    #define _Vector
     #define _Geometry
     #define _Trigo
 #endif
@@ -211,7 +211,7 @@ File Description:
 /* VectorX */
 #ifdef _Vector
     // -> Customized vector2 & vector3 for respectively 2 & 3 value of undefined type
-    #include "math/vector/Vector.hpp"   // utils::math::vector::IVector<T>, utils::math::vector::VectorN, utils::math::vector::OVectorN
+    #include "type/vector/Vector.hpp"   // utils::type::IVector<T>, utils::type::VectorN, utils::type::OVectorN
 #endif
 
 /* Geometry */

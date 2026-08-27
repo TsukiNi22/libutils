@@ -24,12 +24,12 @@ File Description:
     /* INCLUDE */
 
     /* interface */
-    #include "IVector.hpp"  // utils::math::vector::IVector
+    #include "IVector.hpp"  // utils::type::IVector
 
     /* vector */
-    #include "Vector2.hpp"  // utils::math::vector::Vector2
-    #include "Vector3.hpp"  // utils::math::vector::Vector3
-    #include "OVector2.hpp" // utils::math::vector::OVector2
-    #include "OVector3.hpp" // utils::math::vector::OVector3
+    #include "Vector2.hpp"  // utils::type::Vector2
+    #include "Vector3.hpp"  // utils::type::Vector3
+    #include "OVector2.hpp" // utils::type::OVector2
+    #include "OVector3.hpp" // utils::type::OVector3
 
 #endif /* VECTOR_H */
