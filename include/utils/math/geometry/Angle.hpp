@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 18/05/2026 by @author Tsukini
+##  @date 29/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Angle.hpp
@@ -23,7 +23,7 @@ namespace utils::math::geometry { // namepoint start
 /* PROTOTYPE */
 
 // Convert an orientation in deg to a look vector normalized
-utils::math::Direction toLook(const utils::math::Direction& orientation);
+utils::math::Direction to_look(const utils::math::Direction& orientation);
 
 } // namepoint end
 #endif /* ANGLE_H */

@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 05/07/2026 by @author Tsukini
+##  @date 29/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Point.cpp
@@ -15,10 +15,10 @@ File Description:
 #include "utils/math/MathType.hpp"
 #include <cmath>
 
-utils::math::Direction utils::math::geometry::toLook(const utils::math::Direction& orientation)
+utils::math::Direction utils::math::geometry::to_look(const utils::math::Direction& orientation)
 {
-    utils::math::Type pitch = utils::math::trigo::degToRad(orientation.x);
-    utils::math::Type yaw = utils::math::trigo::degToRad(orientation.y);
+    utils::math::Type pitch = utils::math::trigo::deg_to_rad(orientation.x);
+    utils::math::Type yaw = utils::math::trigo::deg_to_rad(orientation.y);
     utils::math::Direction look;
     look.x = std::cos(pitch) * std::sin(yaw);
     look.y = std::sin(pitch);

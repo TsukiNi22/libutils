@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 20/08/2026 by @author Tsukini
+##  @date 29/08/2026 by @author Tsukini
 
 File Name:
 ##  @file ASocket.cpp
@@ -34,13 +34,13 @@ File Description:
 #include <string>
 #include <regex>
 
-_cold _nodiscard bool utils::network::socket::isIp(const std::string& s)
+_cold _nodiscard bool utils::network::socket::is_ip(const std::string& s)
 {
     static const std::regex regex(IP_REGEX);
     return std::regex_match(s, regex);
 }
 
-_cold _nodiscard std::string utils::network::socket::resolveHostname(const std::string& hostname)
+_cold _nodiscard std::string utils::network::socket::resolve_hostname(const std::string& hostname)
 {
     struct addrinfo* res = nullptr;
     struct addrinfo settings{};
@@ -68,13 +68,13 @@ _cold _nodiscard std::string utils::network::socket::resolveHostname(const std::
     return std::string(ip);
 }
 
-_cold void utils::network::socket::resolveAddress(utils::network::Address& address)
+_cold void utils::network::socket::resolve_address(utils::network::Address& address)
 {
-    if (address.ip.first.empty() || !utils::network::socket::isIp(address.ip.first)) {
+    if (address.ip.first.empty() || !utils::network::socket::is_ip(address.ip.first)) {
         onBasicVerbose("Resolving the hostname...");
         if (address.ip.second.empty()) address.ip.second = address.ip.first; // Store the hostname
         else address.ip.first = address.ip.second;
-        address.ip.first = utils::network::socket::resolveHostname(address.ip.first);
+        address.ip.first = utils::network::socket::resolve_hostname(address.ip.first);
     }
 }
 

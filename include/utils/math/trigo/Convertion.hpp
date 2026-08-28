@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 20/07/2026 by @author Tsukini
+##  @date 29/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Point.hpp
@@ -24,10 +24,10 @@ namespace utils::math::trigo { // namepoint start
 //----------------------------------------------------------------//
 /* PROTOTYPE */
 
-_nodiscard inline utils::math::Type degToRad(utils::math::Angle deg)
+_nodiscard inline utils::math::Type deg_to_rad(utils::math::Angle deg)
 {return deg * M_PI / 180.0;};
 
-_nodiscard inline utils::math::Angle radToDeg(utils::math::Type rad)
+_nodiscard inline utils::math::Angle rad_to_deg(utils::math::Type rad)
 {return rad / M_PI * 180.0;};
 
 } // namepoint end

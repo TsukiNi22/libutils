@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 19/08/2026 by @author Tsukini
+##  @date 29/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Point.hpp
@@ -29,7 +29,7 @@ namespace utils::math::geometry { // namepoint start
  * angle -> angle to rotate the point
  * rad -> is the angle in radian or deg
 */
-utils::math::Coord2D rotatePoint2D(const utils::math::Coord2D& origin, const utils::math::Coord2D& point, utils::math::Angle angle, const bool rad = false);
+utils::math::Coord2D rotate_point_2D(const utils::math::Coord2D& origin, const utils::math::Coord2D& point, utils::math::Angle angle, const bool rad = false);
 
 /* 3D */
 /*
@@ -38,7 +38,7 @@ utils::math::Coord2D rotatePoint2D(const utils::math::Coord2D& origin, const uti
  * orientation -> angles to rotate the point
  * rad -> is the orientation in radian or deg
 */
-utils::math::Coord rotatePoint3D(const utils::math::Coord& origin, const utils::math::Coord& point, const utils::math::Direction& orientation, const bool rad = false);
+utils::math::Coord rotate_point_3D(const utils::math::Coord& origin, const utils::math::Coord& point, const utils::math::Direction& orientation, const bool rad = false);
 
 } // namepoint end
 #endif /* POINT_H */

@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 20/08/2026 by @author Tsukini
+##  @date 29/08/2026 by @author Tsukini
 
 File Name:
 ##  @file Client.hpp
@@ -76,7 +76,7 @@ class Client: private utils::security::observer::Observer<"Client"> {
 
         // ---------- Constructor --------- //
         Client() = default;
-        Client(const std::shared_ptr<utils::network::socket::ISocket>& socket, const utils::network::Address& address = {}): _socket{socket}, _address{address} {utils::network::socket::resolveAddress(this->_address);};
+        Client(const std::shared_ptr<utils::network::socket::ISocket>& socket, const utils::network::Address& address = {}): _socket{socket}, _address{address} {utils::network::socket::resolve_address(this->_address);};
         Client(const Client& other) = delete;
         Client(Client&& other) = delete;
 

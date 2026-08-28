@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 20/08/2026 by @author Tsukini
+##  @date 29/08/2026 by @author Tsukini
 
 File Name:
 ##  @file ASocket.hpp
@@ -41,9 +41,9 @@ namespace utils::network::socket { // namespace start
 /* PROTOTYPE */
 
 /* tools */
-bool isIp(const std::string& s);
-std::string resolveHostname(const std::string& hostname);
-void resolveAddress(utils::network::Address& address);
+bool is_ip(const std::string& s);
+std::string resolve_hostname(const std::string& hostname);
+void resolve_address(utils::network::Address& address);
 
 //----------------------------------------------------------------//
 /* CLASS */
