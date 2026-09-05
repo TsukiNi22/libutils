@@ -34,10 +34,25 @@ File Description:
 
 _cold void utils::encapsulation::SharedMemory::init_(void)
 {
-    /*
-    auto current = this->_metadata->readable.load(std::memory_order_relaxed);
-    this->_metadata->readable.wait(current, std::memory_order_acquire);
-    */
+    this->_thread = std::jthread([this](std::stop_token stop_token) {
+        // allow the thread to be awake when a stop is requested
+        std::stop_callback wake_on_stop(stop_token, [this]() {
+            this->_metadata->readable.fetch_add(1, std::memory_order_release);
+            this->_metadata->readable.notify_all();
+        });
+
+        while (!stop_token.stop_requested()) {
+            // wait for trigger from atomic notifier in metatdata
+            auto current = this->_metadata->readable.load(std::memory_order_relaxed);
+            this->_metadata->readable.wait(current, std::memory_order_acquire);
+
+            // awake can also be trigger by a stop request
+            if (stop_token.stop_requested()) break;
+
+            // redirect on internal read
+            this->read_();
+        }
+    });
 }
 
 _hot void utils::encapsulation::SharedMemory::read_(void)
