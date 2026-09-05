@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 27/08/2026 by @author Tsukini
+##  @date 29/08/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -74,7 +74,7 @@ File Description:
     /* _Handling */\
     !defined(_Exception) && !defined(_Verbose) && !defined(_Pool) && !defined(_Cli) && !defined(_Arguments) && !defined(_Network) && \
     /* _Tools */\
-    !defined(_Concepts) && !defined(_Encapsulation) && !defined(_System) && !defined(_CustomType) && !defined(_Math) && !defined(_Manip) && !defined(_Algorithms) && !defined(_Security) && \
+    !defined(_Concepts) && !defined(_System) && !defined(_Encapsulation) && !defined(_CustomType) && !defined(_Math) && !defined(_Manip) && !defined(_Algorithms) && !defined(_Security) && \
     /* _Pool */\
     !defined(_Middleware) && \
     /* _Network */\
@@ -244,6 +244,7 @@ File Description:
     #include "encapsulation/Pipe.hpp"           // utils::encapsulation::Pipe
     #include "encapsulation/Dup.hpp"            // utils::encapsulation::Dup
     #include "encapsulation/Process.hpp"        // utils::encapsulation::Process
+    #include "encapsulation/SharedMemory.hpp"   // utils::encapsulation::SharedMemory
 #endif
 
 /* System */

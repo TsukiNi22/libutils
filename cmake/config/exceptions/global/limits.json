@@ -34,6 +34,11 @@
             "code": "UnknowCast",
             "message": "Unknow cast type, can't proceed",
             "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "OutOfMemory",
+            "message": "No enought memory left to write the given byte(s)",
+            "restrictions": ["Fatal", "Error", "Warning"]
         }
     ]
 }

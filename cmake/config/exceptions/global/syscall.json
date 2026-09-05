@@ -49,6 +49,21 @@
             "code": "Accept",
             "message": "Error during the accept call",
             "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "ShmOpen",
+            "message": "Error during the shm_open call",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "Ftruncate",
+            "message": "Error during the ftruncate call",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "Mmap",
+            "message": "Error during the mmap call",
+            "restrictions": ["Fatal", "Error"]
         }
     ]
 }

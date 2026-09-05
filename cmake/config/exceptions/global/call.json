@@ -16,8 +16,13 @@
             "restrictions": ["Fatal", "Error", "Warning"]
         },
         {
+            "code": "DoubleUse",
+            "message": "Try to use something that is in use",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
             "code": "DoubleFree",
-            "message": "Try to free somthing that was already free",
+            "message": "Try to free something that was already free",
             "restrictions": ["Fatal", "Error", "Warning"]
         }
     ]

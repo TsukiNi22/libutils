@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 26/08/2026 by @author Tsukini
+##  @date 05/09/2026 by @author Tsukini
 
 File Name:
 ##  @file IdHandler.hpp
@@ -44,6 +44,7 @@ class IdHandler {
         mutable std::mutex _lock; // Handling of multithreading
         // 0 is reserved for unallocated ones / default value
         T _id = std::numeric_limits<T>::min();
+        std::set<T> _usedIds; // only for forced allocated ids
         std::set<T> _freeIds;
 
         // ------------ Function ---------- //
@@ -64,6 +65,7 @@ class IdHandler {
                 }
                 id = ++this->_id;
                 if (id == 0) _unlikely {id = ++this->_id;}
+                while (this->_usedIds.contains(id)) _unlikely {id = ++this->_id;}
             }
             return id;
         };
@@ -77,10 +79,31 @@ class IdHandler {
             if (!this->_freeIds.insert(id).second) _unlikely {
                 throw utils::exception::ErrorException(utils::exception::InternalCode::DoubleFree);
             }
+
+            // Check if it's need to be removed from forced
+            if (!this->_usedIds.contains(id)) {this->_usedIds.erase(id);}
         };
 
     public:
         // ------------ Function ---------- //
+        _cold inline void use(T id, const bool safe_mode = true)
+        {
+            std::unique_lock<std::mutex> lock(this->_lock, std::defer_lock);
+            if (safe_mode) lock.lock();
+            else (void)lock.try_lock();
+
+            // Check if the id is free
+            if (this->_freeIds.contains(id)) _unlikely {
+                this->_freeIds.erase(id);
+            } else if (this->_id <= id) _unlikely {
+                throw utils::exception::ErrorException(utils::exception::InternalCode::DoubleUse);
+            }
+
+            // Store the forced id
+            if (!this->_usedIds.insert(id).second) _unlikely {
+                throw utils::exception::ErrorException(utils::exception::InternalCode::DoubleUse);
+            }
+        };
         _cold _nodiscard inline T id(void) const {return this->_id;};
         _cold _nodiscard inline T actual(const bool safe_mode = true) const
         {
