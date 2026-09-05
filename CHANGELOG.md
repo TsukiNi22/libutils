@@ -20,6 +20,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [pre-release] (empty)
 
+## [v2.12.1-pre] - 2026-09-05
+### Changed
+- Change naming policy for normal function/tools without class <name>(<Name>)* -> <name>(_<name>)*
+- Switch `vector` sub-section to `type` section
+
+### Added
+- Add the encapsulation class for `SharedMemory` (handle multiple writer & reader with multiple mode for layout optimisation)
+
+## [v2.11.0-pre] - 2026-08-20
+### Changed
+- Remove some sub-section part like the sub-section `middleware`
+- Add new method to the `IdHandler` to preview ids and allow other actions (free all, const arg, ...)
+- Single type for legacy of class moved to the `type` section like the `Worker` or other class like `BidirectionalLookupTable`
+
+### Added
+- Class legacy for freeze handling `Freezable`
+
+## [v2.10.1-pre] - 2026-08-20
+### Changed
+- Artifact retention period changed to 1 day
+- `IdHandler` switched section from `security` to `system` and new method added to preview ids and allow other actions (free all, const arg, ...)
+
+### Added
+- A `Scheduler` for task, cancel/schedule/overview
+- A class to handle load balancing for worker `LoadBalancer`
+- `Process` encapsulation method to check if it's running
+- Unsigned math type: U<type>
+
+### Fixed
+- Change the `EETPParser` encoding of base64, it's was missing for the internal data sended
+
 ## [v2.9.2] - 2026-08-20
 ### Fixed
 - **[MAJOR]** invalid namespace `utils::exceptionutils::exception` -> `utils::exception`
@@ -87,7 +118,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial version of the utils library with multiple tools (see [README-1.0.0](https://github.com/TsukiNi22/libutils/blob/v1.0.0/README.md) for more details)
 
-[pre-release]: https://github.com/TsukiNi22/libutils/compare/v2.9.2...HEAD
+[pre-release]: https://github.com/TsukiNi22/libutils/compare/v2.12.1-pre...HEAD
+[v2.12.1-pre]: https://github.com/TsukiNi22/libutils/compare/v2.11.0-pre...v2.12.1-pre
+[v2.11.0-pre]: https://github.com/TsukiNi22/libutils/compare/v2.10.1-pre...v2.11.0-pre
+[v2.10.1-pre]: https://github.com/TsukiNi22/libutils/compare/v2.9.2...v2.10.1-pre
 [v2.9.2]: https://github.com/TsukiNi22/libutils/compare/v2.9.0-pre...v2.9.2
 [v2.9.0-pre]: https://github.com/TsukiNi22/libutils/compare/v2.3.3-release...v2.9.0-pre
 [v2.3.3]: https://github.com/TsukiNi22/libutils/compare/v2.2.0...v2.3.3-release
