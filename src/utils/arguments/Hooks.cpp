@@ -88,7 +88,7 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
                 if (!mandatory) std::cout << "[";
                 std::cout << ((fshort.empty() && fflag.empty()) ? "--" : "-") << (fshort.empty() ? (fflag.empty() ? flong : fflag) : fshort);
                 for (const auto& [name, fmandatory, _]: it->second.options)
-                    std::cout << (fmandatory ? "" : "[") << " <" << name << ">" << (fmandatory ? "" : "]");
+                    std::cout << " " << (fmandatory ? "" : "[") << "<" << name << ">" << (fmandatory ? "" : "]");
                 if (it->second.unlimited) std::cout << "*";
                 if (!mandatory) std::cout << "]";
             }
