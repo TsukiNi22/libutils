@@ -129,7 +129,7 @@ void utils::cli::Cli::launch(const std::size_t call)
                     else if (info == "Unclosed escape sequence") this->_code = 126;
                 } else if (code == utils::exception::InternalCode::CliExecution) {
                     std::string info = e.info();
-                    if (info == "Unknow command") this->_code = 128;
+                    if (info == "Unknown command") this->_code = 128;
                     else if (info == "Command not implemented") this->_code = 129;
                     else if (info.starts_with("Callback exception: ")) {
                         if (!(this->_flags & utils::cli::Flag::CATCH)) {
@@ -508,16 +508,16 @@ _hot void utils::cli::Cli::exec(const utils::cli::ParsedData& parsedInput)
                     }
                     std::cout << "Did you mean '" << getHint<3>(commands, command.front()) << "'?" << std::endl;
                     status = 4;
-                    lastExceptionInfo = "Unknow command";
+                    lastExceptionInfo = "Unknown command";
                 } else {
-                    throw utils::exception::ErrorException(utils::exception::InternalCode::CliExecution, "Unknow command");
+                    throw utils::exception::ErrorException(utils::exception::InternalCode::CliExecution, "Unknown command");
                 }
             }
         } catch (const utils::exception::ErrorException& e) {
             lastExceptionInfo = e.info();
             if (!(this->_flags & utils::cli::Flag::CATCH)) throw;
             if (e.getCode() == utils::exception::InternalCode::CliParser) status = 1;
-            else if (lastExceptionInfo == "Unknow command" || lastExceptionInfo == "Command not implemented") status = 2;
+            else if (lastExceptionInfo == "Unknown command" || lastExceptionInfo == "Command not implemented") status = 2;
             else status = 3;
         } catch (const utils::exception::NoneException& e) {
             throw;
@@ -536,7 +536,7 @@ _hot void utils::cli::Cli::exec(const utils::cli::ParsedData& parsedInput)
                 case 2: std::cerr << lastExceptionInfo << std::endl; break; // Execution
                 case 3: std::cerr << "Callback exception: " << lastExceptionInfo << std::endl; break; // Other
                 case 4: break; // For error with no display
-                default: // Unknow
+                default: // Unknown
                     throw utils::exception::ErrorException(utils::exception::InternalCode::CliExecution, "Callback exception: can't determine the error");
             }
 
@@ -544,7 +544,7 @@ _hot void utils::cli::Cli::exec(const utils::cli::ParsedData& parsedInput)
             if (lastExceptionInfo == "Not enough arguments") this->_code = 124;
             else if (lastExceptionInfo == "Too many arguments") this->_code = 125;
             else if (lastExceptionInfo == "Unclosed escape sequence") this->_code = 126;
-            else if (lastExceptionInfo == "Unknow command") this->_code = 128;
+            else if (lastExceptionInfo == "Unknown command") this->_code = 128;
             else if (lastExceptionInfo == "Command not implemented") this->_code = 129;
             else if (lastExceptionInfo.starts_with("Callback exception: ")) this->_code = 130;
             else _unlikely {this->_code = 255;}
@@ -578,7 +578,7 @@ std::string utils::cli::Cli::strcode(std::uint8_t code) const
         case 125: return "Too many arguments";
         case 126: return "Unclosed escape sequence";
         case 127: return "Empty input";
-        case 128: return "Unknow command";
+        case 128: return "Unknown command";
         case 129: return "Command not implemented";
         case 130: return "Callback exception";
         case 255: return "Undefined error";

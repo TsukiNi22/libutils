@@ -63,7 +63,7 @@ class BidirectionalLookupTable: public utils::type::Freezable, private utils::se
         {
             this->requireFrozen();
             if (!this->_left.contains(left)) {
-                utils::exception::WarningException e(utils::exception::InternalCode::UnknowKey);
+                utils::exception::WarningException e(utils::exception::InternalCode::UnknownKey);
                 std::cerr << e.formated() << std::endl;
                 return;
             }
@@ -75,7 +75,7 @@ class BidirectionalLookupTable: public utils::type::Freezable, private utils::se
         {
             this->requireFrozen();
             if (!this->_right.contains(right)) {
-                utils::exception::WarningException e(utils::exception::InternalCode::UnknowKey);
+                utils::exception::WarningException e(utils::exception::InternalCode::UnknownKey);
                 std::cerr << e.formated() << std::endl;
                 return;
             }
@@ -114,13 +114,13 @@ class BidirectionalLookupTable: public utils::type::Freezable, private utils::se
         const R& operator[](const L& left) const
         {
             if (!this->_left.contains(left))
-                throw utils::exception::ErrorException(utils::exception::InternalCode::UnknowKey);
+                throw utils::exception::ErrorException(utils::exception::InternalCode::UnknownKey);
             return this->_left.at(left);
         }
         const L& operator[](const R& right) const
         {
             if (!this->_right.contains(right))
-                throw utils::exception::ErrorException(utils::exception::InternalCode::UnknowKey);
+                throw utils::exception::ErrorException(utils::exception::InternalCode::UnknownKey);
             return this->_right.at(right);
         }
 

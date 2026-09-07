@@ -137,7 +137,7 @@ class Settings: private utils::security::observer::Observer<"Settings"> {
                 /* special */
                 case utils::arguments::CastType::Path: this->set<force>(id, this->cast_path(setting));      break;
 
-                default: throw utils::exception::ErrorException(utils::exception::InternalCode::UnknowCast);
+                default: throw utils::exception::ErrorException(utils::exception::InternalCode::UnknownCast);
             }
         }
         template<typename T>
@@ -156,7 +156,7 @@ class Settings: private utils::security::observer::Observer<"Settings"> {
         {
             if (!this->_settings.contains(id)) {
                 if constexpr (failsafe) return;
-                else throw utils::exception::ErrorException(utils::exception::InternalCode::UnknowId, id);
+                else throw utils::exception::ErrorException(utils::exception::InternalCode::UnknownId, id);
             }
             this->_settings.erase(id);
         };

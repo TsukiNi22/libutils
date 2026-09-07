@@ -63,7 +63,7 @@ _nodiscard static std::u32string decode_utf8(const std::string& setting)
 _nodiscard const utils::arguments::Setting& utils::arguments::Settings::at(const std::string& id) const
 {
     if (!this->_settings.contains(id))
-        throw utils::exception::ErrorException(utils::exception::InternalCode::UnknowId, id);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::UnknownId, id);
     return this->_settings.at(id);
 }
 

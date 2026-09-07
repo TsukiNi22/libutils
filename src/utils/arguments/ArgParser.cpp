@@ -41,7 +41,7 @@ utils::arguments::ArgParser::ArgParser(const std::string& binary, const std::str
 void utils::arguments::ArgParser::removeUsage(const std::string& id)
 {
     if (!this->_usages.contains(id)) {
-        utils::exception::WarningException e(utils::exception::InternalCode::UnknowId, id);
+        utils::exception::WarningException e(utils::exception::InternalCode::UnknownId, id);
         std::cerr << e.formated() << std::endl;
         return;
     }
@@ -57,7 +57,7 @@ void utils::arguments::ArgParser::removeUsages(const std::vector<std::string>& i
 void utils::arguments::ArgParser::removeOption(const std::string& id)
 {
     if (!this->_options.contains(id)) {
-        utils::exception::WarningException e(utils::exception::InternalCode::UnknowId, id);
+        utils::exception::WarningException e(utils::exception::InternalCode::UnknownId, id);
         std::cerr << e.formated() << std::endl;
         return;
     }
@@ -73,7 +73,7 @@ void utils::arguments::ArgParser::removeOptions(const std::vector<std::string>& 
 void utils::arguments::ArgParser::removeFlag(const std::string& id)
 {
     if (!this->_flags.contains(id)) {
-        utils::exception::WarningException e(utils::exception::InternalCode::UnknowId, id);
+        utils::exception::WarningException e(utils::exception::InternalCode::UnknownId, id);
         std::cerr << e.formated() << std::endl;
         return;
     }
@@ -102,7 +102,7 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
     const std::string argOrigin = arg; // keep the orignal value
     std::string id;
     bool isLong = arg.starts_with("--"), isShort = false;
-    bool unknow = true;
+    bool unknown = true;
     std::size_t f = 0; // short counter
     std::size_t pos = 0;
 
@@ -122,7 +122,7 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
         // Is the flag know
         for (const auto &[fid, flag]: this->_flags) {
             const auto &[_, _, flong, _] = flag.flag;
-            if (flong == arg) {ids.push_back(fid); unknow = false; break;}
+            if (flong == arg) {ids.push_back(fid); unknown = false; break;}
         }
     }
 
@@ -134,11 +134,11 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
         // Is the flag know (Flag have the priority)
         for (const auto &[fid, flag]: this->_flags) {
             const auto &[fshort, fflag, _, _] = flag.flag;
-            if (fflag == arg) {ids.push_back(fid); unknow = false; break;}
+            if (fflag == arg) {ids.push_back(fid); unknown = false; break;}
             else if ((pos = sarg.find(fshort)) != std::string::npos) {
                 ids.push_back(fid);
                 sarg.erase(pos, fshort.size());
-                if (++f == arg.size()) {isShort = true; unknow = false; break;};
+                if (++f == arg.size()) {isShort = true; unknown = false; break;};
             }
         }
     }
@@ -148,12 +148,12 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
         return true; // ignored
 
     // Check if the flag was found
-    if (unknow) {
+    if (unknown) {
         if (alreadyFailed) return false;
         alreadyFailed = true;
-        std::string s = ((!isLong && arg == sarg) ? ("-" + arg + ": " + sarg + " (unknow short)") : ((isLong ? "--" : "-") + arg));
-        if (failsafe) {std::cerr << utils::exception::WarningException(utils::exception::InternalCode::UnknowFlag, s).formated() << std::endl; return false;}
-        else throw utils::exception::ErrorException(utils::exception::InternalCode::UnknowFlag, s);
+        std::string s = ((!isLong && arg == sarg) ? ("-" + arg + ": " + sarg + " (unknown short)") : ((isLong ? "--" : "-") + arg));
+        if (failsafe) {std::cerr << utils::exception::WarningException(utils::exception::InternalCode::UnknownFlag, s).formated() << std::endl; return false;}
+        else throw utils::exception::ErrorException(utils::exception::InternalCode::UnknownFlag, s);
     }
 
     // Select the id who is the next one in the usage

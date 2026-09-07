@@ -39,7 +39,7 @@ _cold void utils::system::Scheduler::cancel(std::size_t id)
 {
     this->_tasks.clear();
     if (!this->_tasks.contains(id)) _unlikely {
-        throw utils::exception::ErrorException(utils::exception::InternalCode::UnknowId, std::to_string(id));
+        throw utils::exception::ErrorException(utils::exception::InternalCode::UnknownId, std::to_string(id));
     }
     this->_tasks.erase(id);
     this->_idHandler.free(id);

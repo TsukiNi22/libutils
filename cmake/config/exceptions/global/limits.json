@@ -11,13 +11,13 @@
             "restrictions": ["Fatal", "Error", "Warning"]
         },
         {
-            "code": "UnknowId",
-            "message": "Try to do thing with an unknow id",
+            "code": "UnknownId",
+            "message": "Try to do thing with an unknown id",
             "restrictions": ["Fatal", "Error", "Warning"]
         },
         {
-            "code": "UnknowKey",
-            "message": "Try to do thing with an unknow key",
+            "code": "UnknownKey",
+            "message": "Try to do thing with an unknown key",
             "restrictions": ["Fatal", "Error", "Warning"]
         },
         {
@@ -31,8 +31,8 @@
             "restrictions": ["Fatal", "Error", "Warning"]
         },
         {
-            "code": "UnknowCast",
-            "message": "Unknow cast type, can't proceed",
+            "code": "UnknownCast",
+            "message": "Unknown cast type, can't proceed",
             "restrictions": ["Fatal", "Error", "Warning"]
         },
         {

@@ -43,7 +43,7 @@ Empty content: <>
     - reset style
 Content: <DATA1|DATA2|...|DATAX>
     - setup the given style
-    - ignore the unknow ones
+    - ignore the unknown ones
 
 Data (case insensitive):
     reset

@@ -109,7 +109,7 @@ _hot _nodiscard const std::unordered_map<int, utils::network::Payloads>& utils::
     // Check status
     if (this->_status != utils::network::Status::Up) _unlikely {return this->_payloads;}
     else if (fd != -1 && !this->_payloads.contains(fd)) _unlikely {
-        throw utils::exception::WarningException(utils::exception::InternalCode::UnknowId, std::to_string(fd));
+        throw utils::exception::WarningException(utils::exception::InternalCode::UnknownId, std::to_string(fd));
     }
 
     // Clear the last events getted
@@ -235,7 +235,7 @@ _hot void utils::network::Server::join(const int fd)
     // Check status
     if (this->_status != utils::network::Status::Up) _unlikely {return;}
     else if (fd != -1 && !this->_payloads.contains(fd)) _unlikely {
-        throw utils::exception::WarningException(utils::exception::InternalCode::UnknowId, std::to_string(fd));
+        throw utils::exception::WarningException(utils::exception::InternalCode::UnknownId, std::to_string(fd));
     }
 
     // Read the events
@@ -305,7 +305,7 @@ _hot void utils::network::Server::flush(const int fd)
     // Check status
     if (this->_status != utils::network::Status::Up) _unlikely {return;}
     else if (!this->_payloads.contains(fd)) _unlikely {
-        throw utils::exception::WarningException(utils::exception::InternalCode::UnknowId, std::to_string(fd));
+        throw utils::exception::WarningException(utils::exception::InternalCode::UnknownId, std::to_string(fd));
     }
 
     try {this->_socket->flush(fd);}
@@ -326,7 +326,7 @@ _hot void utils::network::Server::send<false>(const int fd, const utils::network
     // Check status
     if (this->_status != utils::network::Status::Up) _unlikely {return;}
     else if (!this->_payloads.contains(fd)) _unlikely {
-        throw utils::exception::WarningException(utils::exception::InternalCode::UnknowId, std::to_string(fd));
+        throw utils::exception::WarningException(utils::exception::InternalCode::UnknownId, std::to_string(fd));
     }
 
     try {this->_socket->send(payload, fd);}
@@ -347,7 +347,7 @@ _hot void utils::network::Server::send<true>(const int fd, const utils::network:
     // Check status
     if (this->_status != utils::network::Status::Up) _unlikely {return;}
     else if (!this->_payloads.contains(fd)) _unlikely {
-        throw utils::exception::WarningException(utils::exception::InternalCode::UnknowId, std::to_string(fd));
+        throw utils::exception::WarningException(utils::exception::InternalCode::UnknownId, std::to_string(fd));
     }
 
     try {this->_socket->sendBuffered(payload, fd);}
@@ -365,7 +365,7 @@ _hot void utils::network::Server::send<true>(const int fd, const utils::network:
 _hot void utils::network::Server::remove(const int fd)
 {
     if (!this->_payloads.contains(fd)) _unlikely {
-        throw utils::exception::WarningException(utils::exception::InternalCode::UnknowId, std::to_string(fd));
+        throw utils::exception::WarningException(utils::exception::InternalCode::UnknownId, std::to_string(fd));
     }
 
     // Verbose

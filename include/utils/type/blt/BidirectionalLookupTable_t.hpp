@@ -64,7 +64,7 @@ class BidirectionalLookupTable<T, T, Hash, Hash, Equal, Equal>: public utils::ty
         {
             this->requireFrozen();
             if (!this->_table.contains(element)) {
-                utils::exception::WarningException e(utils::exception::InternalCode::UnknowKey);
+                utils::exception::WarningException e(utils::exception::InternalCode::UnknownKey);
                 std::cerr << e.formated() << std::endl;
                 return;
             }
@@ -90,7 +90,7 @@ class BidirectionalLookupTable<T, T, Hash, Hash, Equal, Equal>: public utils::ty
         const T& operator[](const T& element) const
         {
             if (!this->_table.contains(element))
-                throw utils::exception::ErrorException(utils::exception::InternalCode::UnknowKey);
+                throw utils::exception::ErrorException(utils::exception::InternalCode::UnknownKey);
             return this->_table.at(element);
         }
 

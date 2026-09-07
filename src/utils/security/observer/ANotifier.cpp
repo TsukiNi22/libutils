@@ -77,7 +77,7 @@ _hot void utils::security::observer::ANotifier::unlink(const std::uint64_t id, c
     if (id == 0) _unlikely {
         throw utils::exception::ErrorException(utils::exception::InternalCode::InvalidId, "Can't link the id: 0");   
     } else if (!this->_links.contains(id)) _unlikely {
-        utils::exception::WarningException e(utils::exception::InternalCode::UnknowId, std::to_string(id));
+        utils::exception::WarningException e(utils::exception::InternalCode::UnknownId, std::to_string(id));
         std::cerr << e.formated() << std::endl;
         return;
     }

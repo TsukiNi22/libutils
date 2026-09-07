@@ -16,12 +16,12 @@ if [ "$mode" = "unregistered" ]; then
         echo "$files" | grep -q "$file" || echo "$file"
     done
     echo -e "╚═════ 🔺 [${CYAN}Unregistered Files${RESET}] 🔺 ═════╝"
-elif [ "$mode" = "unknow" ]; then
-    echo -e "╔════════ 🔻 [${CYAN}Unknow Files${RESET}] 🔻 ════════╗"
+elif [ "$mode" = "unknown" ]; then
+    echo -e "╔════════ 🔻 [${CYAN}Unknown Files${RESET}] 🔻 ════════╗"
     for file in $files; do
         [ -f "$file" ] || echo "$file"
     done
-    echo -e "╚════════ 🔺 [${CYAN}Unknow Files${RESET}] 🔺 ════════╝"
+    echo -e "╚════════ 🔺 [${CYAN}Unknown Files${RESET}] 🔺 ════════╝"
 fi
 
 # Remove the colors

@@ -11,8 +11,8 @@
             "restrictions": ["Fatal", "Error", "Warning"]
         },
         {
-            "code": "UnknowFlag",
-            "message": "Unknow flag",
+            "code": "UnknownFlag",
+            "message": "Unknown flag",
             "restrictions": ["Fatal", "Error", "Warning"]
         },
         {
