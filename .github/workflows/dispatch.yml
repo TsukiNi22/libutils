@@ -114,7 +114,7 @@ jobs:
 
   notify-release:
     needs: [dispatch, notify-build-packages]
-    if: needs.dispatch.outputs.ignore == 'false' && needs.dispatch.outputs.release == 'true' && (needs.notify-build-packages.result == 'success' || needs.notify-build-packages.result == 'skipped')
+    if: needs.dispatch.outputs.ignore == 'false' && (needs.dispatch.outputs.build == 'true' || needs.dispatch.outputs.release == 'true') && (needs.notify-build-packages.result == 'success' || needs.notify-build-packages.result == 'skipped')
 
     runs-on: ${{ vars.RUNNER }}
     defaults:
