@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Change the size setup for `SharedMemory` on 'client' side, it's auto now
 
 ### Added
+- Cmake support of versionning requirement using `find_package`
 - Methods `contains` for the `Settings` handler
 - Features for the `ArgParser` to handle raw text options
 
