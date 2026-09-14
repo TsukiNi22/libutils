@@ -66,6 +66,11 @@
             "restrictions": ["Fatal", "Error"]
         },
         {
+            "code": "Fstat",
+            "message": "Error during the fstat call",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
             "code": "Mmap",
             "message": "Error during the mmap call",
             "restrictions": ["Fatal", "Error"]

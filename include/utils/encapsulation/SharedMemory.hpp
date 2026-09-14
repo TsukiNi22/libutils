@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 06/09/2026 by @author Tsukini
+##  @date 14/09/2026 by @author Tsukini
 
 File Name:
 ##  @file SharedMemory.hpp
@@ -30,6 +30,7 @@ File Description:
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "../system/IdHandler.hpp"                  // utils::system::IdHandler<T>
     #include <sys/mman.h>                               // mmap, shm_open
+    #include <sys/stat.h>                               // fstat
     #include <unistd.h>                                 // close, ftruncate
     #include <fcntl.h>                                  // O_CREAT, O_RDWR
     #include <unordered_map>                            // std::unordered_map
@@ -51,6 +52,8 @@ namespace utils::encapsulation::shm { // namespace start
 
 struct ShmMetadata {
     //std::atomic<bool> lock{false}; // id handler lock | 0 = unlock, 1 = lock
+    std::size_t size = 0;
+    std::size_t queue = 0;
     std::atomic<std::uint16_t> connected{0}; // number of connected
     std::atomic<std::uint8_t> readable{0}; // (signal) awake the reader
 };
@@ -180,7 +183,7 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
 
         /* setup */
         template<bool create = true, utils::encapsulation::shm::LayoutPolicy policy = utils::encapsulation::shm::LayoutPolicy::Compact, std::size_t group_size = 2, bool forced = false>
-        void init(const std::string& name, std::size_t size, std::size_t queue = 1) // size is only for a single section, real size: sizeof(IdHandler lock) + (size + sizeof(metadata)) * queue
+        void init(const std::string& name, std::size_t size = 1, std::size_t queue = 1) // size/queue ignored in 'client' mode | size is only for a single section, real size: sizeof(IdHandler lock) + (size + sizeof(metadata)) * queue
         {
             if constexpr (!forced)
                 throw utils::exception::ErrorException(utils::exception::InternalCode::InvalidArgument, "Why? Do you want to create a empty memory??? (required: size > 0)");
@@ -204,6 +207,37 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
                 }
             }
 
+            // In 'client' mode extract size/queue
+            else {
+                struct stat st{};
+                if (::fstat(this->_fd, &st) == -1) _unlikely {
+                    ::close(this->_fd);
+                    this->_fd = -1;
+                    throw utils::exception::ErrorException(utils::exception::InternalCode::Fstat, ::strerror(errno));
+                }
+
+                // Alloc using real size
+                this->_ptr = ::mmap(
+                    nullptr,
+                    st.st_size,
+                    PROT_READ,
+                    MAP_SHARED,
+                    this->_fd,
+                    0
+                );
+                if (this->_ptr == MAP_FAILED) _unlikely {
+                    ::close(this->_fd);
+                    this->_fd = -1;
+                    this->_ptr = nullptr;
+                    throw utils::exception::ErrorException(utils::exception::InternalCode::Mmap, ::strerror(errno));
+                }
+
+                // Extract sub size information
+                utils::encapsulation::shm::ShmMetadata* metadata = (utils::encapsulation::shm::ShmMetadata*) this->_ptr;
+                this->_size = metadata->size;
+                this->_queue = metadata->queue;
+            }
+
             // compute size: metadata + (size + metadata) * queue
             std::size_t group_count = (this->_queue + group_size - 1) / group_size;
             std::size_t mem_size = utils::encapsulation::shm::align_ceil(sizeof(utils::encapsulation::shm::ShmMetadata));
@@ -215,28 +249,33 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
                 mem_size += utils::encapsulation::shm::align_ceil(this->_size + sizeof(utils::encapsulation::shm::ShmRequestMetadata)) * this->_queue;
             }
 
-            // allocate the memory
-            this->_ptr = ::mmap(
-                nullptr,
-                mem_size,
-                PROT_READ | PROT_WRITE,
-                MAP_SHARED,
-                this->_fd,
-                0
-            );
-            if (this->_ptr == MAP_FAILED) _unlikely {
-                ::close(this->_fd);
-                this->_fd = -1;
-                this->_ptr = nullptr;
-                throw utils::exception::ErrorException(utils::exception::InternalCode::Mmap, ::strerror(errno));
+            // Allocate the memory
+            if constexpr (create) {
+                this->_ptr = ::mmap(
+                    nullptr,
+                    mem_size,
+                    PROT_READ | PROT_WRITE,
+                    MAP_SHARED,
+                    this->_fd,
+                    0
+                );
+                if (this->_ptr == MAP_FAILED) _unlikely {
+                    ::close(this->_fd);
+                    this->_fd = -1;
+                    this->_ptr = nullptr;
+                    throw utils::exception::ErrorException(utils::exception::InternalCode::Mmap, ::strerror(errno));
+                }
             }
 
             // init global metadata and starting address
             utils::encapsulation::shm::ShmRequestMetadata* metadata = nullptr;
             std::byte *ptr_metadata, *ptr_bytes, *last_ptr_metadata, *last_ptr_bytes;
             std::byte* ptr = (std::byte*) this->_ptr;
-            if constexpr (create) this->_metadata = std::construct_at((utils::encapsulation::shm::ShmMetadata*) ptr);
-            else this->_metadata = (utils::encapsulation::shm::ShmMetadata*) ptr;
+            if constexpr (create) {
+                this->_metadata = std::construct_at((utils::encapsulation::shm::ShmMetadata*) ptr);
+                this->_metadata->size = this->_size;
+                this->_metadata->queue = this->_queue;
+            } else this->_metadata = (utils::encapsulation::shm::ShmMetadata*) ptr;
             ptr += utils::encapsulation::shm::align_ceil(sizeof(utils::encapsulation::shm::ShmMetadata));
             ptr_metadata = ptr; ptr_bytes = ptr;
             if constexpr (policy == utils::encapsulation::shm::LayoutPolicy::Compact) {
