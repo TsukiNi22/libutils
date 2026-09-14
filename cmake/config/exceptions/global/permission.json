@@ -4,6 +4,11 @@
             "code": "Override",
             "message": "The override is desactivated",
             "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "Sudo",
+            "message": "This action require sudo permission",
+            "restrictions": ["Fatal", "Error", "Warning"]
         }
     ]
 }

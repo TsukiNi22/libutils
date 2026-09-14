@@ -19,8 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 ## [pre-release]
+
+## v2.13.8 - 2026-09-14 (unofficial)
 ### Added
 - Warning/Macro for depreacated/soon removed support
+- Method to replace the actual process using `Process` (other `exec*` except for `execvp` are not supported for now)
 
 ## v2.13.7 - 2026-09-14 (unofficial)
 ### Fixed

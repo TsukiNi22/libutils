@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 29/08/2026 by @author Tsukini
+##  @date 14/09/2026 by @author Tsukini
 
 File Name:
 ##  @file Process.hpp
@@ -58,6 +58,7 @@ class Process: private utils::security::observer::Observer<"Process"> {
         bool is(void) const;
         pid_t spawn(void); // fork
         pid_t spawn(const std::string& path, const std::vector<std::string>& args); // execvp
+        void replace(const std::string& path, const std::vector<std::string>& args); // execvp
         utils::encapsulation::Status wait(void); // waitpid
         void kill(void); // -s 9
 

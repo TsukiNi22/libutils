@@ -93,6 +93,25 @@ _cold _nodiscard pid_t utils::encapsulation::Process::spawn(const std::string& p
     return this->_pid;
 }
 
+_cold void utils::encapsulation::Process::replace(const std::string& path, const std::vector<std::string>& args)
+{
+    if (this->_pid != -1) {
+        throw utils::exception::ErrorException(utils::exception::InternalCode::Process, "Process is already running, call kill() or wait() before spawn()");
+    }
+
+    // build argv
+    std::vector<char*> argv;
+    argv.push_back(const_cast<char*>(path.c_str()));
+    for (const std::string& s: args) argv.push_back(const_cast<char*>(s.c_str()));
+    argv.push_back(nullptr);
+
+    // replace this process by the new
+    ::execvp(path.c_str(), argv.data());
+
+    // execvp has failed
+    ::_exit(127);
+}
+
 _cold _nodiscard utils::encapsulation::Status utils::encapsulation::Process::wait(void)
 {
     if (this->_pid == 0) {
