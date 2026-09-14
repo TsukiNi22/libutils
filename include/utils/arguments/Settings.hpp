@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 20/08/2026 by @author Tsukini
+##  @date 14/09/2026 by @author Tsukini
 
 File Name:
 ##  @file Settings.hpp
@@ -162,6 +162,7 @@ class Settings: private utils::security::observer::Observer<"Settings"> {
         };
         void clear(void) {this->_settings.clear();};
         _nodiscard const utils::arguments::Setting& get(const std::string& id) const {return this->at(id);};
+        _nodiscard bool contains(const std::string& id) const {return this->_settings.contains(id);};
 
         // ------------ Operator ---------- //
         Settings& operator=(const Settings& other) = delete;
