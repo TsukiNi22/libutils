@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 20/08/2026 by @author Tsukini
+##  @date 14/09/2026 by @author Tsukini
 
 File Name:
 ##  @file CustomException.hpp

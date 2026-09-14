@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [pre-release] (empty)
 
+## v2.13.7 - 2026-09-14 (unofficial)
+### Fixed
+- **[MAJOR]** Missing exception constructor for `ExternalCode`
+
 ## [v2.13.6-pre] - 2026-09-14
 ### Changed
 - Change the size setup for `SharedMemory` on 'client' side, it's auto now

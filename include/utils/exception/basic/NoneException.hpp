@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 20/08/2026 by @author Tsukini
+##  @date 14/09/2026 by @author Tsukini
 
 File Name:
 ##  @file NoneException.hpp
@@ -34,6 +34,7 @@ class NoneException: public utils::exception::AException {
         // ---------- Constructor --------- //
         #ifdef GENERATED_EXTERNAL_EXCEPTION_HEADER_H
             _cold explicit NoneException(utils::exception::ExternalCode code, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::None, static_cast<utils::exception::InternalCode>(code)) {};
+            _cold NoneException(utils::exception::ExternalCode code, std::string info, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::None, static_cast<utils::exception::InternalCode>(code), info) {};
         #endif
         _cold explicit NoneException(utils::exception::InternalCode code = utils::exception::InternalCode::Undefined, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::None, code) {};
         _cold NoneException(utils::exception::InternalCode code, std::string info, std::source_location loc = std::source_location::current()) : AException(loc, utils::exception::Type::None, code, info) {};
