@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 06/09/2026 by @author Tsukini
+##  @date 14/09/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -34,9 +34,18 @@ File Description:
 /* Activate all automatic warning & _deprecated message */
 #ifdef _Warning
     #define DEPRECATED_WARNING // _deprecated(...)
+    #define BACKWARD_COMPATIBILITY_WARNING // Things that still here but soon will potentialy be removed (only keep for backward compatibility)
     #define LINKER_WARNING // Linker requirement
     #define USAGE_WARNING // Things that should be used carfully
     //#warning "All warnings from 'utils/utils.hpp' are disable"
+#endif
+
+/* --- Different Messages ---
+ * legacy -> _deprecated("Only kept for backward compatibility; no removal in sight ._.")
+ * temporary -> _deprecated("Retained for backward compatibility; will be removed in a future version (estimated: ~vx.x.x)")
+*/
+#ifdef BACKWARD_COMPATIBILITY_WARNING
+    /* Nothing for now or everything was removed... */
 #endif
 
 #ifdef LINKER_WARNING

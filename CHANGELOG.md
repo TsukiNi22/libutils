@@ -18,7 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [pre-release] (empty)
+## [pre-release]
+### Added
+- Warning/Macro for depreacated/soon removed support
 
 ## v2.13.7 - 2026-09-14 (unofficial)
 ### Fixed
