@@ -19,7 +19,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 ## [pre-release] (empty)
-### Added 
+
+## [v2.13.6-pre] - 2026-09-14
+### Changed
+- Change the size setup for `SharedMemory` on 'client' side, it's auto now
+
+### Added
+- Methods `contains` for the `Settings` handler
 - Features for the `ArgParser` to handle raw text options
 
 ## [v2.13.2] - 2026-09-06
@@ -129,7 +135,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial version of the utils library with multiple tools (see [README-1.0.0](https://github.com/TsukiNi22/libutils/blob/v1.0.0/README.md) for more details)
 
-[pre-release]: https://github.com/TsukiNi22/libutils/compare/v2.13.2...HEAD
+[pre-release]: https://github.com/TsukiNi22/libutils/compare/v2.13.6-pre...HEAD
+[v2.13.6-pre]: https://github.com/TsukiNi22/libutils/compare/v2.13.2...v2.13.6-pre
 [v2.13.2]: https://github.com/TsukiNi22/libutils/compare/v2.13.1-pre...v2.13.2
 [v2.13.1-pre]: https://github.com/TsukiNi22/libutils/compare/v2.12.2-pre...v2.13.1-pre
 [v2.12.2-pre]: https://github.com/TsukiNi22/libutils/compare/v2.11.0-pre...v2.12.2-pre
