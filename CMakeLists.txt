@@ -298,15 +298,28 @@ if(UTILS_DEV_PACKAGE)
     )
 endif()
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${TARGET}Config.cmake
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
-    COMPONENT headers
+set(CONFIG_INSTALL_DIR
+    ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
 )
 
 configure_package_config_file(
     ${CMAKE_SOURCE_DIR}/cmake/package/${TARGET}Config.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/${TARGET}Config.cmake
-    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET}
+    INSTALL_DESTINATION ${CONFIG_INSTALL_DIR}
+)
+
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/${TARGET}ConfigVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+
+install(
+    FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/${TARGET}Config.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/${TARGET}ConfigVersion.cmake
+    DESTINATION ${CONFIG_INSTALL_DIR}
+    COMPONENT headers
 )
 
 endif()
