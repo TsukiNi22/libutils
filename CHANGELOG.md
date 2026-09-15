@@ -18,7 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [pre-release]
+## [pre-release] (empty)
+
+## v2.13.10 - 2026-09-15 (unofficial)
 ### Added
 - Add auto ownership generation for `SharedMemory`
 - Warning for `_legacy` or `_migration(major, minor, fix)` on attribute
