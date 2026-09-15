@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 06/09/2026 by @author Tsukini
+##  @date 15/09/2026 by @author Tsukini
 
 File Name:
 ##  @file Hooks.cpp
@@ -43,7 +43,7 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
     const std::unordered_map<std::string, utils::arguments::Flag>&   flags   = parser.getFlags();
     const std::unordered_map<std::string, utils::arguments::Option>& options = parser.getOptions();
 
-    std::cout << utils::iomanip::format("<strong>PROJECT<>") << std::endl;
+    std::cout << utils::smanip::format("<strong>PROJECT<>") << std::endl;
     std::cout << utils::iomanip::color(utils::iomanip::Color::Cyan) << "\t" << parser.getDescription() << std::endl;
     std::cout << utils::iomanip::reset() << std::endl;
 
@@ -54,7 +54,7 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
     }
     maxNameLen += 2;
 
-    std::cout << utils::iomanip::format("<strong>USAGE<>") << std::endl;
+    std::cout << utils::smanip::format("<strong>USAGE<>") << std::endl;
     std::cout << utils::iomanip::color(utils::iomanip::Color::Magenta);
     bool defaultUsage = false;
     for (const auto& [idU, usage]: usages) {
@@ -113,7 +113,7 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
     }
     std::cout << utils::iomanip::reset() << std::endl;
 
-    std::cout << utils::iomanip::format("<strong>OPTIONS<>") << std::endl;
+    std::cout << utils::smanip::format("<strong>OPTIONS<>") << std::endl;
     for (const auto& [_, option]: options) {
         std::cout << utils::iomanip::color(utils::iomanip::Color::Green) << "\t" << option.name << utils::iomanip::reset() << std::endl;
         std::cout << "\t\t" << option.description << std::endl;
@@ -121,7 +121,7 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
     if (options.size() == 0) std::cout << "\tNothing..." << std::endl;;
     std::cout << utils::iomanip::reset() << std::endl;
 
-    std::cout << utils::iomanip::format("<strong>FLAGS<>") << std::endl;
+    std::cout << utils::smanip::format("<strong>FLAGS<>") << std::endl;
     std::cout << utils::iomanip::color(utils::iomanip::Color::Green) << "\t" << "-h, -help, --help" << utils::iomanip::reset() << std::endl;
     std::cout << "\t\t" << "Display this help and exit" << std::endl;
     for (const auto& [_, flag]: flags) {
@@ -141,7 +141,7 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
     if (flags.size() == 0) std::cout << "\tNothing..." << std::endl;;
     std::cout << utils::iomanip::reset() << std::endl;
 
-    std::cout << utils::iomanip::format("<strong>ENVIRONMENT<>") << std::endl;
+    std::cout << utils::smanip::format("<strong>ENVIRONMENT<>") << std::endl;
     bool none = true;
     for (const auto& [_, flag]: parser.getFlags()) {
         const auto& [fshort, fflag, flong, fenv] = flag.flag;

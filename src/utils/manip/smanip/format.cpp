@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 20/07/2026 by @author Tsukini
+##  @date 15/09/2026 by @author Tsukini
 
 File Name:
 ##  @file format.cpp
@@ -45,7 +45,7 @@ static const std::unordered_map<std::string, std::function<void(std::string&)>> 
     {"indice",          [](std::string& s){s += utils::iomanip::indice();}},
 };
 
-_nodiscard std::string utils::iomanip::format(const std::string& s)
+_nodiscard std::string utils::smanip::format(const std::string& s)
 {
     // Init the string
     std::string formated;

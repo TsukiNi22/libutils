@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 set(TARGET utils)
-project(${TARGET} VERSION 2.13.9 LANGUAGES CXX)
+project(${TARGET} VERSION 2.13.10 LANGUAGES CXX)
 
 # =========================
 # Options
@@ -18,6 +18,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_COMPILER clang++)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON) # Moderne compilation -fPIE
+add_compile_definitions(BACKWARD_COMPATIBILITY_WARNING) # To check internal usage for potential depreacted function
 
 # =========================
 # Requirement

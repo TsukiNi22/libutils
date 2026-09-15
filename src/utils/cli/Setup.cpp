@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 25/07/2026 by @author Tsukini
+##  @date 15/09/2026 by @author Tsukini
 
 File Name:
 ##  @file Setup.cpp
@@ -147,8 +147,8 @@ static void displayCode(const utils::cli::Cli& cli)
     std::cout << utils::iomanip::strong();
     if (code == 0) std::cout << utils::iomanip::color_rgb(0, 255, 0) << "✔ ";
     else std::cout << utils::iomanip::color_rgb(255, 80, 80) << "✖ ";
-    std::cout << utils::iomanip::format(std::format("<><strong>[{:03}]<>", code));
-    std::cout << utils::iomanip::format("<strong>➤ ");
+    std::cout << utils::smanip::format(std::format("<><strong>[{:03}]<>", code));
+    std::cout << utils::smanip::format("<strong>➤ ");
     std::cout << utils::iomanip::color_rgb(0, 200, 200) << cli.strcode(code) << utils::iomanip::reset();
     std::cout << std::endl << std::flush;
 }

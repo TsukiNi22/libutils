@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 18/05/2026 by @author Tsukini
+##  @date 15/09/2026 by @author Tsukini
 
 File Name:
 ##  @file Format.hpp
@@ -24,9 +24,10 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include <string>   // std::string
+    #include "../../attribute/Attribute.hpp"    // _migration
+    #include <string>                           // std::string
 
-namespace utils::iomanip { // namespace start
+namespace utils::smanip { // namespace start
 //----------------------------------------------------------------//
 /* PROTOTYPE */
 
@@ -76,4 +77,11 @@ not for now:
 */
 
 } // namespace end
+
+//----------------------------------------------------------------//
+/* MIGRATION */
+namespace utils::iomanip {
+    _migration(3, 0, 0) inline std::string format(const std::string& s) {return utils::smanip::format(s);};
+}
+
 #endif /* FORMAT_H */
