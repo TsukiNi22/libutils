@@ -43,14 +43,16 @@ _cold _nodiscard pid_t utils::encapsulation::Process::spawn(void)
         throw utils::exception::ErrorException(utils::exception::InternalCode::Process, "Process is already running, call kill() or wait() before spawn()");
     }
 
+    // Init the pipe
+    for (utils::encapsulation::Pipe& pipe: _pipes) pipe.trigger();
+
     if ((this->_pid = ::fork()) == -1) _unlikely {
         throw utils::exception::ErrorException(utils::exception::InternalCode::Kill, ::strerror(errno));
     }
 
     // child
     if (this->_pid == 0) {
-        // Init the pipe & dup
-        for (utils::encapsulation::Pipe& pipe: _pipes) pipe.trigger();
+        // Init the dup
         for (utils::encapsulation::Dup& dup: _dups) dup.trigger();
 
         return this->_pid;
@@ -66,14 +68,16 @@ _cold _nodiscard pid_t utils::encapsulation::Process::spawn(const std::string& p
         throw utils::exception::ErrorException(utils::exception::InternalCode::Process, "Process is already running, call kill() or wait() before spawn()");
     }
 
+    // Init the pipe
+    for (utils::encapsulation::Pipe& pipe: _pipes) pipe.trigger();
+
     if ((this->_pid = ::fork()) == -1) _unlikely {
         throw utils::exception::ErrorException(utils::exception::InternalCode::Kill, ::strerror(errno));
     }
 
     // child
     if (this->_pid == 0) {
-        // Init the pipe & dup
-        for (utils::encapsulation::Pipe& pipe: _pipes) pipe.trigger();
+        // Init the dup
         for (utils::encapsulation::Dup& dup: _dups) dup.trigger();
 
         // build argv
@@ -98,6 +102,10 @@ _cold void utils::encapsulation::Process::replace(const std::string& path, const
     if (this->_pid != -1) {
         throw utils::exception::ErrorException(utils::exception::InternalCode::Process, "Process is already running, call kill() or wait() before spawn()");
     }
+ 
+    // Init the pipe & dup
+    for (utils::encapsulation::Pipe& pipe: _pipes) pipe.trigger();
+    for (utils::encapsulation::Dup& dup: _dups) dup.trigger();
 
     // build argv
     std::vector<char*> argv;

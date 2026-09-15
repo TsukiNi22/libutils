@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 14/09/2026 by @author Tsukini
+##  @date 15/09/2026 by @author Tsukini
 
 File Name:
 ##  @file SharedMemory.hpp
@@ -25,7 +25,7 @@ File Description:
 
     /* type */
     #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
-    #include "../attribute/Attribute.hpp"               // _cold, _hot, _nodiscard, _unlikely, std::hardware_destructive_interference_size
+    #include "../attribute/Attribute.hpp"               // _cold, _hot, _nodiscard, _unlikely, _deprecated, _legacy, std::hardware_destructive_interference_size
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::Type, utils::exception::InternalCode
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "../system/IdHandler.hpp"                  // utils::system::IdHandler<T>
@@ -37,7 +37,7 @@ File Description:
     #include <optional>                                 // std::optional
     #include <cstring>                                  // strerror
     #include <cstddef>                                  // std::size_t, std::byte
-    #include <cstdint>                                  // std::uint8_t
+    #include <cstdint>                                  // std::uint8_t, std::uint16_t
     #include <thread>                                   // std::jthread, std::this_thread::yield
     #include <atomic>                                   // std::atomic
     #include <vector>                                   // std::vector
@@ -54,13 +54,13 @@ struct ShmMetadata {
     //std::atomic<bool> lock{false}; // id handler lock | 0 = unlock, 1 = lock
     std::size_t size = 0;
     std::size_t queue = 0;
-    std::atomic<std::uint16_t> connected{0}; // number of connected
+    std::atomic<pid_t> connected{0}; // number of connected
     std::atomic<std::uint8_t> readable{0}; // (signal) awake the reader
 };
 
 struct Id {
     std::size_t id = 0; // 0 == invalid/unset id
-    std::uint16_t ownership = 0; // ownership of the id
+    pid_t ownership = 0; // ownership of the id
 
     // ------------ Operator ---------- //
     bool operator==(const Id& other) const {return id == other.id && ownership == other.ownership;};
@@ -69,12 +69,12 @@ struct Id {
     // ---------- Constructor --------- //
     Id() = default;
     Id(std::size_t id): id{id} {}
-    Id(std::size_t id, std::uint16_t ownership): id{id}, ownership{ownership} {}
+    Id(std::size_t id, pid_t ownership): id{id}, ownership{ownership} {}
 };
 
 struct Target {
     std::size_t limit = 0; // number of people who will read it (0 = inf)
-    std::uint16_t ownership = 0; // to only a specific reader
+    pid_t ownership = 0; // to only a specific reader
     bool global = false; // to all reader
     std::atomic<std::size_t> readed{0}; // number of time readed
 };
@@ -128,7 +128,7 @@ namespace std {
     struct hash<utils::encapsulation::shm::Id> {
         std::size_t operator()(const utils::encapsulation::shm::Id& id) const {
             std::size_t h1 = std::hash<std::size_t>{}(id.id);
-            std::size_t h2 = std::hash<std::uint16_t>{}(id.ownership);
+            std::size_t h2 = std::hash<pid_t>{}(id.ownership);
             return h1 ^ (h2 << 1);
         }
     };
@@ -149,7 +149,7 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
         /* shm */
         std::size_t _queue = 1;
         std::size_t _size = 0;
-        std::uint16_t _ownership = 0; // 0 = creator, 1 = user, n = custom
+        pid_t _ownership = 0;
         int _fd = -1;
         void* _ptr = nullptr;
         utils::encapsulation::shm::ShmMetadata* _metadata;
@@ -178,15 +178,16 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
         void join(utils::encapsulation::shm::Id id); // for a specifc id to be readed
 
         // ------------ Function ---------- //
-        _cold inline void ownership(std::uint16_t ownership) {this->_ownership = ownership;};
-        _hot _nodiscard inline std::uint16_t ownership(void) const {return this->_ownership;};
+        _cold inline void ownership(pid_t ownership) {this->_ownership = ownership;};
+        _hot _nodiscard inline pid_t ownership(void) const {return this->_ownership;};
 
         /* setup */
-        template<bool create = true, utils::encapsulation::shm::LayoutPolicy policy = utils::encapsulation::shm::LayoutPolicy::Compact, std::size_t group_size = 2, bool forced = false>
+        template<bool create = false, utils::encapsulation::shm::LayoutPolicy policy = utils::encapsulation::shm::LayoutPolicy::Compact, std::size_t group_size = 2, bool forced = false>
         void init(const std::string& name, std::size_t size = 1, std::size_t queue = 1) // size/queue ignored in 'client' mode | size is only for a single section, real size: sizeof(IdHandler lock) + (size + sizeof(metadata)) * queue
         {
-            if constexpr (!forced)
-                throw utils::exception::ErrorException(utils::exception::InternalCode::InvalidArgument, "Why? Do you want to create a empty memory??? (required: size > 0)");
+            if constexpr (create && !forced) {
+                if (size == 0) throw utils::exception::ErrorException(utils::exception::InternalCode::InvalidArgument, "Why? Do you want to create a empty memory??? (required: size > 0)");
+            }
 
             // setup
             this->_queue = queue;
@@ -198,17 +199,8 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
                 throw utils::exception::ErrorException(utils::exception::InternalCode::ShmOpen, ::strerror(errno));
             }
 
-            // setup the memory in create mode
-            if constexpr (create) {
-                if (::ftruncate(this->_fd, static_cast<off_t>(this->_size)) == -1) _unlikely {
-                    ::close(this->_fd);
-                    this->_fd = -1;
-                    throw utils::exception::ErrorException(utils::exception::InternalCode::Ftruncate, ::strerror(errno));
-                }
-            }
-
             // In 'client' mode extract size/queue
-            else {
+            if constexpr (!create) {
                 struct stat st{};
                 if (::fstat(this->_fd, &st) == -1) _unlikely {
                     ::close(this->_fd);
@@ -249,8 +241,15 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
                 mem_size += utils::encapsulation::shm::align_ceil(this->_size + sizeof(utils::encapsulation::shm::ShmRequestMetadata)) * this->_queue;
             }
 
-            // Allocate the memory
+            // setup the memory in create mode
             if constexpr (create) {
+                if (::ftruncate(this->_fd, static_cast<off_t>(mem_size)) == -1) _unlikely {
+                    ::close(this->_fd);
+                    this->_fd = -1;
+                    throw utils::exception::ErrorException(utils::exception::InternalCode::Ftruncate, ::strerror(errno));
+                }
+
+                // Allocate the memory
                 this->_ptr = ::mmap(
                     nullptr,
                     mem_size,
@@ -317,13 +316,6 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
                 }
             }
 
-            enum class LayoutPolicy {
-                Compact,             // (meta,meta,...)(byte,byte,...)  — 1 writer, N readers
-                CompactSemiAligned,  // idem + alignement per groups    — some writers, some at the same time
-                Interleaved,         // (meta,byte,meta,byte,...)       — N writers moderated, payload >= cache-line (advise)
-                InterleavedAligned   // idem + alignas(hardware_destructive_interference_size) per slot — N writers, many at the same time
-            };
-
             // increment connected counter
             this->_metadata->connected.fetch_add(1, std::memory_order_relaxed);
         }
@@ -337,7 +329,8 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
         SharedMemory& operator=(SharedMemory&& other) = delete;
 
         // ---------- Constructor --------- //
-        SharedMemory(std::uint16_t ownership = 0): _ownership{ownership} {this->init_();};
+        _legacy SharedMemory(std::uint16_t ownership): _ownership{static_cast<pid_t>(ownership)} {this->init_();};
+        SharedMemory(pid_t ownership = ::getpid()): _ownership{ownership} {this->init_();};
         SharedMemory(const SharedMemory& other) = delete;
         SharedMemory(SharedMemory&& other) = delete;
 

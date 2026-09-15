@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 06/07/2026 by @author Tsukini
+##  @date 15/09/2026 by @author Tsukini
 
 File Name:
 ##  @file Attribute.hpp
@@ -51,7 +51,20 @@ File Description:
         #else
             #include "fallback.hpp"
         #endif
-    
+
+    #endif
+
+    // BACKWARD_COMPATIBILITY_WARNING
+    /* --- Different Messages ---
+     * legacy -> Only kept for backward compatibility; no removal in sight ._.
+     * migration -> Retained for backward compatibility; will be removed in a future version (estimated: ~vx.x.x)
+    */
+    #if defined(BACKWARD_COMPATIBILITY_WARNING) && !defined(NO_BACKWARD_COMPATIBILITY_WARNING)
+        #define _legacy _deprecated("Only kept for backward compatibility; no removal in sight ._.")
+        #define _migration(major, minor, fix) _deprecated("Retained for backward compatibility; will be removed in a future version (estimated: ~v" #major "." #minor "." #fix ")")
+    #else
+        #define _legacy
+        #define _migration(major, minor, fix)
     #endif
 
     // fallback (x86-64)

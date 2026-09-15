@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 14/09/2026 by @author Tsukini
+##  @date 15/09/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -40,14 +40,6 @@ File Description:
     //#warning "All warnings from 'utils/utils.hpp' are disable"
 #endif
 
-/* --- Different Messages ---
- * legacy -> _deprecated("Only kept for backward compatibility; no removal in sight ._.")
- * temporary -> _deprecated("Retained for backward compatibility; will be removed in a future version (estimated: ~vx.x.x)")
-*/
-#ifdef BACKWARD_COMPATIBILITY_WARNING
-    /* Nothing for now or everything was removed... */
-#endif
-
 #ifdef LINKER_WARNING
     #define BASE64CODEC_LINKER_WARNING
     #define RSAKEY_LINKER_WARNING
@@ -62,6 +54,7 @@ File Description:
 /* Desactivate all automatic warning & _deprecated message */
 #ifdef _NoWarning
     #define NO_DEPRECATED_WARNING // _deprecated(...)
+    #define BACKWARD_COMPATIBILITY_WARNING // Things that still here but soon will potentialy be removed (only keep for backward compatibility)
     #define NO_LINKER_WARNING // Linker requirement
     #define NO_USAGE_WARNING // Things that should be used carfully
     //#warning "All warnings from 'utils/utils.hpp' are disable"
