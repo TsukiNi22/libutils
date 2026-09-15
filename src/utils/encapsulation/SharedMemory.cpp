@@ -153,14 +153,16 @@ _hot void utils::encapsulation::SharedMemory::read_(void)
 
 _cold void utils::encapsulation::SharedMemory::close(void)
 {
-    // decrement connected counter
-    this->_metadata->connected.fetch_sub(1, std::memory_order_relaxed);
+    if (this->_metadata) {
+        // decrement connected counter
+        this->_metadata->connected.fetch_sub(1, std::memory_order_relaxed);
 
-    // stop the internal reader thread
-    this->_thread.request_stop();
-    this->_metadata->readable.fetch_add(1, std::memory_order_relaxed);
-    this->_metadata->readable.notify_all();
-    if (this->_thread.joinable()) this->_thread.join(); // wait for the stop
+        // stop the internal reader thread
+        this->_thread.request_stop();
+        this->_metadata->readable.fetch_add(1, std::memory_order_relaxed);
+        this->_metadata->readable.notify_all();
+        if (this->_thread.joinable()) this->_thread.join(); // wait for the stop
+    }
 
     // close
     if (this->_ptr) ::munmap(this->_ptr, this->_size);
