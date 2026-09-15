@@ -34,6 +34,9 @@ File Description:
 
 _cold void utils::encapsulation::SharedMemory::init_(void)
 {
+    // Do not start the thread if the shm is not initialized yet
+    if (!this->_metadata) return;
+
     this->_thread = std::jthread([this](std::stop_token stop_token) {
         // allow the thread to be awake when a stop is requested
         std::stop_callback wake_on_stop(stop_token, [this]() {

@@ -318,6 +318,9 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
 
             // increment connected counter
             this->_metadata->connected.fetch_add(1, std::memory_order_relaxed);
+
+            // start the auto-read thread now that metadata is initialized
+            this->init_();
         }
 
         /* communication */
@@ -329,8 +332,8 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
         SharedMemory& operator=(SharedMemory&& other) = delete;
 
         // ---------- Constructor --------- //
-        _legacy SharedMemory(std::uint16_t ownership): _ownership{static_cast<pid_t>(ownership)} {this->init_();};
-        SharedMemory(pid_t ownership = ::getpid()): _ownership{ownership} {this->init_();};
+        _legacy SharedMemory(std::uint16_t ownership): _ownership{static_cast<pid_t>(ownership)} {};
+        SharedMemory(pid_t ownership = ::getpid()): _ownership{ownership} {};
         SharedMemory(const SharedMemory& other) = delete;
         SharedMemory(SharedMemory&& other) = delete;
 
