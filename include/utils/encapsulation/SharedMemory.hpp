@@ -212,7 +212,7 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
                 this->_ptr = ::mmap(
                     nullptr,
                     st.st_size,
-                    PROT_READ,
+                    PROT_READ | PROT_WRITE,
                     MAP_SHARED,
                     this->_fd,
                     0

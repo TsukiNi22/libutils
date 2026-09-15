@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [pre-release] (empty)
 
+## v2.13.11 - 2026-09-15 (unofficial)
+### Fixed
+- In `SharedMemory`, fix the permission of the memory opened has a 'client'
+
 ## v2.13.10 - 2026-09-15 (unofficial)
 ### Added
 - Add auto ownership generation for `SharedMemory`
