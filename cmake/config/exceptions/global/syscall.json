@@ -74,6 +74,16 @@
             "code": "Mmap",
             "message": "Error during the mmap call",
             "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "Read",
+            "message": "Error during the read call",
+            "restrictions": ["Fatal", "Error"]
+        },
+        {
+            "code": "Write",
+            "message": "Error during the write call",
+            "restrictions": ["Fatal", "Error"]
         }
     ]
 }
