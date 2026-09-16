@@ -23,13 +23,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## v2.13.15 - 2026-09-15 (unofficial)
 ### Fixed
 - **[MAJOR]** Missing exception constructor for `ExternalCode`
-- Invalid awake for last enable during jooin of `SharedMemory`
+- Invalid awake for last enable during join of `SharedMemory`
 - The internal thread of `SharedMemory` was trying to read uninitialized data
 - In `SharedMemory`, fix the permission of the memory opened has a 'client' and add the closing missing check
 - `SharedMemory` size init check (was always failling in normal mode)
 
 ### Added
-- Add auto ownership generation and join implementation (forgot) for `SharedMemory`
+- Add auto ownership generation and join implementation (forgot) for `SharedMemory` and last filter mode for read
 - Warning for `_legacy` or `_migration(major, minor, fix)` on attribute
 - Warning/Macro for depreacated/soon removed support
 - Method to replace the actual process using `Process` (other `exec*` except for `execvp` are not supported for now)

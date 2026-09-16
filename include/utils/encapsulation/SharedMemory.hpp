@@ -106,7 +106,7 @@ static_assert(std::atomic<std::uint8_t>::is_always_lock_free);
 static_assert(std::is_standard_layout_v<utils::encapsulation::shm::ShmMetadata>);
 static_assert(std::is_standard_layout_v<utils::encapsulation::shm::ShmRequestMetadata>);
 
-enum class ReadFilter {All, ZeroOnly, NonZeroOnly};
+enum class ReadFilter {All, ZeroOnly, NonZeroOnly, LastOnly};
 enum class LayoutPolicy {
     Compact,             // (meta,meta,...)(byte,byte,...)  — 1 writer, N readers
     CompactSemiAligned,  // idem + alignement per groups    — some writers, some at the same time

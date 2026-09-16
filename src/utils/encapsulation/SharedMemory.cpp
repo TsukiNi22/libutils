@@ -265,14 +265,21 @@ _hot _nodiscard std::optional<std::unordered_map<utils::encapsulation::shm::Id, 
     std::unordered_map<utils::encapsulation::shm::Id, std::vector<std::vector<std::byte>>> values;
     if (filter == utils::encapsulation::shm::ReadFilter::All) {
         this->_data.swap(values);
+        this->_lastIds.clear();
     } else {
         for (auto it = this->_data.begin(); it != this->_data.end();) {
-            bool isZero = (it->first.id == 0);
-            bool match = ((filter == utils::encapsulation::shm::ReadFilter::ZeroOnly) ? isZero : !isZero);
+            const utils::encapsulation::shm::Id key = it->first; // keep a copy before any erase
+            bool match;
+            if (filter == utils::encapsulation::shm::ReadFilter::LastOnly) {
+                match = this->_lastIds.contains(key);
+            } else {
+                bool isZero = (key.id == 0);
+                match = ((filter == utils::encapsulation::shm::ReadFilter::ZeroOnly) ? isZero : !isZero);
+            }
             if (match) {
                 values.emplace(std::move(it->first), std::move(it->second));
                 it = this->_data.erase(it);
-                this->_lastIds.erase(it->first);
+                this->_lastIds.erase(key);
             } else {
                 ++it;
             }
