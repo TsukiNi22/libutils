@@ -134,6 +134,10 @@ _hot void utils::encapsulation::SharedMemory::read_(void)
             else if (this->_ownerships.contains(id)) this->_ownerships.erase(id);
         } else if (last) this->_await.insert(id.id); // shouldn't be able to fail in any case (failsafe)
 
+        // Notify join calls
+        if (last) this->_last.fetch_add(1, std::memory_order_relaxed);
+        this->_cv.notify_all();
+
         // clear it's presence has a reader (if it's the last, then empty the slot)
         if (global) {
             // if there is other reader
@@ -313,4 +317,32 @@ _hot _nodiscard bool utils::encapsulation::SharedMemory::readable(const utils::e
         if ((id.id == 0) == wantZero) return true;
     }
     return false;
+}
+
+_hot void utils::encapsulation::SharedMemory::join(bool last) const
+{
+    if (!this->_ptr) return; // shm not initialized
+    std::unique_lock<std::mutex> lock(this->_lock);
+
+    if (!last) {
+        this->_cv.wait(lock, [this]{return !this->_data.empty();});
+    } else {
+        std::size_t generation = this->_last.load(std::memory_order_relaxed);
+        this->_cv.wait(lock, [this, generation]{return this->_last.load(std::memory_order_relaxed) != generation;});
+    }
+}
+
+_hot void utils::encapsulation::SharedMemory::join(const utils::encapsulation::shm::Id& id, bool last) const
+{
+    if (!this->_ptr) return; // shm not initialized
+    std::unique_lock<std::mutex> lock(this->_lock);
+
+    if (!last) {
+        this->_cv.wait(lock, [this, &id]{return this->_data.contains(id);});
+    } else {
+        std::size_t generation = this->_last.load(std::memory_order_relaxed);
+        this->_cv.wait(lock, [this, &id, generation]{
+            return this->_data.contains(id) || this->_last.load(std::memory_order_relaxed) != generation;
+        });
+    }
 }

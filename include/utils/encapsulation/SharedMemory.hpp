@@ -33,6 +33,7 @@ File Description:
     #include <sys/stat.h>                               // fstat
     #include <unistd.h>                                 // close, ftruncate
     #include <fcntl.h>                                  // O_CREAT, O_RDWR
+    #include <condition_variable>                       // std::condition_variable
     #include <unordered_map>                            // std::unordered_map
     #include <optional>                                 // std::optional
     #include <cstring>                                  // strerror
@@ -145,6 +146,8 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
         std::unordered_map<utils::encapsulation::shm::Id, std::vector<std::vector<std::byte>>> _data;
         std::set<utils::encapsulation::shm::Id> _ownerships;
         std::set<std::size_t> _await; // id that await to be free on user read
+        mutable std::condition_variable _cv;
+        std::atomic<std::size_t> _last{0};
 
         /* shm */
         std::size_t _queue = 1;
@@ -174,8 +177,8 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
         std::optional<std::unordered_map<utils::encapsulation::shm::Id, std::vector<std::vector<std::byte>>>> read(const utils::encapsulation::shm::ReadFilter filter = utils::encapsulation::shm::ReadFilter::All);
         std::optional<std::vector<std::vector<std::byte>>> read(const utils::encapsulation::shm::Id& id);
         bool readable(const utils::encapsulation::shm::ReadFilter filter = utils::encapsulation::shm::ReadFilter::All) const;
-        void join(void); // wait for anything to be readed
-        void join(utils::encapsulation::shm::Id id); // for a specifc id to be readed
+        void join(bool last = false) const; // wait for anything to be readed (or any last to be readed)
+        void join(const utils::encapsulation::shm::Id& id, bool last = false) const; // for a specifc id to be readed (wait until the last awnser or just any)
 
         // ------------ Function ---------- //
         _cold inline void ownership(pid_t ownership) {this->_ownership = ownership;};
