@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 15/09/2026 by @author Tsukini
+##  @date 16/09/2026 by @author Tsukini
 
 File Name:
 ##  @file SharedMemory.cpp
@@ -135,7 +135,10 @@ _hot void utils::encapsulation::SharedMemory::read_(void)
         } else if (last) this->_await.insert(id.id); // shouldn't be able to fail in any case (failsafe)
 
         // Notify join calls
-        if (last) this->_last.fetch_add(1, std::memory_order_relaxed);
+        if (last) {
+            this->_last.fetch_add(1, std::memory_order_relaxed);
+            this->_lastIds.insert(id);
+        }
         this->_cv.notify_all();
 
         // clear it's presence has a reader (if it's the last, then empty the slot)
@@ -269,6 +272,7 @@ _hot _nodiscard std::optional<std::unordered_map<utils::encapsulation::shm::Id, 
             if (match) {
                 values.emplace(std::move(it->first), std::move(it->second));
                 it = this->_data.erase(it);
+                this->_lastIds.erase(it->first);
             } else {
                 ++it;
             }
@@ -302,6 +306,7 @@ _hot _nodiscard std::optional<std::vector<std::vector<std::byte>>> utils::encaps
         this->_idHandler.free(key.id);
     }
     this->_data.erase(it);
+    this->_lastIds.erase(key);
 
     return value;
 }
@@ -340,9 +345,6 @@ _hot void utils::encapsulation::SharedMemory::join(const utils::encapsulation::s
     if (!last) {
         this->_cv.wait(lock, [this, &id]{return this->_data.contains(id);});
     } else {
-        std::size_t generation = this->_last.load(std::memory_order_relaxed);
-        this->_cv.wait(lock, [this, &id, generation]{
-            return this->_data.contains(id) || this->_last.load(std::memory_order_relaxed) != generation;
-        });
+        this->_cv.wait(lock, [this, &id]{return this->_lastIds.contains(id);});
     }
 }

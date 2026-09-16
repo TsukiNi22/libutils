@@ -20,9 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [pre-release] (empty)
 
-## v2.13.14 - 2026-09-15 (unofficial)
+## v2.13.15 - 2026-09-15 (unofficial)
 ### Fixed
 - **[MAJOR]** Missing exception constructor for `ExternalCode`
+- Invalid awake for last enable during jooin of `SharedMemory`
 - The internal thread of `SharedMemory` was trying to read uninitialized data
 - In `SharedMemory`, fix the permission of the memory opened has a 'client' and add the closing missing check
 - `SharedMemory` size init check (was always failling in normal mode)

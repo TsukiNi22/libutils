@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 15/09/2026 by @author Tsukini
+##  @date 16/09/2026 by @author Tsukini
 
 File Name:
 ##  @file SharedMemory.hpp
@@ -35,6 +35,7 @@ File Description:
     #include <fcntl.h>                                  // O_CREAT, O_RDWR
     #include <condition_variable>                       // std::condition_variable
     #include <unordered_map>                            // std::unordered_map
+    #include <unordered_set>                            // std::unordered_set
     #include <optional>                                 // std::optional
     #include <cstring>                                  // strerror
     #include <cstddef>                                  // std::size_t, std::byte
@@ -45,7 +46,6 @@ File Description:
     #include <string>                                   // std::string
     #include <cerrno>                                   // errno
     #include <mutex>                                    // std::mutex
-    #include <set>                                      // std::set
 
 namespace utils::encapsulation::shm { // namespace start
 //----------------------------------------------------------------//
@@ -144,10 +144,11 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
         mutable std::mutex _lock;
         utils::system::IdHandler<std::size_t> _idHandler;
         std::unordered_map<utils::encapsulation::shm::Id, std::vector<std::vector<std::byte>>> _data;
-        std::set<utils::encapsulation::shm::Id> _ownerships;
-        std::set<std::size_t> _await; // id that await to be free on user read
+        std::unordered_set<utils::encapsulation::shm::Id> _ownerships;
+        std::unordered_set<std::size_t> _await; // id that await to be free on user read
         mutable std::condition_variable _cv;
         std::atomic<std::size_t> _last{0};
+        std::unordered_set<utils::encapsulation::shm::Id> _lastIds;
 
         /* shm */
         std::size_t _queue = 1;
