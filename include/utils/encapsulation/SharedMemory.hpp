@@ -56,7 +56,7 @@ struct ShmMetadata {
     std::size_t size = 0;
     std::size_t queue = 0;
     std::atomic<pid_t> connected{0}; // number of connected
-    std::atomic<std::uint8_t> readable{0}; // (signal) awake the reader
+    std::atomic<std::uint32_t> readable{1}; // (signal) awake the reader
 };
 
 struct Id {
@@ -74,6 +74,7 @@ struct Id {
 };
 
 struct Target {
+    pid_t sender = 0; // ownership of the sender
     std::size_t limit = 0; // number of people who will read it (0 = inf)
     pid_t ownership = 0; // to only a specific reader
     bool global = false; // to all reader
@@ -102,7 +103,7 @@ struct Slot {
 };
 
 //static_assert(std::atomic<bool>::is_always_lock_free);
-static_assert(std::atomic<std::uint8_t>::is_always_lock_free);
+static_assert(std::atomic<std::uint32_t>::is_always_lock_free);
 static_assert(std::is_standard_layout_v<utils::encapsulation::shm::ShmMetadata>);
 static_assert(std::is_standard_layout_v<utils::encapsulation::shm::ShmRequestMetadata>);
 
@@ -153,10 +154,10 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
         /* shm */
         std::size_t _queue = 1;
         std::size_t _size = 0;
-        pid_t _ownership = 0;
+        pid_t _ownership = 0; // 0 is reserved for unilateral sending
         int _fd = -1;
         void* _ptr = nullptr;
-        utils::encapsulation::shm::ShmMetadata* _metadata;
+        utils::encapsulation::shm::ShmMetadata* _metadata = nullptr;
         std::vector<utils::encapsulation::shm::Slot> _slots;
 
         /* internal */
@@ -285,6 +286,8 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
                 ptr_bytes += sizeof(utils::encapsulation::shm::ShmRequestMetadata) * this->_queue;
             } else if constexpr (policy == utils::encapsulation::shm::LayoutPolicy::CompactSemiAligned) {
                 ptr_bytes += utils::encapsulation::shm::align_ceil(sizeof(utils::encapsulation::shm::ShmRequestMetadata) * group_size) * group_count;
+            } else {
+                ptr_bytes += sizeof(utils::encapsulation::shm::ShmRequestMetadata);
             }
             last_ptr_metadata = ptr_metadata; last_ptr_bytes = ptr_bytes;
 
@@ -310,13 +313,13 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
                         ptr_bytes += this->_size;
                     }
                 } else if constexpr (policy == utils::encapsulation::shm::LayoutPolicy::Interleaved) {
-                    ptr_metadata = ptr;
-                    ptr_bytes = ptr_metadata + sizeof(utils::encapsulation::shm::ShmRequestMetadata);
                     ptr = ptr_bytes + this->_size;
-                } else if constexpr (policy == utils::encapsulation::shm::LayoutPolicy::InterleavedAligned) {
                     ptr_metadata = ptr;
                     ptr_bytes = ptr_metadata + sizeof(utils::encapsulation::shm::ShmRequestMetadata);
+                } else if constexpr (policy == utils::encapsulation::shm::LayoutPolicy::InterleavedAligned) {
                     ptr += utils::encapsulation::shm::align_ceil(sizeof(utils::encapsulation::shm::ShmRequestMetadata) + this->_size);
+                    ptr_metadata = ptr;
+                    ptr_bytes = ptr_metadata + sizeof(utils::encapsulation::shm::ShmRequestMetadata);
                 }
             }
 
@@ -328,6 +331,7 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
         }
 
         /* communication */
+        _hot inline void trigger(void) {this->read_();}; // auto in normal case
         _hot inline void send(const std::vector<std::byte>& bytes, std::size_t id, bool last, bool failsafe) {this->send(bytes, {id, this->_ownership}, last, failsafe);}
         _hot _nodiscard inline bool readable(const utils::encapsulation::shm::Id& id) const {std::lock_guard<std::mutex> lock(this->_lock); return this->_data.contains(id);};
 

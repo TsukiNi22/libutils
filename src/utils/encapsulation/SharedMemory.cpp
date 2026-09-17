@@ -22,15 +22,46 @@ File Description:
 #include "utils/exception/basic/ErrorException.hpp"
 #include "utils/exception/basic/NoneException.hpp"
 #include "utils/encapsulation/SharedMemory.hpp"
+#include <linux/futex.h>
+#include <sys/syscall.h>
 #include <sys/mman.h>
 #include <unistd.h>
 #include <optional>
 #include <cstddef>
 #include <cstring>
+#include <cstdint>
 #include <thread>
 #include <vector>
 #include <string>
+#include <limits>
 #include <mutex>
+
+static inline void futex_wait(std::atomic<std::uint32_t>* addr, std::uint32_t expected)
+{
+    (void)static_cast<int>(::syscall(
+        SYS_futex,
+        reinterpret_cast<std::uint32_t*>(addr),
+        FUTEX_WAIT,
+        expected,
+        nullptr,
+        nullptr,
+        0
+    ));
+}
+
+// won't wakeup after 2^32 call for one call (can be ignored, data will be read on the next)
+static inline void futex_wake(std::atomic<std::uint32_t>* addr)
+{
+    (void)static_cast<int>(::syscall(
+        SYS_futex,
+        reinterpret_cast<std::uint32_t*>(addr),
+        FUTEX_WAKE,
+        UINT32_MAX,
+        nullptr,
+        nullptr,
+        0
+    ));
+}
 
 _cold void utils::encapsulation::SharedMemory::init_(void)
 {
@@ -41,13 +72,13 @@ _cold void utils::encapsulation::SharedMemory::init_(void)
         // allow the thread to be awake when a stop is requested
         std::stop_callback wake_on_stop(stop_token, [this]() {
             this->_metadata->readable.fetch_add(1, std::memory_order_release);
-            this->_metadata->readable.notify_all();
+            futex_wake(&this->_metadata->readable);
         });
 
         while (!stop_token.stop_requested()) {
             // wait for trigger from atomic notifier in metatdata
             auto current = this->_metadata->readable.load(std::memory_order_relaxed);
-            this->_metadata->readable.wait(current, std::memory_order_acquire);
+            futex_wait(&this->_metadata->readable, current);
 
             // awake can also be trigger by a stop request
             if (stop_token.stop_requested()) break;
@@ -72,8 +103,8 @@ _hot void utils::encapsulation::SharedMemory::read_(void)
                 continue;
             }
 
-            // check if it's was destined to itself   
-            else if (slot.metadata->target.ownership != this->_ownership && !slot.metadata->target.global) {
+            // check if it's was destined to itself
+            else if (slot.metadata->target.sender == this->_ownership || (slot.metadata->target.ownership != this->_ownership && !slot.metadata->target.global)) {
                 slot.metadata->reader.fetch_sub(1, std::memory_order_relaxed);
                 continue;
             }
@@ -143,18 +174,35 @@ _hot void utils::encapsulation::SharedMemory::read_(void)
 
         // clear it's presence has a reader (if it's the last, then empty the slot)
         if (global) {
-            // if there is other reader
-            if (slot.metadata->reader.fetch_sub(1, std::memory_order_acq_rel) > 1) continue;
+            // if the limit is reach then reset slot
+            if (slot.metadata->target.readed.load(std::memory_order_acquire) < slot.metadata->target.limit) continue;
             expected = 2;
         } else { // sole reader assured
             expected = 1;
         }
 
-        // set flag to signal an empty slot
+        // set to unique mode (no more readed allowed)
+        (void)slot.metadata->flag.compare_exchange_strong(
+            expected, 1,
+            std::memory_order_acquire, std::memory_order_relaxed
+        );
+
+        // wait until there is no more reader
+        slot.metadata->reader.fetch_sub(1, std::memory_order_acq_rel);
+        while (slot.metadata->reader.load(std::memory_order_acquire) != 0)
+            std::this_thread::yield();
+
+        // set flag to signal an empty slot only when limit is reached
+        expected = 1;
         (void)slot.metadata->flag.compare_exchange_strong(
             expected, 0,
             std::memory_order_acquire, std::memory_order_relaxed
         );
+
+        // reset metadata value
+        while (slot.metadata->reader.load(std::memory_order_acquire) != 0) // precaution for unwanted reader
+            std::this_thread::yield();
+        std::construct_at(slot.metadata);
     }
 }
 
@@ -167,7 +215,7 @@ _cold void utils::encapsulation::SharedMemory::close(void)
         // stop the internal reader thread
         this->_thread.request_stop();
         this->_metadata->readable.fetch_add(1, std::memory_order_relaxed);
-        this->_metadata->readable.notify_all();
+        futex_wake(&this->_metadata->readable);
         if (this->_thread.joinable()) this->_thread.join(); // wait for the stop
     }
 
@@ -188,6 +236,9 @@ _cold void utils::encapsulation::SharedMemory::close(void)
 
 _hot void utils::encapsulation::SharedMemory::send_(const std::vector<std::byte>& bytes, const utils::encapsulation::shm::Id& id, bool last, bool failsafe)
 {
+    this->_metadata->readable.fetch_add(1, std::memory_order_relaxed);
+    futex_wake(&this->_metadata->readable);
+
     // check the size of the memory to write
     if (bytes.size() > this->_size) _unlikely {
         //this->_idHandler.free(id);
@@ -215,6 +266,13 @@ _hot void utils::encapsulation::SharedMemory::send_(const std::vector<std::byte>
         throw utils::exception::ErrorException(utils::exception::InternalCode::OutOfMemory);
     }
 
+    // setup target
+    utils::encapsulation::shm::Target& target = emptySlot.metadata->target;
+    target.sender = this->_ownership;
+    target.limit = 1;
+    target.ownership = 0;
+    target.global = true;
+
     // write the memory
     emptySlot.metadata->id = id;
     emptySlot.metadata->last = last;
@@ -224,7 +282,7 @@ _hot void utils::encapsulation::SharedMemory::send_(const std::vector<std::byte>
     // set the flag to: data to read
     emptySlot.metadata->flag.store(2, std::memory_order_release);
     this->_metadata->readable.fetch_add(1, std::memory_order_relaxed);
-    this->_metadata->readable.notify_all();
+    futex_wake(&this->_metadata->readable);
 }
 
 _hot void utils::encapsulation::SharedMemory::send(const std::vector<std::byte>& bytes, const utils::encapsulation::shm::Id& id, bool last, bool failsafe)

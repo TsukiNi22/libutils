@@ -20,13 +20,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [pre-release] (empty)
 
-## v2.13.15 - 2026-09-15 (unofficial)
+## v2.13.18 - 2026-09-15 (unofficial)
 ### Fixed
 - **[MAJOR]** Missing exception constructor for `ExternalCode`
-- Invalid awake for last enable during join of `SharedMemory`
+- Invalid awake for last enable during join of `SharedMemory` and invalid ptr initialized during `init` call
 - The internal thread of `SharedMemory` was trying to read uninitialized data
 - In `SharedMemory`, fix the permission of the memory opened has a 'client' and add the closing missing check
-- `SharedMemory` size init check (was always failling in normal mode)
+- `SharedMemory` size init check (was always failling in normal mode) and forgot to reset counter on slot metadata after reading
 
 ### Added
 - Add auto ownership generation and join implementation (forgot) for `SharedMemory` and last filter mode for read
