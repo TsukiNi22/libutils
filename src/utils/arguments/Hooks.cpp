@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 15/09/2026 by @author Tsukini
+##  @date 20/09/2026 by @author Tsukini
 
 File Name:
 ##  @file Hooks.cpp
@@ -220,6 +220,13 @@ std::optional<std::string> utils::arguments::defaultDoubleParsingHook(const std:
     } catch (const std::exception& e) {
         return std::string(e.what()) + ": " + option;
     }
+}
+
+std::optional<std::string> utils::arguments::defaultDirectoryParsingHook(const std::string& option)
+{
+    if (!std::filesystem::exists(option) || !std::filesystem::is_directory(option))
+        return "The given path isn't a valid directory: " + option;
+    return std::nullopt;
 }
 
 std::optional<std::string> utils::arguments::defaultFileParsingHook(const std::string& option)
