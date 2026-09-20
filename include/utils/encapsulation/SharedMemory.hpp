@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 16/09/2026 by @author Tsukini
+##  @date 21/09/2026 by @author Tsukini
 
 File Name:
 ##  @file SharedMemory.hpp
@@ -79,6 +79,12 @@ struct Target {
     pid_t ownership = 0; // to only a specific reader
     bool global = false; // to all reader
     std::atomic<std::size_t> readed{0}; // number of time readed
+
+    // ---------- Constructor --------- //
+    Target() = default;
+    Target(const std::size_t limit): limit{limit}, global{true} {};
+    Target(const std::size_t limit, const pid_t ownership): limit{limit}, ownership{ownership} {};
+
 };
 
 struct ShmRequestMetadata {
@@ -86,7 +92,7 @@ struct ShmRequestMetadata {
     std::atomic<std::size_t> reader{0}; // number of reader (if value need to be edited wait until reader == 1)
     utils::encapsulation::shm::Id id;
     utils::encapsulation::shm::Target target;
-    bool last = false; // free the id on read if it's is ownership, otherwhise remove it from it's storage
+    std::pair<bool, bool> last = {false, false}; // [last sending] only trigger the join | [last transmition] free the id on read if it's is ownership, otherwhise remove it from it's storage
     std::size_t size = 0; // total size of the bytes to not read the whole 'slot' with garbage from before
 };
 
@@ -166,7 +172,7 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
         // ---------- Pre-Function -------- //
         void init_(void); // create the internal thread
         void read_(void); // function call by the thread
-        void send_(const std::vector<std::byte>& bytes, const utils::encapsulation::shm::Id& id, bool last, bool failsafe);
+        void send_(const std::vector<std::byte>& bytes, const utils::encapsulation::shm::Id& id, const utils::encapsulation::shm::Target& target, std::pair<bool, bool> last, bool failsafe);
 
     public:
         // ---------- Pre-Function -------- //
@@ -174,8 +180,8 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
         void close(void);
 
         /* communication */
-        void send(const std::vector<std::byte>& bytes, const utils::encapsulation::shm::Id& id, bool last = true, bool failsafe = false); // force an id for the request
-        utils::encapsulation::shm::Id send(const std::vector<std::byte>& bytes, bool last = false, bool failsafe = false); // allocate an id for this request
+        void send(const std::vector<std::byte>& bytes, const utils::encapsulation::shm::Id& id, const utils::encapsulation::shm::Target& target, bool lastSending = false, bool lastTransmission = false, bool failsafe = false); // force an id for the request
+        utils::encapsulation::shm::Id send(const std::vector<std::byte>& bytes, const utils::encapsulation::shm::Target& target, bool lastSending = false, bool lastTransmission = false, bool failsafe = false); // allocate an id for this request
         std::optional<std::unordered_map<utils::encapsulation::shm::Id, std::vector<std::vector<std::byte>>>> read(const utils::encapsulation::shm::ReadFilter filter = utils::encapsulation::shm::ReadFilter::All);
         std::optional<std::vector<std::vector<std::byte>>> read(const utils::encapsulation::shm::Id& id);
         bool readable(const utils::encapsulation::shm::ReadFilter filter = utils::encapsulation::shm::ReadFilter::All) const;

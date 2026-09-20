@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 16/09/2026 by @author Tsukini
+##  @date 21/09/2026 by @author Tsukini
 
 File Name:
 ##  @file SharedMemory.cpp
@@ -159,14 +159,14 @@ _hot void utils::encapsulation::SharedMemory::read_(void)
         this->_data[id].push_back(std::move(bytes));
 
         // handle ownership storage?
-        bool last = slot.metadata->last;
+        auto [lastSending, lastTransmission] = slot.metadata->last;
         if (id.ownership != this->_ownership) {
-            if (!last) this->_ownerships.insert(id); // can fail (failsafe)
+            if (!lastTransmission) this->_ownerships.insert(id); // can fail (failsafe)
             else if (this->_ownerships.contains(id)) this->_ownerships.erase(id);
-        } else if (last) this->_await.insert(id.id); // shouldn't be able to fail in any case (failsafe)
+        } else if (lastTransmission) this->_await.insert(id.id); // shouldn't be able to fail in any case (failsafe)
 
         // Notify join calls
-        if (last) {
+        if (lastSending || lastTransmission) {
             this->_last.fetch_add(1, std::memory_order_relaxed);
             this->_lastIds.insert(id);
         }
@@ -234,7 +234,7 @@ _cold void utils::encapsulation::SharedMemory::close(void)
     this->_fd = -1;
 }
 
-_hot void utils::encapsulation::SharedMemory::send_(const std::vector<std::byte>& bytes, const utils::encapsulation::shm::Id& id, bool last, bool failsafe)
+_hot void utils::encapsulation::SharedMemory::send_(const std::vector<std::byte>& bytes, const utils::encapsulation::shm::Id& id, const utils::encapsulation::shm::Target& target, std::pair<bool, bool> last, bool failsafe)
 {
     this->_metadata->readable.fetch_add(1, std::memory_order_relaxed);
     futex_wake(&this->_metadata->readable);
@@ -267,11 +267,11 @@ _hot void utils::encapsulation::SharedMemory::send_(const std::vector<std::byte>
     }
 
     // setup target
-    utils::encapsulation::shm::Target& target = emptySlot.metadata->target;
-    target.sender = this->_ownership;
-    target.limit = 1;
-    target.ownership = 0;
-    target.global = true;
+    utils::encapsulation::shm::Target& metadata_target = emptySlot.metadata->target;
+    metadata_target.sender = this->_ownership;
+    metadata_target.limit = target.limit;
+    metadata_target.ownership = target.ownership;
+    metadata_target.global = target.global;
 
     // write the memory
     emptySlot.metadata->id = id;
@@ -285,30 +285,30 @@ _hot void utils::encapsulation::SharedMemory::send_(const std::vector<std::byte>
     futex_wake(&this->_metadata->readable);
 }
 
-_hot void utils::encapsulation::SharedMemory::send(const std::vector<std::byte>& bytes, const utils::encapsulation::shm::Id& id, bool last, bool failsafe)
+_hot void utils::encapsulation::SharedMemory::send(const std::vector<std::byte>& bytes, const utils::encapsulation::shm::Id& id, const utils::encapsulation::shm::Target& target, bool lastSending, bool lastTransmission, bool failsafe)
 {
     std::lock_guard<std::mutex> lock(this->_lock);
 
     // determine the ownership
     if (id.ownership == this->_ownership) _unlikely { // force alloc of id
-        this->_idHandler.use(id.id);
+        //this->_idHandler.use(id.id);
     } else if (this->_ownerships.contains(id)) _likely { // remove usless id
-        if (last) this->_ownerships.erase(id);
+        if (lastTransmission) this->_ownerships.erase(id);
     } else _unlikely {
         throw utils::exception::ErrorException(utils::exception::InternalCode::InvalidId, "This id is not registered in the internal storage, unknown pair of id/ownership...");
     }
 
     // redirect the call
-    this->send_(bytes, id, last, failsafe);
+    this->send_(bytes, id, target, {lastSending, lastTransmission}, failsafe);
 }
 
-_hot utils::encapsulation::shm::Id utils::encapsulation::SharedMemory::send(const std::vector<std::byte>& bytes, bool last, bool failsafe)
+_hot utils::encapsulation::shm::Id utils::encapsulation::SharedMemory::send(const std::vector<std::byte>& bytes, const utils::encapsulation::shm::Target& target, bool lastSending, bool lastTransmission, bool failsafe)
 {
     // allocate an id
-    utils::encapsulation::shm::Id id = {last ? 0 : this->_idHandler.allocate(), this->_ownership};
+    utils::encapsulation::shm::Id id = {lastTransmission ? 0 : this->_idHandler.allocate(), this->_ownership};
 
     // redirect the call
-    this->send_(bytes, id, last, failsafe);
+    this->send_(bytes, id, target, {lastSending, lastTransmission}, failsafe);
 
     return id;
 }

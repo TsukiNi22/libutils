@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [pre-release] (empty)
 
-## v2.13.19 - 2026-09-15 (unofficial)
+## v2.13.20 - 2026-09-15 (unofficial)
 ### Fixed
 - **[MAJOR]** Missing exception constructor for `ExternalCode`
 - Missing constructor/operator on `SharedObject` to allow std::move
@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `SharedMemory` size init check (was always failling in normal mode) and forgot to reset counter on slot metadata after reading
 
 ### Added
+- Add missing option to select a target to send on `SharedMemory`
 - Add missing default hook to check directory for `ArgParser`
 - Add auto ownership generation and join implementation (forgot) for `SharedMemory` and last filter mode for read
 - Warning for `_legacy` or `_migration(major, minor, fix)` on attribute

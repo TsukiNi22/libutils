@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 20/09/2026 by @author Tsukini
+##  @date 21/09/2026 by @author Tsukini
 
 File Name:
 ##  @file SharedObject.hpp
@@ -59,7 +59,7 @@ class SharedObject: private utils::security::observer::Observer<"SharedObject"> 
 
         // ------------ Operator ---------- //
         SharedObject& operator=(const SharedObject& other) = delete;
-        SharedObject& operator=(SharedObject&& other) {this->_lib = other._lib; this->_path = other._path; other._lib = nullptr; other._path.clear();};
+        SharedObject& operator=(SharedObject&& other) {this->_lib = other._lib; this->_path = other._path; other._lib = nullptr; other._path.clear(); return *this;};
 
         // ---------- Constructor --------- //
         SharedObject(const std::string& path);
