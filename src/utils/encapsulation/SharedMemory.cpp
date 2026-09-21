@@ -383,8 +383,8 @@ _hot _nodiscard std::optional<std::vector<std::vector<std::byte>>> utils::encaps
         this->_await.erase(key.id);
         this->_idHandler.free(key.id);
     }
-    this->_data.erase(it);
     this->_lastIds.erase(key);
+    this->_data.erase(it);
 
     return value;
 }
