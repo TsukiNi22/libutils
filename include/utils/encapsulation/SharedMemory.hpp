@@ -88,8 +88,9 @@ struct Target {
 };
 
 struct ShmRequestMetadata {
-    std::atomic<std::uint8_t> flag{0}; // request flag | 0 = no data / readed, 1 = in writting/reading (unique), 2 = data / to read (shared)
+    std::atomic<std::uint8_t> flag{0}; // request flag | 0 = no data / readed, 1 = in writting/reading (unique), 2 = data / to read (shared), 3 = reset in process
     std::atomic<std::size_t> reader{0}; // number of reader (if value need to be edited wait until reader == 1)
+    std::atomic<std::size_t> waiting{0}; // number of reader in waiting status (reset of data)
     utils::encapsulation::shm::Id id;
     utils::encapsulation::shm::Target target;
     std::pair<bool, bool> last = {false, false}; // [last sending] only trigger the join | [last transmition] free the id on read if it's is ownership, otherwhise remove it from it's storage

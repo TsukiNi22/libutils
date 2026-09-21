@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 26/08/2026 by @author Tsukini
+##  @date 21/09/2026 by @author Tsukini
 
 File Name:
 ##  @file Scheduler.hpp
@@ -86,6 +86,8 @@ class Scheduler: private utils::security::observer::Observer<"Scheduler"> {
                 std::lock_guard lock(this->_lock);
                 this->_finished.push_back(id);
             }));
+
+            return id;
         }
 
         // ------------ Operator ---------- //

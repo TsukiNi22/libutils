@@ -26,15 +26,20 @@ File Description:
 #include <sys/syscall.h>
 #include <sys/mman.h>
 #include <unistd.h>
+#include <functional>
 #include <optional>
 #include <cstddef>
 #include <cstring>
 #include <cstdint>
 #include <thread>
+#include <chrono>
 #include <vector>
 #include <string>
 #include <limits>
 #include <mutex>
+
+// allow use of 9min, 0ms, ...
+using namespace std::chrono_literals;
 
 static inline void futex_wait(std::atomic<std::uint32_t>* addr, std::uint32_t expected)
 {
@@ -75,10 +80,13 @@ _cold void utils::encapsulation::SharedMemory::init_(void)
             futex_wake(&this->_metadata->readable);
         });
 
+        std::uint32_t current = this->_metadata->readable.load(std::memory_order_relaxed);
         while (!stop_token.stop_requested()) {
-            // wait for trigger from atomic notifier in metatdata
-            auto current = this->_metadata->readable.load(std::memory_order_relaxed);
-            futex_wait(&this->_metadata->readable, current);
+            // loop for each wakeup called
+            if (current >= this->_metadata->readable.load(std::memory_order_acquire)) {
+                // wait for trigger from atomic notifier in metatdata
+                futex_wait(&this->_metadata->readable, this->_metadata->readable.load(std::memory_order_acquire));
+            } else ++current;
 
             // awake can also be trigger by a stop request
             if (stop_token.stop_requested()) break;
@@ -181,28 +189,36 @@ _hot void utils::encapsulation::SharedMemory::read_(void)
             expected = 1;
         }
 
-        // set to unique mode (no more readed allowed)
+        // set to reset mode (no more readed allowed)
         (void)slot.metadata->flag.compare_exchange_strong(
-            expected, 1,
+            expected, 3,
             std::memory_order_acquire, std::memory_order_relaxed
         );
 
         // wait until there is no more reader
         slot.metadata->reader.fetch_sub(1, std::memory_order_acq_rel);
+        slot.metadata->waiting.fetch_add(1, std::memory_order_acq_rel);
         while (slot.metadata->reader.load(std::memory_order_acquire) != 0)
             std::this_thread::yield();
 
+        // reset metadata value
+        std::size_t readed = slot.metadata->target.readed.load(std::memory_order_acquire);
+        (void)slot.metadata->target.readed.compare_exchange_strong(
+            readed, 0,
+            std::memory_order_acquire, std::memory_order_relaxed
+        );
+
+        // wait until there is no more reader in waiting status
+        slot.metadata->waiting.fetch_sub(1, std::memory_order_acq_rel);
+        while (slot.metadata->waiting.load(std::memory_order_acquire) != 0)
+            std::this_thread::yield();
+
         // set flag to signal an empty slot only when limit is reached
-        expected = 1;
+        expected = 3;
         (void)slot.metadata->flag.compare_exchange_strong(
             expected, 0,
             std::memory_order_acquire, std::memory_order_relaxed
         );
-
-        // reset metadata value
-        while (slot.metadata->reader.load(std::memory_order_acquire) != 0) // precaution for unwanted reader
-            std::this_thread::yield();
-        std::construct_at(slot.metadata);
     }
 }
 
@@ -236,9 +252,6 @@ _cold void utils::encapsulation::SharedMemory::close(void)
 
 _hot void utils::encapsulation::SharedMemory::send_(const std::vector<std::byte>& bytes, const utils::encapsulation::shm::Id& id, const utils::encapsulation::shm::Target& target, std::pair<bool, bool> last, bool failsafe)
 {
-    this->_metadata->readable.fetch_add(1, std::memory_order_relaxed);
-    futex_wake(&this->_metadata->readable);
-
     // check the size of the memory to write
     if (bytes.size() > this->_size) _unlikely {
         //this->_idHandler.free(id);
