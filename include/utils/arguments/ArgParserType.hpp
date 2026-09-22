@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 06/09/2026 by @author Tsukini
+##  @date 21/09/2026 by @author Tsukini
 
 File Name:
 ##  @file ArgParsers.hpp
@@ -69,7 +69,7 @@ struct Option {
 
 struct Flag {
     std::tuple<std::string, std::string, std::string, std::string> flag; // <short, flag, long, env>
-    bool unlimited = false;
+    std::pair<bool, bool> unlimited = {false, false}; // <ulimited, ignore flag>
     std::vector<std::tuple<std::string, bool, std::function<std::optional<std::string>(const std::string&)>>> options; // <name, mandatory, check>, the order matter
     std::string description = "[None]";
 };

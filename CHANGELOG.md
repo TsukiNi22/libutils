@@ -20,9 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [pre-release] (empty)
 
-## v2.13.21 - 2026-09-15 (unofficial)
+## v2.13.22 - 2026-09-15 (unofficial)
 ### Fixed
 - **[MAJOR]** Missing exception constructor for `ExternalCode`
+- Multiple many fix on `ArgParser` handling/check that where invalid or craching
 - Error during cleaning of metadata on `SharedMemory` slot, added a status for reset process
 - Missing constructor/operator on `SharedObject` to allow std::move
 - Invalid awake for last enable during join of `SharedMemory` and invalid ptr initialized during `init` call

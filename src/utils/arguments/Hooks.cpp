@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 20/09/2026 by @author Tsukini
+##  @date 22/09/2026 by @author Tsukini
 
 File Name:
 ##  @file Hooks.cpp
@@ -89,7 +89,7 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
                 std::cout << ((fshort.empty() && fflag.empty()) ? "--" : "-") << (fshort.empty() ? (fflag.empty() ? flong : fflag) : fshort);
                 for (const auto& [name, fmandatory, _]: it->second.options)
                     std::cout << " " << (fmandatory ? "" : "[") << "<" << name << ">" << (fmandatory ? "" : "]");
-                if (it->second.unlimited) std::cout << "*";
+                if (it->second.unlimited.first) std::cout << "*";
                 if (!mandatory) std::cout << "]";
             }
 
@@ -133,7 +133,7 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
         std::cout << utils::iomanip::reset();
         for (std::size_t i = 0; i < flag.options.size(); ++i) {
             const auto& [name, mandatory, _] = flag.options[i];
-            std::cout << " " << (mandatory ? "" : "[") << "<" << utils::iomanip::color(utils::iomanip::Color::Red) << name << utils::iomanip::reset() << ">" << ((flag.unlimited && i == flag.options.size() - 1) ? "*" : "") << (mandatory ? "" : "]");
+            std::cout << " " << (mandatory ? "" : "[") << "<" << utils::iomanip::color(utils::iomanip::Color::Red) << name << utils::iomanip::reset() << ">" << ((flag.unlimited.first && i == flag.options.size() - 1) ? "*" : "") << (mandatory ? "" : "]");
         }
         std::cout << utils::iomanip::reset() << std::endl;
         std::cout << "\t\t" << flag.description << std::endl;

@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 20/09/2026 by @author Tsukini
+##  @date 21/09/2026 by @author Tsukini
 
 File Name:
 ##  @file ArgParser.hpp
@@ -122,13 +122,15 @@ class ArgParser: private utils::security::observer::Observer<"ArgParser"> {
         };
         void resetOptions(void) {this->_options.clear();};
         template<bool force = false> // Can't override an exiting one by default, throw of error
-        void setFlag(const std::string& id, const std::tuple<std::string, std::string, std::string, std::string>& flag, const std::vector<std::tuple<std::string, bool, std::function<std::optional<std::string>(const std::string&)>>>& options, const std::string& description = "[None]", const bool unlimited = false)
+        void setFlag(const std::string& id, const std::tuple<std::string, std::string, std::string, std::string>& flag, const std::vector<std::tuple<std::string, bool, std::function<std::optional<std::string>(const std::string&)>>>& options, const std::string& description = "[None]", const bool unlimited = false, const bool ignore_case = false)
         {
             if constexpr (!force) {
                 if (this->_flags.contains(id) || this->_options.contains(id))
                     throw utils::exception::ErrorException(utils::exception::InternalCode::Override, std::string("A flag/option with this id is already defined: ") + id);
+            } else if (unlimited && options.empty()) {
+                throw utils::exception::ErrorException(utils::exception::InternalCode::FlagOption, "An unlimited flag must have at least one option: " + id);
             }
-            this->_flags[id] = utils::arguments::Flag{flag, unlimited, options, description};
+            this->_flags[id] = utils::arguments::Flag{flag, {unlimited, ignore_case}, options, description};
         };
         void resetFlags(void) {this->_flags.clear();};
 

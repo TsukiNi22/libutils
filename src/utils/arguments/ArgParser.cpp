@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 06/09/2026 by @author Tsukini
+##  @date 21/09/2026 by @author Tsukini
 
 File Name:
 ##  @file ArgParser.cpp
@@ -97,10 +97,9 @@ void utils::arguments::ArgParser::help(void) const
 
 bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& usageFull, const std::vector<std::string>& argv, std::size_t& i, bool& alreadyFailed, const bool failsafe) const
 {
-    std::vector<std::string> ids; // <id>
+    std::vector<std::string> ids, idsChecked; // <id>
     std::string arg = argv[i], sarg; // sarg is used for temporary sub edition
     const std::string argOrigin = arg; // keep the orignal value
-    std::string id;
     bool isLong = arg.starts_with("--"), isShort = false;
     bool unknown = true;
     std::size_t f = 0; // short counter
@@ -128,24 +127,23 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
 
     // Short & Flag
     else {
+        std::size_t size = 0;
         arg.erase(0, 1); // Remove '-'
         sarg = arg; // Used for the short checking
 
         // Is the flag know (Flag have the priority)
         for (const auto &[fid, flag]: this->_flags) {
             const auto &[fshort, fflag, _, _] = flag.flag;
-            if (fflag == arg) {ids.push_back(fid); unknown = false; break;}
-            else if ((pos = sarg.find(fshort)) != std::string::npos) {
+            if (fflag == arg) {ids.clear(); ids.push_back(fid); isShort = false; unknown = false; break;}
+            else if (size < arg.size() && (pos = sarg.find(fshort)) != std::string::npos) {
                 ids.push_back(fid);
                 sarg.erase(pos, fshort.size());
-                if (++f == arg.size()) {isShort = true; unknown = false; break;};
+                size += fshort.size();
+                ++f;
+                if (size == arg.size()) {isShort = true; unknown = false;};
             }
         }
     }
-
-    // Empty flag detection
-    if (arg.empty() || ids.empty())
-        return true; // ignored
 
     // Check if the flag was found
     if (unknown) {
@@ -154,111 +152,121 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
         std::string s = ((!isLong && arg == sarg) ? ("-" + arg + ": " + sarg + " (unknown short)") : ((isLong ? "--" : "-") + arg));
         if (failsafe) {std::cerr << utils::exception::WarningException(utils::exception::InternalCode::UnknownFlag, s).formated() << std::endl; return false;}
         else throw utils::exception::ErrorException(utils::exception::InternalCode::UnknownFlag, s);
+        return false;
     }
+
+    // Empty flag detection (should have exited at unknown)
+    if (arg.empty() || ids.empty())
+        return true; // ignored
 
     // Select the id who is the next one in the usage
-    for (const std::string& subId: ids) {
+    for (const std::string& id: ids) {
+        // Check the id settings and store them if valid
+        std::vector<std::string> options;
+        const utils::arguments::Flag& flag = this->_flags.at(id);
+
         // Check if they are allowed in the left over ids of the usage
-        if (!std::any_of(this->_usages.at(usageFull.id).ids.begin(), this->_usages.at(usageFull.id).ids.end(), [&](const auto& p) {return p.first == subId;}))
-            continue;
+        if (!std::any_of(this->_usages.at(usageFull.id).ids.begin(), this->_usages.at(usageFull.id).ids.end(), [&](const auto& p) {return p.first == id;})) {
+            if (alreadyFailed) return false;
+            alreadyFailed = true;
+            std::string s = "The flag isn't allowed in this usage: " + id;
+            if (failsafe) {std::cerr << utils::exception::WarningException(utils::exception::InternalCode::FlagCombinaison, s).formated() << std::endl; return false;}
+            else throw utils::exception::ErrorException(utils::exception::InternalCode::FlagCombinaison, s);
+            return false;
+        }
 
         // Check in ordered case if the flag is the next one
-        if (usageFull.ordered) {
+        if (usageFull.ordered && usageFull.ids.size() > 0) {
             std::size_t index = 0;
-            for (index = 0; usageFull.ids.at(index).first != subId && !usageFull.ids.at(index).second; ++index);
+            for (index = 0; usageFull.ids.at(index).first != id && !usageFull.ids.at(index).second; ++index);
             // Fail to setup a mandatory argument before the flag
-            if (usageFull.ids.at(index).first != subId) continue;
+            if (usageFull.ids.at(index).first != id) continue;
         }
 
-        // Save the first valid optional or mandatory that fit
-        id = subId;
-        break;
-    }
-    if (id.empty()) return false;
-
-    // Check the id settings and store them if valid
-    std::vector<std::string> options;
-    const utils::arguments::Flag& flag = this->_flags.at(id);
-
-    // Check if the '=' is allowed
-    bool single = (flag.options.size() == 1);
-    if (equalFound && !single) {
-        if (alreadyFailed) return false;
-        alreadyFailed = true;
-        std::string s = "Can't use '=' on flag that have only one option(s): '" + argOrigin + "'";
-        if (failsafe) {std::cerr << utils::exception::WarningException(utils::exception::InternalCode::FlagOption, s).formated() << std::endl; return false;}
-        else throw utils::exception::ErrorException(utils::exception::InternalCode::FlagOption, s);
-    }
-
-    // Check for redefinition
-    bool redefined = false;
-    for (const auto &[fid, type, _]: usageFull.arguments) {
-        if (!type && fid == id) {
-            if (!alreadyFailed) std::cerr << utils::exception::WarningException(utils::exception::InternalCode::DuplicatedFlag, (isLong ? std::get<2>(flag.flag) : (isShort ? std::get<0>(flag.flag) : std::get<1>(flag.flag)))).formated() << std::endl;
+        // Check if they can be combined
+        if (isShort && f > 1 && flag.options.size() != 0) {
+            if (alreadyFailed) return false;
             alreadyFailed = true;
-            redefined = true;
-            break;
+            std::string s = "Can't combine short flag that have option(s), '" + std::get<0>(flag.flag) + "' in '-" + arg + "'";
+            if (failsafe) {std::cerr << utils::exception::WarningException(utils::exception::InternalCode::FlagCombinaison, s).formated() << std::endl; return false;}
+            else throw utils::exception::ErrorException(utils::exception::InternalCode::FlagCombinaison, s);
+            return false;
         }
-    }
 
-    // Check if they can be combined
-    if (isShort && f > 1 && flag.options.size() != 0) {
-        if (alreadyFailed) return false;
-        alreadyFailed = true;
-        std::string s = "Can't combine short flag that have option(s), '" + std::get<0>(flag.flag) + "' in '-" + arg + "'";
-        if (failsafe) {std::cerr << utils::exception::WarningException(utils::exception::InternalCode::FlagCombinaison, s).formated() << std::endl; return false;}
-        else throw utils::exception::ErrorException(utils::exception::InternalCode::FlagCombinaison, s);
-    }
-
-    // Check for the option(s)
-    std::optional<std::string> res;
-    bool breaked = false;
-    for (std::size_t j = 0; j < flag.options.size(); ++j) {
-        const auto &[_, mandatory, check] = flag.options[j];
-        if (!equalFound && argv.size() <= i + 1) {
-            if (!mandatory) continue;
+        // Check if the '=' is allowed
+        bool single = (flag.options.size() == 1);
+        if (equalFound && !single) {
             if (alreadyFailed) return false;
             alreadyFailed = true;
-            std::string s = (isLong ? "--" : "-") + arg;
-            if (failsafe) {std::cerr << utils::exception::WarningException(utils::exception::InternalCode::FlagOptionsNumber, s).formated() << std::endl; return false;}
-            else throw utils::exception::ErrorException(utils::exception::InternalCode::FlagOptionsNumber, s);
-        } else if (!equalFound && j + 1 >= flag.options.size() && flag.unlimited && argv[i + 1].front() == '-') { // Special case (unlimited can also accept no argument)
-            breaked = true;
-            break;
-        } else if ((equalFound && (res = check(equal)).has_value()) || (!equalFound && (res = check(argv[i + 1])).has_value())) {
-            if (!mandatory) continue;
-            if (alreadyFailed) return false;
-            alreadyFailed = true;
-            std::string s = (isLong ? "--" : "-") + arg + ": " + *res;
+            std::string s = "Can't use '=' on flag that have only one option(s): '" + argOrigin + "'";
             if (failsafe) {std::cerr << utils::exception::WarningException(utils::exception::InternalCode::FlagOption, s).formated() << std::endl; return false;}
             else throw utils::exception::ErrorException(utils::exception::InternalCode::FlagOption, s);
+            return false;
+        }
+
+        // Check for redefinition
+        bool redefined = false;
+        for (const auto &[fid, type, _]: usageFull.arguments) {
+            if (!type && fid == id) {
+                if (!alreadyFailed) std::cerr << utils::exception::WarningException(utils::exception::InternalCode::DuplicatedFlag, (isLong ? std::get<2>(flag.flag) : (isShort ? std::get<0>(flag.flag) : std::get<1>(flag.flag)))).formated() << std::endl;
+                alreadyFailed = true;
+                redefined = true;
+                break;
+            }
+        }
+
+        // Exit and dosen't store the redefined one
+        if (redefined) return true;
+
+        // Check for the option(s)
+        std::optional<std::string> res;
+        bool breaked = false;
+        for (std::size_t j = 0; j < flag.options.size(); ++j) {
+            const auto &[_, mandatory, check] = flag.options[j];
+            if (!equalFound && argv.size() <= i + 1) {
+                if (!mandatory) continue;
+                if (alreadyFailed) return false;
+                alreadyFailed = true;
+                std::string s = (isLong ? "--" : "-") + arg;
+                if (failsafe) {std::cerr << utils::exception::WarningException(utils::exception::InternalCode::FlagOptionsNumber, s).formated() << std::endl; return false;}
+                else throw utils::exception::ErrorException(utils::exception::InternalCode::FlagOptionsNumber, s);
+                return false;
+            } else if (!equalFound && j + 1 >= flag.options.size() && flag.unlimited.first && !flag.unlimited.second && argv[i + 1].front() == '-') { // Special case (unlimited can also accept no argument)
+                breaked = true;
+                break;
+            } else if ((equalFound && (res = check(equal)).has_value()) || (!equalFound && (res = check(argv[i + 1])).has_value())) {
+                if (!mandatory) continue;
+                if (alreadyFailed) return false;
+                alreadyFailed = true;
+                std::string s = (isLong ? "--" : "-") + arg + ": " + *res;
+                if (failsafe) {std::cerr << utils::exception::WarningException(utils::exception::InternalCode::FlagOption, s).formated() << std::endl; return false;}
+                else throw utils::exception::ErrorException(utils::exception::InternalCode::FlagOption, s);
+                return false;
+            } else {
+                options.push_back(equalFound ? equal : argv[++i]);
+            }
+        }
+
+        // For unlimited options (extend to infinite the last option)
+        if (flag.unlimited.first && !flag.options.empty() && !breaked) {
+            const auto &[_, _, check] = flag.options.back();
+            while (true) {
+                if (argv.size() <= i + 1) break; // End of arguments
+                else if (!flag.unlimited.second && argv[i + 1].front() == '-') break; // Other flag
+                else if (check(argv[i + 1]).has_value()) break; // Non compliance
+                else options.push_back(argv[++i]);
+            }
+        }
+
+        // Store it
+        usageFull.arguments.emplace_back(id, false, options);
+        if (usageFull.ordered) {
+            while (usageFull.ids.front().first != id) usageFull.ids.pop_front();
+            usageFull.ids.pop_front();
         } else {
-            options.push_back(equalFound ? equal : argv[++i]);
+            auto it = std::find_if(usageFull.ids.begin(), usageFull.ids.end(), [&](const auto& p) {return p.first == id;});
+            usageFull.ids.erase(it);
         }
-    }
-
-    // For unlimited options (extend to infinite the last option)
-    if (flag.unlimited && !breaked) {
-        const auto &[_, _, check] = flag.options.back();
-        while (true) {
-            if (argv.size() <= i + 1) break; // End of arguments
-            else if (argv[i + 1].front() == '-') break; // Other flag
-            else if (check(argv[i + 1]).has_value()) break; // Non compliance
-            else options.push_back(argv[++i]);
-        }
-    }
-
-    // Exit and dosen't store the redefined one
-    if (redefined) return true;
-
-    // Store it
-    usageFull.arguments.emplace_back(id, false, options);
-    if (usageFull.ordered) {
-        while (usageFull.ids.front().first != id) usageFull.ids.pop_front();
-        usageFull.ids.pop_front();
-    } else {
-        auto it = std::find_if(usageFull.ids.begin(), usageFull.ids.end(), [&](const auto& p) {return p.first == id;});
-        usageFull.ids.erase(it);
     }
 
     return true;
@@ -267,12 +275,27 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
 bool utils::arguments::ArgParser::parseOption(utils::arguments::ParsedUsageFull& usageFull, const std::vector<std::string>& argv, const std::size_t i, bool& alreadyFailed, const bool failsafe) const
 {
     const std::string& option = argv[i];
+    std::optional<std::string> res;
     std::vector<std::string> validIds;
     std::string id;
-
+    
     // Try to find the possible corresponding ids of the option
-    for (const auto &[oid, opt]: this->_options)
-        if ((opt.exact && option == opt.name) || (!opt.exact && !opt.check(option).has_value())) validIds.push_back(oid);
+    //const bool alreadyFailedLocal = alreadyFailed;
+    for (const auto &[oid, opt]: this->_options) {
+        if (opt.exact && option == opt.name) validIds.push_back(oid);
+        else if (!opt.exact) {
+            if ((res = opt.check(option)).has_value()) {
+                /*if (alreadyFailedLocal) continue;
+                alreadyFailed = true;
+                std::string s = option + ": " + *res;
+                if (!std::any_of(usageFull.ids.begin(), usageFull.ids.end(), [&](const auto& p) {return oid == p.first;})) continue;
+                if (failsafe) {std::cerr << utils::exception::WarningException(utils::exception::InternalCode::OptionIngored, s).formated() << std::endl; return false;}
+                else throw utils::exception::ErrorException(utils::exception::InternalCode::OptionIngored, s);
+                */
+                continue;
+            } else validIds.push_back(oid);
+        } else continue;
+    }
 
     // Check if the option is valid in any way
     if (validIds.size() == 0) {
@@ -281,6 +304,7 @@ bool utils::arguments::ArgParser::parseOption(utils::arguments::ParsedUsageFull&
         std::string s = option;
         if (failsafe) {std::cerr << utils::exception::WarningException(utils::exception::InternalCode::OptionIngored, s).formated() << std::endl; return false;}
         else throw utils::exception::ErrorException(utils::exception::InternalCode::OptionIngored, s);
+        return false;
     }
 
     // Check if the actual usage allow the id (first valid correspondence win)
