@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 29/08/2026 by @author Tsukini
+##  @date 23/09/2026 by @author Tsukini
 
 File Name:
 ##  @file ASocket.cpp
@@ -32,12 +32,13 @@ File Description:
 #include <netdb.h>
 #include <cstddef>
 #include <string>
-#include <regex>
 
 _cold _nodiscard bool utils::network::socket::is_ip(const std::string& s)
 {
-    static const std::regex regex(IP_REGEX);
-    return std::regex_match(s, regex);
+    struct in_addr buf{};
+    return ::inet_pton(AF_INET, s.c_str(), &buf) == 1;
+    //static const std::regex regex(IP_REGEX);
+    //return std::regex_match(s, regex);
 }
 
 _cold _nodiscard std::string utils::network::socket::resolve_hostname(const std::string& hostname)
