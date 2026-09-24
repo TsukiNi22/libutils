@@ -3,7 +3,7 @@
         {
             "code": "ArgumentsNumber",
             "message": "Invalid number of argument(s) given, use '-h' for more information",
-            "restrictions": ["Fatal", "Error"]
+            "restrictions": ["Fatal", "Error", "Warning"]
         },
         {
             "code": "OptionIngored",
@@ -18,7 +18,7 @@
         {
             "code": "NoCompliantUsage",
             "message": "No compliant usage where found, use '-h' for more information",
-            "restrictions": ["Fatal", "Error"]
+            "restrictions": ["Fatal", "Error", "Warning"]
         },
         {
             "code": "ArgParserHook",
@@ -28,12 +28,12 @@
         {
             "code": "OptionsNumber",
             "message": "Invalid number of option(s) given, use '-h' for more information",
-            "restrictions": ["Fatal", "Error"]
+            "restrictions": ["Fatal", "Error", "Warning"]
         },
         {
             "code": "FlagOptionsNumber",
             "message": "Invalid number of option(s) for the flag",
-            "restrictions": ["Fatal", "Error"]
+            "restrictions": ["Fatal", "Error", "Warning"]
         },
         {
             "code": "Option",

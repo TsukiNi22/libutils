@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 21/09/2026 by @author Tsukini
+##  @date 24/09/2026 by @author Tsukini
 
 File Name:
 ##  @file ArgParser.cpp
