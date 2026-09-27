@@ -20,7 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [pre-release] (empty)
 
-## v2.13.22 - 2026-09-15 (unofficial)
+## v2.14.0 - 2026-09-27
+### Added
+- Add a new custom type `Matrix` and it's light version `OMatrix` in the `type` section
+
+## v2.13.22 - 2026-09-24 (unofficial)
 ### Fixed
 - **[MAJOR]** Missing exception constructor for `ExternalCode`
 - Multiple many fix on `ArgParser` handling/check that where invalid or craching

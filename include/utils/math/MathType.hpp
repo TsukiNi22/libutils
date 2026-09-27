@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 29/08/2026 by @author Tsukini
+##  @date 24/09/2026 by @author Tsukini
 
 File Name:
 ##  @file SpaceType.hpp

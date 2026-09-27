@@ -5,6 +5,12 @@
             "message": "Invalid index on a vector",
             "info": "Can't retrieve the value, the VectorX dosen't have this index",
             "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "MatrixSingular",
+            "message": "Can't invert a singular matrix",
+            "info": "The determinant of the matrix is null, the inverse doesn't exist",
+            "restrictions": ["Fatal", "Error", "Warning"]
         }
     ]
 }

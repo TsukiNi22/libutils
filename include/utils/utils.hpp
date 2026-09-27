@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 15/09/2026 by @author Tsukini
+##  @date 27/09/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -82,7 +82,7 @@ File Description:
     /* _Network */\
     !defined(_Socket) && \
     /* _CustomType */\
-    !defined(_Vector) && !defined(_BLT) && \
+    !defined(_Vector) && !defined(_Matrix) && !defined(_BLT) && \
     /* _Math */\
     !defined(_Geometry) && !defined(_Trigo) && \
     /* _Manip */\
@@ -138,6 +138,7 @@ File Description:
 #ifdef _CustomType
     #define _BLT // Bidirectional Lookup Table
     #define _Vector
+    #define _Matrix
 #endif
 
 /* Activate all math sub-include */
@@ -212,8 +213,15 @@ File Description:
 
 /* VectorX */
 #ifdef _Vector
-    // -> Customized vector2 & vector3 for respectively 2 & 3 value of undefined type
-    #include "type/vector/Vector.hpp"   // utils::type::IVector<T>, utils::type::VectorN, utils::type::OVectorN
+    // -> customized Vector2 & Vector3 for respectively 2 & 3 value of undefined type
+    #include "type/vector/Vector.hpp"   // utils::type::IVector<t>, utils::type::VectorN, utils::type::OVectorN
+#endif
+
+/* Matrix */
+#ifdef _Matrix
+    // -> litteraly a class to handle matrix computing (maybe a cuda support in the future)
+    #include "type/matrix/Matrix.hpp"   // utils::type::Matrix
+    #include "type/matrix/OMatrix.hpp"  // utils::type::OMatrix
 #endif
 
 /* Geometry */
