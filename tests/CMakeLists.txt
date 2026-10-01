@@ -14,15 +14,61 @@ find_package(GTest REQUIRED)
 # Sources
 # =========================
 set(SRC
+    # Exception
+    exception/Exception.cpp
+
+    # Concepts
+    concepts/Concepts.cpp
+
     # Verbose
     verbose/Verbose.cpp
 
+    # IO - Manip
+    manip/iomanip/ANSI.cpp
+
+    # S - Manip
+    manip/smanip/Format.cpp
+    manip/smanip/Base64Codec.cpp
+    manip/smanip/EETPParser.cpp
+
+    # Cli
+    cli/Cli.cpp
+
+    # Arguments
+    arguments/ArgParser.cpp
+    arguments/Settings.cpp
+
+    # Network
+    network/Socket.cpp
+    network/ClientServer.cpp
+
+    # Encapsulation
+    encapsulation/Encapsulation.cpp
+    encapsulation/SharedMemory.cpp
+
+    # Math
+    math/Geometry.cpp
+
+    # Type
+    type/Vector.cpp
+    type/Matrix.cpp
+    type/Freezable.cpp
+
+    # Pool
+    pool/Pool.cpp
+
     # System
     system/IdHandler.cpp
-    
+    system/Scheduler.cpp
+
+    # Algorithms
+    algorithms/C2dmp.cpp
+    algorithms/Sos.cpp
+
     # Security (sub-part: encryption)
     security/encryption/RSAKey.cpp
     security/encryption/AESKey.cpp
+    security/encryption/CommonRSAKey.cpp
 
     # Security (sub-part: observer)
     security/observer/MemoryLeakNotifer.cpp
