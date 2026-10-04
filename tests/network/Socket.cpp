@@ -28,14 +28,14 @@ File Description:
 
 // TCPSocket that can adopt an existing fd (socketpair) to test the buffering logic
 // (TCPSocket hide the high level recv/send/accept of ASocket with its raw overloads, the using restore them)
-class PairSocket : public utils::network::socket::TCPSocket {
+class PairSocket: public utils::network::TCPSocket {
     public:
-        using utils::network::socket::ASocket::recv;
-        using utils::network::socket::ASocket::send;
-        using utils::network::socket::ASocket::accept;
-        using utils::network::socket::TCPSocket::recv;
-        using utils::network::socket::TCPSocket::send;
-        using utils::network::socket::TCPSocket::accept;
+        using utils::network::ASocket::recv;
+        using utils::network::ASocket::send;
+        using utils::network::ASocket::accept;
+        using utils::network::TCPSocket::recv;
+        using utils::network::TCPSocket::send;
+        using utils::network::TCPSocket::accept;
         void adopt(int fd, bool server = false) {this->_fd = fd; this->_mode = server;};
 };
 
@@ -50,7 +50,7 @@ static std::string readAvailable(int fd)
 
 static bool isOpen(int fd) {return ::fcntl(fd, F_GETFD) != -1;}
 
-class SocketTest : public ::testing::Test {
+class SocketTest: public ::testing::Test {
     protected:
         int _fds[2] = {-1, -1}; // [0] adopted by the socket, [1] peer
         PairSocket _socket;
@@ -280,37 +280,37 @@ TEST(SocketFd, OverloadFlags) {
 
 /* tools */
 TEST(SocketTools, IsIp) {
-    EXPECT_TRUE(utils::network::socket::is_ip("127.0.0.1"));
-    EXPECT_TRUE(utils::network::socket::is_ip("255.255.255.255"));
-    EXPECT_FALSE(utils::network::socket::is_ip("256.0.0.1"));
-    EXPECT_FALSE(utils::network::socket::is_ip("localhost"));
-    EXPECT_FALSE(utils::network::socket::is_ip(""));
-    EXPECT_FALSE(utils::network::socket::is_ip("1.2.3"));
+    EXPECT_TRUE(utils::network::is_ip("127.0.0.1"));
+    EXPECT_TRUE(utils::network::is_ip("255.255.255.255"));
+    EXPECT_FALSE(utils::network::is_ip("256.0.0.1"));
+    EXPECT_FALSE(utils::network::is_ip("localhost"));
+    EXPECT_FALSE(utils::network::is_ip(""));
+    EXPECT_FALSE(utils::network::is_ip("1.2.3"));
 }
 
 TEST(SocketTools, ResolveHostname) {
     utils::verbose::verbose = utils::verbose::Verbose::None;
-    EXPECT_EQ(utils::network::socket::resolve_hostname("localhost"), "127.0.0.1");
-    EXPECT_THROW((void)utils::network::socket::resolve_hostname("this.host.does.not.exist.invalid"), utils::exception::IException);
+    EXPECT_EQ(utils::network::resolve_hostname("localhost"), "127.0.0.1");
+    EXPECT_THROW((void)utils::network::resolve_hostname("this.host.does.not.exist.invalid"), utils::exception::IException);
     utils::verbose::verbose = utils::verbose::Verbose::Basic;
 }
 
 TEST(SocketTools, ResolveAddress) {
     utils::verbose::verbose = utils::verbose::Verbose::None;
     utils::network::Address address{{"localhost", ""}, 1234};
-    utils::network::socket::resolve_address(address);
+    utils::network::resolve_address(address);
     EXPECT_EQ(address.ip.first, "127.0.0.1");
     EXPECT_EQ(address.ip.second, "localhost");
     EXPECT_EQ(address.port, 1234);
 
     utils::network::Address ip{{"10.0.0.1", ""}, 1};
-    utils::network::socket::resolve_address(ip);
+    utils::network::resolve_address(ip);
     EXPECT_EQ(ip.ip.first, "10.0.0.1"); // already an ip, untouched
     utils::verbose::verbose = utils::verbose::Verbose::Basic;
 }
 
 /* TCP connection */
-class TCPSocketTest : public ::testing::Test {
+class TCPSocketTest: public ::testing::Test {
     protected:
         void SetUp(void) override {utils::verbose::verbose = utils::verbose::Verbose::None;};
         void TearDown(void) override {utils::verbose::verbose = utils::verbose::Verbose::Basic;};
@@ -388,4 +388,57 @@ TEST_F(TCPSocketTest, ReconnectAfterClose) {
     client.connect({{"127.0.0.1", ""}, port});
     client.close();
     EXPECT_NO_THROW(client.connect({{"127.0.0.1", ""}, port}));
+}
+
+/* -------------------------------- edge cases -------------------------------- */
+TEST_F(SocketTest, OverflowZeroIsUnlimited) {
+    this->_socket.setOverflow(0);
+    EXPECT_NO_THROW(this->_socket.send(std::string(10000, 'a')));
+    this->peerWrite(std::string(10000, 'b') + "\n");
+    EXPECT_EQ(this->_socket.recv().size(), 10000u);
+}
+
+TEST_F(SocketTest, RawModeEmptySeparator) {
+    this->_socket.setPayloadSeparator(std::string(""));
+    this->peerWrite("data");
+    EXPECT_EQ(this->_socket.recv(), "data");
+    EXPECT_TRUE(this->_socket.empty());
+    this->peerWrite("more");
+    EXPECT_EQ(this->_socket.receive(), 4u);
+    EXPECT_EQ(this->_socket.recvAll(), (std::vector<std::string>{"more"}));
+}
+
+TEST_F(SocketTest, ReceiveReadOnce) {
+    this->peerWrite("partial");
+    EXPECT_EQ(this->_socket.receive(), 7u); // never wait for the separator
+    EXPECT_TRUE(this->_socket.empty());
+    this->peerWrite(" end\nnext");
+    (void)this->_socket.receive();
+    EXPECT_EQ(this->_socket.recvAll(), (std::vector<std::string>{"partial end"}));
+}
+
+TEST_F(SocketTest, DiscardForgetBuffers) {
+    this->peerWrite("left\nover");
+    (void)this->_socket.receive();
+    this->_socket.discard(this->_fds[0]);
+    EXPECT_TRUE(this->_socket.empty());
+}
+
+TEST_F(SocketTest, DiscardEveryFd) {
+    this->peerWrite("left\nover");
+    (void)this->_socket.receive();
+    this->_socket.discard();
+    EXPECT_TRUE(this->_socket.empty());
+}
+
+TEST_F(TCPSocketTest, FailedConnectCloseTheSocket) {
+    std::uint16_t port = 0;
+    {
+        utils::network::TCPSocket tmp;
+        tmp.listen({{"", ""}, 0});
+        port = portOf(tmp.getFd());
+    }
+    utils::network::TCPSocket client;
+    EXPECT_THROW(client.connect({{"127.0.0.1", ""}, port}), utils::exception::IException);
+    EXPECT_EQ(client.getFd(), -1);
 }

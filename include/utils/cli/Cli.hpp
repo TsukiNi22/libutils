@@ -24,22 +24,27 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../security/observer/Observer.hpp"    // utils::security::observer::Observer
-    #include "../pool/middleware/Middlewares.hpp"   // utils::pool::Middlewares
-    #include "Flags.hpp"                            // utils::cli::Flag, flag preset macro
-    #include <termios.h>                            // termios
-    #include <unordered_map>                        // std::unordered_map
-    #include <shared_mutex>                         // std::shared_mutex, std::unique_lock, std::shared_lock
-    #include <functional>                           // std::function
-    #include <optional>                             // std::optional
-    #include <cstdint>                              // std::uint8_t, std::uint32_t
-    #include <thread>                               // std::thread
-    #include <atomic>                               // std::atomic
-    #include <vector>                               // std::vector
-    #include <string>                               // std::string
-    #include <mutex>                                // std::mutex, std::lock_guard
-    #include <tuple>                                // std::tuple
-    #include <queue>                                // std::queue
+    #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
+    #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
+    #include "../pool/middleware/Middlewares.hpp"       // utils::pool::Middlewares
+    #include "../exception/ExceptionDefine.hpp"         // utils::exception::InternalCode
+    #include "../attribute/Attribute.hpp"               // _cold, _nodiscard
+    #include "Flags.hpp"                                // utils::cli::Flag, utils::cli::flags::* (preset)
+    #include <termios.h>                                // termios
+    #include <csignal>                                  // SIG_DFL
+    #include <unordered_map>                            // std::unordered_map
+    #include <shared_mutex>                             // std::shared_mutex, std::unique_lock, std::shared_lock
+    #include <functional>                               // std::function
+    #include <optional>                                 // std::optional
+    #include <cstddef>                                  // std::size_t
+    #include <cstdint>                                  // std::uint8_t, std::int16_t, std::uint32_t
+    #include <thread>                                   // std::thread
+    #include <atomic>                                   // std::atomic
+    #include <vector>                                   // std::vector
+    #include <string>                                   // std::string
+    #include <mutex>                                    // std::mutex, std::lock_guard
+    #include <tuple>                                    // std::tuple
+    #include <queue>                                    // std::queue
 
     //----------------------------------------------------------------//
     /* DEFINE */
@@ -50,18 +55,21 @@ File Description:
 
 namespace utils::cli { // namespace start
 //----------------------------------------------------------------//
-/* PROTOTYPE */
+/* TYPE */
 
 // Return of the parser
 using ParsedData =
-std::vector< // Groupe of commands, separated by '&&', '||' and ';'
+std::vector< // Group of commands, separated by '&&', '||' and ';'
     std::vector< // Command separated by ' ' and '\t'
         // the first std::string represent only the command
-        // The input parsed (depende on the parser mode)
+        // The input parsed (depends on the parser mode)
         // the last std::string represent the separator '&&', '||', ';' or '' for nothing/last
         std::string
     >
 >;
+
+//----------------------------------------------------------------//
+/* PROTOTYPE */
 
 class Cli;
 
@@ -77,11 +85,14 @@ class Cli: private utils::security::observer::Observer<"Cli"> {
     private:
         /* global data */
         termios _orig;
+        bool _termios = false; // terminal setup done (to restore)
         bool _sig = false;
+        void (*_oldSigInt)(int) = SIG_DFL; // handlers before the cli (restored at the destruction)
+        void (*_oldSigTstp)(int) = SIG_DFL;
         std::atomic<bool> _interrupted = false;
         std::atomic<bool> _killed = false; // Can't be undone
         std::atomic<bool> _running = false;
-        std::atomic<std::uint32_t> _flags = utils::cli::Flags::DEFAULT;
+        std::atomic<std::uint32_t> _flags = utils::cli::flags::DEFAULT;
         std::atomic<std::uint8_t> _code = 0;
         std::atomic<char> _inputDelimitor = '\n';
         std::queue<std::string> _initInput; // Only at start
@@ -91,7 +102,7 @@ class Cli: private utils::security::observer::Observer<"Cli"> {
         mutable std::shared_mutex _commandsLock;
         std::unordered_map<std::string, std::tuple<std::function<void(const utils::cli::Cli&, const std::vector<std::string>&)>, std::int16_t, std::int16_t>> _parsedCommands;
         std::unordered_map<std::string, std::function<void(const utils::cli::Cli&, const std::string&)>> _rawCommands;
-        std::shared_mutex _historyLock;
+        mutable std::shared_mutex _historyLock;
         std::vector<std::string> _history;
 
         /* hooks */
@@ -101,15 +112,15 @@ class Cli: private utils::security::observer::Observer<"Cli"> {
         std::function<bool(char&)> _getcHook;
 
         // ---------- Pre-Function -------- //
-        void launch(const std::size_t call); // Stop on ctrl+d (except: MANUAL) or interrupt()
-        void prompt(void);
-        std::string getInput(void);
-        utils::cli::ParsedData parse(const std::string& input);
-        void exec(const utils::cli::ParsedData& parsedInput);
+        void launch_(const std::size_t call); // Stop on ctrl+d (except: MANUAL) or interrupt()
+        void prompt_(void);
+        std::string getInput_(void);
+        utils::cli::ParsedData parse_(const std::string& input);
+        void exec_(const utils::cli::ParsedData& parsedInput);
 
-        /* persitent storage handling */
-        void loadHistory(void);
-        void saveHistory(void);
+        /* persistent storage handling */
+        void loadHistory_(void);
+        void saveHistory_(void);
 
     public:
         /* middlewares */
@@ -143,23 +154,25 @@ class Cli: private utils::security::observer::Observer<"Cli"> {
         std::string strcode(std::uint8_t code) const;
 
         // ------------ Function ---------- //
-        void setInputDelimitor(const char c) {this->_inputDelimitor = c;};
-        void interrupt(void) {this->_interrupted = true;};
-        void kill(void) {this->_killed = true; this->_interrupted = true;};
-        bool isRunning(void) const {return this->_running;};
-        bool wasInterrupted(void) const {return (!this->_running && this->_interrupted && !this->_killed);};
-        bool wasKilled(void) const {return (!this->_running && this->_killed);};
-        bool wasStopped(void) const {return (!this->_running && !this->_interrupted && !this->_killed);};
+        _cold inline void setInputDelimitor(const char c) {this->_inputDelimitor = c;};
+        _cold inline void interrupt(void)                 {this->_interrupted = true;};
+        _cold inline void kill(void)                      {this->_killed = true; this->_interrupted = true;};
+
+        /* status */
+        _cold _nodiscard inline bool isRunning(void) const      {return this->_running;};
+        _cold _nodiscard inline bool wasInterrupted(void) const {return (!this->_running && this->_interrupted && !this->_killed);};
+        _cold _nodiscard inline bool wasKilled(void) const      {return (!this->_running && this->_killed);};
+        _cold _nodiscard inline bool wasStopped(void) const     {return (!this->_running && !this->_interrupted && !this->_killed);};
 
         /* flag */
-        void resetFlags(void) {this->_flags = utils::cli::Flags::DEFAULT;};
-        void subFlags(std::uint32_t flags) {this->_flags &= ~flags;};
-        void addFlags(std::uint32_t flags) {this->_flags |= flags;};
-        void setFlags(std::uint32_t flags) {this->_flags = flags;};
+        _cold inline void resetFlags(void)              {this->_flags = utils::cli::flags::DEFAULT;};
+        _cold inline void subFlags(std::uint32_t flags) {this->_flags &= ~flags;};
+        _cold inline void addFlags(std::uint32_t flags) {this->_flags |= flags;};
+        _cold inline void setFlags(std::uint32_t flags) {this->_flags = flags;};
 
         /* commands */
         template<bool force = false> // Can't override an exiting one by default, throw of error
-        void setCommand(const std::string& command, const std::tuple<std::function<void(const utils::cli::Cli&, const std::vector<std::string>&)>, std::int16_t, std::int16_t>& tup)
+        _cold void setCommand(const std::string& command, const std::tuple<std::function<void(const utils::cli::Cli&, const std::vector<std::string>&)>, std::int16_t, std::int16_t>& tup)
         {
             std::unique_lock lock(this->_commandsLock);
             if constexpr (!force) {
@@ -169,7 +182,7 @@ class Cli: private utils::security::observer::Observer<"Cli"> {
             this->_parsedCommands[command] = tup;
         };
         template<bool force = false> // Can't override an exiting one by default, throw of error
-        void setCommand(const std::string& command, const std::function<void(const utils::cli::Cli&, const std::string&)>& fn)
+        _cold void setCommand(const std::string& command, const std::function<void(const utils::cli::Cli&, const std::string&)>& fn)
         {
             std::unique_lock lock(this->_commandsLock);
             if constexpr (!force) {
@@ -179,10 +192,10 @@ class Cli: private utils::security::observer::Observer<"Cli"> {
             this->_rawCommands[command] = fn;
         };
         template<bool force = false> // Can't override an exiting one by default, throw of error
-        void setCommands(const std::unordered_map<std::string, std::tuple<std::function<void(const utils::cli::Cli&, const std::vector<std::string>&)>, std::int16_t, std::int16_t>>& commands)
+        _cold void setCommands(const std::unordered_map<std::string, std::tuple<std::function<void(const utils::cli::Cli&, const std::vector<std::string>&)>, std::int16_t, std::int16_t>>& commands)
         {
             std::unique_lock lock(this->_commandsLock);
-            for (const auto&[command, tup]: commands) {
+            for (const auto &[command, tup]: commands) {
                 if constexpr (!force) {
                     if (this->_parsedCommands.contains(command))
                         throw utils::exception::ErrorException(utils::exception::InternalCode::Override, std::string("This command is already defined (parsed): ") + command);
@@ -191,10 +204,10 @@ class Cli: private utils::security::observer::Observer<"Cli"> {
             }
         };
         template<bool force = false> // Can't override an exiting one by default, throw of error
-        void setCommands(const std::unordered_map<std::string, std::function<void(const utils::cli::Cli&, const std::string&)>>& commands)
+        _cold void setCommands(const std::unordered_map<std::string, std::function<void(const utils::cli::Cli&, const std::string&)>>& commands)
         {
             std::unique_lock lock(this->_commandsLock);
-            for (const auto&[command, fn]: commands) {
+            for (const auto &[command, fn]: commands) {
                 if constexpr (!force) {
                     if (this->_rawCommands.contains(command))
                         throw utils::exception::ErrorException(utils::exception::InternalCode::Override, std::string("This command is already defined (raw): ") + command);
@@ -204,25 +217,25 @@ class Cli: private utils::security::observer::Observer<"Cli"> {
         };
 
         /* hooks */
-        void resetPromptHook(void) {std::lock_guard lock(this->_hooksLock); this->_promptHook = defaultPromptHook;};
-        void resetParserHook(void) {std::lock_guard lock(this->_hooksLock); this->_parserHook = defaultParserHook;};
-        void resetGetCHook(void)   {std::lock_guard lock(this->_hooksLock); this->_getcHook = defaultGetCHook;};
-        void setPromptHook(const std::function<void(const utils::cli::Cli&, std::uint8_t)>& hook) {std::lock_guard lock(this->_hooksLock); this->_promptHook = hook;}; // Called to print the prompt
-        void setParserHook(const std::function<ParsedData(const std::string&, bool, bool, bool)>& hook) {std::lock_guard lock(this->_hooksLock); this->_parserHook = hook;}; // Called to parse the input
-        void setGetCHook(const std::function<bool(char&)>& hook) {std::lock_guard lock(this->_hooksLock); this->_getcHook = hook;}; // Called to print the prompt
+        _cold inline void resetPromptHook(void)                                                                                  {std::lock_guard lock(this->_hooksLock); this->_promptHook = utils::cli::defaultPromptHook;};
+        _cold inline void resetParserHook(void)                                                                                  {std::lock_guard lock(this->_hooksLock); this->_parserHook = utils::cli::defaultParserHook;};
+        _cold inline void resetGetCHook(void)                                                                                    {std::lock_guard lock(this->_hooksLock); this->_getcHook = utils::cli::defaultGetCHook;};
+        _cold inline void setPromptHook(const std::function<void(const utils::cli::Cli&, std::uint8_t)>& hook)                   {std::lock_guard lock(this->_hooksLock); this->_promptHook = hook;}; // Called to print the prompt
+        _cold inline void setParserHook(const std::function<utils::cli::ParsedData(const std::string&, bool, bool, bool)>& hook) {std::lock_guard lock(this->_hooksLock); this->_parserHook = hook;}; // Called to parse the input
+        _cold inline void setGetCHook(const std::function<bool(char&)>& hook)                                                    {std::lock_guard lock(this->_hooksLock); this->_getcHook = hook;}; // Called to get a char of the input
 
         /* getter */
-        std::uint8_t getCode(void) const {return this->_code;};
-        std::uint32_t getFlags(void) const {return this->_flags;};
-        char getInputDelimitor(void) const {return this->_inputDelimitor;};
-        std::vector<std::string> getHistory() const {std::lock_guard lock(this->_hooksLock); return this->_history;};
+        _cold _nodiscard inline std::uint8_t getCode(void) const                {return this->_code;};
+        _cold _nodiscard inline std::uint32_t getFlags(void) const              {return this->_flags;};
+        _cold _nodiscard inline char getInputDelimitor(void) const              {return this->_inputDelimitor;};
+        _cold _nodiscard inline std::vector<std::string> getHistory(void) const {std::shared_lock lock(this->_historyLock); return this->_history;};
 
         // ------------ Operator ---------- //
         Cli& operator=(const Cli& other) = delete;
         Cli& operator=(Cli&& other) = delete;
 
         // ---------- Constructor --------- //
-        Cli(const bool sig = false); // Enable/Disbale catch of ctrl-c & ctrl-z signal
+        Cli(const bool sig = false); // Enable/Disable catch of ctrl-c & ctrl-z signal
         Cli(const Cli& other) = delete;
         Cli(Cli&& other) = delete;
 

@@ -11,7 +11,7 @@ Edition:
 ##  @date 16/08/2026 by @author Tsukini
 
 File Name:
-##  @file RSAKey.hpp
+##  @file CommonRSAKey.cpp
 
 File Description:
 ##  Definition of the CommomRSA key methods
@@ -23,9 +23,11 @@ File Description:
 #include "utils/security/encryption/CommonRSAKey.hpp"
 #include <fstream>
 #include <sstream>
+#include <cstdlib>
+#include <string>
 
 // Only on the first char
-_cold _nodiscard static std::string expandTilde(const std::string &path)
+_cold _nodiscard static std::string expand_tilde(const std::string& path)
 {
     // Check the path
     if (path.empty() || path[0] != '~')
@@ -33,7 +35,7 @@ _cold _nodiscard static std::string expandTilde(const std::string &path)
 
     // "~" or "~/..." -> $HOME
     if (path.size() == 1 || path[1] == '/') {
-        const char *home = std::getenv("HOME");
+        const char* home = std::getenv("HOME");
         if (!home) _unlikely {
             throw utils::exception::ErrorException(
                 utils::exception::InternalCode::Encryption,
@@ -47,8 +49,8 @@ _cold _nodiscard static std::string expandTilde(const std::string &path)
 
 _cold void utils::security::encryption::CommonRSAKey::loadCommon(std::string path)
 {
-    path = expandTilde(path); // Try to resolve '~' in the path
-    KeyPair keys;
+    path = expand_tilde(path); // Try to resolve '~' in the path
+    utils::security::encryption::KeyPair keys;
 
     // Open the file (pub)
     std::ifstream filePub(path + ".pub", std::ios::binary);

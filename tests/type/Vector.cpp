@@ -25,12 +25,12 @@ File Description:
 
 /* Typed tests to run the same checks on the checked & unchecked versions */
 template<typename V>
-class Vector2Test : public ::testing::Test {};
+class Vector2Test: public ::testing::Test {};
 using Vector2Types = ::testing::Types<utils::type::Vector2<int>, utils::type::OVector2<int>>;
 TYPED_TEST_SUITE(Vector2Test, Vector2Types);
 
 template<typename V>
-class Vector3Test : public ::testing::Test {};
+class Vector3Test: public ::testing::Test {};
 using Vector3Types = ::testing::Types<utils::type::Vector3<int>, utils::type::OVector3<int>>;
 TYPED_TEST_SUITE(Vector3Test, Vector3Types);
 
@@ -319,4 +319,40 @@ TEST(Vector3, Polymorphism) {
 TEST(OVector3, FloatingNormalize) {
     utils::type::OVector3<double> n = utils::type::OVector3<double>(2.0, 0.0, 0.0).normalize();
     EXPECT_DOUBLE_EQ(n.x, 1.0);
+}
+
+/* -------------------------------- edge cases -------------------------------- */
+TEST(VectorTypes, DotCrossCommonType) {
+    EXPECT_DOUBLE_EQ(utils::type::Vector2<int>(1, 0).dot(utils::type::Vector2<double>(0.5, 0.0)), 0.5);
+    EXPECT_DOUBLE_EQ(utils::type::Vector2<int>(1, 0).cross(utils::type::Vector2<double>(0.0, 0.5)), 0.5);
+    EXPECT_DOUBLE_EQ(utils::type::Vector3<int>(1, 0, 0).dot(utils::type::Vector3<double>(0.5, 0.0, 0.0)), 0.5);
+    auto c = utils::type::Vector3<int>(1, 0, 0).cross(utils::type::Vector3<double>(0.0, 0.5, 0.0));
+    EXPECT_TRUE((std::is_same_v<decltype(c), utils::type::Vector3<double>>));
+    EXPECT_DOUBLE_EQ(c.z, 0.5);
+}
+
+TEST(VectorTypes, NormalizeZero) {
+    EXPECT_EQ(utils::type::Vector2<int>(0, 0).normalize(), utils::type::Vector2<int>(0, 0));
+    EXPECT_EQ(utils::type::Vector3<int>(0, 0, 0).normalize(), utils::type::Vector3<int>(0, 0, 0));
+    EXPECT_EQ(utils::type::OVector2<int>(0, 0).normalize(), utils::type::OVector2<int>(0, 0));
+    EXPECT_EQ(utils::type::OVector3<int>(0, 0, 0).normalize(), utils::type::OVector3<int>(0, 0, 0));
+    utils::type::Vector2<double> d = utils::type::Vector2<double>(0.0, 0.0).normalize();
+    EXPECT_FALSE(std::isnan(d.x));
+}
+
+TEST(VectorTypes, OVectorReverseKeepElementType) {
+    utils::type::OVector2<double> a = 2 * utils::type::OVector2<double>(1.25, 2.25);
+    EXPECT_DOUBLE_EQ(a.x, 2.5);
+    EXPECT_DOUBLE_EQ(a.y, 4.5);
+    utils::type::OVector3<double> b = 2 * utils::type::OVector3<double>(0.5, 1.5, 2.5);
+    EXPECT_DOUBLE_EQ(b.z, 5.0);
+}
+
+TEST(VectorTypes, Vector3Bitwise) {
+    utils::type::Vector3<unsigned> a(0b1100, 0b1010, 0b1111), b(0b1010, 0b0110, 0b0001);
+    EXPECT_EQ(a & b, utils::type::Vector3<unsigned>(0b1000, 0b0010, 0b0001));
+    EXPECT_EQ(a | b, utils::type::Vector3<unsigned>(0b1110, 0b1110, 0b1111));
+    EXPECT_EQ(a ^ b, utils::type::Vector3<unsigned>(0b0110, 0b1100, 0b1110));
+    utils::type::OVector3<unsigned> c(1, 2, 3), d(3, 3, 3);
+    EXPECT_EQ(c & d, utils::type::OVector3<unsigned>(1, 2, 3));
 }

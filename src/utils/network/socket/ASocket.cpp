@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 23/09/2026 by @author Tsukini
+##  @date 02/10/2026 by @author Tsukini
 
 File Name:
 ##  @file ASocket.cpp
@@ -28,12 +28,14 @@ File Description:
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <string.h>
+#include <cstring>
 #include <netdb.h>
+#include <cerrno>
 #include <cstddef>
+#include <vector>
 #include <string>
 
-_cold _nodiscard bool utils::network::socket::is_ip(const std::string& s)
+_cold _nodiscard bool utils::network::is_ip(const std::string& s)
 {
     struct in_addr buf{};
     return ::inet_pton(AF_INET, s.c_str(), &buf) == 1;
@@ -41,7 +43,7 @@ _cold _nodiscard bool utils::network::socket::is_ip(const std::string& s)
     //return std::regex_match(s, regex);
 }
 
-_cold _nodiscard std::string utils::network::socket::resolve_hostname(const std::string& hostname)
+_cold _nodiscard std::string utils::network::resolve_hostname(const std::string& hostname)
 {
     struct addrinfo* res = nullptr;
     struct addrinfo settings{};
@@ -55,12 +57,14 @@ _cold _nodiscard std::string utils::network::socket::resolve_hostname(const std:
     // Get the information
     onAdvancedVerbose("Get the correponding ipv4 from the hostname '" << hostname << "'...");
     if ((status = ::getaddrinfo(hostname.c_str(), nullptr, &settings, &res)) != 0)
-        throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, gai_strerror(status));
+        throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, ::gai_strerror(status));
 
     // Convert the result in an ip
     onAdvancedVerbose("Convert the result into a valid ipv4...");
-    if (!::inet_ntop(AF_INET, &((struct sockaddr_in*) res->ai_addr)->sin_addr, ip, sizeof(ip)))
-        throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, strerror(errno));
+    if (!::inet_ntop(AF_INET, &reinterpret_cast<sockaddr_in*>(res->ai_addr)->sin_addr, ip, sizeof(ip))) {
+        ::freeaddrinfo(res);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, std::strerror(errno));
+    }
 
     // Clean the memory
     ::freeaddrinfo(res);
@@ -69,17 +73,17 @@ _cold _nodiscard std::string utils::network::socket::resolve_hostname(const std:
     return std::string(ip);
 }
 
-_cold void utils::network::socket::resolve_address(utils::network::Address& address)
+_cold void utils::network::resolve_address(utils::network::Address& address)
 {
-    if (address.ip.first.empty() || !utils::network::socket::is_ip(address.ip.first)) {
+    if (address.ip.first.empty() || !utils::network::is_ip(address.ip.first)) {
         onBasicVerbose("Resolving the hostname...");
         if (address.ip.second.empty()) address.ip.second = address.ip.first; // Store the hostname
         else address.ip.first = address.ip.second;
-        address.ip.first = utils::network::socket::resolve_hostname(address.ip.first);
+        address.ip.first = utils::network::resolve_hostname(address.ip.first);
     }
 }
 
-_cold void utils::network::socket::ASocket::close(void) noexcept
+_cold void utils::network::ASocket::close(void) noexcept
 {
     if (this->_fd == -1) return; // Ignore invalid socket
 
@@ -87,17 +91,21 @@ _cold void utils::network::socket::ASocket::close(void) noexcept
     onAdvancedVerbose("Close the socket...");
     ::close(this->_fd);
     this->_fd = -1;
+
+    // Forget the buffers (a new connection could reuse the same fd number)
+    this->_buffersRecv.clear();
+    this->_buffersSend.clear();
     onBasicVerbose((this->_mode ? "Server closed!" : "Client closed!"));
 }
 
-_cold void utils::network::socket::ASocket::reset(void)
+_cold void utils::network::ASocket::reset(void)
 {
     this->_fd = -1;
     this->_buffersSend.clear();
     this->_buffersRecv.clear();
 }
 
-_hot _nodiscard bool utils::network::socket::ASocket::empty(int fd) const
+_hot _nodiscard bool utils::network::ASocket::empty(int fd) const
 {
     // Automatic redirection on self
     if (fd == -1) {
@@ -107,11 +115,56 @@ _hot _nodiscard bool utils::network::socket::ASocket::empty(int fd) const
     }
 
     // Try to know if there is still a valid payload in the fd's buffer
-    if (!this->_buffersRecv.contains(fd)) return true;
-    return (!this->_separator.empty() && this->_buffersRecv.at(fd).find(this->_separator) == std::string::npos);
+    auto it = this->_buffersRecv.find(fd);
+    if (it == this->_buffersRecv.end()) return true;
+    if (this->_separator.empty()) return it->second.empty(); // raw mode: any data is a payload
+    return it->second.find(this->_separator) == std::string::npos;
 }
 
-_hot _nodiscard int utils::network::socket::ASocket::accept(void)
+_cold void utils::network::ASocket::discard(int fd)
+{
+    // Every fd
+    if (fd == -1) {
+        this->_buffersRecv.clear();
+        this->_buffersSend.clear();
+        return;
+    }
+
+    this->_buffersRecv.erase(fd);
+    this->_buffersSend.erase(fd);
+}
+
+_hot _nodiscard std::size_t utils::network::ASocket::receive(int fd)
+{
+    // Automatic redirection on self
+    if (fd == -1) {
+        if ((fd = this->_fd) == -1) _unlikely { // Check if the redirect fd is valid
+            throw utils::exception::ErrorException(utils::exception::InternalCode::InvalidFd);
+        }
+    }
+
+    // Read once (the fd is readable: no wait)
+    std::vector<char> buffer(this->_chunk);
+    ssize_t bytes = this->recv(fd, buffer.data(), buffer.size());
+    if (bytes < 0) _unlikely {
+        if (errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR) return 0;
+        throw utils::exception::ErrorException(utils::exception::InternalCode::Socket, std::strerror(errno));
+    } else if (bytes == 0) _unlikely {
+        throw utils::exception::NoneException(utils::exception::InternalCode::SocketClosed);
+    }
+
+    // Store to the internal buffer & detect 'overflow' (0 = unlimited)
+    std::string& storage = this->_buffersRecv[fd];
+    storage.append(buffer.begin(), buffer.begin() + bytes);
+    std::size_t pos = this->_separator.empty() ? storage.size() : storage.find(this->_separator);
+    std::size_t size = (pos == std::string::npos) ? storage.size() : pos;
+    if (this->_overflow != 0 && size > this->_overflow) _unlikely {
+        throw utils::exception::ErrorException(utils::exception::InternalCode::Socket, "Overflow detected, maximum char accepted by payload is '" + std::to_string(this->_overflow) + "', but got: " + std::to_string(size));
+    }
+    return static_cast<std::size_t>(bytes);
+}
+
+_hot _nodiscard int utils::network::ASocket::accept(void)
 {
     // Check if the fd & mode is valid
     if (this->_fd == -1) _unlikely {
@@ -126,15 +179,15 @@ _hot _nodiscard int utils::network::socket::ASocket::accept(void)
 
     // Accept the client
     onAdvancedVerbose("Accepting the new connection...");
-    if ((fd = this->accept(this->_fd, (sockaddr *)&(storage), &len)) < 0)
-        throw utils::exception::ErrorException(utils::exception::InternalCode::Accept, strerror(errno));
+    if ((fd = this->accept(this->_fd, reinterpret_cast<sockaddr*>(&storage), &len)) < 0)
+        throw utils::exception::ErrorException(utils::exception::InternalCode::Accept, std::strerror(errno));
     const sockaddr_in& in = reinterpret_cast<const sockaddr_in&>(storage);
     onBasicVerbose("New client '" << ::inet_ntoa(in.sin_addr) << ":" << ::ntohs(in.sin_port) << "'");
 
     return fd;
 }
 
-_hot _nodiscard std::string utils::network::socket::ASocket::recv(int fd)
+_hot _nodiscard std::string utils::network::ASocket::recv(int fd)
 {
     // Automatic redirection on self
     if (fd == -1) {
@@ -146,14 +199,13 @@ _hot _nodiscard std::string utils::network::socket::ASocket::recv(int fd)
     std::vector<char> buffer(this->_chunk);
     std::string& storage = this->_buffersRecv[fd];
 
-    // Read the socket while there is no '\n' encountered
-    std::size_t pos = (this->_separator.empty() ? storage.size() : storage.find(this->_separator));
+    // Read the socket while there is no '\n' encountered (raw mode: while there is nothing)
+    std::size_t pos = (this->_separator.empty() ? (storage.empty() ? std::string::npos : storage.size()) : storage.find(this->_separator));
     while (pos == std::string::npos) {
-
         // Read the socket
         ssize_t bytes = this->recv(fd, buffer.data(), buffer.size());
         if (bytes < 0) _unlikely {
-            throw utils::exception::ErrorException(utils::exception::InternalCode::Socket, strerror(errno));
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Socket, std::strerror(errno));
         } else if (bytes == 0) _unlikely {
             throw utils::exception::NoneException(utils::exception::InternalCode::SocketClosed);
         }
@@ -164,9 +216,9 @@ _hot _nodiscard std::string utils::network::socket::ASocket::recv(int fd)
         // Search for any '\n'
         pos = (this->_separator.empty() ? storage.size() : storage.find(this->_separator));
 
-        // Detect 'overflow'
+        // Detect 'overflow' (0 = unlimited)
         std::size_t size = (pos == std::string::npos) ? storage.size() : pos;
-        if (size > this->_overflow) _unlikely {
+        if (this->_overflow != 0 && size > this->_overflow) _unlikely {
             throw utils::exception::ErrorException(utils::exception::InternalCode::Socket, "Overflow detected, maximum char accepted by payload is '" + std::to_string(this->_overflow) + "', but got: " + std::to_string(size));
         }
     }
@@ -178,7 +230,7 @@ _hot _nodiscard std::string utils::network::socket::ASocket::recv(int fd)
     return line;
 }
 
-_hot _nodiscard std::vector<std::string> utils::network::socket::ASocket::recvAll(int fd)
+_hot _nodiscard std::vector<std::string> utils::network::ASocket::recvAll(int fd)
 {
     // Automatic redirection on self
     if (fd == -1) {
@@ -189,11 +241,11 @@ _hot _nodiscard std::vector<std::string> utils::network::socket::ASocket::recvAl
 
     // While there is data to read
     std::vector<std::string> lines;
-    while (!this->empty()) lines.push_back(this->recv(fd));
+    while (!this->empty(fd)) lines.push_back(this->recv(fd));
     return lines;
 }
 
-_hot void utils::network::socket::ASocket::flush(int fd)
+_hot void utils::network::ASocket::flush(int fd)
 {
     // Automatic redirection on self
     if (fd == -1) {
@@ -207,11 +259,11 @@ _hot void utils::network::socket::ASocket::flush(int fd)
 
     // While the data wasn't fully sended
     ssize_t total = 0;
-    ssize_t size = buffer.size();
+    ssize_t size = static_cast<ssize_t>(buffer.size());
     while (total < size) {
-        ssize_t sent = this->send(fd, buffer.data() + total, size - total);
+        ssize_t sent = this->send(fd, buffer.data() + total, static_cast<std::size_t>(size - total));
         if (sent < 0) _unlikely {
-            throw utils::exception::ErrorException(utils::exception::InternalCode::Socket, strerror(errno));
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Socket, std::strerror(errno));
         } else if (sent == 0) _unlikely {
             throw utils::exception::NoneException(utils::exception::InternalCode::SocketClosed);
         }
@@ -222,7 +274,7 @@ _hot void utils::network::socket::ASocket::flush(int fd)
     buffer.clear();
 }
 
-_hot void utils::network::socket::ASocket::buffered(const std::string& s, int fd)
+_hot void utils::network::ASocket::buffered(const std::string& s, int fd)
 {
     // Automatic redirection on self
     if (fd == -1) {
@@ -231,8 +283,8 @@ _hot void utils::network::socket::ASocket::buffered(const std::string& s, int fd
         }
     }
 
-    // Check overflow
-    if (s.size() > this->_overflow) _unlikely {
+    // Check overflow (0 = unlimited)
+    if (this->_overflow != 0 && s.size() > this->_overflow) _unlikely {
         throw utils::exception::ErrorException(utils::exception::InternalCode::Socket, "Overflow detected, maximum char accepted by payload is '" + std::to_string(this->_overflow) + "', but got: " + std::to_string(s.size()));
     }
 

@@ -3,7 +3,7 @@ Edition:
 ##  @date 16/08/2026 by @author Tsukini
 
 File Name:
-##  @file Attribute-c++20.hpp
+##  @file c++20.hpp
 
 File Description:
 ##  Different attribute used for optimisation & other thing
@@ -19,6 +19,7 @@ File Description:
     /* attributes */
     #define _nodiscard      [[nodiscard]]                   // Warn for unused return
     #define _noinline       [[noinline]]                    // Cancel any auto inline from the compiler
+    #define _noreturn       [[noreturn]]                    // Signal a function that never return
     #define _unused         [[maybe_unused]]                // Signal an unused variable
     #define _hidden         [[gnu::visibility("hidden")]]   // Change the visibility on a shared lib
     #define _ctor           [[gnu::constructor]]            // Execute before the main

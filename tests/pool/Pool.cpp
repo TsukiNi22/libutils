@@ -200,3 +200,89 @@ TEST(Middlewares, ReferenceArguments) {
     m.callBefore("input");
     EXPECT_EQ(seen, "input");
 }
+
+/* -------------------------------- edge cases -------------------------------- */
+TEST(Cluster, SpawnManyNotMovedFrom) {
+    utils::pool::Cluster<std::string> cluster;
+    cluster.spawn(std::size_t{3}, std::string(5, 'x')); // rvalue: every element must be "xxxxx"
+    std::vector<std::string> values;
+    cluster.apply([&](std::string& s) {values.push_back(s);});
+    EXPECT_EQ(values, (std::vector<std::string>{"xxxxx", "xxxxx", "xxxxx"}));
+}
+
+TEST(Cluster, SpawnCountForNonIntegerType) {
+    utils::pool::Cluster<std::string> cluster;
+    cluster.spawn(3); // a std::string isn't constructible from an int: spawn 3 default elements
+    EXPECT_EQ(cluster.size(), 3u);
+}
+
+TEST(Middlewares, AddTemporary) {
+    utils::pool::Middlewares<int, void> m;
+    int sum = 0;
+    m.addBefore([&](int v) {sum += v;});
+    m.addAfter([&](void) {sum += 100;});
+    m.callBefore(1);
+    m.callAfter();
+    EXPECT_EQ(sum, 101);
+}
+
+TEST(Middlewares, MiddlewareEditingMiddlewares) {
+    utils::pool::Middlewares<void, void> m;
+    int count = 0;
+    m.addBefore([&](void) {++count; m.addAfter([&](void) {++count;});});
+    m.callBefore();
+    m.callAfter();
+    EXPECT_EQ(count, 2);
+}
+
+TEST(Middlewares, VoidVoidCallOrder) {
+    utils::pool::Middlewares<void, void> m;
+    std::vector<int> calls;
+    m.addBefore([&calls](void) {calls.push_back(1);});
+    m.addBefore({[&calls](void) {calls.push_back(2);}, [&calls](void) {calls.push_back(3);}});
+    m.addAfter([&calls](void) {calls.push_back(4);});
+    m.addAfter(std::vector<utils::pool::Middleware<void>>{[&calls](void) {calls.push_back(5);}});
+    m.callBefore();
+    m.callAfter();
+    EXPECT_EQ(calls, (std::vector<int>{1, 2, 3, 4, 5}));
+}
+
+TEST(Middlewares, VoidVoidAfterExceptionWrapped) {
+    utils::pool::Middlewares<void, void> m;
+    m.addAfter([](void) {throw std::runtime_error("after");});
+    try {
+        m.callAfter();
+        FAIL() << "Expected an exception";
+    } catch (const utils::exception::IException& e) {
+        EXPECT_EQ(e.getCode(), utils::exception::InternalCode::MiddlewareCall);
+    }
+}
+
+TEST(Middlewares, VoidVoidEditDuringCall) {
+    utils::pool::Middlewares<void, void> m;
+    int calls = 0;
+    m.addBefore([&](void) {++calls; m.addBefore([&calls](void) {++calls;});}); // a middleware can edit the middlewares
+    m.callBefore();
+    EXPECT_EQ(calls, 1); // snapshot: the new one is for the next call
+    m.callBefore();
+    EXPECT_EQ(calls, 3);
+}
+
+TEST(Middlewares, VoidVoidCopyAndMove) {
+    utils::pool::Middlewares<void, void> a;
+    int calls = 0;
+    a.addBefore([&calls](void) {++calls;});
+    utils::pool::Middlewares<void, void> b;
+    b = a;
+    b.callBefore();
+    utils::pool::Middlewares<void, void> c;
+    c = std::move(b);
+    c.callBefore();
+    utils::pool::Middlewares<void, void>& self = a;
+    a = self; // self assignment
+    a.callBefore();
+    utils::pool::Middlewares<void, void> d(a);
+    utils::pool::Middlewares<void, void> e(std::move(d));
+    e.callBefore();
+    EXPECT_EQ(calls, 4);
+}

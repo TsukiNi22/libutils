@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 21/09/2026 by @author Tsukini
+##  @date 01/10/2026 by @author Tsukini
 
 File Name:
 ##  @file IdHandler.hpp
@@ -28,6 +28,7 @@ File Description:
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::InternalCode
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "../exception/custom/FatalException.hpp"   // utils::exception::FatalException
+    #include <type_traits>                              // std::is_integral_v
     #include <limits>                                   // std::numeric_limits<T>
     #include <mutex>                                    // std::mutex
     #include <set>                                      // std::set
@@ -54,18 +55,18 @@ class IdHandler {
             if (safe_mode) lock.lock();
             else (void)lock.try_lock();
 
-            T id;
+            T id = 0;
             if (this->_freeIds.size() > 0) {
                 auto it = this->_freeIds.begin();
                 id = *it;
                 this->_freeIds.erase(id);
             } else _likely {
-                if (this->_id == std::numeric_limits<T>::max()) _unlikely {
-                    throw utils::exception::FatalException(utils::exception::InternalCode::IdOverflow);
-                }
-                id = ++this->_id;
-                if (id == 0) _unlikely {id = ++this->_id;}
-                while (this->_usedIds.contains(id)) _unlikely {id = ++this->_id;}
+                do { // skip 0 (reserved) & the forced ids, the overflow is checked at each step
+                    if (this->_id == std::numeric_limits<T>::max()) _unlikely {
+                        throw utils::exception::FatalException(utils::exception::InternalCode::IdOverflow);
+                    }
+                    id = ++this->_id;
+                } while (id == 0 || this->_usedIds.contains(id));
             }
             return id;
         };
@@ -75,13 +76,26 @@ class IdHandler {
             if (safe_mode) lock.lock();
             else (void)lock.try_lock();
 
+            // 0 is never distributed
+            if (id == 0) _unlikely {
+                throw utils::exception::ErrorException(utils::exception::InternalCode::InvalidId, "The id 0 is reserved");
+            }
+
+            // Above the counter: only a forced id can be freed (the counter will give it later)
+            if (id > this->_id) _unlikely {
+                if (this->_usedIds.erase(id) == 0) _unlikely {
+                    throw utils::exception::ErrorException(utils::exception::InternalCode::UnknownId, "This id was never distributed");
+                }
+                return;
+            }
+
             // Only if the id wasn't already free
             if (!this->_freeIds.insert(id).second) _unlikely {
                 throw utils::exception::ErrorException(utils::exception::InternalCode::DoubleFree);
             }
 
-            // Check if it's need to be removed from forced
-            if (!this->_usedIds.contains(id)) {this->_usedIds.erase(id);}
+            // Remove it from the forced ones (if it was forced)
+            this->_usedIds.erase(id);
         };
 
     public:
@@ -92,10 +106,12 @@ class IdHandler {
             if (safe_mode) lock.lock();
             else (void)lock.try_lock();
 
-            // Check if the id is free
-            if (this->_freeIds.contains(id)) _unlikely {
+            // Check if the id is free (released or never distributed)
+            if (id == 0) _unlikely {
+                throw utils::exception::ErrorException(utils::exception::InternalCode::InvalidId, "The id 0 is reserved");
+            } else if (this->_freeIds.contains(id)) _unlikely {
                 this->_freeIds.erase(id);
-            } else if (this->_id <= id) _unlikely {
+            } else if (id <= this->_id) _unlikely { // already distributed and still in use
                 throw utils::exception::ErrorException(utils::exception::InternalCode::DoubleUse);
             }
 
@@ -122,20 +138,24 @@ class IdHandler {
 
             if (this->_freeIds.size() > 0) {
                 return *this->_freeIds.begin();
-            } else _likely {
-                if (this->_id == std::numeric_limits<T>::max()) _unlikely {
-                    throw utils::exception::FatalException(utils::exception::InternalCode::IdOverflow);
-                }
-                if (this->_id + 1 == 0) _unlikely {return this->_id + 2;}
-                else _likely {return this->_id + 1;}
             }
-            return 0;
+
+            // Same as allocate (skip 0 & the forced ids) without changing anything
+            T id = this->_id;
+            do {
+                if (id == std::numeric_limits<T>::max()) _unlikely {
+                    throw utils::exception::ErrorException(utils::exception::InternalCode::IdOverflow);
+                }
+                ++id;
+            } while (id == 0 || this->_usedIds.contains(id));
+            return id;
         };
-        _hot T allocate(T& id, const bool safe_mode = true)     {return (id = this->allocate_(safe_mode));};
-        _hot _nodiscard T allocate(const bool safe_mode = true) {return this->allocate_(safe_mode);};
-        _hot void free(T& id, const bool safe_mode = true)       {this->free_(id, safe_mode); id = 0;}
-        _hot void free(const T& id, const bool safe_mode = true) {this->free_(id, safe_mode);};
-        _cold void free(const bool safe_mode = true)
+        _hot inline T allocate(T& id, const bool safe_mode = true)      {return (id = this->allocate_(safe_mode));};
+        _hot _nodiscard inline T allocate(const bool safe_mode = true)  {return this->allocate_(safe_mode);};
+        _hot inline void free(T& id, const bool safe_mode = true)       {this->free_(id, safe_mode); id = 0;};
+        _hot inline void free(const T& id, const bool safe_mode = true) {this->free_(id, safe_mode);};
+        _cold inline void free(void)                                    {this->clear(true);}; // free every id
+        _cold void clear(const bool safe_mode = true) // free every id
         {
             std::unique_lock<std::mutex> lock(this->_lock, std::defer_lock);
             if (safe_mode) lock.lock();
@@ -144,6 +164,7 @@ class IdHandler {
             // Reset value (no id in circulation)
             this->_id = std::numeric_limits<T>::min();
             this->_freeIds.clear();
+            this->_usedIds.clear();
         };
 
         // ------------ Operator ---------- //

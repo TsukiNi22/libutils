@@ -33,8 +33,8 @@ TEST(GlobalConcepts, Convertible) {
     EXPECT_TRUE((utils::concepts::Convertible<int, double>));
     EXPECT_TRUE((utils::concepts::Convertible<const char*, std::string>));
     EXPECT_FALSE((utils::concepts::Convertible<std::string, int>));
-    EXPECT_TRUE((utils::concepts::convertible_to<int, long>));
-    EXPECT_FALSE((utils::concepts::convertible_to<NoOp, int>));
+    EXPECT_TRUE((utils::concepts::ConvertibleTo<int, long>));
+    EXPECT_FALSE((utils::concepts::ConvertibleTo<NoOp, int>));
 }
 
 TEST(GlobalConcepts, SwappableStreamable) {

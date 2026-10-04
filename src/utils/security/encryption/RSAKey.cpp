@@ -11,7 +11,7 @@ Edition:
 ##  @date 16/08/2026 by @author Tsukini
 
 File Name:
-##  @file RSAKey.hpp
+##  @file RSAKey.cpp
 
 File Description:
 ##  Definition of the RSA key methods
@@ -26,6 +26,9 @@ File Description:
 #include <openssl/pem.h>
 #include <openssl/core_names.h>
 #include <openssl/param_build.h>
+#include <algorithm>
+#include <cstddef>
+#include <cstdint>
 #include <memory>
 #include <vector>
 #include <string>
@@ -35,9 +38,9 @@ using BioPtr = std::unique_ptr<BIO, decltype(&BIO_free)>;
 using PkeyPtr = std::unique_ptr<EVP_PKEY, decltype(&EVP_PKEY_free)>;
 using PkeyCtxPtr = std::unique_ptr<EVP_PKEY_CTX, decltype(&EVP_PKEY_CTX_free)>;
 
-inline BioPtr makeBio(BIO* bio) {return BioPtr(bio, BIO_free);}
-inline PkeyPtr makePkey(EVP_PKEY* pkey) {return PkeyPtr(pkey, EVP_PKEY_free);}
-inline PkeyCtxPtr makePkeyCtx(EVP_PKEY_CTX* ctx) {return PkeyCtxPtr(ctx, EVP_PKEY_CTX_free);}
+_hot _nodiscard static inline BioPtr make_bio(BIO* bio)                   {return BioPtr(bio, BIO_free);};
+_hot _nodiscard static inline PkeyPtr make_pkey(EVP_PKEY* pkey)           {return PkeyPtr(pkey, EVP_PKEY_free);};
+_hot _nodiscard static inline PkeyCtxPtr make_pkey_ctx(EVP_PKEY_CTX* ctx) {return PkeyCtxPtr(ctx, EVP_PKEY_CTX_free);};
 
 _cold void utils::security::encryption::RSAKey::generate(void)
 {
@@ -46,7 +49,7 @@ _cold void utils::security::encryption::RSAKey::generate(void)
     long privLen = 0, pubLen = 0;
 
     // Init the keygen context
-    PkeyCtxPtr genCtx = makePkeyCtx(EVP_PKEY_CTX_new_from_name(nullptr, "RSA", nullptr));
+    PkeyCtxPtr genCtx = make_pkey_ctx(EVP_PKEY_CTX_new_from_name(nullptr, "RSA", nullptr));
     if (!genCtx)
         throw utils::exception::ErrorException(utils::exception::InternalCode::Encryption, "Error during the creation of the RSA keygen context");
 
@@ -59,11 +62,11 @@ _cold void utils::security::encryption::RSAKey::generate(void)
     EVP_PKEY* rawPkey = nullptr;
     if (EVP_PKEY_keygen(genCtx.get(), &rawPkey) <= 0)
         throw utils::exception::ErrorException(utils::exception::InternalCode::Encryption, "Failed to generate RSA key");
-    PkeyPtr pkey = makePkey(rawPkey);
+    PkeyPtr pkey = make_pkey(rawPkey);
 
     // Store the key in memory (PEM)
-    BioPtr privBio = makeBio(BIO_new(BIO_s_mem()));
-    BioPtr pubBio  = makeBio(BIO_new(BIO_s_mem()));
+    BioPtr privBio = make_bio(BIO_new(BIO_s_mem()));
+    BioPtr pubBio  = make_bio(BIO_new(BIO_s_mem()));
     if (!privBio || !pubBio)
         throw utils::exception::ErrorException(utils::exception::InternalCode::Encryption, "Error during the allocation of the BIO to store the key (PEM)");
 
@@ -74,75 +77,100 @@ _cold void utils::security::encryption::RSAKey::generate(void)
     // Convert the key PEM in string
     if ((privLen = BIO_get_mem_data(privBio.get(), &privData)) <= 0 || !privData)
         throw utils::exception::ErrorException(utils::exception::InternalCode::Encryption, "Failed to convert private keys (PEM) into string");
-    this->_keys.priv.assign(privData, privLen);
+    this->_keys.priv.assign(privData, static_cast<std::size_t>(privLen));
 
     if ((pubLen = BIO_get_mem_data(pubBio.get(), &pubData)) <= 0 || !pubData)
         throw utils::exception::ErrorException(utils::exception::InternalCode::Encryption, "Failed to convert public keys (PEM) into string");
-    this->_keys.pub.assign(pubData, pubLen);
+    this->_keys.pub.assign(pubData, static_cast<std::size_t>(pubLen));
 }
 
 _hot _nodiscard std::string utils::security::encryption::RSAKey::encrypt(const std::string& s) const
 {
-    std::vector<std::uint8_t> data = utils::security::encryption::stringToKey(s);
+    std::vector<std::uint8_t> data = utils::security::encryption::string_to_key(s);
 
     // Convert the key string in PEM
-    BioPtr pubBio = makeBio(BIO_new_mem_buf(this->_keys.pub.data(), static_cast<int>(this->_keys.pub.size())));
+    BioPtr pubBio = make_bio(BIO_new_mem_buf(this->_keys.pub.data(), static_cast<int>(this->_keys.pub.size())));
     if (!pubBio)
         throw utils::exception::ErrorException(utils::exception::InternalCode::Encryption, "Error during the allocation of the BIO to store the key (PEM)");
 
-    PkeyPtr pkey = makePkey(PEM_read_bio_PUBKEY(pubBio.get(), nullptr, nullptr, nullptr));
+    PkeyPtr pkey = make_pkey(PEM_read_bio_PUBKEY(pubBio.get(), nullptr, nullptr, nullptr));
     if (!pkey)
         throw utils::exception::ErrorException(utils::exception::InternalCode::Encryption, "Error during the read of the RSA key");
 
-    PkeyCtxPtr ctx = makePkeyCtx(EVP_PKEY_CTX_new(pkey.get(), nullptr));
+    PkeyCtxPtr ctx = make_pkey_ctx(EVP_PKEY_CTX_new(pkey.get(), nullptr));
     if (!ctx || EVP_PKEY_encrypt_init(ctx.get()) <= 0)
         throw utils::exception::ErrorException(utils::exception::InternalCode::Encryption, "Error during the initialization of the RSA encryption context");
 
     if (EVP_PKEY_CTX_set_rsa_padding(ctx.get(), RSA_PKCS1_OAEP_PADDING) <= 0)
         throw utils::exception::ErrorException(utils::exception::InternalCode::Encryption, "Error while setting the RSA padding");
 
-    // Determine the output size, then encrypt
-    std::size_t outLen = 0;
-    if (EVP_PKEY_encrypt(ctx.get(), nullptr, &outLen, data.data(), data.size()) <= 0)
-        throw utils::exception::ErrorException(utils::exception::InternalCode::Encryption, "Data too big to be encrypted");
+    // RSA can only encrypt (key size - padding) bytes at once: encrypt block by block
+    const int keySize = EVP_PKEY_get_size(pkey.get());
+    if (keySize <= RSA_OAEP_PADDING_SIZE) _unlikely {
+        throw utils::exception::ErrorException(utils::exception::InternalCode::Encryption, "Invalid RSA key size");
+    }
+    const std::size_t blockSize = static_cast<std::size_t>(keySize - RSA_OAEP_PADDING_SIZE);
 
-    std::vector<uint8_t> encryptedData(outLen);
-    if (EVP_PKEY_encrypt(ctx.get(), encryptedData.data(), &outLen, data.data(), data.size()) <= 0)
-        throw utils::exception::ErrorException(utils::exception::InternalCode::Encryption, "Error during the RSA encryption of the data");
+    std::vector<std::uint8_t> encryptedData;
+    std::size_t offset = 0;
+    do { // at least one block (empty data)
+        const std::size_t len = std::min(blockSize, data.size() - offset);
 
-    encryptedData.resize(outLen);
-    return utils::security::encryption::keyToString(encryptedData);
+        // Determine the output size, then encrypt
+        std::size_t outLen = 0;
+        if (EVP_PKEY_encrypt(ctx.get(), nullptr, &outLen, data.data() + offset, len) <= 0)
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Encryption, "Error during the RSA encryption setup of the data");
+
+        std::vector<std::uint8_t> block(outLen);
+        if (EVP_PKEY_encrypt(ctx.get(), block.data(), &outLen, data.data() + offset, len) <= 0)
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Encryption, "Error during the RSA encryption of the data");
+
+        encryptedData.insert(encryptedData.end(), block.begin(), block.begin() + static_cast<std::ptrdiff_t>(outLen));
+        offset += len;
+    } while (offset < data.size());
+
+    return utils::security::encryption::key_to_string(encryptedData);
 }
 
 _hot _nodiscard std::string utils::security::encryption::RSAKey::decrypt(const std::string& s) const
 {
-    std::vector<std::uint8_t> encryptedData = utils::security::encryption::stringToKey(s);
+    std::vector<std::uint8_t> encryptedData = utils::security::encryption::string_to_key(s);
 
     // Convert the key string in PEM
-    BioPtr privBio = makeBio(BIO_new_mem_buf(this->_keys.priv.data(), static_cast<int>(this->_keys.priv.size())));
+    BioPtr privBio = make_bio(BIO_new_mem_buf(this->_keys.priv.data(), static_cast<int>(this->_keys.priv.size())));
     if (!privBio)
         throw utils::exception::ErrorException(utils::exception::InternalCode::Decryption, "Error during the allocation of the BIO to store the key (PEM)");
 
-    PkeyPtr pkey = makePkey(PEM_read_bio_PrivateKey(privBio.get(), nullptr, nullptr, nullptr));
+    PkeyPtr pkey = make_pkey(PEM_read_bio_PrivateKey(privBio.get(), nullptr, nullptr, nullptr));
     if (!pkey)
         throw utils::exception::ErrorException(utils::exception::InternalCode::Decryption, "Error during the read of the RSA key");
 
-    PkeyCtxPtr ctx = makePkeyCtx(EVP_PKEY_CTX_new(pkey.get(), nullptr));
+    PkeyCtxPtr ctx = make_pkey_ctx(EVP_PKEY_CTX_new(pkey.get(), nullptr));
     if (!ctx || EVP_PKEY_decrypt_init(ctx.get()) <= 0)
         throw utils::exception::ErrorException(utils::exception::InternalCode::Decryption, "Error during the initialization of the RSA decryption context");
 
     if (EVP_PKEY_CTX_set_rsa_padding(ctx.get(), RSA_PKCS1_OAEP_PADDING) <= 0)
         throw utils::exception::ErrorException(utils::exception::InternalCode::Decryption, "Error while setting the RSA padding");
 
-    // Determine the output size, then decrypt
-    std::size_t outLen = 0;
-    if (EVP_PKEY_decrypt(ctx.get(), nullptr, &outLen, encryptedData.data(), encryptedData.size()) <= 0)
-        throw utils::exception::ErrorException(utils::exception::InternalCode::Decryption, "Error during the RSA decryption of the data");
+    // The data is a list of encrypted blocks of 'key size' bytes
+    const std::size_t keySize = static_cast<std::size_t>(EVP_PKEY_get_size(pkey.get()));
+    if (keySize == 0 || encryptedData.empty() || encryptedData.size() % keySize != 0) _unlikely {
+        throw utils::exception::ErrorException(utils::exception::InternalCode::Decryption, "Invalid RSA encrypted data size");
+    }
 
-    std::vector<uint8_t> data(outLen);
-    if (EVP_PKEY_decrypt(ctx.get(), data.data(), &outLen, encryptedData.data(), encryptedData.size()) <= 0)
-        throw utils::exception::ErrorException(utils::exception::InternalCode::Decryption, "Error during the RSA decryption of the data");
+    std::vector<std::uint8_t> data;
+    for (std::size_t offset = 0; offset < encryptedData.size(); offset += keySize) {
+        // Determine the output size, then decrypt
+        std::size_t outLen = 0;
+        if (EVP_PKEY_decrypt(ctx.get(), nullptr, &outLen, encryptedData.data() + offset, keySize) <= 0)
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Decryption, "Error during the RSA decryption of the data");
 
-    data.resize(outLen);
-    return utils::security::encryption::keyToString(data);
+        std::vector<std::uint8_t> block(outLen);
+        if (EVP_PKEY_decrypt(ctx.get(), block.data(), &outLen, encryptedData.data() + offset, keySize) <= 0)
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Decryption, "Error during the RSA decryption of the data");
+
+        data.insert(data.end(), block.begin(), block.begin() + static_cast<std::ptrdiff_t>(outLen));
+    }
+
+    return utils::security::encryption::key_to_string(data);
 }

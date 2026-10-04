@@ -3,7 +3,7 @@ Edition:
 ##  @date 16/08/2026 by @author Tsukini
 
 File Name:
-##  @file Attribute-c++14.hpp
+##  @file c++14.hpp
 
 File Description:
 ##  Different attribute used for optimisation & other thing
@@ -19,6 +19,7 @@ File Description:
     /* attributes */
     #define _nodiscard      __attribute__((warn_unused_result))     // Warn for unused return
     #define _noinline       __attribute__((noinline))               // Cancel any auto inline from the compiler
+    #define _noreturn       [[noreturn]]                            // Signal a function that never return
     #define _unused         __attribute__((unused))                 // Signal an unused variable
     #define _hidden         __attribute__((visibility("hidden")))   // Change the visibility on a shared lib
     #define _ctor           __attribute__((constructor))            // Execute before the main
@@ -36,7 +37,7 @@ File Description:
     #define _likely_c(c)    __builtin_expect(!!(c), 1)  // Signal a condition that has a bigger probability of appening
     #define _unlikely_c(c)  __builtin_expect(!!(c), 0)  // Signal a condition that has a smallest probability of appening
     #define _expect(c, v)   __builtin_expect(c, v)      // Signal a condition that has a high probability of having the given value
-    
+
     /* optimisation */
     #define _assume(expr)   __builtin_assume(expr)  // Assume a given expr as true
     #define _cold           __attribute__((cold))   // Signal a function that has a small number of use

@@ -17,8 +17,8 @@ File Description:
 ##  Declaration of the key used for the common RSA
 \**************************************************************/
 
-#ifndef COMMOMRSAKEY_H
-    #define COMMOMRSAKEY_H
+#ifndef COMMONRSAKEY_H
+    #define COMMONRSAKEY_H
 
     //----------------------------------------------------------------//
     /* INCLUDE */
@@ -58,4 +58,4 @@ class CommonRSAKey: public utils::security::encryption::RSAKey {
 };
 
 } // namespace end
-#endif /* COMMOMRSAKEY_H */
+#endif /* COMMONRSAKEY_H */

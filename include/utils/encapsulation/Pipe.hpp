@@ -41,28 +41,29 @@ class Pipe: private utils::security::observer::Observer<"Pipe"> {
         _cold inline void close_(int& fd) noexcept {if (fd != -1) ::close(fd); fd = -1;};
 
     public:
-        // ------------ Function ---------- //
+        // ---------- Pre-Function -------- //
         void trigger(void);
 
+        // ------------ Function ---------- //
         /* close */
-        _cold inline void closeRead(void) noexcept {this->close_(this->_fds[0]);};
+        _cold inline void closeRead(void) noexcept  {this->close_(this->_fds[0]);};
         _cold inline void closeWrite(void) noexcept {this->close_(this->_fds[1]);};
-        _cold inline void close(void) noexcept {this->closeRead(); this->closeWrite();};
-        _cold inline void clear(void) {this->_fds[0] = -1; this->_fds[1] = -1;};
+        _cold inline void close(void) noexcept      {this->closeRead(); this->closeWrite();};
+        _cold inline void clear(void)               {this->_fds[0] = -1; this->_fds[1] = -1;};
 
         /* getter */
         _cold _nodiscard inline const std::array<int, 2>& getFds(void) const {return this->_fds;};
-        _cold _nodiscard inline int getRead(void) const {return this->_fds[0];};
-        _cold _nodiscard inline int getWrite(void) const {return this->_fds[1];};
+        _cold _nodiscard inline int getRead(void) const                      {return this->_fds[0];};
+        _cold _nodiscard inline int getWrite(void) const                     {return this->_fds[1];};
 
         /* setter */
         _cold inline void setFds(const std::array<int, 2>& fds) {this->_fds = fds;};
-        _cold inline void setRead(const int fd = -1) {this->_fds[0] = fd;};
-        _cold inline void setWrite(const int fd = -1) {this->_fds[1] = fd;};
+        _cold inline void setRead(const int fd = -1)            {this->_fds[0] = fd;};
+        _cold inline void setWrite(const int fd = -1)           {this->_fds[1] = fd;};
 
         // ------------ Operator ---------- //
         Pipe& operator=(const Pipe& other) = delete;
-        Pipe& operator=(Pipe&& other) {this->_fds = other._fds; other.clear(); return *this;};
+        Pipe& operator=(Pipe&& other) {if (this != &other) {this->close(); this->_fds = other._fds; other.clear();} return *this;};
 
         // ---------- Constructor --------- //
         Pipe(const int fds[2]): _fds{fds[0], fds[1]} {};

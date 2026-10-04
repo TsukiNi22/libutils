@@ -27,9 +27,13 @@ File Description:
 #include <cstring>
 #include <cerrno>
 #include <vector>
+#include <string>
 
-_hot bool utils::encapsulation::Process::is(void) const
+_hot _nodiscard bool utils::encapsulation::Process::is(void) const
 {
+    // No process (never spawned or already waited/killed), kill(-1, ...) would target every process
+    if (this->_pid == -1) return false;
+
     // Check of existance using dull signal: 0
     if (::kill(this->_pid, 0) == 0) _likely {return true;}
     else if (errno == ESRCH) _unlikely {return false;} // No process with this pid
@@ -44,16 +48,16 @@ _cold _nodiscard pid_t utils::encapsulation::Process::spawn(void)
     }
 
     // Init the pipe
-    for (utils::encapsulation::Pipe& pipe: _pipes) pipe.trigger();
+    for (utils::encapsulation::Pipe& pipe: this->_pipes) pipe.trigger();
 
     if ((this->_pid = ::fork()) == -1) _unlikely {
-        throw utils::exception::ErrorException(utils::exception::InternalCode::Kill, ::strerror(errno));
+        throw utils::exception::ErrorException(utils::exception::InternalCode::Fork, ::strerror(errno));
     }
 
     // child
     if (this->_pid == 0) {
         // Init the dup
-        for (utils::encapsulation::Dup& dup: _dups) dup.trigger();
+        for (utils::encapsulation::Dup& dup: this->_dups) dup.trigger();
 
         return this->_pid;
     }
@@ -68,23 +72,34 @@ _cold _nodiscard pid_t utils::encapsulation::Process::spawn(const std::string& p
         throw utils::exception::ErrorException(utils::exception::InternalCode::Process, "Process is already running, call kill() or wait() before spawn()");
     }
 
+    // Check the dup before the fork (an error in the child can't reach the caller)
+    for (const utils::encapsulation::Dup& dup: this->_dups) {
+        if (dup.getOrigin() == -1) _unlikely {
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Dup, "The origin fd is close, please set a valid fd: setOrigin(int fd)");
+        }
+    }
+
+    // build argv (no allocation between the fork & the exec)
+    std::vector<char*> argv;
+    argv.push_back(const_cast<char*>(path.c_str()));
+    for (const std::string& s: args) argv.push_back(const_cast<char*>(s.c_str()));
+    argv.push_back(nullptr);
+
     // Init the pipe
-    for (utils::encapsulation::Pipe& pipe: _pipes) pipe.trigger();
+    for (utils::encapsulation::Pipe& pipe: this->_pipes) pipe.trigger();
 
     if ((this->_pid = ::fork()) == -1) _unlikely {
-        throw utils::exception::ErrorException(utils::exception::InternalCode::Kill, ::strerror(errno));
+        throw utils::exception::ErrorException(utils::exception::InternalCode::Fork, ::strerror(errno));
     }
 
     // child
     if (this->_pid == 0) {
-        // Init the dup
-        for (utils::encapsulation::Dup& dup: _dups) dup.trigger();
-
-        // build argv
-        std::vector<char*> argv;
-        argv.push_back(const_cast<char*>(path.c_str()));
-        for (const std::string& s: args) argv.push_back(const_cast<char*>(s.c_str()));
-        argv.push_back(nullptr);
+        // Init the dup (the child must never go back to the caller's code)
+        try {
+            for (utils::encapsulation::Dup& dup: this->_dups) dup.trigger();
+        } catch (...) {
+            ::_exit(127);
+        }
 
         // replace this process by the new
         ::execvp(path.c_str(), argv.data());
@@ -97,15 +112,15 @@ _cold _nodiscard pid_t utils::encapsulation::Process::spawn(const std::string& p
     return this->_pid;
 }
 
-_cold void utils::encapsulation::Process::replace(const std::string& path, const std::vector<std::string>& args)
+_cold _noreturn void utils::encapsulation::Process::replace(const std::string& path, const std::vector<std::string>& args)
 {
     if (this->_pid != -1) {
         throw utils::exception::ErrorException(utils::exception::InternalCode::Process, "Process is already running, call kill() or wait() before spawn()");
     }
- 
+
     // Init the pipe & dup
-    for (utils::encapsulation::Pipe& pipe: _pipes) pipe.trigger();
-    for (utils::encapsulation::Dup& dup: _dups) dup.trigger();
+    for (utils::encapsulation::Pipe& pipe: this->_pipes) pipe.trigger();
+    for (utils::encapsulation::Dup& dup: this->_dups) dup.trigger();
 
     // build argv
     std::vector<char*> argv;
@@ -167,6 +182,6 @@ _cold void utils::encapsulation::Process::kill(void)
 
     // wait for the end of the process killed
     int status = 0;
-    ::waitpid(this->_pid, &status, 0);
+    (void)::waitpid(this->_pid, &status, 0);
     this->_pid = -1;
 }

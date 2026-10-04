@@ -54,7 +54,7 @@ File Description:
 /* Desactivate all automatic warning & _deprecated message */
 #ifdef _NoWarning
     #define NO_DEPRECATED_WARNING // _deprecated(...)
-    #define BACKWARD_COMPATIBILITY_WARNING // Things that still here but soon will potentialy be removed (only keep for backward compatibility)
+    #define NO_BACKWARD_COMPATIBILITY_WARNING // Things that still here but soon will potentialy be removed (only keep for backward compatibility)
     #define NO_LINKER_WARNING // Linker requirement
     #define NO_USAGE_WARNING // Things that should be used carfully
     //#warning "All warnings from 'utils/utils.hpp' are disable"
@@ -184,7 +184,7 @@ File Description:
 #ifdef _Cli
     // -> Handling of a customizable command line interface
     #include "cli/Cli.hpp"          // utils::cli::Cli, utils::cli::ParsedData
-    #include "cli/Flags.hpp"        // utils::cli::Flag, utils::cli::Flags
+    #include "cli/Flags.hpp"        // utils::cli::Flag, utils::cli::flags
 #endif
 
 /* Macro */
@@ -301,7 +301,7 @@ File Description:
 /* Network - Socket */
 #ifdef _Socket
     // -> Handling of socket and tools
-    #include "network/socket/Socket.hpp"    // utils::network::socket::ISocket, utils::network::socket::*Socket, utils::network::socket::* (tools)
+    #include "network/socket/Socket.hpp"    // utils::network::ISocket, utils::network::*Socket, utils::network::* (tools)
 #endif
 
 /* Input/Output - Manip */

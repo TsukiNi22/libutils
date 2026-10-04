@@ -11,7 +11,7 @@ Edition:
 ##  @date 06/09/2026 by @author Tsukini
 
 File Name:
-##  @file Dup.cpp
+##  @file Poll.cpp
 
 File Description:
 ##  Definition of the Poll's methods
@@ -25,11 +25,11 @@ File Description:
 #include <unistd.h>
 #include <cstddef>
 #include <cstring>
-#include <cstring>
+#include <utility>
 #include <vector>
 #include <cerrno>
 
-utils::encapsulation::Poll& utils::encapsulation::Poll::operator=(Poll&& other)
+_cold utils::encapsulation::Poll& utils::encapsulation::Poll::operator=(utils::encapsulation::Poll&& other)
 {
     this->close();
     this->_fd = other._fd;
@@ -50,9 +50,10 @@ _cold void utils::encapsulation::Poll::close(void)
 {
     if (this->_fd != -1) ::close(this->_fd);
     this->_fd = -1;
+    this->_registered.clear();
 }
 
-void utils::encapsulation::Poll::link(int fd, std::uint32_t events, void* data)
+_cold void utils::encapsulation::Poll::link(int fd, std::uint32_t events, void* data)
 {
     struct epoll_event ev{};
     ev.events = events;
@@ -69,7 +70,7 @@ void utils::encapsulation::Poll::link(int fd, std::uint32_t events, void* data)
     this->_registered.insert(fd);
 }
 
-void utils::encapsulation::Poll::edit(int fd, std::uint32_t events, void* data) const
+_cold void utils::encapsulation::Poll::edit(int fd, std::uint32_t events, void* data) const
 {
     struct epoll_event ev{};
     ev.events = events;
@@ -84,7 +85,7 @@ void utils::encapsulation::Poll::edit(int fd, std::uint32_t events, void* data) 
     }
 }
 
-void utils::encapsulation::Poll::unlink(int fd)
+_cold void utils::encapsulation::Poll::unlink(int fd)
 {
     if (epoll_ctl(this->_fd, EPOLL_CTL_DEL, fd, nullptr) == -1) _unlikely {
         // ENOENT/EBADF: fd is no longer used (already closed or removed)
@@ -100,9 +101,8 @@ _hot _nodiscard std::vector<struct epoll_event> utils::encapsulation::Poll::wait
     const std::size_t max = (limits != 0) ? limits : (this->_registered.empty() ? 1 : this->_registered.size());
     std::vector<struct epoll_event> events(max);
 
-    int n;
-    do {n = epoll_wait(this->_fd, events.data(), static_cast<int>(max), delay);}
-    while (n == -1 && errno == EINTR); // external interuption (not a error)
+    int n = 0;
+    do {n = epoll_wait(this->_fd, events.data(), static_cast<int>(max), delay);} while (n == -1 && errno == EINTR); // external interruption (not an error)
 
     if (n == -1) _unlikely {
         throw utils::exception::ErrorException(utils::exception::InternalCode::EPoll, std::strerror(errno));

@@ -11,7 +11,7 @@ Edition:
 ##  @date 19/08/2026 by @author Tsukini
 
 File Name:
-##  @file Middlewares.hpp
+##  @file MiddlewaresType.hpp
 
 File Description:
 ##  Declaration of the Middleware type for void & non void function
@@ -26,9 +26,9 @@ File Description:
     /* type */
     #include <functional>   // std::function
 
-namespace utils::pool { // namespace
+namespace utils::pool { // namespace start
 //----------------------------------------------------------------//
-/* CLASS */
+/* STRUCT */
 
 template<typename T>
 struct MiddlewareType {
@@ -37,11 +37,14 @@ struct MiddlewareType {
 
 template<>
 struct MiddlewareType<void> {
-    using type = std::function<void()>;
+    using type = std::function<void(void)>;
 };
 
+//----------------------------------------------------------------//
+/* TYPE */
+
 template<typename T>
-using Middleware = typename MiddlewareType<T>::type;
+using Middleware = typename utils::pool::MiddlewareType<T>::type;
 
 } // namespace end
 #endif /* MIDDLEWARESTYPE_H */

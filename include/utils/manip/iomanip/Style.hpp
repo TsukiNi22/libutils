@@ -24,11 +24,11 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include <iostream>
+    #include <cstdint>  // std::uint8_t
 
 namespace utils::iomanip { // namespace start
 //----------------------------------------------------------------//
-/* TYPDEF */
+/* ENUM */
 
 /* style */
 enum class Style: std::uint8_t {
@@ -36,8 +36,8 @@ enum class Style: std::uint8_t {
     Dark,
     Italic,
     Underlined,
-    FlashingFast,
-    FlashingSlow,
+    FlashingSlow,   // 5 (ECMA-48: slowly blinking)
+    FlashingFast,   // 6 (ECMA-48: rapidly blinking)
     Reversed,
     Hide,
     Bar,
@@ -52,13 +52,13 @@ enum class Style: std::uint8_t {
 /* reset style */
 enum class ResetStyle: std::uint8_t {
     All = 0,
-    Strong = 21,
-    Dark,
+    Strong = 22,        // 22 = normal intensity (21 is a double underline on most terminals)
+    Dark = 22,
     Italic,
     Underlined,
-    FlashingFast,
-    FlashingSlow,
-    Reversed,
+    FlashingFast,       // 25 = steady (no blinking)
+    FlashingSlow = 25,
+    Reversed = 27,
     Hide,
     Bar,
     FramedEncircled = 54,

@@ -25,10 +25,8 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"               // _nodiscard, _hot, _cold, _unlikely
+    #include "../attribute/Attribute.hpp"               // _nodiscard, _hot, _cold
     #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
-    #include "../exception/ExceptionDefine.hpp"         // utils::exception::* (Type)
-    #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include <chrono>                                   // std::chrono::steady_clock::time_point, std::chrono::steady_clock::now
     #include <atomic>                                   // std::atomic
 
@@ -43,17 +41,17 @@ class Worker: private utils::security::observer::Observer<"Worker"> {
 
     public:
         // ------------ Function ---------- //
-        _hot inline void setWorkingStatus(const bool status) {if (!(this->_workingStatus = status)) this->_stopedWorkingTimestamp = std::chrono::steady_clock::now();};
+        _hot inline void setWorkingStatus(const bool status)                                                {if (!(this->_workingStatus = status)) this->_stopedWorkingTimestamp = std::chrono::steady_clock::now();};
         _cold _nodiscard inline std::chrono::steady_clock::time_point getStopedWorkingTimestamp(void) const {return this->_stopedWorkingTimestamp;};
-        _hot _nodiscard inline bool isWorking(void) const {return this->_workingStatus;};
+        _hot _nodiscard inline bool isWorking(void) const                                                   {return this->_workingStatus;};
 
         // ------------ Operator ---------- //
-        Worker& operator=(_unused const Worker& other) {this->setWorkingStatus(other.isWorking()); return *this;};
+        Worker& operator=(const Worker& other) {this->setWorkingStatus(other.isWorking()); return *this;};
         Worker& operator=(Worker&& other) {this->setWorkingStatus(other.isWorking()); other.setWorkingStatus(false); return *this;};
 
         // ---------- Constructor --------- //
         Worker() = default;
-        Worker(_unused const Worker& other): _workingStatus{other.isWorking()} {};
+        Worker(const Worker& other): _workingStatus{other.isWorking()} {};
         Worker(Worker&& other): _workingStatus{other.isWorking()} {other.setWorkingStatus(false);};
 
         // ----------- Destructor --------- //

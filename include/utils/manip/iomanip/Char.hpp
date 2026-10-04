@@ -14,7 +14,7 @@ File Description:
 
 namespace utils::iomanip { // namespace start
 //----------------------------------------------------------------//
-/* TYPEDEF */
+/* ENUM */
 
 /* special chars */
 enum class Char: char {

@@ -26,22 +26,21 @@ File Description:
 #include <sys/syscall.h>
 #include <sys/mman.h>
 #include <unistd.h>
+#include <unordered_map>
 #include <functional>
 #include <optional>
+#include <utility>
 #include <cstddef>
 #include <cstring>
 #include <cstdint>
 #include <thread>
-#include <chrono>
+#include <atomic>
 #include <vector>
 #include <string>
 #include <limits>
 #include <mutex>
 
-// allow use of 9min, 0ms, ...
-using namespace std::chrono_literals;
-
-static inline void futex_wait(std::atomic<std::uint32_t>* addr, std::uint32_t expected)
+_hot static inline void futex_wait(std::atomic<std::uint32_t>* addr, std::uint32_t expected)
 {
     (void)static_cast<int>(::syscall(
         SYS_futex,
@@ -54,14 +53,14 @@ static inline void futex_wait(std::atomic<std::uint32_t>* addr, std::uint32_t ex
     ));
 }
 
-// won't wakeup after 2^32 call for one call (can be ignored, data will be read on the next)
-static inline void futex_wake(std::atomic<std::uint32_t>* addr)
+// wake every waiter (the number of waiters to wake is an int)
+_hot static inline void futex_wake(std::atomic<std::uint32_t>* addr)
 {
     (void)static_cast<int>(::syscall(
         SYS_futex,
         reinterpret_cast<std::uint32_t*>(addr),
         FUTEX_WAKE,
-        UINT32_MAX,
+        std::numeric_limits<int>::max(),
         nullptr,
         nullptr,
         0
@@ -72,24 +71,32 @@ _cold void utils::encapsulation::SharedMemory::init_(void)
 {
     // Do not start the thread if the shm is not initialized yet
     if (!this->_metadata) return;
+    {std::lock_guard<std::mutex> lock(this->_lock); this->_closed = false;}
 
-    this->_thread = std::jthread([this](std::stop_token stop_token) {
+    // last signal seen (taken before the thread start)
+    const std::uint32_t start = this->_metadata->readable.load(std::memory_order_acquire);
+
+    this->_thread = std::jthread([this, start](std::stop_token stoken) {
         // allow the thread to be awake when a stop is requested
-        std::stop_callback wake_on_stop(stop_token, [this]() {
+        std::stop_callback wakeOnStop(stoken, [this](void) {
             this->_metadata->readable.fetch_add(1, std::memory_order_release);
             futex_wake(&this->_metadata->readable);
         });
 
-        std::uint32_t current = this->_metadata->readable.load(std::memory_order_relaxed);
-        while (!stop_token.stop_requested()) {
+        // read the requests already waiting (sent before the connection)
+        this->read_();
+
+        std::uint32_t current = start;
+        while (!stoken.stop_requested()) {
             // loop for each wakeup called
-            if (current >= this->_metadata->readable.load(std::memory_order_acquire)) {
+            const std::uint32_t observed = this->_metadata->readable.load(std::memory_order_acquire);
+            if (current >= observed) {
                 // wait for trigger from atomic notifier in metatdata
-                futex_wait(&this->_metadata->readable, this->_metadata->readable.load(std::memory_order_acquire));
+                futex_wait(&this->_metadata->readable, observed);
             } else ++current;
 
             // awake can also be trigger by a stop request
-            if (stop_token.stop_requested()) break;
+            if (stoken.stop_requested()) break;
 
             // redirect on internal read
             this->read_();
@@ -99,21 +106,31 @@ _cold void utils::encapsulation::SharedMemory::init_(void)
 
 _hot void utils::encapsulation::SharedMemory::read_(void)
 {
+    // only one read at a time for this instance (internal thread & trigger)
+    std::lock_guard<std::mutex> readLock(this->_readLock);
+
     // try to find a spot with data to read
     std::vector<utils::encapsulation::shm::Slot> slots;
-    for (const utils::encapsulation::shm::Slot& slot: this->_slots) {
+    for (std::size_t i = 0; i < this->_slots.size(); ++i) {
+        const utils::encapsulation::shm::Slot& slot = this->_slots[i];
         if (slot.metadata->flag.load(std::memory_order_acquire) == 2) {
             slot.metadata->reader.fetch_add(1, std::memory_order_acquire);
 
             // cancel action if flag was edited before reader added
             if (slot.metadata->flag.load(std::memory_order_acquire) != 2) _unlikely {
-                slot.metadata->reader.fetch_sub(1, std::memory_order_relaxed);
+                slot.metadata->reader.fetch_sub(1, std::memory_order_release);
+                continue;
+            }
+
+            // already read by this instance (a global request stay readable until all the readers read it)
+            else if (slot.metadata->sequence == this->_seen[i]) {
+                slot.metadata->reader.fetch_sub(1, std::memory_order_release);
                 continue;
             }
 
             // check if it's was destined to itself
             else if (slot.metadata->target.sender == this->_ownership || (slot.metadata->target.ownership != this->_ownership && !slot.metadata->target.global)) {
-                slot.metadata->reader.fetch_sub(1, std::memory_order_relaxed);
+                slot.metadata->reader.fetch_sub(1, std::memory_order_release);
                 continue;
             }
 
@@ -130,10 +147,11 @@ _hot void utils::encapsulation::SharedMemory::read_(void)
                 }
             }
             if (fail) {
-                slot.metadata->reader.fetch_sub(1, std::memory_order_relaxed);
+                slot.metadata->reader.fetch_sub(1, std::memory_order_release);
                 continue;
             }
 
+            this->_seen[i] = slot.metadata->sequence;
             slots.push_back(slot);
         }
     }
@@ -153,7 +171,7 @@ _hot void utils::encapsulation::SharedMemory::read_(void)
             expected = 2;
             (void)slot.metadata->flag.compare_exchange_strong(
                 expected, 1,
-                std::memory_order_acquire, std::memory_order_relaxed
+                std::memory_order_acq_rel, std::memory_order_relaxed
             );
 
             // wait until it's the sole reader of the request
@@ -167,7 +185,7 @@ _hot void utils::encapsulation::SharedMemory::read_(void)
         this->_data[id].push_back(std::move(bytes));
 
         // handle ownership storage?
-        auto [lastSending, lastTransmission] = slot.metadata->last;
+        const auto &[lastSending, lastTransmission] = slot.metadata->last;
         if (id.ownership != this->_ownership) {
             if (!lastTransmission) this->_ownerships.insert(id); // can fail (failsafe)
             else if (this->_ownerships.contains(id)) this->_ownerships.erase(id);
@@ -182,8 +200,11 @@ _hot void utils::encapsulation::SharedMemory::read_(void)
 
         // clear it's presence has a reader (if it's the last, then empty the slot)
         if (global) {
-            // if the limit is reach then reset slot
-            if (slot.metadata->target.readed.load(std::memory_order_acquire) < slot.metadata->target.limit) continue;
+            // if the limit is not reach, leave it for the other readers (without staying counted as a reader)
+            if (slot.metadata->target.readed.load(std::memory_order_acquire) < slot.metadata->target.limit) {
+                slot.metadata->reader.fetch_sub(1, std::memory_order_acq_rel);
+                continue;
+            }
             expected = 2;
         } else { // sole reader assured
             expected = 1;
@@ -192,7 +213,7 @@ _hot void utils::encapsulation::SharedMemory::read_(void)
         // set to reset mode (no more readed allowed)
         (void)slot.metadata->flag.compare_exchange_strong(
             expected, 3,
-            std::memory_order_acquire, std::memory_order_relaxed
+            std::memory_order_acq_rel, std::memory_order_relaxed
         );
 
         // wait until there is no more reader
@@ -217,7 +238,7 @@ _hot void utils::encapsulation::SharedMemory::read_(void)
         expected = 3;
         (void)slot.metadata->flag.compare_exchange_strong(
             expected, 0,
-            std::memory_order_acquire, std::memory_order_relaxed
+            std::memory_order_acq_rel, std::memory_order_relaxed
         );
     }
 }
@@ -236,17 +257,24 @@ _cold void utils::encapsulation::SharedMemory::close(void)
     }
 
     // close
-    if (this->_ptr) ::munmap(this->_ptr, this->_size);
+    if (this->_ptr) ::munmap(this->_ptr, this->_mapped);
     if (this->_fd != -1) ::close(this->_fd);
 
-    // reset
+    // reset (the join calls are woken up, nothing more will be read)
+    std::lock_guard<std::mutex> lock(this->_lock);
+    this->_closed = true;
+    this->_cv.notify_all();
     this->_idHandler.free();
     this->_data.clear();
     this->_ownerships.clear();
     this->_await.clear();
     this->_metadata = nullptr;
     this->_slots.clear();
+    this->_seen.clear();
+    this->_lastIds.clear();
+    this->_last = 0;
     this->_ptr = nullptr;
+    this->_mapped = 0;
     this->_fd = -1;
 }
 
@@ -258,9 +286,9 @@ _hot void utils::encapsulation::SharedMemory::send_(const std::vector<std::byte>
         throw utils::exception::ErrorException(utils::exception::InternalCode::OutOfBounds, std::to_string(bytes.size()) + " > " + std::to_string(this->_size) + " (actual limits per 'slot')");
     }
 
-    // try to find a spot to write data
+    // try to find a spot to write data (once, or until one is found in failsafe mode)
     utils::encapsulation::shm::Slot emptySlot = {nullptr, nullptr};
-    while (!emptySlot && failsafe) {
+    do {
         for (const utils::encapsulation::shm::Slot& slot: this->_slots) {
             std::uint8_t expected = 0;
             if (slot.metadata->flag.compare_exchange_strong(
@@ -271,8 +299,8 @@ _hot void utils::encapsulation::SharedMemory::send_(const std::vector<std::byte>
                 break;
             }
         }
-        std::this_thread::yield();
-    }
+        if (!emptySlot && failsafe) std::this_thread::yield();
+    } while (!emptySlot && failsafe);
 
     // no empty memory slot find
     if (!emptySlot) _unlikely {
@@ -280,13 +308,18 @@ _hot void utils::encapsulation::SharedMemory::send_(const std::vector<std::byte>
     }
 
     // setup target
-    utils::encapsulation::shm::Target& metadata_target = emptySlot.metadata->target;
-    metadata_target.sender = this->_ownership;
-    metadata_target.limit = target.limit;
-    metadata_target.ownership = target.ownership;
-    metadata_target.global = target.global;
+    utils::encapsulation::shm::Target& metadataTarget = emptySlot.metadata->target;
+    metadataTarget.sender = this->_ownership;
+    metadataTarget.limit = target.limit;
+    if (metadataTarget.limit == 0) { // 0 = every reader connected (except the sender) for a global request, the given reader otherwise
+        const pid_t connected = this->_metadata->connected.load(std::memory_order_relaxed);
+        metadataTarget.limit = (target.global && connected > 2) ? static_cast<std::size_t>(connected - 1) : 1;
+    }
+    metadataTarget.ownership = target.ownership;
+    metadataTarget.global = target.global;
 
     // write the memory
+    emptySlot.metadata->sequence = this->_metadata->sequence.fetch_add(1, std::memory_order_relaxed) + 1;
     emptySlot.metadata->id = id;
     emptySlot.metadata->last = last;
     emptySlot.metadata->size = bytes.size();
@@ -300,15 +333,16 @@ _hot void utils::encapsulation::SharedMemory::send_(const std::vector<std::byte>
 
 _hot void utils::encapsulation::SharedMemory::send(const std::vector<std::byte>& bytes, const utils::encapsulation::shm::Id& id, const utils::encapsulation::shm::Target& target, bool lastSending, bool lastTransmission, bool failsafe)
 {
-    std::lock_guard<std::mutex> lock(this->_lock);
-
-    // determine the ownership
-    if (id.ownership == this->_ownership) _unlikely { // force alloc of id
-        //this->_idHandler.use(id.id);
-    } else if (this->_ownerships.contains(id)) _likely { // remove usless id
-        if (lastTransmission) this->_ownerships.erase(id);
-    } else _unlikely {
-        throw utils::exception::ErrorException(utils::exception::InternalCode::InvalidId, "This id is not registered in the internal storage, unknown pair of id/ownership...");
+    // determine the ownership (lock only for the check: the reader thread need the lock to free a slot)
+    {
+        std::lock_guard<std::mutex> lock(this->_lock);
+        if (id.ownership == this->_ownership) _unlikely { // force alloc of id
+            //this->_idHandler.use(id.id);
+        } else if (this->_ownerships.contains(id)) _likely { // remove usless id
+            if (lastTransmission) this->_ownerships.erase(id);
+        } else _unlikely {
+            throw utils::exception::ErrorException(utils::exception::InternalCode::InvalidId, "This id is not registered in the internal storage, unknown pair of id/ownership...");
+        }
     }
 
     // redirect the call
@@ -320,17 +354,21 @@ _hot utils::encapsulation::shm::Id utils::encapsulation::SharedMemory::send(cons
     // allocate an id
     utils::encapsulation::shm::Id id = {lastTransmission ? 0 : this->_idHandler.allocate(), this->_ownership};
 
-    // redirect the call
-    this->send_(bytes, id, target, {lastSending, lastTransmission}, failsafe);
+    // redirect the call (free the id if nothing was sent)
+    try {
+        this->send_(bytes, id, target, {lastSending, lastTransmission}, failsafe);
+    } catch (...) {
+        if (id.id != 0) this->_idHandler.free(id.id);
+        throw;
+    }
 
     return id;
 }
 
 _hot _nodiscard std::optional<std::unordered_map<utils::encapsulation::shm::Id, std::vector<std::vector<std::byte>>>> utils::encapsulation::SharedMemory::read(const utils::encapsulation::shm::ReadFilter filter)
 {
-    // nothing to read
-    if (this->_data.empty()) _unlikely {return std::nullopt;}
     std::lock_guard<std::mutex> lock(this->_lock);
+    if (this->_data.empty()) _unlikely {return std::nullopt;} // nothing to read
 
     // get only data depending on the filter
     std::unordered_map<utils::encapsulation::shm::Id, std::vector<std::vector<std::byte>>> values;
@@ -340,7 +378,7 @@ _hot _nodiscard std::optional<std::unordered_map<utils::encapsulation::shm::Id, 
     } else {
         for (auto it = this->_data.begin(); it != this->_data.end();) {
             const utils::encapsulation::shm::Id key = it->first; // keep a copy before any erase
-            bool match;
+            bool match = false;
             if (filter == utils::encapsulation::shm::ReadFilter::LastOnly) {
                 match = this->_lastIds.contains(key);
             } else {
@@ -359,7 +397,7 @@ _hot _nodiscard std::optional<std::unordered_map<utils::encapsulation::shm::Id, 
     }
 
     // erase awaiting id
-    for (const auto& [id, _]: values) {
+    for (const auto &[id, _]: values) {
         if (!(id.ownership == this->_ownership && _likely_c(this->_await.contains(id.id)))) continue;
         this->_await.erase(id.id);
         this->_idHandler.free(id.id);
@@ -371,12 +409,13 @@ _hot _nodiscard std::optional<std::unordered_map<utils::encapsulation::shm::Id, 
 
 _hot _nodiscard std::optional<std::vector<std::vector<std::byte>>> utils::encapsulation::SharedMemory::read(const utils::encapsulation::shm::Id& id)
 {
-    // nothing to read
-    if (!this->readable(id)) _unlikely {return std::nullopt;}
     std::lock_guard<std::mutex> lock(this->_lock);
 
-    // remove the value readed from storage
+    // nothing to read
     auto it = this->_data.find(id);
+    if (it == this->_data.end()) _unlikely {return std::nullopt;}
+
+    // remove the value readed from storage
     std::vector<std::vector<std::byte>> value = std::move(it->second);
     const utils::encapsulation::shm::Id& key = it->first; // can't name 2 var has 'id'
     if (key.ownership == this->_ownership && _likely_c(this->_await.contains(key.id))) {
@@ -393,10 +432,15 @@ _hot _nodiscard bool utils::encapsulation::SharedMemory::readable(const utils::e
 {
     std::lock_guard<std::mutex> lock(this->_lock);
     if (filter == utils::encapsulation::shm::ReadFilter::All) return !this->_data.empty();
+    if (filter == utils::encapsulation::shm::ReadFilter::LastOnly) {
+        for (const utils::encapsulation::shm::Id& id: this->_lastIds)
+            if (this->_data.contains(id)) return true;
+        return false;
+    }
 
     // On the first valid id return
     bool wantZero = (filter == utils::encapsulation::shm::ReadFilter::ZeroOnly);
-    for (const auto& [id, _]: this->_data) {
+    for (const auto &[id, _]: this->_data) {
         if ((id.id == 0) == wantZero) return true;
     }
     return false;
@@ -404,25 +448,25 @@ _hot _nodiscard bool utils::encapsulation::SharedMemory::readable(const utils::e
 
 _hot void utils::encapsulation::SharedMemory::join(bool last) const
 {
-    if (!this->_ptr) return; // shm not initialized
     std::unique_lock<std::mutex> lock(this->_lock);
+    if (this->_closed) return; // shm not initialized or closed
 
     if (!last) {
-        this->_cv.wait(lock, [this]{return !this->_data.empty();});
+        this->_cv.wait(lock, [this](void) {return this->_closed || !this->_data.empty();});
     } else {
         std::size_t generation = this->_last.load(std::memory_order_relaxed);
-        this->_cv.wait(lock, [this, generation]{return this->_last.load(std::memory_order_relaxed) != generation;});
+        this->_cv.wait(lock, [this, generation](void) {return this->_closed || this->_last.load(std::memory_order_relaxed) != generation;});
     }
 }
 
 _hot void utils::encapsulation::SharedMemory::join(const utils::encapsulation::shm::Id& id, bool last) const
 {
-    if (!this->_ptr) return; // shm not initialized
     std::unique_lock<std::mutex> lock(this->_lock);
+    if (this->_closed) return; // shm not initialized or closed
 
     if (!last) {
-        this->_cv.wait(lock, [this, &id]{return this->_data.contains(id);});
+        this->_cv.wait(lock, [this, &id](void) {return this->_closed || this->_data.contains(id);});
     } else {
-        this->_cv.wait(lock, [this, &id]{return this->_lastIds.contains(id);});
+        this->_cv.wait(lock, [this, &id](void) {return this->_closed || this->_lastIds.contains(id);});
     }
 }

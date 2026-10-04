@@ -18,7 +18,7 @@ File Description:
     /* type */
     #include "../MathType.hpp"  // utils::math::* (Type)
 
-namespace utils::math::geometry { // namepoint start
+namespace utils::math::geometry { // namespace start
 //----------------------------------------------------------------//
 /* PROTOTYPE */
 
@@ -40,5 +40,5 @@ utils::math::Coord2D rotate_point_2D(const utils::math::Coord2D& origin, const u
 */
 utils::math::Coord rotate_point_3D(const utils::math::Coord& origin, const utils::math::Coord& point, const utils::math::Direction& orientation, const bool rad = false);
 
-} // namepoint end
+} // namespace end
 #endif /* POINT_H */

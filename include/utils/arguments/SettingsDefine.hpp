@@ -24,8 +24,9 @@ File Description:
     /* INCLUDE */
 
     /* type */
+    #include <cstddef>  // std::size_t
     #if __has_include(<cstdfloat>)
-        #include <cstdfloat>
+        #include <cstdfloat>    // std::float16_t, std::float32_t, std::float64_t, std::float128_t
     #endif
 
 namespace utils::arguments { // namespace start

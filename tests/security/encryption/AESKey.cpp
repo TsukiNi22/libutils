@@ -95,3 +95,31 @@ INSTANTIATE_TEST_SUITE_P(InputCases, AESKeyTest,
         ""
     )
 );
+
+TEST(AESKeySizes, InvalidKeyIvTag) {
+    utils::security::encryption::AESKey aes;
+    utils::security::encryption::KeyAES key{aes.generateRandomBytes(32), aes.generateRandomBytes(12), ""};
+    std::string en = aes.encrypt("data", key);
+    EXPECT_EQ(key.tag.size(), 16u);
+    EXPECT_EQ(aes.decrypt(en, key), "data");
+
+    utils::security::encryption::KeyAES shortKey{"k", key.iv, key.tag};
+    EXPECT_THROW((void)aes.encrypt("data", shortKey), utils::exception::IException);
+    utils::security::encryption::KeyAES shortIv{key.AES, "iv", key.tag};
+    EXPECT_THROW((void)aes.encrypt("data", shortIv), utils::exception::IException);
+    utils::security::encryption::KeyAES shortTag{key.AES, key.iv, "A"};
+    try {
+        (void)aes.decrypt(en, shortTag);
+        FAIL() << "Expected an exception";
+    } catch (const utils::exception::IException& e) {
+        EXPECT_EQ(e.getCode(), utils::exception::InternalCode::Decryption);
+    }
+}
+
+TEST(AESKeySizes, IvLengthIsUsed) {
+    // The whole iv is used
+    utils::security::encryption::AESKey aes;
+    std::string k = aes.generateRandomBytes(32), iv = aes.generateRandomBytes(16);
+    utils::security::encryption::KeyAES a{k, iv, ""}, b{k, iv.substr(0, 12) + "XXXX", ""};
+    EXPECT_NE(aes.encrypt("same", a), aes.encrypt("same", b));
+}

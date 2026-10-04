@@ -24,9 +24,9 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../attribute/Attribute.hpp"    // _hot, _nodiscard
+    #include "../../attribute/Attribute.hpp"    // _hot, _nodiscard, _migration
     #include "../NetworkType.hpp"               // utils::network::Address
-    #include "ASocket.hpp"                      // utils::network::socket::ASocket
+    #include "ASocket.hpp"                      // utils::network::ASocket
     #include <sys/socket.h>                     // ::accept, ::send, ::recv, socklen_t
     #include <sys/types.h>                      // ssize_t
     #include <unordered_map>                    // std::unordered_map
@@ -34,11 +34,11 @@ File Description:
     #include <vector>                           // std::vector
     #include <string>                           // std::string, std::to_string
 
-namespace utils::network::socket { // namespace start
+namespace utils::network { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-class TCPSocket: public utils::network::socket::ASocket {
+class TCPSocket: public utils::network::ASocket {
     public:
         // ---------- Pre-Function -------- //
         // Can only be call one time, otherwise throw
@@ -53,11 +53,11 @@ class TCPSocket: public utils::network::socket::ASocket {
 
         /* raw */
         _hot _nodiscard int accept(int fd, sockaddr* addr, socklen_t* len) const final
-        {return ::accept(fd, addr, len);}
+        {return ::accept(fd, addr, len);};
         _hot _nodiscard ssize_t recv(int fd, char* buf, std::size_t len) const final
         {return ::recv(fd, buf, len, 0);};
         _hot _nodiscard ssize_t send(int fd, const char* buf, std::size_t len) const final
-        {return ::send(fd, buf, len, 0);};
+        {return ::send(fd, buf, len, MSG_NOSIGNAL);}; // no SIGPIPE on a closed peer (EPIPE error)
 
         // ------------ Operator ---------- //
         TCPSocket& operator=(const TCPSocket& other) = delete;
@@ -73,4 +73,11 @@ class TCPSocket: public utils::network::socket::ASocket {
 };
 
 } // namespace end
+
+//----------------------------------------------------------------//
+/* MIGRATION */
+namespace utils::network::socket {
+    using TCPSocket _migration(4, 0, 0) = utils::network::TCPSocket;
+}
+
 #endif /* TCPSOCKET_H */

@@ -25,11 +25,14 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../attribute/Attribute.hpp"            // _deprecated
+    #include "../../attribute/Attribute.hpp"            // _cold, _hot, _nodiscard, _unlikely, _deprecated
     #include "../../concepts/OperationConcepts.hpp"     // Operation Concepts
     #include "../../exception/ExceptionDefine.hpp"      // utils::exception::InternalCode
     #include "../../exception/basic/ErrorException.hpp" // utils::exception::ErrorException
-    #include <algorithm>                                // std::clamp
+    #include <type_traits>                              // std::common_type_t
+    #include <algorithm>                                // std::min, std::max, std::clamp
+    #include <concepts>                                 // std::assignable_from, std::constructible_from
+    #include <utility>                                  // std::move
     #include <ostream>                                  // std::ostream
     #include <cstddef>                                  // std::size_t
     #include <cmath>                                    // std::sqrt
@@ -52,194 +55,212 @@ class OVector3 {
         T y;
         T z;
 
-        // ----------- Function ----------- //
-        T get(std::size_t index) const {
-            if (index >= MAX_INDEX_OVECTOR3)
+        // ------------ Function ---------- //
+        _hot _nodiscard T get(std::size_t index) const
+        {
+            if (index >= MAX_INDEX_OVECTOR3) _unlikely {
                 throw utils::exception::ErrorException(utils::exception::InternalCode::VectorInvalidIndex);
-            return (index == 0 ? x : (index == 1 ? y : z));
-        }
-        inline OVector3 min(const OVector3& min) const
-        {return {std::min(x, min.x), std::min(y, min.y), std::min(z, min.z)};}
-        inline OVector3 max(const OVector3& max) const
-        {return {std::max(x, max.x), std::max(y, max.y), std::max(z, max.z)};}
-        inline OVector3 clamp(const OVector3& min, const OVector3& max) const
-        {return {std::clamp(x, min.x, max.x), std::clamp(y, min.y, max.y), std::clamp(z, min.z, max.z)};}
+            }
+            return (index == 0 ? this->x : (index == 1 ? this->y : this->z));
+        };
+        _hot _nodiscard inline OVector3 min(const OVector3& min) const
+        {return {std::min(this->x, min.x), std::min(this->y, min.y), std::min(this->z, min.z)};};
+        _hot _nodiscard inline OVector3 max(const OVector3& max) const
+        {return {std::max(this->x, max.x), std::max(this->y, max.y), std::max(this->z, max.z)};};
+        _hot _nodiscard inline OVector3 clamp(const OVector3& min, const OVector3& max) const
+        {return {std::clamp(this->x, min.x, max.x), std::clamp(this->y, min.y, max.y), std::clamp(this->z, min.z, max.z)};};
 
         // ------- Special-Function ------- //
         template<typename U>
-        inline T dot(const OVector3<U>& v) const
-        {return x * v.x + y * v.y + z * v.z;}
+        _hot _nodiscard inline T dot(const OVector3<U>& v) const
+        {return this->x * v.x + this->y * v.y + this->z * v.z;};
         template<typename U>
-        OVector3 cross(const OVector3<U>& v) const
+        _hot _nodiscard OVector3 cross(const OVector3<U>& v) const
         {
             return {
-                y * v.z - z * v.y,
-                z * v.x - x * v.z,
-                x * v.y - y * v.x
+                this->y * v.z - this->z * v.y,
+                this->z * v.x - this->x * v.z,
+                this->x * v.y - this->y * v.x
             };
-        }
-        inline T length(void) const
-        {return std::sqrt(x * x + y * y + z * z);}
-        inline T lengthSquared(void) const
-        {return x * x + y * y + z * z;}
-        inline OVector3 sign(void) const
-        {return {(x > 0) - (x < 0), (y > 0) - (y < 0), (z > 0) - (z < 0)};}
-        OVector3 normalize(void) const
+        };
+        _hot _nodiscard inline T length(void) const
+        {return static_cast<T>(std::sqrt(this->x * this->x + this->y * this->y + this->z * this->z));}; // truncated for the integer types
+        _hot _nodiscard inline T lengthSquared(void) const
+        {return this->x * this->x + this->y * this->y + this->z * this->z;};
+        _hot _nodiscard inline OVector3 sign(void) const
+        {return {(this->x > 0) - (this->x < 0), (this->y > 0) - (this->y < 0), (this->z > 0) - (this->z < 0)};};
+        _hot _nodiscard OVector3 normalize(void) const
         {
-            T len = length();
-            return {x / len, y / len, z / len};
-        }
+            T len = this->length();
+            if (len == T{}) return *this; // zero vector: no direction
+            return {this->x / len, this->y / len, this->z / len};
+        };
 
         // ------------ Operator ---------- //
-        T& operator[](std::size_t index) {
-            if (index >= MAX_INDEX_OVECTOR3)
+        _hot _nodiscard T& operator[](std::size_t index)
+        {
+            if (index >= MAX_INDEX_OVECTOR3) _unlikely {
                 throw utils::exception::ErrorException(utils::exception::InternalCode::VectorInvalidIndex);
-            return (index == 0 ? x : (index == 1 ? y : z));
-        }
-        const T& operator[](std::size_t index) const {
-            if (index >= MAX_INDEX_OVECTOR3)
+            }
+            return (index == 0 ? this->x : (index == 1 ? this->y : this->z));
+        };
+        _hot _nodiscard const T& operator[](std::size_t index) const
+        {
+            if (index >= MAX_INDEX_OVECTOR3) _unlikely {
                 throw utils::exception::ErrorException(utils::exception::InternalCode::VectorInvalidIndex);
-            return (index == 0 ? x : (index == 1 ? y : z));
-        }
+            }
+            return (index == 0 ? this->x : (index == 1 ? this->y : this->z));
+        };
 
         // -------- Basic-Operator -------- //
         template<typename U>
-        inline OVector3 operator+(const U& v) const
-        {return {x + v, y + v, z + v};}
+        _hot _nodiscard inline OVector3 operator+(const U& v) const
+        {return {this->x + v, this->y + v, this->z + v};};
         template<typename U>
-        inline OVector3 operator+(const OVector3<U>& v) const
-        {return {x + v.x, y + v.y, z + v.z};}
+        _hot _nodiscard inline OVector3 operator+(const OVector3<U>& v) const
+        {return {this->x + v.x, this->y + v.y, this->z + v.z};};
         template<typename U>
-        inline OVector3 operator-(const U& v) const
-        {return {x - v, y - v, z - v};}
+        _hot _nodiscard inline OVector3 operator-(const U& v) const
+        {return {this->x - v, this->y - v, this->z - v};};
         template<typename U>
-        inline OVector3 operator-(const OVector3<U>& v) const
-        {return {x - v.x, y - v.y, z - v.z};}
+        _hot _nodiscard inline OVector3 operator-(const OVector3<U>& v) const
+        {return {this->x - v.x, this->y - v.y, this->z - v.z};};
         template<typename U>
-        inline OVector3 operator*(const U& v) const
-        {return {x * v, y * v, z * v};}
+        _hot _nodiscard inline OVector3 operator*(const U& v) const
+        {return {this->x * v, this->y * v, this->z * v};};
         template<typename U>
-        inline OVector3 operator*(const OVector3<U>& v) const
-        {return {x * v.x, y * v.y, z * v.z};}
+        _hot _nodiscard inline OVector3 operator*(const OVector3<U>& v) const
+        {return {this->x * v.x, this->y * v.y, this->z * v.z};};
         template<typename U>
-        inline OVector3 operator/(const U& v) const
-        {return {x / v, y / v, z / v};}
+        _hot _nodiscard inline OVector3 operator/(const U& v) const
+        {return {this->x / v, this->y / v, this->z / v};};
         template<typename U>
-        inline OVector3 operator/(const OVector3<U>& v) const
-        {return {x / v.x, y / v.y, z / v.z};}
+        _hot _nodiscard inline OVector3 operator/(const OVector3<U>& v) const
+        {return {this->x / v.x, this->y / v.y, this->z / v.z};};
 
         // -------- Special-Operator -------- //
-        inline OVector3& operator++(void)
-        {++x; ++y; ++z; return *this;}
-        inline OVector3 operator++(int)
+        _hot inline OVector3& operator++(void)
+        {++this->x; ++this->y; ++this->z; return *this;};
+        _hot _nodiscard inline OVector3 operator++(int)
         {
             OVector3 tmp = *this;
             ++(*this);
             return tmp;
-        }
-        inline OVector3& operator--(void)
-        {--x; --y; --z; return *this;}
-        inline OVector3 operator--(int)
+        };
+        _hot inline OVector3& operator--(void)
+        {--this->x; --this->y; --this->z; return *this;};
+        _hot _nodiscard inline OVector3 operator--(int)
         {
             OVector3 tmp = *this;
             --(*this);
             return tmp;
-        }
+        };
+
+        // -------- Bitwise-Operator -------- //
+        template<typename U>
+        _hot _nodiscard inline OVector3 operator&(const OVector3<U>& v) const
+        {return {this->x & v.x, this->y & v.y, this->z & v.z};};
+        template<typename U>
+        _hot _nodiscard inline OVector3 operator|(const OVector3<U>& v) const
+        {return {this->x | v.x, this->y | v.y, this->z | v.z};};
+        template<typename U>
+        _hot _nodiscard inline OVector3 operator^(const OVector3<U>& v) const
+        {return {this->x ^ v.x, this->y ^ v.y, this->z ^ v.z};};
 
         // ----- Assignment-Operator ----- //
         template<typename U>
-        OVector3& operator=(const OVector3<U>& v)
+        _hot OVector3& operator=(const OVector3<U>& v)
         {
-            x = v.x;
-            y = v.y;
-            z = v.z;
+            this->x = v.x;
+            this->y = v.y;
+            this->z = v.z;
             return *this;
-        }
+        };
 
         template<typename U>
-        OVector3& operator=(OVector3<U>&& v)
+        _hot OVector3& operator=(OVector3<U>&& v)
         {
-            x = std::move(v.x);
-            y = std::move(v.y);
-            z = std::move(v.z);
+            this->x = std::move(v.x);
+            this->y = std::move(v.y);
+            this->z = std::move(v.z);
             return *this;
-        }
+        };
 
         template<typename U>
-        inline OVector3& operator+=(const U& v)
-        {x += v; y += v; z += v; return *this;}
+        _hot inline OVector3& operator+=(const U& v)
+        {this->x += v; this->y += v; this->z += v; return *this;};
         template<typename U>
-        inline OVector3& operator+=(const OVector3<U>& v)
-        {x += v.x; y += v.y; z += v.z; return *this;}
+        _hot inline OVector3& operator+=(const OVector3<U>& v)
+        {this->x += v.x; this->y += v.y; this->z += v.z; return *this;};
         template<typename U>
-        inline OVector3& operator-=(const U& v)
-        {x -= v; y -= v; z -= v; return *this;}
+        _hot inline OVector3& operator-=(const U& v)
+        {this->x -= v; this->y -= v; this->z -= v; return *this;};
         template<typename U>
-        inline OVector3& operator-=(const OVector3<U>& v)
-        {x -= v.x; y -= v.y; z -= v.z; return *this;}
+        _hot inline OVector3& operator-=(const OVector3<U>& v)
+        {this->x -= v.x; this->y -= v.y; this->z -= v.z; return *this;};
         template<typename U>
-        inline OVector3& operator*=(const U& v)
-        {x *= v; y *= v; z *= v; return *this;}
+        _hot inline OVector3& operator*=(const U& v)
+        {this->x *= v; this->y *= v; this->z *= v; return *this;};
         template<typename U>
-        inline OVector3& operator*=(const OVector3<U>& v)
-        {x *= v.x; y *= v.y; z *= v.z; return *this;}
+        _hot inline OVector3& operator*=(const OVector3<U>& v)
+        {this->x *= v.x; this->y *= v.y; this->z *= v.z; return *this;};
         template<typename U>
-        inline OVector3& operator/=(const U& v)
-        {x /= v; y /= v; z /= v; return *this;}
+        _hot inline OVector3& operator/=(const U& v)
+        {this->x /= v; this->y /= v; this->z /= v; return *this;};
         template<typename U>
-        inline OVector3& operator/=(const OVector3<U>& v)
-        {x /= v.x; y /= v.y; z /= v.z; return *this;}
+        _hot inline OVector3& operator/=(const OVector3<U>& v)
+        {this->x /= v.x; this->y /= v.y; this->z /= v.z; return *this;};
 
         // ---------- Comparison ---------- //
         template<typename U>
-        inline bool operator==(const U& v) const
-        {return (x == v && y == v && z == v);}
+        _hot _nodiscard inline bool operator==(const U& v) const
+        {return (this->x == v && this->y == v && this->z == v);};
         template<typename U>
-        inline bool operator==(const OVector3<U>& v) const
-        {return (x == v.x && y == v.y && z == v.z);}
+        _hot _nodiscard inline bool operator==(const OVector3<U>& v) const
+        {return (this->x == v.x && this->y == v.y && this->z == v.z);};
         template<typename U>
-        inline bool operator!=(const U& v) const
-        {return (x != v || y != v || z == v);}
+        _hot _nodiscard inline bool operator!=(const U& v) const
+        {return (this->x != v || this->y != v || this->z != v);};
         template<typename U>
-        inline bool operator!=(const OVector3<U>& v) const
-        {return (x != v.x || y != v.y || z == v.z);}
+        _hot _nodiscard inline bool operator!=(const OVector3<U>& v) const
+        {return (this->x != v.x || this->y != v.y || this->z != v.z);};
         template<typename U>
-        inline bool operator<(const U& v) const
-        {return (x < v && y < v && z < v);}
+        _hot _nodiscard inline bool operator<(const U& v) const
+        {return (this->x < v && this->y < v && this->z < v);};
         template<typename U>
-        inline bool operator<(const OVector3<U>& v) const
-        {return (x < v.x && y < v.y && z < v.z);}
+        _hot _nodiscard inline bool operator<(const OVector3<U>& v) const
+        {return (this->x < v.x && this->y < v.y && this->z < v.z);};
         template<typename U>
-        inline bool operator<=(const U& v) const
-        {return (x <= v && y <= v && z <= v);}
+        _hot _nodiscard inline bool operator<=(const U& v) const
+        {return (this->x <= v && this->y <= v && this->z <= v);};
         template<typename U>
-        inline bool operator<=(const OVector3<U>& v) const
-        {return (x <= v.x && y <= v.y && z <= v.z);}
+        _hot _nodiscard inline bool operator<=(const OVector3<U>& v) const
+        {return (this->x <= v.x && this->y <= v.y && this->z <= v.z);};
         template<typename U>
-        inline bool operator>(const U& v) const
-        {return (x > v && y > v && z > v);}
+        _hot _nodiscard inline bool operator>(const U& v) const
+        {return (this->x > v && this->y > v && this->z > v);};
         template<typename U>
-        inline bool operator>(const OVector3<U>& v) const
-        {return (x > v.x && y > v.y && z > v.z);}
+        _hot _nodiscard inline bool operator>(const OVector3<U>& v) const
+        {return (this->x > v.x && this->y > v.y && this->z > v.z);};
         template<typename U>
-        inline bool operator>=(const U& v) const
-        {return (x >= v && y >= v && z >= v);}
+        _hot _nodiscard inline bool operator>=(const U& v) const
+        {return (this->x >= v && this->y >= v && this->z >= v);};
         template<typename U>
-        inline bool operator>=(const OVector3<U>& v) const
-        {return (x >= v.x && y >= v.y && z >= v.z);}
+        _hot _nodiscard inline bool operator>=(const OVector3<U>& v) const
+        {return (this->x >= v.x && this->y >= v.y && this->z >= v.z);};
 
         // ------------ Unary ------------- //
-        inline OVector3 operator-(void) const
-        {return {-x, -y, -z};}
+        _hot _nodiscard inline OVector3 operator-(void) const
+        {return {-this->x, -this->y, -this->z};};
 
         // ---------- Constructor --------- //
         OVector3() = default;
         template<typename U, typename R, typename J>
-        OVector3(U x, R y, J z): x(x), y(y), z(z) {}
+        OVector3(U x, R y, J z): x(x), y(y), z(z) {};
         template<typename U>
-        OVector3(const OVector3<U>& v): x(v.x), y(v.y), z(v.z) {}
+        OVector3(const OVector3<U>& v): x(v.x), y(v.y), z(v.z) {};
         template<typename U>
-        OVector3(OVector3<U>&& v): x(std::move(v.x)), y(std::move(v.y)), z(std::move(v.z)) {}
+        OVector3(OVector3<U>&& v): x(std::move(v.x)), y(std::move(v.y)), z(std::move(v.z)) {};
 
         // ----------- Destructor --------- //
         ~OVector3() = default;
@@ -247,62 +268,62 @@ class OVector3 {
 
 // -------- Basic-Operator (reverse) -------- //
 template<typename T, typename U>
-inline utils::type::OVector3<T> operator+(const T& lhs, const utils::type::OVector3<U>& rhs)
+_hot _nodiscard inline utils::type::OVector3<U> operator+(const T& lhs, const utils::type::OVector3<U>& rhs)
 {return {lhs + rhs.x, lhs + rhs.y, lhs + rhs.z};}
 
 template<typename T, typename U>
-inline utils::type::OVector3<T> operator-(const T& lhs, const utils::type::OVector3<U>& rhs)
+_hot _nodiscard inline utils::type::OVector3<U> operator-(const T& lhs, const utils::type::OVector3<U>& rhs)
 {return {lhs - rhs.x, lhs - rhs.y, lhs - rhs.z};}
 
 template<typename T, typename U>
-inline utils::type::OVector3<T> operator*(const T& lhs, const utils::type::OVector3<U>& rhs)
+_hot _nodiscard inline utils::type::OVector3<U> operator*(const T& lhs, const utils::type::OVector3<U>& rhs)
 {return {lhs * rhs.x, lhs * rhs.y, lhs * rhs.z};}
 
 template<typename T, typename U>
-inline utils::type::OVector3<T> operator/(const T& lhs, const utils::type::OVector3<U>& rhs)
+_hot _nodiscard inline utils::type::OVector3<U> operator/(const T& lhs, const utils::type::OVector3<U>& rhs)
 {return {lhs / rhs.x, lhs / rhs.y, lhs / rhs.z};}
 
 // -------- Bitwise-Operator -------- //
 template<typename T, typename U>
-inline utils::type::OVector3<T> operator&(const T& lhs, const utils::type::OVector3<U>& rhs)
+_hot _nodiscard inline utils::type::OVector3<U> operator&(const T& lhs, const utils::type::OVector3<U>& rhs)
 {return {lhs & rhs.x, lhs & rhs.y, lhs & rhs.z};}
 
 template<typename T, typename U>
-inline utils::type::OVector3<T> operator|(const T& lhs, const utils::type::OVector3<U>& rhs)
+_hot _nodiscard inline utils::type::OVector3<U> operator|(const T& lhs, const utils::type::OVector3<U>& rhs)
 {return {lhs | rhs.x, lhs | rhs.y, lhs | rhs.z};}
 
 template<typename T, typename U>
-inline utils::type::OVector3<T> operator^(const T& lhs, const utils::type::OVector3<U>& rhs)
+_hot _nodiscard inline utils::type::OVector3<U> operator^(const T& lhs, const utils::type::OVector3<U>& rhs)
 {return {lhs ^ rhs.x, lhs ^ rhs.y, lhs ^ rhs.z};}
 
 // -------- Comparison (reverse) -------- //
 template<typename T, typename U>
-inline bool operator==(const T& lhs, const utils::type::OVector3<U>& rhs)
+_hot _nodiscard inline bool operator==(const T& lhs, const utils::type::OVector3<U>& rhs)
 {return (lhs == rhs.x && lhs == rhs.y && lhs == rhs.z);}
 
 template<typename T, typename U>
-inline bool operator!=(const T& lhs, const utils::type::OVector3<U>& rhs)
+_hot _nodiscard inline bool operator!=(const T& lhs, const utils::type::OVector3<U>& rhs)
 {return (lhs != rhs.x || lhs != rhs.y || lhs != rhs.z);}
 
 template<typename T, typename U>
-inline bool operator<(const T& lhs, const utils::type::OVector3<U>& rhs)
+_hot _nodiscard inline bool operator<(const T& lhs, const utils::type::OVector3<U>& rhs)
 {return (lhs < rhs.x && lhs < rhs.y && lhs < rhs.z);}
 
 template<typename T, typename U>
-inline bool operator<=(const T& lhs, const utils::type::OVector3<U>& rhs)
+_hot _nodiscard inline bool operator<=(const T& lhs, const utils::type::OVector3<U>& rhs)
 {return (lhs <= rhs.x && lhs <= rhs.y && lhs <= rhs.z);}
 
 template<typename T, typename U>
-inline bool operator>(const T& lhs, const utils::type::OVector3<U>& rhs)
+_hot _nodiscard inline bool operator>(const T& lhs, const utils::type::OVector3<U>& rhs)
 {return (lhs > rhs.x && lhs > rhs.y && lhs > rhs.z);}
 
 template<typename T, typename U>
-inline bool operator>=(const T& lhs, const utils::type::OVector3<U>& rhs)
+_hot _nodiscard inline bool operator>=(const T& lhs, const utils::type::OVector3<U>& rhs)
 {return (lhs >= rhs.x && lhs >= rhs.y && lhs >= rhs.z);}
 
 // -------- Output -------- //
 template<typename T>
-std::ostream& operator<<(std::ostream& os, const utils::type::OVector3<T>& v)
+_cold std::ostream& operator<<(std::ostream& os, const utils::type::OVector3<T>& v)
 {return os << "(" << v.x << ", " << v.y << ", " << v.z << ")";}
 
 } // namespace end

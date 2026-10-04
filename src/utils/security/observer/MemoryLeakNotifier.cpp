@@ -31,7 +31,7 @@ _cold void utils::security::observer::MemoryLeakNotifier::trigger(void)
     std::ostringstream oss;
     oss << "[WARNING] Memory leak detected (origin: " << this->_origin << ")" << std::endl;
     oss << "-- At least one instance wasn't properly closed --" << std::endl;
-    for (const auto& [id, instance]: this->_links)
+    for (const auto &[id, instance]: this->_links)
         oss << "  " << id << " - " << instance << std::endl;
 
     // Display warning

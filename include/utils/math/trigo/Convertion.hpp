@@ -3,10 +3,10 @@ Edition:
 ##  @date 29/08/2026 by @author Tsukini
 
 File Name:
-##  @file Point.hpp
+##  @file Convertion.hpp
 
 File Description:
-##  Prototype for point computing
+##  Angle unit conversion (deg <-> rad)
 \**************************************************************/
 
 #ifndef CONVERTION_H
@@ -16,19 +16,19 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../attribute/Attribute.hpp"    // _nodiscard
+    #include "../../attribute/Attribute.hpp"    // _hot, _nodiscard
     #include "../MathType.hpp"                  // utils::math::* (Type)
     #include <cmath>                            // M_PI
 
-namespace utils::math::trigo { // namepoint start
+namespace utils::math::trigo { // namespace start
 //----------------------------------------------------------------//
 /* PROTOTYPE */
 
-_nodiscard inline utils::math::Type deg_to_rad(utils::math::Angle deg)
+_hot _nodiscard inline utils::math::Type deg_to_rad(utils::math::Angle deg)
 {return deg * M_PI / 180.0;};
 
-_nodiscard inline utils::math::Angle rad_to_deg(utils::math::Type rad)
+_hot _nodiscard inline utils::math::Angle rad_to_deg(utils::math::Type rad)
 {return rad / M_PI * 180.0;};
 
-} // namepoint end
+} // namespace end
 #endif /* CONVERTION_H */

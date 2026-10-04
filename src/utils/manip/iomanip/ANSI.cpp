@@ -17,59 +17,64 @@ File Description:
 ##  Different ANSI method definition
 \**************************************************************/
 
+#include "utils/attribute/Attribute.hpp"
 #include "utils/exception/ExceptionDefine.hpp"
-#include "utils/exception/basic/ErrorException.hpp" 
+#include "utils/exception/basic/ErrorException.hpp"
 #include "utils/manip/iomanip/ANSI.hpp"
 #include "utils/manip/iomanip/Style.hpp"
 #include <unistd.h>
 #include <initializer_list>
+#include <stdexcept>
 #include <iostream>
 #include <sstream>
+#include <utility>
+#include <cstddef>
 #include <cstdint>
+#include <cstdio>
 #include <format>
 #include <string>
 
-std::string utils::iomanip::resetStyle(std::initializer_list<utils::iomanip::ResetStyle> styles)
+_hot _nodiscard std::string utils::iomanip::reset_style(std::initializer_list<utils::iomanip::ResetStyle> styles)
 {
-    std::string s_styles;
+    std::string codes;
 
     bool first = true;
-    for (const utils::iomanip::ResetStyle& style : styles) {
-        if (!first) s_styles += ";";
-        s_styles += std::to_string(static_cast<std::uint8_t>(style));
+    for (const utils::iomanip::ResetStyle& style: styles) {
+        if (!first) codes += ";";
+        codes += std::to_string(static_cast<std::uint8_t>(style));
         first = false;
     }
 
     // Empty list -> reset all style
     if (styles.size() == 0)
-        s_styles = "0";
+        codes = "0";
 
-    return std::format("{}[{}m", static_cast<char>(utils::iomanip::Char::ESC), s_styles);
+    return std::format("{}[{}m", static_cast<char>(utils::iomanip::Char::ESC), codes);
 }
 
-std::string utils::iomanip::setStyle(std::initializer_list<utils::iomanip::Style> styles)
+_hot _nodiscard std::string utils::iomanip::set_style(std::initializer_list<utils::iomanip::Style> styles)
 {
-    std::string s_styles;
+    std::string codes;
 
     bool first = true;
-    for (const utils::iomanip::Style& style : styles) {
-        if (!first) s_styles += ";";
-        s_styles += std::to_string(static_cast<std::uint8_t>(style));
+    for (const utils::iomanip::Style& style: styles) {
+        if (!first) codes += ";";
+        codes += std::to_string(static_cast<std::uint8_t>(style));
         first = false;
     }
 
-    return std::format("{}[{}m", static_cast<char>(utils::iomanip::Char::ESC), s_styles);
+    return std::format("{}[{}m", static_cast<char>(utils::iomanip::Char::ESC), codes);
 }
 
 // Report format -> "ESC[rows;colsR"
-std::pair<int, int> utils::iomanip::readCursorPosition(void)
+_cold _nodiscard std::pair<int, int> utils::iomanip::read_cursor_position(void)
 {
     char buffer[32] = {'\0'};
     std::size_t i = 0;
 
-    // Get the awnser from the term
+    // Get the answer from the term
     for (; i < sizeof(buffer) - 1; ++i) {
-        if (read(STDIN_FILENO, &buffer[i], 1) != 1)
+        if (::read(STDIN_FILENO, &buffer[i], 1) != 1)
             break;
         if (buffer[i] == 'R')
             break;
@@ -78,56 +83,39 @@ std::pair<int, int> utils::iomanip::readCursorPosition(void)
 
     // Get the values
     int rows = 0, cols = 0;
-    if (sscanf(buffer, "\x1b[%d;%dR", &rows, &cols) != 2)
+    if (std::sscanf(buffer, "\x1b[%d;%dR", &rows, &cols) != 2)
         return {-1, -1};
     return {rows, cols};
 }
 
-// Report format -> "ESC[Mb;x;y"
-utils::iomanip::MouseEvent utils::iomanip::readMouseEvent(void)
+// Report format -> "ESC[M" Cb Cx Cy (3 raw bytes, each value + 32)
+_cold _nodiscard utils::iomanip::MouseEvent utils::iomanip::read_mouse_event(void)
 {
     utils::iomanip::MouseEvent event;
-    std::string buffer;
     char c = '\0';
 
-    // Get the input
-    bool started = false;
-    for (std::size_t i = 0; std::cin.get(c) && i < 128; ++i)
-    {
-        if (c == static_cast<char>(utils::iomanip::Char::ESC)) started = true;
-        if (started) buffer += c;
-        if (started && std::isdigit(c)) continue;
-        if (started && c == '\n') break;
+    // Search the start of the sequence: ESC [ M
+    std::string header;
+    for (std::size_t i = 0; header != "\x1b[M" && std::cin.get(c) && i < 128; ++i) { // Limitation of 128 char to counter infinite possible loop
+        if (c == static_cast<char>(utils::iomanip::Char::ESC)) header = c;
+        else if (!header.empty()) header += c;
+        if (header.size() > 3) header.clear();
     }
+    if (header != "\x1b[M")
+        throw utils::exception::ErrorException(utils::exception::InternalCode::ANSIMouseEvent, header.empty() ? "No mouse sequence received" : "Invalid classic mouse format");
 
-    // Check the buffer
-    if (buffer.size() < 6)
-        throw utils::exception::ErrorException(utils::exception::InternalCode::ANSIMouseEvent, "Mouse sequence too short");
-    if (buffer.find("[M") == std::string::npos)
-        throw utils::exception::ErrorException(utils::exception::InternalCode::ANSIMouseEvent, "Invalid classic mouse format");
-
-    // Get the start of the data
-    auto start = buffer.find('M');
-
-    // Setup the data extraction
-    std::stringstream ss(buffer.substr(start + 1));
-    std::string token;
-
-    // Get the different data
-    int cb = 0;
-    try {
-        if (!std::getline(ss, token, ';'))
-            throw std::runtime_error("Missing button field");
-        cb = std::stoi(token);
-        if (!std::getline(ss, token, ';'))
-            throw std::runtime_error("Missing X field");
-        event.x = std::stoul(token);
-        if (!std::getline(ss, token, ';'))
-            throw std::runtime_error("Missing Y field");
-        event.y = std::stoul(token);
-    } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::InternalCode::ANSIMouseEvent, std::format("{}: {}", "Failed parsing classic mouse event", e.what()));
+    // Get the 3 raw bytes: button, x, y
+    unsigned char data[3] = {0, 0, 0};
+    for (std::size_t i = 0; i < 3; ++i) {
+        if (!std::cin.get(c))
+            throw utils::exception::ErrorException(utils::exception::InternalCode::ANSIMouseEvent, "Mouse sequence too short");
+        data[i] = static_cast<unsigned char>(c);
+        if (data[i] < 32)
+            throw utils::exception::ErrorException(utils::exception::InternalCode::ANSIMouseEvent, "Invalid classic mouse value (each value is sent + 32)");
     }
+    int cb = data[0] - 32;
+    event.x = data[1] - 32;
+    event.y = data[2] - 32;
 
     // Convert the button value
     switch (cb & 0b11) {
@@ -142,7 +130,7 @@ utils::iomanip::MouseEvent utils::iomanip::readMouseEvent(void)
 }
 
 // Report format -> "ESC[<b;x;y(M|m)"
-utils::iomanip::AdvancedMouseEvent utils::iomanip::readAdvancedMouseEvent(void)
+_cold _nodiscard utils::iomanip::AdvancedMouseEvent utils::iomanip::read_advanced_mouse_event(void)
 {
     utils::iomanip::AdvancedMouseEvent event;
     std::string buffer;
@@ -168,7 +156,7 @@ utils::iomanip::AdvancedMouseEvent utils::iomanip::readAdvancedMouseEvent(void)
     event.pressed = (buffer.back() == 'M');
 
     // Get the start of the data
-    auto start = buffer.find('<');
+    std::size_t start = buffer.find('<');
 
     // Setup the data extraction
     std::stringstream ss(buffer.substr(start + 1));
@@ -187,7 +175,7 @@ utils::iomanip::AdvancedMouseEvent utils::iomanip::readAdvancedMouseEvent(void)
             throw std::runtime_error("Missing Y field");
         event.y = std::stoul(token);
     } catch (const std::exception& e) {
-        throw utils::exception::ErrorException(utils::exception::InternalCode::ANSIMouseEvent, std::format("{}: {}", "Failed parsing classic mouse event", e.what()));
+        throw utils::exception::ErrorException(utils::exception::InternalCode::ANSIMouseEvent, std::format("{}: {}", "Failed parsing SGR mouse event", e.what()));
     }
 
     // Convert the button value

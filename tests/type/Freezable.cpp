@@ -185,3 +185,19 @@ TEST(BidirectionalLookupTable, LeftRight) {
 TEST(BidirectionalLookupTable, SameType) {
     bltSameTypeScenario<BLTSame>();
 }
+
+TEST(BidirectionalLookupTable, SameTypeRemoveElements) {
+    BLTSame table;
+    table.addElement(std::string("up"), std::string("down"));
+    table.addElement(std::string("left"), std::string("right"));
+    table.addElement(std::string("in"), std::string("out"));
+    table.removeElements({std::string("up"), std::string("right")}); // by any side of the pair
+    EXPECT_THROW((void)table[std::string("down")], utils::exception::IException);
+    EXPECT_THROW((void)table[std::string("left")], utils::exception::IException);
+    EXPECT_EQ(table[std::string("in")], "out");
+
+    testing::internal::CaptureStderr();
+    table.removeElements({std::string("unknown")}); // warning only
+    EXPECT_FALSE(testing::internal::GetCapturedStderr().empty());
+    EXPECT_EQ(table[std::string("out")], "in");
+}

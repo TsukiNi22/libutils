@@ -34,19 +34,19 @@ struct UnsafeObserverLeakCase {
 };
 std::ostream& operator<<(std::ostream& os, const UnsafeObserverLeakCase& c) {return os << c.name;}
 
-class UnsafeObserverTest : public ::testing::TestWithParam<UnsafeObserverLeakCase> {};
+class UnsafeObserverTest: public ::testing::TestWithParam<UnsafeObserverLeakCase> {};
 
 TEST_P(UnsafeObserverTest, DetectsLeak) {
     const UnsafeObserverLeakCase& testCase = GetParam();
 
-    ASSERT_GT(utils::security::observer::instances::Notifiers.size(), 0) << "See test: MemoryLeakNotifer::GlobalNotifiersArrayEmplacement";
+    ASSERT_GT(utils::security::observer::instances::notifiers().size(), 0) << "See test: MemoryLeakNotifer::GlobalNotifiersArrayEmplacement";
     testing::internal::CaptureStderr();
 
     // generate the things to observe
     testCase.generateLeak();
 
     // Trigger & Reset MemoryLeakNotifer instances
-    std::unique_ptr<utils::security::observer::INotifier>& notifier = utils::security::observer::instances::Notifiers[0];
+    std::unique_ptr<utils::security::observer::INotifier>& notifier = utils::security::observer::instances::notifiers()[0];
     notifier->trigger();
     notifier->clear(true);
 
@@ -55,6 +55,8 @@ TEST_P(UnsafeObserverTest, DetectsLeak) {
     ASSERT_EQ(std::regex_replace(output, originRegex, "(origin: X)"), testCase.expectedOutput);
 }
 
+// local to this test file
+namespace {
 class SimpleClass: private utils::security::observer::UnsafeObserver<"SimpleClass"> {};
 class SubClass: private utils::security::observer::UnsafeObserver<"SubClass">
 {
@@ -62,12 +64,13 @@ class SubClass: private utils::security::observer::UnsafeObserver<"SubClass">
         SimpleClass _class1;
         SimpleClass _class2;
 };
+} // namespace
 
 INSTANTIATE_TEST_SUITE_P(LeakCases, UnsafeObserverTest,
     ::testing::Values(
         UnsafeObserverLeakCase{
             "SimpleClass",
-            [] {
+            [](void) {
                 void* ptr = new SimpleClass();
                 (void)ptr;
             },
@@ -77,7 +80,7 @@ INSTANTIATE_TEST_SUITE_P(LeakCases, UnsafeObserverTest,
         },
         UnsafeObserverLeakCase{
             "SimpleClassAttribution",
-            [] {
+            [](void) {
                 SimpleClass* ptr = new SimpleClass();
                 SimpleClass simp;
                 *ptr = simp;
@@ -89,7 +92,7 @@ INSTANTIATE_TEST_SUITE_P(LeakCases, UnsafeObserverTest,
         },
         UnsafeObserverLeakCase{
             "SimpleClassMove",
-            [] {
+            [](void) {
                 SimpleClass* ptr = new SimpleClass();
                 SimpleClass simp;
                 *ptr = std::move(simp);
@@ -101,7 +104,7 @@ INSTANTIATE_TEST_SUITE_P(LeakCases, UnsafeObserverTest,
         },
         UnsafeObserverLeakCase{
             "SimpleClassCreateFrom",
-            [] {
+            [](void) {
                 SimpleClass simp;
                 SimpleClass* ptr = new SimpleClass(simp);
                 (void)ptr;
@@ -112,7 +115,7 @@ INSTANTIATE_TEST_SUITE_P(LeakCases, UnsafeObserverTest,
         },
         UnsafeObserverLeakCase{
             "SimpleClassCreateMove",
-            [] {
+            [](void) {
                 SimpleClass simp;
                 SimpleClass* ptr = new SimpleClass(std::move(simp));
                 (void)ptr;
@@ -123,7 +126,7 @@ INSTANTIATE_TEST_SUITE_P(LeakCases, UnsafeObserverTest,
         },
         UnsafeObserverLeakCase{
             "SubClass",
-            [] {
+            [](void) {
                 void* ptr = new SubClass();
                 (void)ptr;
             },
@@ -135,7 +138,7 @@ INSTANTIATE_TEST_SUITE_P(LeakCases, UnsafeObserverTest,
         },
         UnsafeObserverLeakCase{
             "SubClassAttribution",
-            [] {
+            [](void) {
                 SubClass* ptr = new SubClass();
                 SubClass sub;
                 *ptr = sub;
@@ -149,7 +152,7 @@ INSTANTIATE_TEST_SUITE_P(LeakCases, UnsafeObserverTest,
         },
         UnsafeObserverLeakCase{
             "SubClassMove",
-            [] {
+            [](void) {
                 SubClass* ptr = new SubClass();
                 SubClass sub;
                 *ptr = std::move(sub);
@@ -163,7 +166,7 @@ INSTANTIATE_TEST_SUITE_P(LeakCases, UnsafeObserverTest,
         },
         UnsafeObserverLeakCase{
             "SubClassCreateFrom",
-            [] {
+            [](void) {
                 SubClass sub;
                 SubClass* ptr = new SubClass(sub);
                 (void)ptr;
@@ -176,7 +179,7 @@ INSTANTIATE_TEST_SUITE_P(LeakCases, UnsafeObserverTest,
         },
         UnsafeObserverLeakCase{
             "SubClassCreateMove",
-            [] {
+            [](void) {
                 SubClass sub;
                 SubClass* ptr = new SubClass(std::move(sub));
                 (void)ptr;

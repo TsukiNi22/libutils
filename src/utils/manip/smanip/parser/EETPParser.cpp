@@ -11,10 +11,10 @@ Edition:
 ##  @date 25/08/2026 by @author Tsukini
 
 File Name:
-##  @file EETPParser.hpp
+##  @file EETPParser.cpp
 
 File Description:
-##  Definition of the 2etp parser methods
+##  Definition of the EETP parser methods
 \**************************************************************/
 
 #include "utils/attribute/Attribute.hpp"
@@ -23,83 +23,77 @@ File Description:
 #include "utils/manip/smanip/parser/EETPParser.hpp"
 #include "utils/manip/iomanip/Char.hpp"
 #include <cstddef>
+#include <vector>
 #include <string>
 
-// payload = <tag> ETB <type> [<data> *(<data> ETB)]
-// <tag> (base64)
-// ETB
-// <payload> (base64) -> <type> (AES only) [<data> *(<data> ETB)] (AES | RSA)
+// payload = <tag> ETB <content>
+// <tag>     (codec) -> <iv> (12 bytes) <AES-GCM tag> (16 bytes), empty when the content isn't AES encrypted
+// <content> (codec) -> <type> <data>
+//  - AES  : AES(<type> *(ETB <data>))     -> default payloads, a new random <iv> for each payload (GCM nonce never reused)
+//  - SYN  : <type> RSA_common(ETB <data>) -> <data> = client RSA public key
+//  - SO   : <type> RSA_client(ETB <data>) -> <data> = AES key
+//  - EM   : <type>                        -> never encrypted, no data
+// Each <data> is preceded by ETB (an empty <data> is kept) & encoded with the codec (ETB can never appear inside a <data>)
 
 /* Special Type
- * SYN -> generate local RSA + encrypt with common RSA
- * SO -> store AES + decrypt using local RSA + encrypt with local RSA
- * EM -> not encrypted
- * ACK -> only one <data>
- * NAK -> only one <data>
- * other -> <type> [<data> *(<data> ETB)]
+ * SYN -> generate local RSA + send the public key encrypted with the common RSA
+ * SO  -> generate & store AES + send it encrypted with the RSA public key of the client
+ * EM  -> not encrypted (disconnection)
+ * ACK -> only one <data> or less
+ * NAK -> only one <data> or less
+ * other -> <type> *(ETB <data>)
 */
 
 _hot _nodiscard std::string utils::smanip::parser::EETPParser::format(std::string id, utils::smanip::parser::EETPContent content)
 {
-    std::string s;
-    bool spe = false;
-
-    // Dispatch for special encryption
-    /*
-     * SYN -> encrypted with common RSA
-     * SO  -> encrypted with local RSA
-     * EM  -> never encrypted
-    */
     if (content.type.size() != this->_typeSize) _unlikely {
         throw utils::exception::ErrorException(utils::exception::InternalCode::Parser, "Invalid content, the type should be " + std::to_string(this->_typeSize) + " wide");
     }
+
+    utils::security::encryption::KeyAES& keyAES = this->_aesKeys[id];
+    keyAES.tag.clear(); // Reset on each new encryption
+    std::string s = content.type; // <type> always in clear (except AES), needed to know how to decrypt the rest
+    std::string tag; // <iv> <tag> (AES only)
+
     char type = content.type.front(); // Default type are only one char wide
     switch (type) {
         case static_cast<char>(utils::iomanip::Char::SYN): // Connection
         {
-            utils::security::encryption::RSAKey& RSAKey = this->_RSAKeys[id];
-            RSAKey.generate(); // Generate local RSA
-            s += content.type;
-            s += RSAKey.get().pub; // local RSA (pub)
-            s = this->_commonKey.encrypt(s); // common RSA (pub)
-            spe = true; break;
+            utils::security::encryption::RSAKey& rsaKey = this->_rsaKeys[id];
+            rsaKey.generate(); // Generate local RSA
+            s += this->_commonKey.encrypt(static_cast<char>(utils::iomanip::Char::ETB) + this->_codec->encode(rsaKey.get().pub)); // common RSA (pub)
+            break;
         }
 
         case static_cast<char>(utils::iomanip::Char::EM): // Disconnection
-            s += content.type; // Never encrypted
-            spe = true; break;
+            break; // Never encrypted, no data
 
         case static_cast<char>(utils::iomanip::Char::SO): // Key exchange
-            // Generate AES
-            utils::security::encryption::KeyAES& keyAES = this->_KeysAES[id];
-            keyAES.AES = this->_AESKey.generateRandomBytes(32);
-            keyAES.iv = this->_AESKey.generateRandomBytes(16);
-            s += content.type;
-            s += keyAES.AES;
-            s += static_cast<char>(utils::iomanip::Char::ETB);
-            s += keyAES.iv;
-            s = this->_RSAKeys[id].encrypt(s); // local RSA (pub)
-            spe = true; break;
-    }
-
-    // On not special encryption payload
-    utils::security::encryption::KeyAES& keyAES = this->_KeysAES[id];
-    keyAES.tag.clear(); // Reset on each new encryption
-    if (!spe) _likely {
-        // Build content
-        s += content.type;
-        for (std::size_t i = 0; i < content.data.size(); ++i) {
-            if (i != 0) _likely {s += static_cast<char>(utils::iomanip::Char::ETB);}
-            s += this->_codec->encode(content.data[i]);
+        {
+            keyAES.AES = this->_aesKey.generateRandomBytes(EETP_AES_KEY_SIZE); // Generate AES
+            s += this->_rsaKeys[id].encrypt(static_cast<char>(utils::iomanip::Char::ETB) + this->_codec->encode(keyAES.AES)); // RSA of the client (pub)
+            break;
         }
 
-        // Encrypt
-        s = this->_AESKey.encrypt(s, keyAES);
+        default: // Default payload: AES encrypted
+        {
+            if (keyAES.AES.empty()) _unlikely {
+                throw utils::exception::ErrorException(utils::exception::InternalCode::Parser, "No AES key for this id, the key exchange (SYN/SO) must be done first: " + id);
+            }
+            for (const std::string& data: content.data) {
+                s += static_cast<char>(utils::iomanip::Char::ETB);
+                s += this->_codec->encode(data);
+            }
+            keyAES.iv = this->_aesKey.generateRandomBytes(EETP_AES_IV_SIZE); // new nonce for each payload
+            s = this->_aesKey.encrypt(s, keyAES);
+            tag = keyAES.iv + keyAES.tag;
+            break;
+        }
     }
 
     // Encapsule the string
     std::string framed;
-    if (!keyAES.tag.empty()) _likely {framed += this->_codec->encode(keyAES.tag);}
+    if (!tag.empty()) _likely {framed += this->_codec->encode(tag);}
     framed += static_cast<char>(utils::iomanip::Char::ETB);
     framed += this->_codec->encode(s);
 
@@ -111,7 +105,7 @@ _hot _nodiscard utils::smanip::parser::EETPContent utils::smanip::parser::EETPPa
     utils::smanip::parser::EETPContent content;
     std::size_t pos = 0;
 
-    // Check the minum size (ETB + type size)
+    // Check the minimum size (ETB + type size)
     if (s.size() < 1 + this->_typeSize) _unlikely {
         throw utils::exception::ErrorException(utils::exception::InternalCode::Parser, "The transmission content is too small, at least " + std::to_string(1 + this->_typeSize) + " bytes");
     }
@@ -132,44 +126,76 @@ _hot _nodiscard utils::smanip::parser::EETPContent utils::smanip::parser::EETPPa
     if (!tag.empty()) _likely {tag = this->_codec->decode(tag);}
     s = this->_codec->decode(s);
 
-    // Decrypt if the tag is set
+    // Decrypt if the tag is set (<iv> <tag>)
     if (!tag.empty()) {
-        utils::security::encryption::KeyAES& keyAES = this->_KeysAES[id];
-        keyAES.tag = tag;
-        s = this->_AESKey.decrypt(s, keyAES);
+        if (tag.size() != EETP_AES_IV_SIZE + EETP_AES_TAG_SIZE) _unlikely {
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Parser, "Invalid transmission content, the tag should be " + std::to_string(EETP_AES_IV_SIZE + EETP_AES_TAG_SIZE) + " bytes");
+        }
+        utils::security::encryption::KeyAES& keyAES = this->_aesKeys[id];
+        if (keyAES.AES.empty()) _unlikely {
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Parser, "No AES key for this id, the key exchange (SYN/SO) must be done first: " + id);
+        }
+        keyAES.iv = tag.substr(0, EETP_AES_IV_SIZE);
+        keyAES.tag = tag.substr(EETP_AES_IV_SIZE);
+        s = this->_aesKey.decrypt(s, keyAES);
     }
 
     // Extract the type
+    if (s.size() < this->_typeSize) _unlikely {
+        throw utils::exception::ErrorException(utils::exception::InternalCode::Parser, "Invalid transmission content, can't extract the type");
+    }
     content.type = s.substr(0, this->_typeSize); // <type>
     s.erase(0, this->_typeSize); // <type>
 
     // On special payload
     /*
-     * SYN -> encrypted with common RSA
-     * SO  -> encrypted with local RSA
+     * SYN -> <data> encrypted with common RSA
+     * SO  -> <data> encrypted with local RSA
+     * EM  -> never encrypted
+     * other -> always AES encrypted
     */
     char type = content.type.front(); // Default type are only one char wide
     switch (type) {
         case static_cast<char>(utils::iomanip::Char::SYN): // Connection
+            if (!tag.empty()) _unlikely {
+                throw utils::exception::ErrorException(utils::exception::InternalCode::Parser, "Invalid transmission content, the payload of type SYN should be RSA encrypted");
+            }
             s = this->_commonKey.decrypt(s); // common RSA (priv)
             break;
 
         case static_cast<char>(utils::iomanip::Char::SO): // Key exchange
-            s = this->_RSAKeys[id].decrypt(s); // local RSA (priv)
+            if (!tag.empty()) _unlikely {
+                throw utils::exception::ErrorException(utils::exception::InternalCode::Parser, "Invalid transmission content, the payload of type SO should be RSA encrypted");
+            }
+            s = this->_rsaKeys[id].decrypt(s); // local RSA (priv)
+            break;
+
+        case static_cast<char>(utils::iomanip::Char::EM): // Disconnection
+            if (!tag.empty()) _unlikely {
+                throw utils::exception::ErrorException(utils::exception::InternalCode::Parser, "Invalid transmission content, the payload of type EM (disconnection) should never be encrypted!!!");
+            }
+            break;
+
+        default:
+            if (tag.empty()) _unlikely {
+                throw utils::exception::ErrorException(utils::exception::InternalCode::Parser, "Invalid transmission content, the payload isn't encrypted");
+            }
             break;
     }
 
-    // Split the lasting char on ETB
+    // Split the data: *(ETB <data>), each <data> is encoded with the codec
     std::vector<std::string>& data = content.data;
-    std::size_t begin = 0;
-    while (true) {
-        pos = s.find(static_cast<char>(utils::iomanip::Char::ETB), begin);
-        if (pos == std::string::npos) {
-            if (!s.empty()) data.emplace_back(s.substr(begin));
-            break;
+    if (!s.empty()) {
+        if (s.front() != static_cast<char>(utils::iomanip::Char::ETB)) _unlikely {
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Parser, "Invalid transmission content, each <data> should be preceded by ETB");
         }
-        data.emplace_back(this->_codec->decode(s.substr(begin, pos - begin)));
-        begin = pos + 1;
+        std::size_t begin = 1;
+        while (true) {
+            pos = s.find(static_cast<char>(utils::iomanip::Char::ETB), begin);
+            data.emplace_back(this->_codec->decode(s.substr(begin, (pos == std::string::npos) ? std::string::npos : pos - begin)));
+            if (pos == std::string::npos) break;
+            begin = pos + 1;
+        }
     }
 
     // On special payload
@@ -189,26 +215,22 @@ _hot _nodiscard utils::smanip::parser::EETPContent utils::smanip::parser::EETPPa
             // Extract pub from client
             utils::security::encryption::KeyPair keyPair;
             keyPair.pub = data[0];
-            this->_RSAKeys[id].set(keyPair);
+            this->_rsaKeys[id].set(keyPair);
             break;
         }
 
         case static_cast<char>(utils::iomanip::Char::SO): // Key exchange
         {
-            if (data.size() != 2) _unlikely {
-                throw utils::exception::ErrorException(utils::exception::InternalCode::Parser, "Invalid transmission content, expected exactly 1 part: <type> (SO) <data> (AES key) ETB <data> (AES iv)");
+            if (data.size() != 1 || data[0].size() != EETP_AES_KEY_SIZE) _unlikely {
+                throw utils::exception::ErrorException(utils::exception::InternalCode::Parser, "Invalid transmission content, expected exactly 1 part: <type> (SO) <data> (AES key of " + std::to_string(EETP_AES_KEY_SIZE) + " bytes)");
             }
             // Extract AES from server
-            utils::security::encryption::KeyAES& keyAES = this->_KeysAES[id];
-            keyAES.AES = data[0];
-            keyAES.iv = data[1];
+            this->_aesKeys[id].AES = data[0];
             break;
         }
 
         case static_cast<char>(utils::iomanip::Char::EM): // Disconnection
-            if (!tag.empty()) _unlikely {
-                throw utils::exception::ErrorException(utils::exception::InternalCode::Parser, "Invalid transmission content, the payload of type EM (disconnection) should never be encrypted!!!");
-            } else if (data.size() != 0) _unlikely {
+            if (data.size() != 0) _unlikely {
                 throw utils::exception::ErrorException(utils::exception::InternalCode::Parser, "Invalid transmission content, expected exactly no part: <type> (EM)");
             }
             break;

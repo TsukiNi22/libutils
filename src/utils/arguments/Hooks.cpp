@@ -14,9 +14,10 @@ File Name:
 ##  @file Hooks.cpp
 
 File Description:
-##  Default hook used for the cli
+##  Default hooks used by the ArgParser
 \**************************************************************/
 
+#include "utils/attribute/Attribute.hpp"
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/basic/WarningException.hpp"
 #include "utils/arguments/ArgParser.hpp"
@@ -28,6 +29,8 @@ File Description:
 #include <unordered_map>
 #include <filesystem>
 #include <exception>
+#include <stdexcept>
+#include <algorithm>
 #include <iostream>
 #include <optional>
 #include <iomanip>
@@ -35,9 +38,11 @@ File Description:
 #include <cstddef>
 #include <cstdint>
 #include <format>
+#include <limits>
+#include <cctype>
 #include <string>
 
-void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser)
+_cold void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser)
 {
     const std::unordered_map<std::string, utils::arguments::Usage>&  usages  = parser.getUsages();
     const std::unordered_map<std::string, utils::arguments::Flag>&   flags   = parser.getFlags();
@@ -48,7 +53,7 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
     std::cout << utils::iomanip::reset() << std::endl;
 
     std::size_t maxNameLen = 0;
-    for (const auto& [id, usage]: usages) {
+    for (const auto &[id, usage]: usages) {
         if (id != "default")
             maxNameLen = std::max(maxNameLen, usage.name.size());
     }
@@ -57,15 +62,15 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
     std::cout << utils::smanip::format("<strong>USAGE<>") << std::endl;
     std::cout << utils::iomanip::color(utils::iomanip::Color::Magenta);
     bool defaultUsage = false;
-    for (const auto& [idU, usage]: usages) {
+    for (const auto &[idU, usage]: usages) {
         if (idU == "default") {
             defaultUsage = true;
             continue;
         }
         std::cout << "\t";
-        if (!usage.name.empty()) std::cout << std::left << std::setw(maxNameLen) << std::format("({})", usage.name) << " -> ";
+        if (!usage.name.empty()) std::cout << std::left << std::setw(static_cast<int>(maxNameLen)) << std::format("({})", usage.name) << " -> ";
         std::cout << "./" << parser.getBinary();
-        for (const auto& [id, mandatory]: usage.ids) {
+        for (const auto &[id, mandatory]: usage.ids) {
             // Options
             if (options.contains(id)) {
                 auto it = options.find(id);
@@ -82,12 +87,12 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
             else if (flags.contains(id)) {
                 auto it = flags.find(id);
                 if (it == flags.end()) continue;
-                const auto& [fshort, fflag, flong, _] = it->second.flag;
+                const auto &[fshort, fflag, flong, _] = it->second.flag;
                 if (fshort.empty() && fflag.empty() && flong.empty()) continue;
                 std::cout << " ";
                 if (!mandatory) std::cout << "[";
                 std::cout << ((fshort.empty() && fflag.empty()) ? "--" : "-") << (fshort.empty() ? (fflag.empty() ? flong : fflag) : fshort);
-                for (const auto& [name, fmandatory, _]: it->second.options)
+                for (const auto &[name, fmandatory, _]: it->second.options)
                     std::cout << " " << (fmandatory ? "" : "[") << "<" << name << ">" << (fmandatory ? "" : "]");
                 if (it->second.unlimited.first) std::cout << "*";
                 if (!mandatory) std::cout << "]";
@@ -101,12 +106,12 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
         std::cout << std::endl;
     }
     if (defaultUsage || usages.size() == 0) { // Default usage (all flag authorized, dosen't know option position)
-        std::cout << "\t" << std::left << std::setw(maxNameLen) << "(default)" << " -> ./" << parser.getBinary();
-        for (const auto& [_, flag]: parser.getFlags()) {
-            const auto& [fshort, fflag, flong, _] = flag.flag;
+        std::cout << "\t" << std::left << std::setw(static_cast<int>(maxNameLen)) << "(default)" << " -> ./" << parser.getBinary();
+        for (const auto &[_, flag]: parser.getFlags()) {
+            const auto &[fshort, fflag, flong, _] = flag.flag;
             if (fshort.empty() && fflag.empty() && flong.empty()) continue;
             std::cout << " " << ((fshort.empty() && fflag.empty()) ? "--" : "-") << (fshort.empty() ? (fflag.empty() ? flong : fflag) : fshort);
-            for (const auto& [name, mandatory, _]: flag.options)
+            for (const auto &[name, mandatory, _]: flag.options)
                 std::cout << (mandatory ? "" : "[") << " <" << name << ">" << (mandatory ? "" : "]");
         }
         std::cout << std::endl;
@@ -114,37 +119,37 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
     std::cout << utils::iomanip::reset() << std::endl;
 
     std::cout << utils::smanip::format("<strong>OPTIONS<>") << std::endl;
-    for (const auto& [_, option]: options) {
+    for (const auto &[_, option]: options) {
         std::cout << utils::iomanip::color(utils::iomanip::Color::Green) << "\t" << option.name << utils::iomanip::reset() << std::endl;
         std::cout << "\t\t" << option.description << std::endl;
     }
-    if (options.size() == 0) std::cout << "\tNothing..." << std::endl;;
+    if (options.size() == 0) std::cout << "\tNothing..." << std::endl;
     std::cout << utils::iomanip::reset() << std::endl;
 
     std::cout << utils::smanip::format("<strong>FLAGS<>") << std::endl;
     std::cout << utils::iomanip::color(utils::iomanip::Color::Green) << "\t" << "-h, -help, --help" << utils::iomanip::reset() << std::endl;
     std::cout << "\t\t" << "Display this help and exit" << std::endl;
-    for (const auto& [_, flag]: flags) {
-        const auto& [fshort, fflag, flong, _] = flag.flag;
+    for (const auto &[_, flag]: flags) {
+        const auto &[fshort, fflag, flong, _] = flag.flag;
         std::cout << utils::iomanip::color(utils::iomanip::Color::Green) << "\t";
         if (!fshort.empty()) std::cout << "-" << fshort;
         if (!fflag.empty())  std::cout << (fshort.empty() ? "" : ", ") << "-" << fflag;
         if (!flong.empty())  std::cout << ((fshort.empty() && fflag.empty()) ? "" : ", ") << "--" << flong;
         std::cout << utils::iomanip::reset();
         for (std::size_t i = 0; i < flag.options.size(); ++i) {
-            const auto& [name, mandatory, _] = flag.options[i];
+            const auto &[name, mandatory, _] = flag.options[i];
             std::cout << " " << (mandatory ? "" : "[") << "<" << utils::iomanip::color(utils::iomanip::Color::Red) << name << utils::iomanip::reset() << ">" << ((flag.unlimited.first && i == flag.options.size() - 1) ? "*" : "") << (mandatory ? "" : "]");
         }
         std::cout << utils::iomanip::reset() << std::endl;
         std::cout << "\t\t" << flag.description << std::endl;
     }
-    if (flags.size() == 0) std::cout << "\tNothing..." << std::endl;;
+    if (flags.size() == 0) std::cout << "\tNothing..." << std::endl;
     std::cout << utils::iomanip::reset() << std::endl;
 
     std::cout << utils::smanip::format("<strong>ENVIRONMENT<>") << std::endl;
     bool none = true;
-    for (const auto& [_, flag]: parser.getFlags()) {
-        const auto& [fshort, fflag, flong, fenv] = flag.flag;
+    for (const auto &[_, flag]: parser.getFlags()) {
+        const auto &[fshort, fflag, flong, fenv] = flag.flag;
         if (fenv.empty()) continue;
         none = false;
         std::cout << utils::iomanip::color(utils::iomanip::Color::Green) << "\t" << fenv;
@@ -154,11 +159,11 @@ void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& parser
         if (!flong.empty())  std::cout << ((fshort.empty() && fflag.empty()) ? "" : ", ") << "--" << flong;
         std::cout << "]" << std::endl;
     }
-    if (none) std::cout << "\tNothing..." << std::endl;;
+    if (none) std::cout << "\tNothing..." << std::endl;
     std::cout << utils::iomanip::reset() << std::flush;
 }
 
-std::optional<std::string> utils::arguments::defaultBoolParsingHook(const std::string& option)
+_hot _nodiscard std::optional<std::string> utils::arguments::defaultBoolParsingHook(const std::string& option)
 {
     try {
         if (option.empty())
@@ -170,12 +175,13 @@ std::optional<std::string> utils::arguments::defaultBoolParsingHook(const std::s
     }
 }
 
-std::optional<std::string> utils::arguments::defaultInt32ParsingHook(const std::string& option)
+_hot _nodiscard std::optional<std::string> utils::arguments::defaultInt32ParsingHook(const std::string& option)
 {
     try {
         if (option.empty())
             throw std::invalid_argument("empty");
-        if (!std::all_of(option.begin(), option.end(), ::isdigit))
+        const std::size_t sign = (option.front() == '-' || option.front() == '+'); // optional sign
+        if (sign == option.size() || !std::all_of(option.begin() + static_cast<std::ptrdiff_t>(sign), option.end(), [](unsigned char c) {return std::isdigit(c);}))
             throw std::invalid_argument("not numeric");
         std::size_t pos = 0;
         long value = std::stol(option, &pos);
@@ -190,12 +196,12 @@ std::optional<std::string> utils::arguments::defaultInt32ParsingHook(const std::
     }
 }
 
-std::optional<std::string> utils::arguments::defaultSizetParsingHook(const std::string& option)
+_hot _nodiscard std::optional<std::string> utils::arguments::defaultSizetParsingHook(const std::string& option)
 {
     try {
         if (option.empty())
             throw std::invalid_argument("empty");
-        if (!std::all_of(option.begin(), option.end(), ::isdigit))
+        if (!std::all_of(option.begin(), option.end(), [](unsigned char c) {return std::isdigit(c);}))
             throw std::invalid_argument("not numeric");
         std::size_t pos = 0;
         (void)std::stoull(option, &pos);
@@ -207,7 +213,7 @@ std::optional<std::string> utils::arguments::defaultSizetParsingHook(const std::
     }
 }
 
-std::optional<std::string> utils::arguments::defaultDoubleParsingHook(const std::string& option)
+_hot _nodiscard std::optional<std::string> utils::arguments::defaultDoubleParsingHook(const std::string& option)
 {
     try {
         if (option.empty())
@@ -222,39 +228,53 @@ std::optional<std::string> utils::arguments::defaultDoubleParsingHook(const std:
     }
 }
 
-std::optional<std::string> utils::arguments::defaultDirectoryParsingHook(const std::string& option)
+_hot _nodiscard std::optional<std::string> utils::arguments::defaultDirectoryParsingHook(const std::string& option)
 {
-    if (!std::filesystem::exists(option) || !std::filesystem::is_directory(option))
-        return "The given path isn't a valid directory: " + option;
-    return std::nullopt;
-}
-
-std::optional<std::string> utils::arguments::defaultFileParsingHook(const std::string& option)
-{
-    if (!std::filesystem::exists(option) || !std::filesystem::is_regular_file(option))
-        return "The given path isn't a readable regular file: " + option;
-    if (std::filesystem::file_size(option) == 0)
-        return "The given file is empty: " + option;
-    return std::nullopt;
-}
-
-std::optional<std::string> utils::arguments::defaultWritableParsingHook(const std::string& option)
-{
-    std::filesystem::path path(option);
-    if (std::filesystem::exists(path) && std::filesystem::is_regular_file(path))
-        return "Can't override an existing file: " + option;
-
-    // Explicit directory
-    bool isDirectory = option.back() == '/' || option.back() == '\\';
     try {
-        // Check if the directory exist
-        if (std::filesystem::exists(path) && std::filesystem::is_directory(path))
+        if (option.empty() || !std::filesystem::exists(option) || !std::filesystem::is_directory(option))
+            return "The given path isn't a valid directory: " + option;
+        return std::nullopt;
+    } catch (const std::exception& e) {
+        return std::string(e.what()) + ": " + option;
+    }
+}
+
+_hot _nodiscard std::optional<std::string> utils::arguments::defaultFileParsingHook(const std::string& option)
+{
+    try {
+        if (option.empty() || !std::filesystem::exists(option) || !std::filesystem::is_regular_file(option))
+            return "The given path isn't a readable regular file: " + option;
+        if (std::filesystem::file_size(option) == 0)
+            return "The given file is empty: " + option;
+        return std::nullopt;
+    } catch (const std::exception& e) {
+        return std::string(e.what()) + ": " + option;
+    }
+}
+
+_hot _nodiscard std::optional<std::string> utils::arguments::defaultWritableParsingHook(const std::string& option)
+{
+    if (option.empty())
+        return "The given path is empty";
+
+    try {
+        std::filesystem::path path(option);
+        std::filesystem::file_status status = std::filesystem::symlink_status(path); // a symlink isn't followed (dangling one included)
+
+        // Existing path: only a directory is allowed
+        bool isDirectory = option.back() == '/' || option.back() == '\\'; // Explicit directory
+        if (std::filesystem::exists(status)) {
+            if (!std::filesystem::is_directory(status))
+                return "Can't override an existing file: " + option;
             isDirectory = true;
+        }
 
         // On directory case
         if (isDirectory) {
             std::filesystem::create_directories(path);
             std::filesystem::path testFile = path / ".TO_DELETE-permission_check_auto_generated_file";
+            if (std::filesystem::exists(std::filesystem::symlink_status(testFile)))
+                return "Can't test the given directory, the test file already exists: " + testFile.string();
             std::ofstream file(testFile.string());
             if (!file) return "Error during the file opening in the given directory (testing): " + option;
             file.close();

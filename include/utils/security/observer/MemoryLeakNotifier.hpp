@@ -13,14 +13,14 @@ File Description:
     #define MEMORYLEAKNOTIFIER_H
 
     //----------------------------------------------------------------//
-    /* MemoryLeakNCLUDE */
+    /* INCLUDE */
 
     /* type */
     #include "ANotifier.hpp"    // utils::security::observer::ANotifier
 
 namespace utils::security::observer { // namespace start
 //----------------------------------------------------------------//
-/* CLMemoryLeakSS */
+/* CLASS */
 
 class MemoryLeakNotifier: public utils::security::observer::ANotifier {
     public:

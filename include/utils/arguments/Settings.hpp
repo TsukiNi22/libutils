@@ -24,12 +24,15 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"           // _nodicard
+    #include "../attribute/Attribute.hpp"           // _cold, _hot, _nodiscard, _migration
     #include "../security/observer/Observer.hpp"    // utils::security::observer::Observer
     #include "SettingsDefine.hpp"                   // utils::arguments::CastType
     #include "Setting.hpp"                          // utils::arguments::Setting
     #include <unordered_map>                        // std::unordered_map
     #include <filesystem>                           // std::filesystem::path
+    #include <functional>                           // std::equal_to, std::hash
+    #include <string_view>                          // std::string_view
+    #include <utility>                              // std::forward
     //#include <cstdfloat> -> handled by SettingsDefine
     #include <cstddef>                              // std::* (type)
     #include <cstdint>                              // std::* (type)
@@ -37,138 +40,208 @@ File Description:
 
 namespace utils::arguments { // namespace start
 //----------------------------------------------------------------//
+/* STRUCT */
+
+// Transparent hash: allow lookup with std::string_view / const char* without building a std::string
+struct SettingsHash {
+    using is_transparent = void;
+    _hot _nodiscard inline std::size_t operator()(std::string_view key) const noexcept {return std::hash<std::string_view>{}(key);};
+};
+
+//----------------------------------------------------------------//
 /* CLASS */
 
 class Settings: private utils::security::observer::Observer<"Settings"> {
     private:
-        std::unordered_map<std::string, utils::arguments::Setting> _settings;
+        std::unordered_map<std::string, utils::arguments::Setting, utils::arguments::SettingsHash, std::equal_to<>> _settings;
 
         // ---------- Pre-Function -------- //
-        utils::arguments::CastType getType(const std::string& setting);
+        utils::arguments::CastType getType_(const std::string& setting);
 
         /* basic */
-        std::byte cast_byte(const std::string& setting);
-        bool cast_bool(const std::string& setting);
+        std::byte castByte_(const std::string& setting);
+        bool castBool_(const std::string& setting);
 
         /* integer */
-        std::int8_t  cast_int8(const std::string& setting);
-        std::int16_t cast_int16(const std::string& setting);
-        std::int32_t cast_int32(const std::string& setting);
-        std::int64_t cast_int64(const std::string& setting);
+        std::int8_t  castInt8_(const std::string& setting);
+        std::int16_t castInt16_(const std::string& setting);
+        std::int32_t castInt32_(const std::string& setting);
+        std::int64_t castInt64_(const std::string& setting);
 
         /* unsigned integer */
-        std::uint8_t  cast_uint8(const std::string& setting);
-        std::uint16_t cast_uint16(const std::string& setting);
-        std::uint32_t cast_uint32(const std::string& setting);
-        std::uint64_t cast_uint64(const std::string& setting);
+        std::uint8_t  castUInt8_(const std::string& setting);
+        std::uint16_t castUInt16_(const std::string& setting);
+        std::uint32_t castUInt32_(const std::string& setting);
+        std::uint64_t castUInt64_(const std::string& setting);
 
         /* floating */
-        utils::arguments::float16_t  cast_float16(const std::string& setting);
-        utils::arguments::float32_t  cast_float32(const std::string& setting);
-        utils::arguments::float64_t  cast_float64(const std::string& setting);
-        utils::arguments::float128_t cast_float128(const std::string& setting);
+        utils::arguments::float16_t  castFloat16_(const std::string& setting);
+        utils::arguments::float32_t  castFloat32_(const std::string& setting);
+        utils::arguments::float64_t  castFloat64_(const std::string& setting);
+        utils::arguments::float128_t castFloat128_(const std::string& setting);
 
         /* char */
-        char8_t  cast_char8(const std::string& setting);
-        char16_t cast_char16(const std::string& setting);
-        char32_t cast_char32(const std::string& setting);
-        std::u8string  cast_u8string(const std::string& setting);
-        std::u16string cast_u16string(const std::string& setting);
-        std::u32string cast_u32string(const std::string& setting);
+        char8_t  castChar8_(const std::string& setting);
+        char16_t castChar16_(const std::string& setting);
+        char32_t castChar32_(const std::string& setting);
+        std::u8string  castU8String_(const std::string& setting);
+        std::u16string castU16String_(const std::string& setting);
+        std::u32string castU32String_(const std::string& setting);
 
         /* huge char */
-        wchar_t      cast_wchar(const std::string& setting);
-        std::wstring cast_wstring(const std::string& setting);
+        wchar_t      castWChar_(const std::string& setting);
+        std::wstring castWString_(const std::string& setting);
 
         /* special */
-        std::filesystem::path cast_path(const std::string& setting);
+        std::filesystem::path castPath_(const std::string& setting);
+
+        // ------------ Function ---------- //
+        template<bool force, typename K, typename T>
+        _cold void set_(K&& id, T&& setting) // K: const std::string& (copy) | std::string&& (move)
+        {
+            auto it = this->_settings.find(id); // single lookup
+            if (it != this->_settings.end()) {
+                if constexpr (force) it->second.assign(std::forward<T>(setting)); // edit in place: no node realloc
+                else throw utils::exception::ErrorException(utils::exception::InternalCode::Override, std::string("A setting with this id is already defined: ") + id);
+                return;
+            }
+            this->_settings.emplace(std::forward<K>(id), std::forward<T>(setting)); // key copied or moved
+        };
 
     public:
         // ---------- Pre-Function -------- //
-        const utils::arguments::Setting& at(const std::string& id) const;
-        template<bool force = false> // Can't override an exiting one by default
-        utils::arguments::CastType auto_cast(const std::string& id, const std::string& setting)
-        {
-            utils::arguments::CastType type = this->getType(setting);
-            if (type == utils::arguments::CastType::None) this->set<force>(id, setting);
-            else this->cast<type, force>(id, setting);
-            return type; // Return type found (None == String)
-        }
+        const utils::arguments::Setting& at(std::string_view id) const;
+        utils::arguments::Setting& at(std::string_view id);
 
         // ------------ Function ---------- //
-        template<utils::arguments::CastType type, bool force = false> // Can't override an exiting one by default
-        void cast(const std::string& id, const std::string& setting)
+        template<bool force = false> // Can't override an exiting one by default
+        _hot utils::arguments::CastType autoCast(const std::string& id, const std::string& setting)
         {
+            utils::arguments::CastType type = this->getType_(setting); // only known at runtime
             switch (type) {
+                /* string */
+                case utils::arguments::CastType::None: this->set<force>(id, setting); break;
+
                 /* basic */
-                case utils::arguments::CastType::Byte: this->set<force>(id, this->cast_byte(setting));      break;
-                case utils::arguments::CastType::Bool: this->set<force>(id, this->cast_bool(setting));      break;
+                case utils::arguments::CastType::Byte: this->cast<utils::arguments::CastType::Byte, force>(id, setting); break;
+                case utils::arguments::CastType::Bool: this->cast<utils::arguments::CastType::Bool, force>(id, setting); break;
 
                 /* integer */
-                case utils::arguments::CastType::Int8:  this->set<force>(id, this->cast_int8(setting));      break;
-                case utils::arguments::CastType::Int16: this->set<force>(id, this->cast_int16(setting));     break;
-                case utils::arguments::CastType::Int32: this->set<force>(id, this->cast_int32(setting));     break;
-                case utils::arguments::CastType::Int64: this->set<force>(id, this->cast_int64(setting));     break;
+                case utils::arguments::CastType::Int8:  this->cast<utils::arguments::CastType::Int8,  force>(id, setting); break;
+                case utils::arguments::CastType::Int16: this->cast<utils::arguments::CastType::Int16, force>(id, setting); break;
+                case utils::arguments::CastType::Int32: this->cast<utils::arguments::CastType::Int32, force>(id, setting); break;
+                case utils::arguments::CastType::Int64: this->cast<utils::arguments::CastType::Int64, force>(id, setting); break;
 
                 /* unsigned integer */
-                case utils::arguments::CastType::UInt8:  this->set<force>(id, this->cast_uint8(setting));     break;
-                case utils::arguments::CastType::UInt16: this->set<force>(id, this->cast_uint16(setting));    break;
-                case utils::arguments::CastType::UInt32: this->set<force>(id, this->cast_uint32(setting));    break;
-                case utils::arguments::CastType::UInt64: this->set<force>(id, this->cast_uint64(setting));    break;
+                case utils::arguments::CastType::UInt8:  this->cast<utils::arguments::CastType::UInt8,  force>(id, setting); break;
+                case utils::arguments::CastType::UInt16: this->cast<utils::arguments::CastType::UInt16, force>(id, setting); break;
+                case utils::arguments::CastType::UInt32: this->cast<utils::arguments::CastType::UInt32, force>(id, setting); break;
+                case utils::arguments::CastType::UInt64: this->cast<utils::arguments::CastType::UInt64, force>(id, setting); break;
 
                 /* floating */
-                case utils::arguments::CastType::Float16:  this->set<force>(id, this->cast_float16(setting));   break;
-                case utils::arguments::CastType::Float32:  this->set<force>(id, this->cast_float32(setting));   break;
-                case utils::arguments::CastType::Float64:  this->set<force>(id, this->cast_float64(setting));   break;
-                case utils::arguments::CastType::Float128: this->set<force>(id, this->cast_float128(setting));  break;
+                case utils::arguments::CastType::Float16:  this->cast<utils::arguments::CastType::Float16,  force>(id, setting); break;
+                case utils::arguments::CastType::Float32:  this->cast<utils::arguments::CastType::Float32,  force>(id, setting); break;
+                case utils::arguments::CastType::Float64:  this->cast<utils::arguments::CastType::Float64,  force>(id, setting); break;
+                case utils::arguments::CastType::Float128: this->cast<utils::arguments::CastType::Float128, force>(id, setting); break;
 
                 /* char */
-                case utils::arguments::CastType::Char8:     this->set<force>(id, this->cast_char8(setting));     break;
-                case utils::arguments::CastType::Char16:    this->set<force>(id, this->cast_char16(setting));    break;
-                case utils::arguments::CastType::Char32:    this->set<force>(id, this->cast_char32(setting));    break;
-                case utils::arguments::CastType::U8String:  this->set<force>(id, this->cast_u8string(setting));  break;
-                case utils::arguments::CastType::U16String: this->set<force>(id, this->cast_u16string(setting)); break;
-                case utils::arguments::CastType::U32String: this->set<force>(id, this->cast_u32string(setting)); break;
+                case utils::arguments::CastType::Char8:     this->cast<utils::arguments::CastType::Char8,     force>(id, setting); break;
+                case utils::arguments::CastType::Char16:    this->cast<utils::arguments::CastType::Char16,    force>(id, setting); break;
+                case utils::arguments::CastType::Char32:    this->cast<utils::arguments::CastType::Char32,    force>(id, setting); break;
+                case utils::arguments::CastType::U8String:  this->cast<utils::arguments::CastType::U8String,  force>(id, setting); break;
+                case utils::arguments::CastType::U16String: this->cast<utils::arguments::CastType::U16String, force>(id, setting); break;
+                case utils::arguments::CastType::U32String: this->cast<utils::arguments::CastType::U32String, force>(id, setting); break;
 
                 /* huge char */
-                case utils::arguments::CastType::WChar:   this->set<force>(id, this->cast_wchar(setting));     break;
-                case utils::arguments::CastType::WString: this->set<force>(id, this->cast_wstring(setting));   break;
+                case utils::arguments::CastType::WChar:   this->cast<utils::arguments::CastType::WChar,   force>(id, setting); break;
+                case utils::arguments::CastType::WString: this->cast<utils::arguments::CastType::WString, force>(id, setting); break;
 
                 /* special */
-                case utils::arguments::CastType::Path: this->set<force>(id, this->cast_path(setting));      break;
+                case utils::arguments::CastType::Path: this->cast<utils::arguments::CastType::Path, force>(id, setting); break;
 
                 default: throw utils::exception::ErrorException(utils::exception::InternalCode::UnknownCast);
             }
-        }
+            return type; // Return type found (None == String)
+        };
+        template<utils::arguments::CastType type, bool force = false> // Can't override an exiting one by default
+        _hot void cast(const std::string& id, const std::string& setting)
+        {
+            switch (type) {
+                /* basic */
+                case utils::arguments::CastType::Byte: this->set<force>(id, this->castByte_(setting));      break;
+                case utils::arguments::CastType::Bool: this->set<force>(id, this->castBool_(setting));      break;
+
+                /* integer */
+                case utils::arguments::CastType::Int8:  this->set<force>(id, this->castInt8_(setting));      break;
+                case utils::arguments::CastType::Int16: this->set<force>(id, this->castInt16_(setting));     break;
+                case utils::arguments::CastType::Int32: this->set<force>(id, this->castInt32_(setting));     break;
+                case utils::arguments::CastType::Int64: this->set<force>(id, this->castInt64_(setting));     break;
+
+                /* unsigned integer */
+                case utils::arguments::CastType::UInt8:  this->set<force>(id, this->castUInt8_(setting));     break;
+                case utils::arguments::CastType::UInt16: this->set<force>(id, this->castUInt16_(setting));    break;
+                case utils::arguments::CastType::UInt32: this->set<force>(id, this->castUInt32_(setting));    break;
+                case utils::arguments::CastType::UInt64: this->set<force>(id, this->castUInt64_(setting));    break;
+
+                /* floating */
+                case utils::arguments::CastType::Float16:  this->set<force>(id, this->castFloat16_(setting));   break;
+                case utils::arguments::CastType::Float32:  this->set<force>(id, this->castFloat32_(setting));   break;
+                case utils::arguments::CastType::Float64:  this->set<force>(id, this->castFloat64_(setting));   break;
+                case utils::arguments::CastType::Float128: this->set<force>(id, this->castFloat128_(setting));  break;
+
+                /* char */
+                case utils::arguments::CastType::Char8:     this->set<force>(id, this->castChar8_(setting));     break;
+                case utils::arguments::CastType::Char16:    this->set<force>(id, this->castChar16_(setting));    break;
+                case utils::arguments::CastType::Char32:    this->set<force>(id, this->castChar32_(setting));    break;
+                case utils::arguments::CastType::U8String:  this->set<force>(id, this->castU8String_(setting));  break;
+                case utils::arguments::CastType::U16String: this->set<force>(id, this->castU16String_(setting)); break;
+                case utils::arguments::CastType::U32String: this->set<force>(id, this->castU32String_(setting)); break;
+
+                /* huge char */
+                case utils::arguments::CastType::WChar:   this->set<force>(id, this->castWChar_(setting));     break;
+                case utils::arguments::CastType::WString: this->set<force>(id, this->castWString_(setting));   break;
+
+                /* special */
+                case utils::arguments::CastType::Path: this->set<force>(id, this->castPath_(setting));      break;
+
+                default: throw utils::exception::ErrorException(utils::exception::InternalCode::UnknownCast);
+            }
+        };
         template<typename T>
-        void add(const std::string& id, const T& setting) {this->set<false>(id, setting);};
+        _cold inline void add(const std::string& id, T&& setting) {this->set_<false>(id, std::forward<T>(setting));};
+        template<typename T>
+        _cold inline void add(std::string&& id, T&& setting) {this->set_<false>(std::move(id), std::forward<T>(setting));};
         template<bool force = true, typename T> // Can override an exiting one by default
-        void set(const std::string& id, const T& setting)
-        {
-            if (this->_settings.contains(id)) {
-                if constexpr (force) this->_settings.erase(id);
-                else throw utils::exception::ErrorException(utils::exception::InternalCode::Override, std::string("A setting with this id is already defined: ") + id);
-            }
-            this->_settings.emplace(id, setting);
-        };
+        _cold inline void set(const std::string& id, T&& setting) {this->set_<force>(id, std::forward<T>(setting));};
+        template<bool force = true, typename T> // Can override an exiting one by default
+        _cold inline void set(std::string&& id, T&& setting) {this->set_<force>(std::move(id), std::forward<T>(setting));};
         template<bool failsafe = false>
-        void remove(const std::string& id)
+        _cold void remove(std::string_view id)
         {
-            if (!this->_settings.contains(id)) {
+            auto it = this->_settings.find(id);
+            if (it == this->_settings.end()) {
                 if constexpr (failsafe) return;
-                else throw utils::exception::ErrorException(utils::exception::InternalCode::UnknownId, id);
+                else throw utils::exception::ErrorException(utils::exception::InternalCode::UnknownId, std::string(id));
             }
-            this->_settings.erase(id);
+            this->_settings.erase(it);
         };
-        void clear(void) {this->_settings.clear();};
-        _nodiscard const utils::arguments::Setting& get(const std::string& id) const {return this->at(id);};
-        _nodiscard bool contains(const std::string& id) const {return this->_settings.contains(id);};
+        _cold inline void clear(void) {this->_settings.clear();};
+        template<typename T>
+        _hot _nodiscard inline const T& get(std::string_view id) const {return this->at(id).template get<T>();};
+        template<typename T>
+        _hot _nodiscard inline T& get(std::string_view id)                                     {return this->at(id).template get<T>();};
+        _hot _nodiscard inline const utils::arguments::Setting& get(std::string_view id) const {return this->at(id);};
+        _hot _nodiscard inline bool contains(std::string_view id) const                        {return this->_settings.contains(id);};
+
+        /* migration */
+        template<bool force = false>
+        _migration(4, 0, 0) inline utils::arguments::CastType auto_cast(const std::string& id, const std::string& setting) {return this->autoCast<force>(id, setting);};
 
         // ------------ Operator ---------- //
         Settings& operator=(const Settings& other) = delete;
         Settings& operator=(Settings&& other) = default;
-        _nodiscard const utils::arguments::Setting& operator[](const std::string& id) {return this->at(id);}
-        _nodiscard const utils::arguments::Setting& operator[](const std::string& id) const {return this->at(id);}
+        _hot _nodiscard inline utils::arguments::Setting& operator[](std::string_view id)             {return this->at(id);};
+        _hot _nodiscard inline const utils::arguments::Setting& operator[](std::string_view id) const {return this->at(id);};
 
         // ---------- Constructor --------- //
         Settings() = default;

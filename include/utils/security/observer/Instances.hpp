@@ -32,13 +32,15 @@ File Description:
 
 namespace utils::security::observer::instances { // namespace start
 //----------------------------------------------------------------//
-/* CLASS */
+/* PROTOTYPE */
+
+// Function local statics (constructed on first use)
 
 /* id distributor */
-extern utils::system::IdHandler<std::uint64_t> IdHandler;
+utils::system::IdHandler<std::uint64_t>& id_handler(void);
 
 /* different notifiers to link/unlink */
-extern std::array<std::unique_ptr<utils::security::observer::INotifier>, 1> Notifiers;
+std::array<std::unique_ptr<utils::security::observer::INotifier>, 1>& notifiers(void);
 
 } // namespace end
 #endif /* INSTANCES_H */

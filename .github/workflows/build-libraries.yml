@@ -35,7 +35,7 @@ jobs:
           set -e
           cmake -S . -B build
           cmake --build build --target release --parallel $(nproc)
-        timeout-minutes: 2
+        timeout-minutes: 6
 
       - name: Show ccache stats
         run: ccache -s
@@ -43,7 +43,7 @@ jobs:
       - name: Check libraries
         run: |
           set -euo pipefail
-          for library in $(echo $LIBRARYS | tr ',' ' ' | xargs); do
+          for library in $LIBRARIES; do
             if [ ! -f "./build/$library" ]; then
               echo "::error title=Missing library, file=$library::Library '$library' not found"
               exit 1

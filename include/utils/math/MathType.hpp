@@ -3,7 +3,7 @@ Edition:
 ##  @date 24/09/2026 by @author Tsukini
 
 File Name:
-##  @file SpaceType.hpp
+##  @file MathType.hpp
 
 File Description:
 ##  Type definition used in math computing
@@ -23,6 +23,7 @@ File Description:
 namespace utils::math { // namespace start
 //----------------------------------------------------------------//
 /* TYPE */
+
 using Type = double; // Type used everywhere for coord, angle, direction, ...
 using UType = std::uint64_t; // Type used everywhere for unsigned coord, angle, direction, ...
 
@@ -42,6 +43,9 @@ using UCoord = utils::type::OVector3<utils::math::UType>;
 using Angle = utils::math::Type; // Generaly in deg
 using Direction = utils::type::OVector3<utils::math::Angle>; // Generaly normalized
 using Chunk = utils::type::OVector3<std::int32_t>; // Used for spacial partitionning
+
+//----------------------------------------------------------------//
+/* STRUCT */
 
 struct CFrame {
     utils::math::Coord position = {0.0, 0.0, 0.0}; // Coord

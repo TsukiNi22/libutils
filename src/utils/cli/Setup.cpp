@@ -24,12 +24,14 @@ File Description:
 #include "utils/manip/smanip/format.hpp"
 #include "utils/cli/Cli.hpp"
 #include <termios.h>
+#include <unistd.h>
 #include <shared_mutex>
 #include <functional>
 #include <filesystem>
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
+#include <cstddef>
 #include <cstdint>
 #include <csignal>
 #include <vector>
@@ -46,51 +48,56 @@ utils::cli::Cli::Cli(const bool sig)
     this->resetMiddlewares();
 
     // Setup the term
-    if (isatty(STDIN_FILENO)) {
-        tcgetattr(STDIN_FILENO, &this->_orig);
+    if (isatty(STDIN_FILENO) && tcgetattr(STDIN_FILENO, &this->_orig) == 0) {
         termios raw = this->_orig;
-        raw.c_lflag &= ~(ICANON | ECHO);
-        tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
+        raw.c_lflag &= ~static_cast<tcflag_t>(ICANON | ECHO);
+        this->_termios = (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == 0);
     }
 
-    // Signal handling
+    // Signal handling (keep the previous handlers to restore them)
     if (this->_sig) {
-        std::signal(SIGINT, SIG_IGN); // ctrl+c
-        std::signal(SIGTSTP, SIG_IGN); // ctrl+z
+        this->_oldSigInt = std::signal(SIGINT, SIG_IGN); // ctrl+c
+        this->_oldSigTstp = std::signal(SIGTSTP, SIG_IGN); // ctrl+z
     }
 
-    // Load history from persitent storage
-    this->loadHistory();
+    // Load history from persistent storage
+    this->loadHistory_();
 }
 
 utils::cli::Cli::~Cli()
 {
-    // Reset the term
-    if (isatty(STDIN_FILENO))
-        tcsetattr(STDIN_FILENO, TCSAFLUSH, &this->_orig);
-
-    // Reset signal
-    if (this->_sig) {
-        std::signal(SIGINT, SIG_DFL); // ctrl+c
-        std::signal(SIGTSTP, SIG_DFL); // ctrl+z
+    // Stop a running cli (thread) before destroying what it uses
+    if (this->_running) {
+        this->kill();
+        this->join();
     }
 
-    // Save history if persitent is enable
+    // Reset the term (only if it was setup)
+    if (this->_termios)
+        tcsetattr(STDIN_FILENO, TCSAFLUSH, &this->_orig);
+
+    // Reset signal (previous handlers)
+    if (this->_sig) {
+        std::signal(SIGINT, this->_oldSigInt == SIG_ERR ? SIG_DFL : this->_oldSigInt); // ctrl+c
+        std::signal(SIGTSTP, this->_oldSigTstp == SIG_ERR ? SIG_DFL : this->_oldSigTstp); // ctrl+z
+    }
+
+    // Save history if persistent is enable
     if (this->_flags & utils::cli::Flag::PERSISTENT)
-        this->saveHistory();
+        this->saveHistory_();
 }
 
-static std::filesystem::path getHistoryFilePath(void)
+_cold _nodiscard static std::filesystem::path get_history_file_path(void)
 {
     const char* home = std::getenv("HOME");
     if (!home) home = ".";
     return std::filesystem::path(home) / HISTORY_FILE;
 }
 
-void utils::cli::Cli::loadHistory(void)
+_cold void utils::cli::Cli::loadHistory_(void)
 {
     std::unique_lock lock(this->_historyLock);
-    const std::filesystem::path path = getHistoryFilePath();
+    const std::filesystem::path path = get_history_file_path();
 
     // Open the file
     std::ifstream file(path);
@@ -103,10 +110,10 @@ void utils::cli::Cli::loadHistory(void)
         if (!line.empty()) this->_history.push_back(line);
 }
 
-void utils::cli::Cli::saveHistory(void)
+_cold void utils::cli::Cli::saveHistory_(void)
 {
     std::shared_lock lock(this->_historyLock);
-    const std::filesystem::path path = getHistoryFilePath();
+    const std::filesystem::path path = get_history_file_path();
 
     // Open the file
     std::ofstream file(path, std::ios::trunc);
@@ -123,7 +130,7 @@ void utils::cli::Cli::saveHistory(void)
  * help -> display commands help
  * bye == quit == exit -> exit the cli
 */
-static void help(void)
+_cold static void help(void)
 {
     std::cout
     << "help:" << std::endl
@@ -134,14 +141,14 @@ static void help(void)
     << " ?\t- Display the precedent return code" << std::endl;
 }
 
-static void exit(void)
+_cold _noreturn static void exit(void)
 {
     throw utils::exception::NoneException(utils::exception::InternalCode::Exit);
 }
-static void bye(void) {exit();}
-static void quit(void) {exit();}
+_cold _noreturn static void bye(void)  {exit();};
+_cold _noreturn static void quit(void) {exit();};
 
-static void displayCode(const utils::cli::Cli& cli)
+_cold static void displayCode(const utils::cli::Cli& cli)
 {
     std::uint8_t code = cli.getCode();
     std::cout << utils::iomanip::strong();
@@ -153,37 +160,35 @@ static void displayCode(const utils::cli::Cli& cli)
     std::cout << std::endl << std::flush;
 }
 
-void utils::cli::Cli::resetCommands(void)
+_cold void utils::cli::Cli::resetCommands(void)
 {
     std::unique_lock lock(this->_commandsLock);
     this->_parsedCommands.clear();
     this->_rawCommands.clear();
 
     // Parsed commands
-    using FnVec = std::function<void(const utils::cli::Cli&, const std::vector<std::string>&)>;
-    this->_parsedCommands["help"] = std::make_tuple(FnVec([](_unused const utils::cli::Cli& cli, _unused const std::vector<std::string>& inputs){help();}), 0, 0);
-    this->_parsedCommands["bye"]  = std::make_tuple(FnVec([](_unused const utils::cli::Cli& cli, _unused const std::vector<std::string>& inputs){bye();}), 0, 0);
-    this->_parsedCommands["quit"] = std::make_tuple(FnVec([](_unused const utils::cli::Cli& cli, _unused const std::vector<std::string>& inputs){quit();}), 0, 0);
-    this->_parsedCommands["exit"] = std::make_tuple(FnVec([](_unused const utils::cli::Cli& cli, _unused const std::vector<std::string>& inputs){exit();}), 0, 0);
-    this->_parsedCommands["?"] = std::make_tuple(FnVec([](const utils::cli::Cli& cli, _unused const std::vector<std::string>& inputs){displayCode(cli);}), 0, 0);
+    this->_parsedCommands["help"] = std::make_tuple(std::function<void(const utils::cli::Cli&, const std::vector<std::string>&)>([](_unused const utils::cli::Cli& cli, _unused const std::vector<std::string>& inputs) {help();}), 0, 0);
+    this->_parsedCommands["bye"]  = std::make_tuple(std::function<void(const utils::cli::Cli&, const std::vector<std::string>&)>([](_unused const utils::cli::Cli& cli, _unused const std::vector<std::string>& inputs) {bye();}), 0, 0);
+    this->_parsedCommands["quit"] = std::make_tuple(std::function<void(const utils::cli::Cli&, const std::vector<std::string>&)>([](_unused const utils::cli::Cli& cli, _unused const std::vector<std::string>& inputs) {quit();}), 0, 0);
+    this->_parsedCommands["exit"] = std::make_tuple(std::function<void(const utils::cli::Cli&, const std::vector<std::string>&)>([](_unused const utils::cli::Cli& cli, _unused const std::vector<std::string>& inputs) {exit();}), 0, 0);
+    this->_parsedCommands["?"]    = std::make_tuple(std::function<void(const utils::cli::Cli&, const std::vector<std::string>&)>([](const utils::cli::Cli& cli, _unused const std::vector<std::string>& inputs) {displayCode(cli);}), 0, 0);
 
     // Raw commands
-    using FnStr = std::function<void(const utils::cli::Cli&, const std::string&)>;
-    this->_rawCommands["help"] = FnStr([](_unused const utils::cli::Cli& cli, _unused const std::string& input){help();});
-    this->_rawCommands["bye"]  = FnStr([](_unused const utils::cli::Cli& cli, _unused const std::string& input){bye();});
-    this->_rawCommands["quit"] = FnStr([](_unused const utils::cli::Cli& cli, _unused const std::string& input){quit();});
-    this->_rawCommands["exit"] = FnStr([](_unused const utils::cli::Cli& cli, _unused const std::string& input){exit();});
-    this->_rawCommands["?"] = FnStr([](const utils::cli::Cli& cli, _unused const std::string& input){displayCode(cli);});
+    this->_rawCommands["help"] = std::function<void(const utils::cli::Cli&, const std::string&)>([](_unused const utils::cli::Cli& cli, _unused const std::string& input) {help();});
+    this->_rawCommands["bye"]  = std::function<void(const utils::cli::Cli&, const std::string&)>([](_unused const utils::cli::Cli& cli, _unused const std::string& input) {bye();});
+    this->_rawCommands["quit"] = std::function<void(const utils::cli::Cli&, const std::string&)>([](_unused const utils::cli::Cli& cli, _unused const std::string& input) {quit();});
+    this->_rawCommands["exit"] = std::function<void(const utils::cli::Cli&, const std::string&)>([](_unused const utils::cli::Cli& cli, _unused const std::string& input) {exit();});
+    this->_rawCommands["?"]    = std::function<void(const utils::cli::Cli&, const std::string&)>([](const utils::cli::Cli& cli, _unused const std::string& input) {displayCode(cli);});
 }
 
-void utils::cli::Cli::resetHooks(void)
+_cold void utils::cli::Cli::resetHooks(void)
 {
     this->resetPromptHook();
     this->resetParserHook();
     this->resetGetCHook();
 }
 
-void utils::cli::Cli::resetMiddlewares(void)
+_cold void utils::cli::Cli::resetMiddlewares(void)
 {
     this->cliMiddlewares.clear();
     this->errorMiddlewares.clear();
@@ -194,21 +199,21 @@ void utils::cli::Cli::resetMiddlewares(void)
     this->commandMiddlewares.clear();
 }
 
-void utils::cli::Cli::clearCommands(void)
+_cold void utils::cli::Cli::clearCommands(void)
 {
     std::unique_lock lock(this->_commandsLock);
     this->_parsedCommands.clear();
     this->_rawCommands.clear();
 }
 
-void utils::cli::Cli::delCommand(const std::string& command)
+_cold void utils::cli::Cli::delCommand(const std::string& command)
 {
     std::unique_lock lock(this->_commandsLock);
     this->_parsedCommands.erase(command);
     this->_rawCommands.erase(command);
 }
 
-void utils::cli::Cli::delCommands(const std::vector<std::string>& commands)
+_cold void utils::cli::Cli::delCommands(const std::vector<std::string>& commands)
 {
     std::unique_lock lock(this->_commandsLock);
     for (const std::string& command: commands) {

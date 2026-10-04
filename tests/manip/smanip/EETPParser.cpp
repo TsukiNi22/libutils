@@ -33,7 +33,7 @@ File Description:
 #define ETB static_cast<char>(utils::iomanip::Char::ETB)
 
 // Setup a fake $HOME with a common RSA key (~/.ssh/common & ~/.ssh/common.pub)
-class EETPParserTest : public ::testing::Test {
+class EETPParserTest: public ::testing::Test {
     protected:
         tests::tools::TempDir _home;
         std::unique_ptr<tests::tools::ScopedEnv> _env;
@@ -233,4 +233,58 @@ TEST_F(EETPParserTest, NoIdOverloadAbortDeathTest) {
     // AParser default definition for the no-id overload is a FatalException
     const utils::smanip::parser::IParser<utils::smanip::parser::EETPContent>& parser = *this->_client;
     EXPECT_DEATH((void)parser.format(utils::smanip::parser::EETPContent{EM, {}}), "ABORTED");
+}
+
+TEST_F(EETPParserTest, EmptyDataPartKept) {
+    this->handshake();
+    if (::testing::Test::HasFatalFailure()) return;
+    utils::smanip::parser::EETPContent content = this->_server->parse("client", this->_client->format("server", {ACK, {""}}));
+    ASSERT_EQ(content.data.size(), 1u);
+    EXPECT_EQ(content.data[0], "");
+    content = this->_server->parse("client", this->_client->format("server", {"A", {"", "x", ""}}));
+    EXPECT_EQ(content.data, (std::vector<std::string>{"", "x", ""}));
+}
+
+TEST_F(EETPParserTest, NewIvForEachMessage) {
+    this->handshake();
+    if (::testing::Test::HasFatalFailure()) return;
+    // Same content twice: a different nonce/ciphertext each time (GCM nonce never reused)
+    std::string a = this->_client->format("server", {"A", {"same"}});
+    std::string b = this->_client->format("server", {"A", {"same"}});
+    EXPECT_NE(a, b);
+    EXPECT_EQ(this->_server->parse("client", a).data[0], "same");
+    EXPECT_EQ(this->_server->parse("client", b).data[0], "same");
+}
+
+TEST_F(EETPParserTest, InvalidTagSize) {
+    this->handshake();
+    if (::testing::Test::HasFatalFailure()) return;
+    utils::smanip::codec::Base64Codec codec;
+    std::string framed = codec.encode("A") + ETB + codec.encode("AAAAAAAA");
+    try {
+        (void)this->_server->parse("client", framed);
+        FAIL() << "Expected an exception";
+    } catch (const utils::exception::IException& e) {
+        EXPECT_EQ(e.getCode(), utils::exception::InternalCode::Parser);
+    }
+}
+
+TEST_F(EETPParserTest, MessageBeforeKeyExchange) {
+    EXPECT_THROW((void)this->_client->format("server", {"A", {"x"}}), utils::exception::IException);
+}
+
+TEST_F(EETPParserTest, ConstructorChecks) {
+    try {
+        utils::smanip::parser::EETPParser parser(std::make_unique<utils::smanip::codec::Base64Codec>(), 0);
+        FAIL() << "Expected an exception";
+    } catch (const utils::exception::IException& e) {
+        EXPECT_EQ(e.getCode(), utils::exception::InternalCode::Parser);
+    }
+    try {
+        utils::smanip::parser::EETPParser parser(nullptr);
+        FAIL() << "Expected an exception";
+    } catch (const utils::exception::IException& e) {
+        EXPECT_EQ(e.getCode(), utils::exception::InternalCode::InvalidCodec);
+    }
+    EXPECT_THROW(this->_client->setCodec(nullptr), utils::exception::IException);
 }

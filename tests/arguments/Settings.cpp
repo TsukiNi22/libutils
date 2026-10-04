@@ -20,6 +20,7 @@ File Description:
 #include "utils.hpp"
 #include <gtest/gtest.h>
 #include <filesystem>
+#include <chrono>
 #include <string_view>
 #include <string>
 #include <vector>
@@ -283,11 +284,11 @@ struct AutoCastCase {
 };
 std::ostream& operator<<(std::ostream& os, const AutoCastCase& c) {return os << '"' << c.input << '"';}
 
-class SettingsAutoCast : public ::testing::TestWithParam<AutoCastCase> {};
+class SettingsAutoCast: public ::testing::TestWithParam<AutoCastCase> {};
 
 TEST_P(SettingsAutoCast, DetectedType) {
     utils::arguments::Settings settings;
-    EXPECT_EQ(settings.auto_cast("id", GetParam().input), GetParam().expected);
+    EXPECT_EQ(settings.autoCast("id", GetParam().input), GetParam().expected);
     EXPECT_TRUE(settings.contains("id"));
 }
 
@@ -318,12 +319,12 @@ INSTANTIATE_TEST_SUITE_P(Cases, SettingsAutoCast,
 
 TEST(SettingsAutoCastValue, StoredValues) {
     utils::arguments::Settings settings;
-    settings.auto_cast("b", "true");
-    settings.auto_cast("u", "42");
-    settings.auto_cast("i", "-42");
-    settings.auto_cast("f", "1.5");
-    settings.auto_cast("p", "./file");
-    settings.auto_cast("s", "hello");
+    settings.autoCast("b", "true");
+    settings.autoCast("u", "42");
+    settings.autoCast("i", "-42");
+    settings.autoCast("f", "1.5");
+    settings.autoCast("p", "./file");
+    settings.autoCast("s", "hello");
     EXPECT_TRUE(settings.get<bool>("b"));
     EXPECT_EQ(settings.get<std::uint32_t>("u"), 42u);
     EXPECT_EQ(settings.get<std::int32_t>("i"), -42);
@@ -334,8 +335,117 @@ TEST(SettingsAutoCastValue, StoredValues) {
 
 TEST(SettingsAutoCastValue, NoOverrideByDefault) {
     utils::arguments::Settings settings;
-    settings.auto_cast("a", "1");
-    EXPECT_THROW(settings.auto_cast("a", "2"), utils::exception::IException);
-    settings.auto_cast<true>("a", "2");
+    settings.autoCast("a", "1");
+    EXPECT_THROW(settings.autoCast("a", "2"), utils::exception::IException);
+    settings.autoCast<true>("a", "2");
     EXPECT_EQ(settings.get<std::uint32_t>("a"), 2u);
+}
+
+/* -------------------------------- edge cases -------------------------------- */
+TEST(SettingsAutoCastValue, ExtremeFloats) {
+    utils::arguments::Settings settings;
+    EXPECT_EQ(settings.autoCast("a", "1e-400"), CastType::Float128);
+    EXPECT_EQ(settings.autoCast("b", "1e-310"), CastType::Float128); // denormal
+    EXPECT_EQ(settings.autoCast("c", "1e99999"), CastType::None); // not representable: kept as a string
+    EXPECT_EQ(settings.get<std::string>("c"), "1e99999");
+}
+
+TEST(SettingsAutoCastValue, LongString) {
+    utils::arguments::Settings settings;
+    std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+    EXPECT_EQ(settings.autoCast("long", std::string(100000, 'a')), CastType::None);
+    EXPECT_LT(std::chrono::steady_clock::now() - start, std::chrono::seconds(5));
+    EXPECT_EQ(settings.autoCast("p", std::string(50000, 'a') + "/b"), CastType::Path);
+}
+
+/* -------------------------------- forced cast -------------------------------- */
+TEST(SettingsCastForce, OverrideEveryType) {
+    utils::arguments::Settings settings;
+    settings.add("v", std::string("old"));
+    settings.cast<CastType::Byte, true>("v", "7");
+    EXPECT_EQ(settings.get<std::byte>("v"), std::byte{7});
+    settings.cast<CastType::Bool, true>("v", "t");
+    EXPECT_TRUE(settings.get<bool>("v"));
+    settings.cast<CastType::Int8, true>("v", "-8");
+    EXPECT_EQ(settings.get<std::int8_t>("v"), -8);
+    settings.cast<CastType::Int16, true>("v", "-16");
+    EXPECT_EQ(settings.get<std::int16_t>("v"), -16);
+    settings.cast<CastType::Int32, true>("v", "-32");
+    EXPECT_EQ(settings.get<std::int32_t>("v"), -32);
+    settings.cast<CastType::Int64, true>("v", "-64");
+    EXPECT_EQ(settings.get<std::int64_t>("v"), -64);
+    settings.cast<CastType::UInt8, true>("v", "+8");
+    EXPECT_EQ(settings.get<std::uint8_t>("v"), 8u);
+    settings.cast<CastType::UInt16, true>("v", "16");
+    EXPECT_EQ(settings.get<std::uint16_t>("v"), 16u);
+    settings.cast<CastType::UInt32, true>("v", "32");
+    EXPECT_EQ(settings.get<std::uint32_t>("v"), 32u);
+    settings.cast<CastType::UInt64, true>("v", "64");
+    EXPECT_EQ(settings.get<std::uint64_t>("v"), 64u);
+    settings.cast<CastType::Float32, true>("v", "0.5");
+    EXPECT_FLOAT_EQ(static_cast<float>(settings.get<utils::arguments::float32_t>("v")), 0.5f);
+    settings.cast<CastType::Float64, true>("v", "0.25");
+    EXPECT_DOUBLE_EQ(static_cast<double>(settings.get<utils::arguments::float64_t>("v")), 0.25);
+    settings.cast<CastType::Float128, true>("v", "2");
+    EXPECT_EQ(settings.get<utils::arguments::float128_t>("v"), static_cast<utils::arguments::float128_t>(2));
+    settings.cast<CastType::Char8, true>("v", "z");
+    EXPECT_EQ(settings.get<char8_t>("v"), u8'z');
+    settings.cast<CastType::Char16, true>("v", "65");
+    EXPECT_EQ(settings.get<char16_t>("v"), u'A');
+    settings.cast<CastType::Char32, true>("v", "66");
+    EXPECT_EQ(settings.get<char32_t>("v"), U'B');
+    settings.cast<CastType::U8String, true>("v", "u8");
+    EXPECT_EQ(settings.get<std::u8string>("v"), u8"u8");
+    settings.cast<CastType::U16String, true>("v", "u16");
+    EXPECT_EQ(settings.get<std::u16string>("v"), u"u16");
+    settings.cast<CastType::U32String, true>("v", "u32");
+    EXPECT_EQ(settings.get<std::u32string>("v"), U"u32");
+    settings.cast<CastType::WChar, true>("v", "w");
+    EXPECT_EQ(settings.get<wchar_t>("v"), L'w');
+    settings.cast<CastType::WString, true>("v", "ws");
+    EXPECT_EQ(settings.get<std::wstring>("v"), L"ws");
+    settings.cast<CastType::Path, true>("v", "/p");
+    EXPECT_EQ(settings.get<std::filesystem::path>("v"), std::filesystem::path("/p"));
+}
+
+TEST(SettingsCastForce, NoForceKeepExisting) {
+    utils::arguments::Settings settings;
+    settings.add("v", 1);
+    try {
+        settings.cast<CastType::Int32>("v", "2");
+        FAIL() << "Expected an exception";
+    } catch (const utils::exception::IException& e) {
+        EXPECT_EQ(e.getCode(), utils::exception::InternalCode::Override);
+    }
+    EXPECT_EQ(settings.get<int>("v"), 1);
+}
+
+TEST(SettingsAutoCastForce, OverrideDetectedTypes) {
+    utils::arguments::Settings settings;
+    settings.add("v", 0);
+    EXPECT_EQ(settings.autoCast<true>("v", "text"), CastType::None);
+    EXPECT_EQ(settings.get<std::string>("v"), "text");
+    EXPECT_EQ(settings.autoCast<true>("v", "true"), CastType::Bool);
+    EXPECT_EQ(settings.autoCast<true>("v", "-5"), CastType::Int32);
+    EXPECT_EQ(settings.autoCast<true>("v", "-9000000000"), CastType::Int64);
+    EXPECT_EQ(settings.autoCast<true>("v", "5000000000"), CastType::UInt64);
+    EXPECT_EQ(settings.autoCast<true>("v", "1.5"), CastType::Float64);
+    EXPECT_EQ(settings.autoCast<true>("v", "./file"), CastType::Path);
+    EXPECT_EQ(settings.get<std::filesystem::path>("v"), std::filesystem::path("./file"));
+}
+
+/* ------------------------------ non-ASCII input ------------------------------ */
+TEST(SettingsCast, NonAsciiDigitsRejected) {
+    utils::arguments::Settings settings;
+    for (const std::string& input: std::vector<std::string>{"\xC3\xA9", "1\xC3\xA9", "\xEF\xBC\x91"}) { // é, 1é, fullwidth 1
+        try {
+            settings.cast<CastType::UInt16>("x", input);
+            FAIL() << "Expected an exception for " << input;
+        } catch (const utils::exception::IException& e) {
+            EXPECT_EQ(e.getCode(), utils::exception::InternalCode::BadCast);
+        }
+        EXPECT_THROW(settings.cast<CastType::Byte>("x", input), utils::exception::IException);
+        EXPECT_THROW(settings.cast<CastType::Bool>("x", input), utils::exception::IException);
+    }
+    EXPECT_FALSE(settings.contains("x"));
 }

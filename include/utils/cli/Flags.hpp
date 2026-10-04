@@ -17,24 +17,25 @@ File Description:
 ##  Definition of the flags used to customize the cli
 \**************************************************************/
 
-#ifndef CLIFLAGS_H
-    #define CLIFLAGS_H
+#ifndef FLAGS_H
+    #define FLAGS_H
 
     //----------------------------------------------------------------//
     /* INCLUDE */
 
     /* type */
-    #include <cstdint>  // std::uint32_t
+    #include "../attribute/Attribute.hpp"   // _migration
+    #include <cstdint>                      // std::uint32_t
 
-namespace utils::cli { // namespace
+namespace utils::cli { // namespace start
 //----------------------------------------------------------------//
-/* CLASS */
+/* ENUM */
 
 enum Flag {
     DEBUG           = 1 << 0, // Active verbose for internal action (Nothing for now)
     NOECHO          = 1 << 1, // Disable echo of the input
     CATCH           = 1 << 2, // Enable error catching on execution
-    EMPTY_INPUT     = 1 << 3, // Ingore empty input (default: error)
+    EMPTY_INPUT     = 1 << 3, // Ignore empty input (default: error)
     TRIM            = 1 << 4, // Enable trim on input
     PARSED          = 1 << 5, // Active parser for the input and send vector<std::string> (default: std::string)
     PROMPT          = 1 << 6, // Active the prompt
@@ -67,7 +68,7 @@ inline utils::cli::Flag& operator^=(utils::cli::Flag& lhs, utils::cli::Flag rhs)
 */
 } // namespace end
 
-namespace utils::cli::Flags { // namespace
+namespace utils::cli::flags { // namespace start
 //----------------------------------------------------------------//
 /* MACRO */
 
@@ -75,7 +76,7 @@ namespace utils::cli::Flags { // namespace
 constexpr std::uint32_t ALL     = DEBUG | CATCH | NOECHO | TRIM | EMPTY_INPUT | PARSED | PROMPT | LOGIC | ARROW | HISTORY | HINT | AUTO_COMPLETION | MANUAL | THREAD | DETACHED;
 constexpr std::uint32_t DEFAULT = CATCH | EMPTY_INPUT | TRIM | PROMPT | ARROW;
 constexpr std::uint32_t DUMB    = 0;
-constexpr std::uint32_t TERM1   = CATCH | EMPTY_INPUT | TRIM | PARSED | PROMPT | EMPTY_INPUT | LOGIC | ARROW | HISTORY;
+constexpr std::uint32_t TERM1   = CATCH | EMPTY_INPUT | TRIM | PARSED | PROMPT | LOGIC | ARROW | HISTORY;
 constexpr std::uint32_t TERM2   = TERM1 | HINT | AUTO_COMPLETION;
 constexpr std::uint32_t TERM3   = TERM2 | THREAD;
 constexpr std::uint32_t LOG     = TERM3 | DETACHED | NO_TTY;
@@ -83,10 +84,25 @@ constexpr std::uint32_t DEV     = TERM2 | DEBUG;
 constexpr std::uint32_t MULTI_THREADING = THREAD | DETACHED;
 /*
  * DEFAULT -> Basic term
- * TERM1   -> Advenced term
- * TERM2   -> Completion on advenced term
- * TERM3   -> Multi threading advenced term
+ * TERM1   -> Advanced term
+ * TERM2   -> Completion on advanced term
+ * TERM3   -> Multi threading advanced term
 */
 
 } // namespace end
-#endif /* CLIFLAGS_H */
+
+//----------------------------------------------------------------//
+/* MIGRATION */
+namespace utils::cli::Flags {
+    _migration(4, 0, 0) inline constexpr std::uint32_t ALL = utils::cli::flags::ALL;
+    _migration(4, 0, 0) inline constexpr std::uint32_t DEFAULT = utils::cli::flags::DEFAULT;
+    _migration(4, 0, 0) inline constexpr std::uint32_t DUMB = utils::cli::flags::DUMB;
+    _migration(4, 0, 0) inline constexpr std::uint32_t TERM1 = utils::cli::flags::TERM1;
+    _migration(4, 0, 0) inline constexpr std::uint32_t TERM2 = utils::cli::flags::TERM2;
+    _migration(4, 0, 0) inline constexpr std::uint32_t TERM3 = utils::cli::flags::TERM3;
+    _migration(4, 0, 0) inline constexpr std::uint32_t LOG = utils::cli::flags::LOG;
+    _migration(4, 0, 0) inline constexpr std::uint32_t DEV = utils::cli::flags::DEV;
+    _migration(4, 0, 0) inline constexpr std::uint32_t MULTI_THREADING = utils::cli::flags::MULTI_THREADING;
+}
+
+#endif /* FLAGS_H */

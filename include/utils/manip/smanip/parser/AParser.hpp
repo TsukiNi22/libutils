@@ -47,7 +47,7 @@ class AParser: public utils::smanip::parser::IParser<T> {
         {throw utils::exception::FatalException(utils::exception::InternalCode::UndefinedCall);};
         _cold T parse(_unused std::string id, _unused std::string s) override
         {throw utils::exception::FatalException(utils::exception::InternalCode::UndefinedCall);};
-        _cold _nodiscard inline bool hasIdOverload(void) const override {return false;};
+        _cold _nodiscard inline bool hasIdOverload(void) const override   {return false;};
         _cold _nodiscard inline bool hasNoIdOverload(void) const override {return false;};
 
         // ------------ Operator ---------- //

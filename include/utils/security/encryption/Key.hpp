@@ -24,7 +24,10 @@ File Description:
     /* INCLUDE */
 
     /* interface */
-    #include "IKey.hpp" // utils::security::encryption::IKey
+    #include "IKey.hpp"         // utils::security::encryption::IKey
+
+    /* abstract */
+    #include "AKey.hpp"         // utils::security::encryption::AKey, utils::security::encryption::key_to_string, utils::security::encryption::string_to_key
 
     /* keys */
     #include "CommonRSAKey.hpp" // utils::security::encryption::CommonRSAKey

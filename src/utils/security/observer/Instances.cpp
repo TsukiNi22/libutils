@@ -26,9 +26,17 @@ File Description:
 #include <array>
 
 /* id distributor */
-utils::system::IdHandler<std::uint64_t> utils::security::observer::instances::IdHandler;
+_cold _nodiscard utils::system::IdHandler<std::uint64_t>& utils::security::observer::instances::id_handler(void)
+{
+    static utils::system::IdHandler<std::uint64_t> handler;
+    return handler;
+}
 
 /* different notifiers to link/unlink */
-std::array<std::unique_ptr<utils::security::observer::INotifier>, 1> utils::security::observer::instances::Notifiers = {
-    std::make_unique<utils::security::observer::MemoryLeakNotifier>(),
-};
+_cold _nodiscard std::array<std::unique_ptr<utils::security::observer::INotifier>, 1>& utils::security::observer::instances::notifiers(void)
+{
+    static std::array<std::unique_ptr<utils::security::observer::INotifier>, 1> notifiers = {
+        std::make_unique<utils::security::observer::MemoryLeakNotifier>(),
+    };
+    return notifiers;
+}

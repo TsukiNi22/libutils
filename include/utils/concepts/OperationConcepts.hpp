@@ -24,7 +24,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include <iostream> // std::convertible_to ????
+    #include <concepts> // std::convertible_to, std::same_as
 
 namespace utils::concepts { // namespace start
 //----------------------------------------------------------------//
@@ -62,14 +62,13 @@ template<typename T, typename U>
 concept ArithmeticWith = AddableWith<T, U> && SubtractableWith<T, U> && MultipliableWith<T, U> && DivisibleWith<T, U>;
 
 template<typename T>
-concept Incrementable = requires(T& a)
-{
+concept Incrementable = requires(T& a) {
     {++a} -> std::same_as<T&>;
     {a++} -> std::same_as<T>;
 };
+
 template<typename T>
-concept Decrementable = requires(T& a)
-{
+concept Decrementable = requires(T& a) {
     {--a} -> std::same_as<T&>;
     {a--} -> std::same_as<T>;
 };

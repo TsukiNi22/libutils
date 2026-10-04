@@ -42,11 +42,12 @@ File Description:
     #endif
     // Keep the include even if it's doesn't exist to kill the compilation
     #include "generated_internal_exception_header.hpp"  // utils::exception::InternalCode, utils::exception::InternalMessages, utils::exception::InternalInfo, utils::exception::InternalRestriction
+    #include "../attribute/Attribute.hpp"               // _hot, _nodiscard
     #include <cstdint>                                  // std::uint8_t
 
     //----------------------------------------------------------------//
     /* DEFINE */
-    
+
     /* Definition of the different return status */
     #ifndef OK
         #define OK 0 // Valid
@@ -57,7 +58,7 @@ File Description:
 
 namespace utils::exception { // namespace start
 //----------------------------------------------------------------//
-/* TYPEDEF */
+/* ENUM */
 
 /* Definition of the different exception type */
 enum Type: std::uint8_t {
@@ -67,19 +68,22 @@ enum Type: std::uint8_t {
     Warning = 0b1000,
 };
 
-// ------------ Operator ---------- //
-constexpr utils::exception::Type operator|(utils::exception::Type lhs, utils::exception::Type rhs)
+//----------------------------------------------------------------//
+/* PROTOTYPE */
+
+/* operator */
+_hot _nodiscard constexpr utils::exception::Type operator|(utils::exception::Type lhs, utils::exception::Type rhs)
 {return static_cast<utils::exception::Type>(static_cast<std::uint8_t>(lhs) | static_cast<std::uint8_t>(rhs));}
-constexpr utils::exception::Type operator&(utils::exception::Type lhs, utils::exception::Type rhs)
+_hot _nodiscard constexpr utils::exception::Type operator&(utils::exception::Type lhs, utils::exception::Type rhs)
 {return static_cast<utils::exception::Type>(static_cast<std::uint8_t>(lhs) & static_cast<std::uint8_t>(rhs));}
-constexpr utils::exception::Type operator^(utils::exception::Type lhs, utils::exception::Type rhs)
+_hot _nodiscard constexpr utils::exception::Type operator^(utils::exception::Type lhs, utils::exception::Type rhs)
 {return static_cast<utils::exception::Type>(static_cast<std::uint8_t>(lhs) ^ static_cast<std::uint8_t>(rhs));}
-constexpr utils::exception::Type operator~(utils::exception::Type f)
+_hot _nodiscard constexpr utils::exception::Type operator~(utils::exception::Type f)
 {return static_cast<utils::exception::Type>(~static_cast<std::uint8_t>(f));}
 
-inline utils::exception::Type& operator|=(utils::exception::Type& lhs, utils::exception::Type rhs) {return lhs = lhs | rhs;}
-inline utils::exception::Type& operator&=(utils::exception::Type& lhs, utils::exception::Type rhs) {return lhs = lhs & rhs;}
-inline utils::exception::Type& operator^=(utils::exception::Type& lhs, utils::exception::Type rhs) {return lhs = lhs ^ rhs;}
+_hot inline utils::exception::Type& operator|=(utils::exception::Type& lhs, utils::exception::Type rhs) {return lhs = lhs | rhs;};
+_hot inline utils::exception::Type& operator&=(utils::exception::Type& lhs, utils::exception::Type rhs) {return lhs = lhs & rhs;};
+_hot inline utils::exception::Type& operator^=(utils::exception::Type& lhs, utils::exception::Type rhs) {return lhs = lhs ^ rhs;};
 
 } // namespace end
 #endif /* EXCEPTIONDEFINE_H */

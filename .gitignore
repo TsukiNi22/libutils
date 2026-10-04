@@ -22,6 +22,9 @@ z
 
 ## CMake
 /build
+_CPack_Packages/
+*.rpm
+*.deb
 /test/build
 __pycache__
 
@@ -30,3 +33,4 @@ __pycache__
 /runner
 .info
 /*.cpp
+/tmp.*

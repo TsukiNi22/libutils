@@ -18,10 +18,11 @@ File Description:
 \**************************************************************/
 
 #include "utils/verbose/Verbose.hpp"
+#include <atomic>
 #include <mutex>
 
 // Declaration of the global var for the security on output writing
-std::mutex utils::verbose::output_lock;
+std::recursive_mutex utils::verbose::output_lock;
 
 // Declaration of the global var for the verbose mode
-volatile utils::verbose::Verbose utils::verbose::verbose = utils::verbose::Verbose::Basic;
+std::atomic<utils::verbose::Verbose> utils::verbose::verbose = utils::verbose::Verbose::Basic;

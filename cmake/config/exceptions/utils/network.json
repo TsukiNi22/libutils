@@ -6,6 +6,11 @@
             "restrictions": ["Fatal", "Error", "Warning"]
         },
         {
+            "code": "UnknownFd",
+            "message": "Try to do thing with an unknown file descriptor",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
             "code": "SocketInit",
             "message": "Error during the socket initialisation",
             "restrictions": ["Fatal", "Error"]

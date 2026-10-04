@@ -29,7 +29,9 @@ File Description:
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "../attribute/Attribute.hpp"               // _cold, _hot, _nodiscard
     #include <functional>                               // std::function
-    #include <cstddef>                                  // std::size_t
+    #include <concepts>                                 // std::constructible_from
+    #include <cstddef>                                  // std::size_t, std::ptrdiff_t
+    #include <utility>                                  // std::forward
     #include <vector>                                   // std::vector
 
 namespace utils::pool { // namespace start
@@ -44,30 +46,31 @@ class Cluster: private utils::security::observer::Observer<"Cluster"> {
     public:
         // ------------ Function ---------- //
         _cold _nodiscard inline std::size_t size(void) const {return this->_class.size();};
-        _hot void apply(std::function<void(T&)> fn) {for (auto& c: this->_class) fn(c);}
+        _hot inline void apply(std::function<void(T&)> fn)   {for (T& c: this->_class) fn(c);};
 
         /* spawn */
-        template <typename... Args>
+        template<typename... Args>
+        requires std::constructible_from<T, Args&&...>
         _hot inline void spawn(Args&&... args) // spawn one
-        {this->_class.emplace_back(std::forward<Args>(args)...);}
-        template <typename... Args>
+        {this->_class.emplace_back(std::forward<Args>(args)...);};
+        template<typename... Args>
         _hot void spawn(std::size_t n, Args&&... args) // spawn n
         {
             this->_class.reserve(this->_class.size() + n);
             for (std::size_t i = 0; i < n; ++i)
-                this->_class.emplace_back(std::forward<Args>(args)...);
-        }
+                this->_class.emplace_back(args...); // not forwarded: the same arguments are used for the n elements
+        };
 
         /* kill */
-        _hot inline void kill() // kill all
-        {this->_class.clear();}
+        _hot inline void kill(void) // kill all
+        {this->_class.clear();};
         _hot void kill(std::size_t n) // kill n last
         {
             if (n > this->_class.size()) _unlikely {
                 throw utils::exception::ErrorException(utils::exception::InternalCode::OutOfBounds);
             }
             this->_class.erase(this->_class.end() - static_cast<std::ptrdiff_t>(n), this->_class.end());
-        }
+        };
 
         // ------------ Operator ---------- //
         Cluster& operator=(const Cluster& other) = delete;

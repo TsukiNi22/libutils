@@ -14,7 +14,7 @@ File Name:
 ##  @file Hooks.cpp
 
 File Description:
-##  Default hook used for the cli
+##  Default hooks used by the cli
 \**************************************************************/
 
 #include "utils/attribute/Attribute.hpp"
@@ -32,7 +32,7 @@ File Description:
 #include <string>
 #include <regex>
 
-static std::string trimString(const std::string& s)
+_hot _nodiscard static std::string trim_string(const std::string& s)
 {
     std::size_t start = s.find_first_not_of(" ");
     if (start == std::string::npos) return "";
@@ -45,17 +45,17 @@ _hot void utils::cli::defaultPromptHook(_unused const utils::cli::Cli& cli, _unu
     std::cout << "> " << std::flush;
 }
 
-static std::vector<std::string> splitCommands(const std::string& input)
+_hot _nodiscard static std::vector<std::string> split_commands(const std::string& input)
 {
     std::vector<std::string> commands;
     std::regex re(R"((.*?(?:&&|\|\||;)))");
-    auto begin = std::sregex_iterator(input.begin(), input.end(), re);
+    std::sregex_iterator begin(input.begin(), input.end(), re);
     std::size_t index = 0;
 
     // For each match
     for (auto it = begin; it != std::sregex_iterator(); ++it) {
         commands.push_back(it->str());
-        index += it->length();
+        index += static_cast<std::size_t>(it->length());
     }
 
     // Last commands in string
@@ -65,12 +65,12 @@ static std::vector<std::string> splitCommands(const std::string& input)
     return commands;
 }
 
-static std::vector<std::string> splitCommand(const std::string& command)
+_hot _nodiscard static std::vector<std::string> split_command(const std::string& command)
 {
     std::vector<std::string> splited;
     std::string token;
 
-    for (size_t i = 0; i < command.size(); ++i) {
+    for (std::size_t i = 0; i < command.size(); ++i) {
         char c = command[i];
 
         // White space
@@ -117,7 +117,7 @@ static std::vector<std::string> splitCommand(const std::string& command)
     return splited;
 }
 
-_hot utils::cli::ParsedData utils::cli::defaultParserHook(const std::string& input, const bool trim, const bool logic, const bool parse)
+_hot _nodiscard utils::cli::ParsedData utils::cli::defaultParserHook(const std::string& input, const bool trim, const bool logic, const bool parse)
 {
     utils::cli::ParsedData parsedInput;
     std::vector<std::string> commands;
@@ -129,13 +129,13 @@ _hot utils::cli::ParsedData utils::cli::defaultParserHook(const std::string& inp
     if (input.empty()) return parsedInput;
 
     // Get the commands separated by '&&', '||' and ';'
-    if (logic) commands = splitCommands(trimString(input));
+    if (logic) commands = split_commands(trim_string(input));
     else commands = {input};
 
     // Separate each commands args
     for (const std::string& rawCommand: commands) {
-        command = (trim ? trimString(rawCommand) : rawCommand);
-        splited = splitCommand(command);
+        command = (trim ? trim_string(rawCommand) : rawCommand);
+        splited = split_command(command);
         if (splited.size() == 0) continue;
         if (parse) {
             data.clear();
@@ -171,8 +171,9 @@ _hot _nodiscard bool utils::cli::defaultGetCHook(char& c)
     if (res < 0) throw std::runtime_error(strerror(errno));
 
     // poll -> thing to read
-    res = read(STDIN_FILENO, &c, 1);
-    if (res != 1 && res != 0)
+    ssize_t bytes = read(STDIN_FILENO, &c, 1);
+    if (bytes < 0)
         throw std::runtime_error(strerror(errno));
+    if (bytes == 0) c = 0; // EOF
     return true;
 }

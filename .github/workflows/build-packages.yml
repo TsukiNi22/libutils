@@ -9,6 +9,10 @@ on:
         type: string
         default: 'OFF'
 
+concurrency:
+  group: packages-${{ github.repository }}
+  cancel-in-progress: false # queue the syncs, never cancel a publication
+
 env:
   LIBRARIES: "libutils.a libutils_debug.a libutils_asan.a"
   PACKAGES: "libutils libutils-dev libutils-dev-op libutils-dev-db libutils-dev-as libutils-op libutils-db libutils-as"
@@ -42,7 +46,7 @@ jobs:
           set -e
           cmake -S . -B build -DUTILS_STABLE_RELEASE=${{ inputs.stable }} -DPACKAGE_RELEASE=${{ github.run_number }}
           cmake --build build --target package_release --parallel $(nproc)
-        timeout-minutes: 2
+        timeout-minutes: 6
 
       - name: Show ccache stats
         run: ccache -s
@@ -50,7 +54,7 @@ jobs:
       - name: Check libraries
         run: |
           set -euo pipefail
-          for library in $(echo $LIBRARYS | tr ',' ' ' | xargs); do
+          for library in $LIBRARIES; do
             if [ ! -f "./build/$library" ]; then
               echo "::error title=Missing library, file=$library::Library '$library' not found"
               exit 1
@@ -160,6 +164,17 @@ jobs:
           mkdir -p "$REPO_DIR" # Security
           mv build/*.rpm $REPO_DIR/
 
+          # Keep every release, only the 5 last versions of each pre-release package
+          prune_pre() {
+              local dir="$1" ext="$2" keep=5
+              find "$dir" -maxdepth 1 -name "*-pre-[0-9]*.${ext}" -printf '%f\n' \
+                  | sed -E 's/^(.+-pre)-([0-9]+\.[0-9]+\.[0-9]+)-(.+)$/\1 \2 \3/' \
+                  | sort -k1,1 -k3,3 -k2,2V \
+                  | awk -v keep="$keep" '{key = $1 " " $3; n[key]++; f[key, n[key]] = $1 "-" $2 "-" $3} END {for (k in n) for (i = 1; i <= n[k] - keep; i++) print f[k, i]}' \
+                  | while read -r file; do echo "Prune old pre-release: $file"; rm -f "$dir/$file"; done
+          }
+          prune_pre "$REPO_DIR" rpm
+
       - name: Update metadata and signature (RPM)
         working-directory: gh-pages/fedora/44/x86_64
         run: |
@@ -174,6 +189,17 @@ jobs:
           POOL_DIR="gh-pages/debian/pool/main"
           mkdir -p "$POOL_DIR"
           mv build/*.deb "$POOL_DIR/"
+
+          # Keep every release, only the 5 last versions of each pre-release package
+          prune_pre() {
+              local dir="$1" ext="$2" keep=5
+              find "$dir" -maxdepth 1 -name "*-pre-[0-9]*.${ext}" -printf '%f\n' \
+                  | sed -E 's/^(.+-pre)-([0-9]+\.[0-9]+\.[0-9]+)-(.+)$/\1 \2 \3/' \
+                  | sort -k1,1 -k3,3 -k2,2V \
+                  | awk -v keep="$keep" '{key = $1 " " $3; n[key]++; f[key, n[key]] = $1 "-" $2 "-" $3} END {for (k in n) for (i = 1; i <= n[k] - keep; i++) print f[k, i]}' \
+                  | while read -r file; do echo "Prune old pre-release: $file"; rm -f "$dir/$file"; done
+          }
+          prune_pre "$POOL_DIR" deb
 
       - name: Update metadata and signature (DEB)
         working-directory: gh-pages/debian

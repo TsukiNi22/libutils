@@ -11,7 +11,7 @@ Edition:
 ##  @date 16/08/2026 by @author Tsukini
 
 File Name:
-##  @file MemoryLeasNotifier.cpp
+##  @file MemoryLeakNotifer.cpp
 
 File Description:
 ##  You know, I don t think there are good or bad descriptions,
@@ -30,10 +30,10 @@ File Description:
 
 TEST(MemoryLeakNotifer, GlobalNotifiersArrayEmplacement) {
     // Check the number of instances
-    ASSERT_GT(utils::security::observer::instances::Notifiers.size(), 0);
+    ASSERT_GT(utils::security::observer::instances::notifiers().size(), 0);
 
     // Check if the first pointer is the MemoryLeakNotifier
-    std::unique_ptr<utils::security::observer::INotifier>& notifier = utils::security::observer::instances::Notifiers[0];
+    std::unique_ptr<utils::security::observer::INotifier>& notifier = utils::security::observer::instances::notifiers()[0];
     ASSERT_NE(dynamic_cast<utils::security::observer::MemoryLeakNotifier*>(notifier.get()), nullptr);
 }
 
@@ -44,19 +44,19 @@ struct MemoryLeasNotifierLeakCase {
 };
 std::ostream& operator<<(std::ostream& os, const MemoryLeasNotifierLeakCase& c) {return os << c.name;}
 
-class MemoryLeasNotifierTest : public ::testing::TestWithParam<MemoryLeasNotifierLeakCase> {};
+class MemoryLeasNotifierTest: public ::testing::TestWithParam<MemoryLeasNotifierLeakCase> {};
 
 TEST_P(MemoryLeasNotifierTest, DetectsLeak) {
     const MemoryLeasNotifierLeakCase& testCase = GetParam();
 
-    ASSERT_GT(utils::security::observer::instances::Notifiers.size(), 0) << "See test: MemoryLeakNotifer::GlobalNotifiersArrayEmplacement";
+    ASSERT_GT(utils::security::observer::instances::notifiers().size(), 0) << "See test: MemoryLeakNotifer::GlobalNotifiersArrayEmplacement";
     testing::internal::CaptureStderr();
 
     // generate the things to observe
     testCase.generateLeak();
 
     // Trigger & Reset MemoryLeakNotifer instances
-    std::unique_ptr<utils::security::observer::INotifier>& notifier = utils::security::observer::instances::Notifiers[0];
+    std::unique_ptr<utils::security::observer::INotifier>& notifier = utils::security::observer::instances::notifiers()[0];
     notifier->trigger();
     notifier->clear(true);
 
@@ -65,6 +65,8 @@ TEST_P(MemoryLeasNotifierTest, DetectsLeak) {
     ASSERT_EQ(std::regex_replace(output, originRegex, "(origin: X)"), testCase.expectedOutput);
 }
 
+// local to this test file
+namespace {
 class SimpleClass: private utils::security::observer::UnsafeObserver<"SimpleClass"> {};
 class SubClass: private utils::security::observer::Observer<"SubClass">
 {
@@ -72,12 +74,13 @@ class SubClass: private utils::security::observer::Observer<"SubClass">
         SimpleClass _class1;
         SimpleClass _class2;
 };
+} // namespace
 
 INSTANTIATE_TEST_SUITE_P(LeakCases, MemoryLeasNotifierTest,
     ::testing::Values(
         MemoryLeasNotifierLeakCase{
             "SimpleClass",
-            [] {
+            [](void) {
                 void* ptr = new utils::arguments::Settings();
                 (void)ptr;
             },
@@ -87,7 +90,7 @@ INSTANTIATE_TEST_SUITE_P(LeakCases, MemoryLeasNotifierTest,
         },
         MemoryLeasNotifierLeakCase{
             "SubClass",
-            [] {
+            [](void) {
                 void* ptr = new utils::network::Client();
                 (void)ptr;
             },
@@ -98,7 +101,7 @@ INSTANTIATE_TEST_SUITE_P(LeakCases, MemoryLeasNotifierTest,
         },
         MemoryLeasNotifierLeakCase{
             "UnsafeSimpleClass",
-            [] {
+            [](void) {
                 void* ptr = new SimpleClass();
                 (void)ptr;
             },
@@ -108,7 +111,7 @@ INSTANTIATE_TEST_SUITE_P(LeakCases, MemoryLeasNotifierTest,
         },
         MemoryLeasNotifierLeakCase{
             "UnsafeSubClass",
-            [] {
+            [](void) {
                 void* ptr = new SubClass();
                 (void)ptr;
             },

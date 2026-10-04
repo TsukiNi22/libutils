@@ -3,7 +3,7 @@ Edition:
 ##  @date 29/08/2026 by @author Tsukini
 
 File Name:
-##  @file Point.cpp
+##  @file Angle.cpp
 
 File Description:
 ##  Geometry angle handling
@@ -15,7 +15,7 @@ File Description:
 #include "utils/math/MathType.hpp"
 #include <cmath>
 
-utils::math::Direction utils::math::geometry::to_look(const utils::math::Direction& orientation)
+_hot _nodiscard utils::math::Direction utils::math::geometry::to_look(const utils::math::Direction& orientation)
 {
     utils::math::Type pitch = utils::math::trigo::deg_to_rad(orientation.x);
     utils::math::Type yaw = utils::math::trigo::deg_to_rad(orientation.y);

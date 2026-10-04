@@ -32,7 +32,7 @@ jobs:
           set -e
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON
           cmake --build build --parallel $(nproc)
-        timeout-minutes: 2
+        timeout-minutes: 6
 
       - name: Show ccache stats
         run: ccache -s
@@ -49,5 +49,5 @@ jobs:
       - name: Run unit-tests
         working-directory: build
         run: |
-          ctest --output-on-failure --timeout 30
-        timeout-minutes: 1
+          ctest --output-on-failure --timeout 30 --parallel $(nproc)
+        timeout-minutes: 3

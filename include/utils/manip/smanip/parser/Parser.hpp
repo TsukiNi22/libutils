@@ -24,9 +24,12 @@ File Description:
     /* INCLUDE */
 
     /* interface */
-    #include "IParser.hpp"   // utils::smanip::parser::IParser
+    #include "IParser.hpp"      // utils::smanip::parser::IParser
+
+    /* abstract */
+    #include "AParser.hpp"      // utils::smanip::parser::AParser
 
     /* parser (default) */
-    #include "EETPParser.hpp"  // utils::smanip::parser::Base64Parser
+    #include "EETPParser.hpp"   // utils::smanip::parser::EETPParser, utils::smanip::parser::EETPContent
 
 #endif /* PARSER_H */

@@ -27,6 +27,7 @@ File Description:
 #include <string>
 #include <vector>
 #include <array>
+#include <utility>
 
 // Read everything available from a fd until EOF
 static std::string readAll(int fd)
@@ -166,6 +167,25 @@ TEST(Dup, Move) {
     EXPECT_EQ(b.getClone(), -1);
 }
 
+TEST(Dup, SettersAndClose) {
+    int fds[2];
+    ASSERT_EQ(::pipe(fds), 0);
+    utils::encapsulation::Dup dup;
+    dup.setOrigin(fds[0]);
+    dup.setClone(fds[1]);
+    EXPECT_EQ(dup.getOrigin(), fds[0]);
+    EXPECT_EQ(dup.getClone(), fds[1]);
+
+    dup.closeClone();
+    EXPECT_EQ(dup.getClone(), -1);
+    EXPECT_FALSE(isOpen(fds[1]));
+    EXPECT_TRUE(isOpen(fds[0]));
+
+    dup.closeOrigin();
+    EXPECT_EQ(dup.getOrigin(), -1);
+    EXPECT_FALSE(isOpen(fds[0]));
+}
+
 /* -------------------------------- Process -------------------------------- */
 TEST(Process, SpawnExecExitCode) {
     utils::encapsulation::Process process;
@@ -273,6 +293,78 @@ TEST(Process, DestructorKillChild) {
     EXPECT_EQ(::kill(pid, 0), -1); // reaped
 }
 
+TEST(Process, SpawnInvalidDupThrowsBeforeFork) {
+    utils::encapsulation::Process process;
+    process.dup(-1, STDOUT_FILENO);
+    try {
+        (void)process.spawn("true", {});
+        FAIL() << "Expected an exception";
+    } catch (const utils::exception::IException& e) {
+        EXPECT_EQ(e.getCode(), utils::exception::InternalCode::Dup);
+    }
+    EXPECT_EQ(process.getPid(), -1); // no child created
+}
+
+TEST(Process, SpawnDupFailureInChildExit) {
+    utils::encapsulation::Pipe pipe;
+    pipe.trigger();
+    utils::encapsulation::Process process;
+    process.dup(STDOUT_FILENO, -5); // dup2 fails in the child only
+    process.dup(pipe.getWrite(), STDOUT_FILENO);
+    (void)process.spawn("echo", {"never"});
+    pipe.closeWrite();
+    utils::encapsulation::Status status = process.wait();
+    EXPECT_TRUE(status.exited);
+    EXPECT_EQ(status.code, 127); // the child never goes back to the caller's code
+    EXPECT_EQ(readAll(pipe.getRead()), "");
+}
+
+TEST(Process, ReplaceInChild) {
+    utils::encapsulation::Process process;
+    pid_t pid = process.spawn();
+    if (pid == 0) {
+        utils::encapsulation::Process self;
+        self.replace("sh", {"-c", "exit 4"});
+    }
+    EXPECT_EQ(process.wait().code, 4);
+}
+
+TEST(Process, ReplaceUnknownBinary) {
+    utils::encapsulation::Process process;
+    pid_t pid = process.spawn();
+    if (pid == 0) {
+        utils::encapsulation::Process self;
+        self.replace("/this/binary/does/not/exist", {});
+    }
+    EXPECT_EQ(process.wait().code, 127);
+}
+
+TEST(Process, ReplaceWhileRunningThrows) {
+    utils::encapsulation::Process process;
+    (void)process.spawn("sleep", {"10"});
+    try {
+        process.replace("true", {});
+        FAIL() << "Expected an exception";
+    } catch (const utils::exception::IException& e) {
+        EXPECT_EQ(e.getCode(), utils::exception::InternalCode::Process);
+    }
+    process.kill();
+}
+
+TEST(Process, ChildState) {
+    utils::encapsulation::Process process;
+    EXPECT_FALSE(process.isChild());
+    process.dup(STDOUT_FILENO, -1);
+    EXPECT_EQ(process.getDups().size(), 1u);
+    EXPECT_EQ(std::as_const(process).getDups()[0].getOrigin(), STDOUT_FILENO);
+    process.getDups().clear();
+
+    pid_t pid = process.spawn();
+    if (pid == 0) ::_exit(process.isChild() && !process.isParent() ? 0 : 1);
+    EXPECT_TRUE(process.isParent());
+    EXPECT_EQ(process.wait().code, 0);
+}
+
 /* --------------------------------- Poll ---------------------------------- */
 TEST(Poll, InitFd) {
     utils::encapsulation::Poll poll;
@@ -311,7 +403,8 @@ TEST(Poll, UserData) {
     ASSERT_EQ(::write(pipe.getWrite(), "z", 1), 1);
     std::vector<struct epoll_event> events = poll.wait(100);
     ASSERT_EQ(events.size(), 1u);
-    EXPECT_EQ(events[0].data.ptr, &marker);
+    void* ptr = events[0].data.ptr; // copy: epoll_event is packed (a reference to the member is misaligned)
+    EXPECT_EQ(ptr, &marker);
 }
 
 TEST(Poll, Edit) {
@@ -385,7 +478,7 @@ TEST(Poll, CloseOnDestruction) {
 /* ----------------------------- SharedObject ------------------------------ */
 TEST(SharedObject, LoadLibc) {
     utils::encapsulation::SharedObject so("libc.so.6");
-    EXPECT_TRUE(so.isloaded());
+    EXPECT_TRUE(so.isLoaded());
     EXPECT_EQ(so.path(), "libc.so.6");
     EXPECT_NE(so.get(), nullptr);
 
@@ -418,7 +511,52 @@ TEST(SharedObject, Move) {
     utils::encapsulation::SharedObject a("libc.so.6");
     void* handle = a.get();
     utils::encapsulation::SharedObject b(std::move(a));
-    EXPECT_FALSE(a.isloaded());
+    EXPECT_FALSE(a.isLoaded());
     EXPECT_EQ(b.get(), handle);
     EXPECT_EQ(b.path(), "libc.so.6");
+}
+
+/* -------------------------------- edge cases -------------------------------- */
+TEST(Process, ChildDestructorDoesNotThrow) {
+    utils::encapsulation::Process* process = new utils::encapsulation::Process();
+    pid_t pid = process->spawn();
+    if (pid == 0) {
+        delete process;
+        ::_exit(7);
+    }
+    EXPECT_EQ(process->wait().code, 7);
+    delete process;
+}
+
+TEST(Process, MoveTransferTheChild) {
+    utils::encapsulation::Process b;
+    {
+        utils::encapsulation::Process a;
+        (void)a.spawn("sleep", {"10"});
+        b = std::move(a);
+        EXPECT_EQ(a.getPid(), -1);
+    }
+    EXPECT_TRUE(b.is());
+    b.kill();
+    utils::encapsulation::Process c(std::move(b));
+    EXPECT_EQ(b.getPid(), -1);
+}
+
+TEST(Pipe, MoveAssignCloseOldFds) {
+    utils::encapsulation::Pipe a, b;
+    a.trigger();
+    b.trigger();
+    int oldRead = a.getRead();
+    a = std::move(b);
+    EXPECT_FALSE(isOpen(oldRead));
+}
+
+TEST(Poll, CloseClearRegistered) {
+    utils::encapsulation::Pipe pipe;
+    pipe.trigger();
+    utils::encapsulation::Poll poll;
+    poll.link(pipe.getRead(), EPOLLIN);
+    poll.close();
+    EXPECT_EQ(poll.size(), 0u);
+    EXPECT_FALSE(poll.contains(pipe.getRead()));
 }

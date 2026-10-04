@@ -75,11 +75,31 @@ TEST(Point, Rotate3DIdentity) {
 }
 
 TEST(Point, Rotate3DYaw) {
-    // yaw (orientation.y) rotate around the z axis: x -> y
-    utils::math::Coord p = utils::math::geometry::rotate_point_3D({0.0, 0.0, 0.0}, {1.0, 0.0, 0.0}, {0.0, 90.0, 0.0});
-    EXPECT_NEAR(p.x, 0.0, EPS);
+    // yaw (orientation.y) rotate around the y axis (same convention as to_look): forward z -> x
+    utils::math::Coord p = utils::math::geometry::rotate_point_3D({0.0, 0.0, 0.0}, {0.0, 0.0, 1.0}, {0.0, 90.0, 0.0});
+    EXPECT_NEAR(p.x, 1.0, EPS);
+    EXPECT_NEAR(p.y, 0.0, EPS);
+    EXPECT_NEAR(p.z, 0.0, EPS);
+}
+
+TEST(Point, Rotate3DPitch) {
+    // positive pitch raise the forward vector
+    utils::math::Coord p = utils::math::geometry::rotate_point_3D({0.0, 0.0, 0.0}, {0.0, 0.0, 1.0}, {90.0, 0.0, 0.0});
     EXPECT_NEAR(p.y, 1.0, EPS);
     EXPECT_NEAR(p.z, 0.0, EPS);
+}
+
+TEST(Point, Rotate3DMatchesToLook) {
+    // rotating the forward vector by an orientation give the look vector of this orientation
+    for (double pitch = -80.0; pitch <= 80.0; pitch += 40.0)
+        for (double yaw = 0.0; yaw < 360.0; yaw += 45.0)
+            for (double roll = 0.0; roll < 360.0; roll += 90.0) {
+                utils::math::Coord p = utils::math::geometry::rotate_point_3D({0.0, 0.0, 0.0}, {0.0, 0.0, 1.0}, {pitch, yaw, roll});
+                utils::math::Direction look = utils::math::geometry::to_look({pitch, yaw, roll});
+                EXPECT_NEAR(p.x, look.x, 1e-9) << pitch << " " << yaw << " " << roll;
+                EXPECT_NEAR(p.y, look.y, 1e-9) << pitch << " " << yaw << " " << roll;
+                EXPECT_NEAR(p.z, look.z, 1e-9) << pitch << " " << yaw << " " << roll;
+            }
 }
 
 TEST(Point, Rotate3DKeepDistance) {
@@ -119,4 +139,13 @@ TEST(Angle, ToLookIsNormalized) {
     for (double pitch = -80.0; pitch <= 80.0; pitch += 20.0)
         for (double yaw = 0.0; yaw < 360.0; yaw += 45.0)
             EXPECT_NEAR(utils::math::geometry::to_look({pitch, yaw, 0.0}).length(), 1.0, 1e-9);
+}
+
+TEST(CFrame, DefaultIsOrigin) {
+    utils::math::CFrame frame;
+    EXPECT_EQ(frame.position.x, 0.0);
+    EXPECT_EQ(frame.position.y, 0.0);
+    EXPECT_EQ(frame.position.z, 0.0);
+    EXPECT_EQ(frame.orientation.x, 0.0);
+    EXPECT_EQ(frame.look.z, 0.0);
 }

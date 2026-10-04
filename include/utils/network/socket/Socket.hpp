@@ -24,12 +24,12 @@ File Description:
     /* INCLUDE */
 
     /* interface */
-    #include "ISocket.hpp"  // utils::network::socket::ISocket
+    #include "ISocket.hpp"  // utils::network::ISocket
 
     /* tools */
-    #include "ASocket.hpp"  // utils::network::socket::isIp, utils::network::socket::resolveHostname, utils::network::socket::resolveAddress
+    #include "ASocket.hpp"  // utils::network::is_ip, utils::network::resolve_hostname, utils::network::resolve_address
 
     /* socket */
-    #include "TCPSocket.hpp"    // utils::network::socket::TCPSocket
+    #include "TCPSocket.hpp"    // utils::network::TCPSocket
 
 #endif /* SOCKET_H */

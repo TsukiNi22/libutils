@@ -37,8 +37,8 @@ namespace utils::smanip::codec { // namespace start
 class Base64Codec: public utils::smanip::codec::ICodec {
     public:
         // ---------- Pre-Function -------- //
-        std::string encode(std::string s) const;
-        std::string decode(std::string s) const;
+        std::string encode(std::string s) const override;
+        std::string decode(std::string s) const override;
 
         // ------------ Operator ---------- //
         Base64Codec& operator=(const Base64Codec& other) = default;

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 set(TARGET utils)
-project(${TARGET} VERSION 2.14.0 LANGUAGES CXX)
+project(${TARGET} VERSION 3.0.0 LANGUAGES CXX)
 
 # =========================
 # Options
@@ -230,8 +230,14 @@ include(CMakePackageConfigHelpers)
 
 # licenses
 install(
-    FILES ${CMAKE_SOURCE_DIR}/LICENSE
+    FILES ${CMAKE_SOURCE_DIR}/LICENSE ${CMAKE_SOURCE_DIR}/THIRD_PARTY_NOTICES.md
     DESTINATION ${CMAKE_INSTALL_DATADIR}/licenses/${CPACK_PACKAGE_NAME}
+    COMPONENT headers
+)
+install(
+    FILES ${CMAKE_SOURCE_DIR}/include/utils/algorithms/LICENSE.md
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/licenses/${CPACK_PACKAGE_NAME}
+    RENAME LICENSE-algorithms.md
     COMPONENT headers
 )
 
@@ -453,8 +459,8 @@ if(UTILS_PACKAGE)
         set(CPACK_DEBIAN_PACKAGE_DEPENDS "libutils-op${CHANNEL} (= ${PROJECT_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE})")
     endif()
 elseif(UTILS_DEV_PACKAGE)
-    set(CPACK_RPM_PACKAGE_REQUIRES "")
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
+    set(CPACK_RPM_PACKAGE_REQUIRES "openssl-devel") # public headers include <openssl/...>
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libssl-dev")
 else()
     if(UTILS_STABLE_RELEASE)
         set(CPACK_RPM_PACKAGE_REQUIRES "libutils-dev${CHANNEL} >= ${PROJECT_VERSION}, libutils-dev-${PREFIX}${CHANNEL} >= ${PROJECT_VERSION}, openssl-libs")
@@ -472,7 +478,7 @@ else()
 endif()
 
 # RPM
-set(CPACK_RPM_PACKAGE_LICENSE "MIT")
+set(CPACK_RPM_PACKAGE_LICENSE "MIT AND CC-BY-NC-SA-4.0") # MIT for libutils, CC BY-NC-SA 4.0 for include/utils/algorithms
 set(CPACK_RPM_LIB_PACKAGE_NAME ${CPACK_PACKAGE_NAME})
 set(CPACK_RPM_HEADERS_PACKAGE_NAME ${CPACK_PACKAGE_NAME})
 

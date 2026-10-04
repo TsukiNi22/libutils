@@ -25,7 +25,10 @@ File Description:
 #include "utils/security/observer/ANotifier.hpp"
 #include <dlfcn.h>
 #include <string_view>
+#include <iostream>
 #include <cstdint>
+#include <string>
+#include <mutex>
 
 // Used to locate the code
 _hidden static void fn(void) {/* Nothing */};
@@ -35,7 +38,7 @@ _hot utils::security::observer::ANotifier::ANotifier() noexcept
     Dl_info info{};
 
     // Get data on the actual module
-    if (dladdr((void*)fn, &info) == 0) _unlikely {return;}
+    if (::dladdr(reinterpret_cast<void*>(&fn), &info) == 0) _unlikely {return;}
 
     // Check if the name was succefully getted
     if (info.dli_fname) _likely {
@@ -52,7 +55,7 @@ _hot void utils::security::observer::ANotifier::link(const std::uint64_t id, std
 
     // Minimal check on the id
     if (id == 0) _unlikely {
-        throw utils::exception::ErrorException(utils::exception::InternalCode::InvalidId, "Can't link the id: 0");   
+        throw utils::exception::ErrorException(utils::exception::InternalCode::InvalidId, "Can't link the id: 0");
     } else if (this->_links.contains(id)) _unlikely {
         utils::exception::WarningException e(utils::exception::InternalCode::InvalidId, "Can't relink the id: " + std::to_string(id));
         std::cerr << e.formated() << std::endl;
@@ -75,7 +78,7 @@ _hot void utils::security::observer::ANotifier::unlink(const std::uint64_t id, c
 
     // Minimal check on the id
     if (id == 0) _unlikely {
-        throw utils::exception::ErrorException(utils::exception::InternalCode::InvalidId, "Can't link the id: 0");   
+        throw utils::exception::ErrorException(utils::exception::InternalCode::InvalidId, "Can't unlink the id: 0");
     } else if (!this->_links.contains(id)) _unlikely {
         utils::exception::WarningException e(utils::exception::InternalCode::UnknownId, std::to_string(id));
         std::cerr << e.formated() << std::endl;
@@ -97,7 +100,7 @@ _cold void utils::security::observer::ANotifier::clear(const bool safe_mode)
     else (void)lock.try_lock();
 
     // Free all the link
-    for (const auto& [id, _]: this->_links) utils::security::observer::instances::IdHandler.free(id, safe_mode);
+    for (const auto &[id, _]: this->_links) utils::security::observer::instances::id_handler().free(id, safe_mode);
     this->_links.clear();
 
     // Internal sub-call

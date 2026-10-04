@@ -11,7 +11,7 @@ File Description:
 
 #ifndef IEXCEPTION_H
     #define IEXCEPTION_H
-    
+
     //----------------------------------------------------------------//
     /* INCLUDE */
 
@@ -27,7 +27,7 @@ namespace utils::exception { // namespace start
 
 class IException: public std::exception {
     public:
-        // --------- Pre-Function --------- //
+        // ---------- Pre-Function -------- //
         virtual utils::exception::Type getType(void) const noexcept = 0;
         virtual utils::exception::InternalCode getCode(void) const noexcept = 0;
         virtual bool isNone(void) const noexcept = 0;

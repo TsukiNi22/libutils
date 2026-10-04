@@ -16,8 +16,8 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../attribute/Attribute.hpp"        // _nodiscard, _unused, _hot
-    #include "../../manip/smanip/fixed_string.hpp"  // utils::smanip::fixed_string
+    #include "../../attribute/Attribute.hpp"        // _hot, _unused
+    #include "../../manip/smanip/FixedString.hpp"   // utils::smanip::FixedString
     #include "IObserver.hpp"                        // utils::security::observer::IObserver
     #include "INotifier.hpp"                        // utils::security::observer::INotifier
     #include "Instances.hpp"                        // utils::security::observer::instances::*
@@ -30,26 +30,26 @@ namespace utils::security::observer { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-template<utils::smanip::fixed_string __instance__ = "[unknown]", bool __safe_mode__ = true>
+template<utils::smanip::FixedString instance = "[unknown]", bool safe_mode = true>
 class AObserver: public utils::security::observer::IObserver {
     private:
         // id = 0 is reserved for unattribued one
         std::uint64_t _id = 0; // up to 2^64 - 1 item at the same time
-        std::string_view _instance = __instance__.view();
+        std::string_view _instance = instance.view();
 
         // ------------ Function ---------- //
         _hot void link_(void) override
         {
-            utils::security::observer::instances::IdHandler.allocate(this->_id, __safe_mode__);
-            for (std::unique_ptr<utils::security::observer::INotifier>& notifier: utils::security::observer::instances::Notifiers)
-                notifier->link(this->_id, this->_instance, __safe_mode__);
+            utils::security::observer::instances::id_handler().allocate(this->_id, safe_mode);
+            for (std::unique_ptr<utils::security::observer::INotifier>& notifier: utils::security::observer::instances::notifiers())
+                notifier->link(this->_id, this->_instance, safe_mode);
         };
         _hot void unlink_(void) override
         {
             if (this->_id == 0) return; // Ignore thoese who where already realese/transfered
-            for (std::unique_ptr<utils::security::observer::INotifier>& notifier: utils::security::observer::instances::Notifiers)
-                notifier->unlink(this->_id, __safe_mode__);
-            utils::security::observer::instances::IdHandler.free(this->_id, __safe_mode__);
+            for (std::unique_ptr<utils::security::observer::INotifier>& notifier: utils::security::observer::instances::notifiers())
+                notifier->unlink(this->_id, safe_mode);
+            utils::security::observer::instances::id_handler().free(this->_id, safe_mode);
         };
 
     public:
@@ -65,7 +65,7 @@ class AObserver: public utils::security::observer::IObserver {
         };
 
         // ---------- Constructor --------- //
-        AObserver() {this->link_();};
+        AObserver()                               {this->link_();};
         AObserver(_unused const AObserver& other) {this->link_();};
         AObserver(AObserver&& other): _id{other._id}, _instance{other._instance} {other._id = 0;};
 

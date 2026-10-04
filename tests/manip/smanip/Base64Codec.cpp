@@ -28,7 +28,7 @@ struct Base64Case {
 };
 std::ostream& operator<<(std::ostream& os, const Base64Case& c) {return os << '"' << c.decoded << '"';}
 
-class Base64CodecTest : public ::testing::TestWithParam<Base64Case> {
+class Base64CodecTest: public ::testing::TestWithParam<Base64Case> {
     protected:
         utils::smanip::codec::Base64Codec _codec;
 };
@@ -90,4 +90,11 @@ TEST(Base64Codec, Polymorphism) {
     std::unique_ptr<utils::smanip::codec::ICodec> codec = std::make_unique<utils::smanip::codec::Base64Codec>();
     EXPECT_EQ(codec->encode("foo"), "Zm9v");
     EXPECT_EQ(codec->decode("Zm9v"), "foo");
+}
+
+TEST(Base64Codec, DecodeTrailingWhitespace) {
+    utils::smanip::codec::Base64Codec codec;
+    EXPECT_EQ(codec.decode("QQ==\n"), "A");
+    EXPECT_EQ(codec.decode("Zm8= \r\n"), "fo");
+    EXPECT_EQ(codec.decode("Zm9v\n"), "foo");
 }

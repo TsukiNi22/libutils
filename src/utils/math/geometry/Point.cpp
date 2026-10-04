@@ -35,43 +35,30 @@ _hot _nodiscard utils::math::Coord2D utils::math::geometry::rotate_point_2D(cons
 
 _hot _nodiscard utils::math::Coord utils::math::geometry::rotate_point_3D(const utils::math::Coord& origin, const utils::math::Coord& point, const utils::math::Direction& orientation, const bool rad)
 {
+    // Same convention as to_look: roll (z), then pitch (x), then yaw (y)
     // Pre compute
     utils::math::Coord p = point - origin;
     utils::math::Type pitch = rad ? orientation.x : utils::math::trigo::deg_to_rad(orientation.x);
     utils::math::Type yaw =   rad ? orientation.y : utils::math::trigo::deg_to_rad(orientation.y);
     utils::math::Type roll =  rad ? orientation.z : utils::math::trigo::deg_to_rad(orientation.z);
 
-    // Rotation value
-    utils::math::Type cosa = std::cos(yaw);
-    utils::math::Type sina = std::sin(yaw);
+    // Roll (around z)
+    utils::math::Type x = p.x * std::cos(roll) - p.y * std::sin(roll);
+    utils::math::Type y = p.x * std::sin(roll) + p.y * std::cos(roll);
+    utils::math::Type z = p.z;
 
-    utils::math::Type cosb = std::cos(pitch);
-    utils::math::Type sinb = std::sin(pitch);
-    
-    utils::math::Type cosc = std::cos(roll);
-    utils::math::Type sinc = std::sin(roll);
+    // Pitch (around x): positive pitch raise the forward vector (+y)
+    utils::math::Type y2 = y * std::cos(pitch) + z * std::sin(pitch);
+    utils::math::Type z2 = -y * std::sin(pitch) + z * std::cos(pitch);
+    y = y2;
+    z = z2;
 
-    // Create the matrix
-    utils::math::Type Axx = cosa * cosb;
-    utils::math::Type Axy = cosa * sinb * sinc - sina * cosc;
-    utils::math::Type Axz = cosa * sinb * cosc + sina * sinc;
-
-    utils::math::Type Ayx = sina * cosb;
-    utils::math::Type Ayy = sina * sinb * sinc + cosa * cosc;
-    utils::math::Type Ayz = sina * sinb * cosc - cosa * sinc;
-
-    utils::math::Type Azx = -sinb;
-    utils::math::Type Azy = cosb * sinc;
-    utils::math::Type Azz = cosb * cosc;
-
-    // Apply the matrix
-    utils::math::Type px = p.x;
-    utils::math::Type py = p.y;
-    utils::math::Type pz = p.z;
-    p.x = Axx * px + Axy * py + Axz * pz;
-    p.y = Ayx * px + Ayy * py + Ayz * pz;
-    p.z = Azx * px + Azy * py + Azz * pz;
+    // Yaw (around y): positive yaw turn the forward vector to +x
+    utils::math::Type x2 = x * std::cos(yaw) + z * std::sin(yaw);
+    z2 = -x * std::sin(yaw) + z * std::cos(yaw);
+    x = x2;
+    z = z2;
 
     // Re apply the origin
-    return p + origin;
+    return utils::math::Coord{x, y, z} + origin;
 }

@@ -18,15 +18,16 @@ File Description:
     /* type */
     #include "../IException.hpp"                // utils::exception::IException
     #include "../AException.hpp"                // utils::exception::AException
-    #include "../../attribute/Attribute.hpp"    // _cold
+    #include "../../attribute/Attribute.hpp"    // _cold, _noreturn
     #include <source_location>                  // std::source_location
     #include <iostream>                         // std::cerr
     #include <cstdlib>                          // std::abort
-    
+    #include <string>                           // std::string
+
     //----------------------------------------------------------------//
     /* DEFINE */
 
-    /* message*/
+    /* message */
     #define EXCEPTION_ABORTED_HEADER  "[ABORTED] FatalException call"
     #define EXCEPTION_ABORTED_MESSAGE "Program terminated without proper RAII cleanup"
 
@@ -40,22 +41,22 @@ namespace utils::exception { // namespace start
 class FatalException: public utils::exception::AException {
     public:
         // ------------ Function ---------- //
-        _cold void display(void) const noexcept
+        _cold _noreturn void display(void) const noexcept
         {
             std::cerr
             << EXCEPTION_ABORTED_HEADER  << std::endl
             << this->formated()          << std::endl
             << EXCEPTION_ABORTED_MESSAGE << std::endl;
             std::abort();
-        }
-        _cold void display(const utils::exception::IException& e) const noexcept
+        };
+        _cold _noreturn void display(const utils::exception::IException& e) const noexcept
         {
             std::cerr
             << EXCEPTION_ABORTED_HEADER  << std::endl
             << e.formated()              << std::endl
             << EXCEPTION_ABORTED_MESSAGE << std::endl;
             std::abort();
-        }
+        };
 
         // ------------ Operator ---------- //
         FatalException& operator=(const FatalException& other) = delete;
@@ -63,20 +64,20 @@ class FatalException: public utils::exception::AException {
 
         // ---------- Constructor --------- //
         #ifdef GENERATED_EXTERNAL_EXCEPTION_HEADER_H
-            _cold explicit FatalException(utils::exception::ExternalCode code, std::source_location loc = std::source_location::current()) noexcept : AException(loc, utils::exception::Type::Error | utils::exception::Type::Fatal, static_cast<utils::exception::InternalCode>(code))
+            _cold explicit FatalException(utils::exception::ExternalCode code, std::source_location loc = std::source_location::current()) noexcept: AException(loc, utils::exception::Type::Error | utils::exception::Type::Fatal, static_cast<utils::exception::InternalCode>(code))
             {this->display();};
-            _cold explicit FatalException(utils::exception::ExternalCode code, std::string info, std::source_location loc = std::source_location::current()) noexcept : AException(loc, utils::exception::Type::Error | utils::exception::Type::Fatal, static_cast<utils::exception::InternalCode>(code), info)
+            _cold explicit FatalException(utils::exception::ExternalCode code, std::string info, std::source_location loc = std::source_location::current()) noexcept: AException(loc, utils::exception::Type::Error | utils::exception::Type::Fatal, static_cast<utils::exception::InternalCode>(code), info)
             {this->display();};
-            _cold FatalException(utils::exception::Type type, utils::exception::ExternalCode code, std::string info = "[None]", std::source_location loc = std::source_location::current()) noexcept : AException(loc, type | utils::exception::Type::Fatal, static_cast<utils::exception::InternalCode>(code), info)
+            _cold FatalException(utils::exception::Type type, utils::exception::ExternalCode code, std::string info = "[None]", std::source_location loc = std::source_location::current()) noexcept: AException(loc, type | utils::exception::Type::Fatal, static_cast<utils::exception::InternalCode>(code), info)
             {this->display();};
         #endif
-        _cold explicit FatalException(utils::exception::InternalCode code = utils::exception::InternalCode::Undefined, std::source_location loc = std::source_location::current()) noexcept : AException(loc, utils::exception::Type::Error | utils::exception::Type::Fatal, code)
+        _cold explicit FatalException(utils::exception::InternalCode code = utils::exception::InternalCode::Undefined, std::source_location loc = std::source_location::current()) noexcept: AException(loc, utils::exception::Type::Error | utils::exception::Type::Fatal, code)
         {this->display();};
-        _cold explicit FatalException(utils::exception::InternalCode code, std::string info, std::source_location loc = std::source_location::current()) noexcept : AException(loc, utils::exception::Type::Error | utils::exception::Type::Fatal, code, info)
+        _cold explicit FatalException(utils::exception::InternalCode code, std::string info, std::source_location loc = std::source_location::current()) noexcept: AException(loc, utils::exception::Type::Error | utils::exception::Type::Fatal, code, info)
         {this->display();};
-        _cold FatalException(utils::exception::Type type, utils::exception::InternalCode code = utils::exception::InternalCode::Undefined, std::string info = "[None]", std::source_location loc = std::source_location::current()) noexcept : AException(loc, type | utils::exception::Type::Fatal, code, info)
+        _cold FatalException(utils::exception::Type type, utils::exception::InternalCode code = utils::exception::InternalCode::Undefined, std::string info = "[None]", std::source_location loc = std::source_location::current()) noexcept: AException(loc, type | utils::exception::Type::Fatal, code, info)
         {this->display();};
-        _cold FatalException(const utils::exception::IException& e) noexcept : AException()
+        _cold FatalException(const utils::exception::IException& e) noexcept: AException()
         {this->display(e);};
         FatalException(const FatalException& other) = delete;
         FatalException(FatalException&& other) = delete;

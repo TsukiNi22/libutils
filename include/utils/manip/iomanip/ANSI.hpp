@@ -16,140 +16,146 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "Color.hpp"        // utils::iomanip::Color, utils::iomanip::BackColor
-    #include "Char.hpp"         // utils::iomanip::Char
-    #include "Style.hpp"        // utils::iomanip::Style, utils::iomanip::ResetStyle
-    #include <initializer_list> // std::initializer_list
-    #include <cstdint>          // std::uint8_t, std::size_t
-    #include <string>           // std::string
+    #include "Color.hpp"                        // utils::iomanip::Color, utils::iomanip::BackColor
+    #include "Char.hpp"                         // utils::iomanip::Char
+    #include "Style.hpp"                        // utils::iomanip::Style, utils::iomanip::ResetStyle
+    #include "../../attribute/Attribute.hpp"    // _cold, _hot, _nodiscard, _migration
+    #include <initializer_list>                 // std::initializer_list
+    #include <cstddef>                          // std::size_t
+    #include <cstdint>                          // std::uint8_t
+    #include <utility>                          // std::pair
+    #include <string>                           // std::string, std::to_string
 
 namespace utils::iomanip { // namespace start
-    //----------------------------------------------------------------//
-    /* ANSI */
+//----------------------------------------------------------------//
+/* PROTOTYPE */
 
-    /* --------- function ---------- */
-    std::string setStyle(std::initializer_list<utils::iomanip::Style> styles);
-    std::string resetStyle(std::initializer_list<utils::iomanip::ResetStyle> styles);
+/* function */
+std::string set_style(std::initializer_list<utils::iomanip::Style> styles);
+std::string reset_style(std::initializer_list<utils::iomanip::ResetStyle> styles);
 
-    /* --------- internal ---------- */
-    constexpr inline std::string esc(void) {return std::string(1, static_cast<char>(utils::iomanip::Char::ESC));}
-    constexpr inline std::string csi(const std::string& code) {return esc() + "[" + code;}
+/* internal */
+_hot _nodiscard constexpr inline std::string esc(void)                    {return std::string(1, static_cast<char>(utils::iomanip::Char::ESC));};
+_hot _nodiscard constexpr inline std::string csi(const std::string& code) {return utils::iomanip::esc() + "[" + code;};
 
-    /* ----------- special ------------ */
-    constexpr inline std::string file_hyperlink(const std::string& display, const std::string& path) {return esc() + "]8;;file://" + path + esc() + "\\" + display + esc() + "]8;;" + esc() + "\\";}
-    constexpr inline std::string hyperlink(const std::string& display, const std::string& link) {return esc() + "]8;;" + link + esc() + "\\" + display + esc() + "]8;;" + esc() + "\\";}
+/* special */
+_hot _nodiscard constexpr inline std::string file_hyperlink(const std::string& display, const std::string& path) {return utils::iomanip::esc() + "]8;;file://" + path + utils::iomanip::esc() + "\\" + display + utils::iomanip::esc() + "]8;;" + utils::iomanip::esc() + "\\";};
+_hot _nodiscard constexpr inline std::string hyperlink(const std::string& display, const std::string& link)      {return utils::iomanip::esc() + "]8;;" + link + utils::iomanip::esc() + "\\" + display + utils::iomanip::esc() + "]8;;" + utils::iomanip::esc() + "\\";};
 
-    /* ----------- reset ----------- */
-    constexpr inline std::string reset(void)                    {return csi("0m");}
-    constexpr inline std::string strong_reset(void)             {return csi("21m");}
-    constexpr inline std::string dark_reset(void)               {return csi("22m");}
-    constexpr inline std::string italic_reset(void)             {return csi("23m");}
-    constexpr inline std::string underlined_reset(void)         {return csi("24m");}
-    constexpr inline std::string flashing_fast_reset(void)      {return csi("25m");}
-    constexpr inline std::string flashing_slow_reset(void)      {return csi("26m");}
-    constexpr inline std::string reversed_reset(void)           {return csi("27m");}
-    constexpr inline std::string hide_reset(void)               {return csi("28m");}
-    constexpr inline std::string bar_reset(void)                {return csi("29m");}
-    constexpr inline std::string framed_encircled_reset(void)   {return csi("54m");}
-    constexpr inline std::string overlined_reset(void)          {return csi("55m");}
-    constexpr inline std::string underline_color_reset(void)    {return csi("59m");}
-    constexpr inline std::string exposant_indice_reset(void)    {return csi("75m");}
-    /* args */
-    constexpr inline std::string resetStyle(utils::iomanip::ResetStyle style) {return csi(std::to_string(static_cast<std::uint8_t>(style)) + "m");}
+/* reset */
+_hot _nodiscard constexpr inline std::string reset(void)                  {return utils::iomanip::csi("0m");};
+_hot _nodiscard constexpr inline std::string strong_reset(void)           {return utils::iomanip::csi("22m");};
+_hot _nodiscard constexpr inline std::string dark_reset(void)             {return utils::iomanip::csi("22m");};
+_hot _nodiscard constexpr inline std::string italic_reset(void)           {return utils::iomanip::csi("23m");};
+_hot _nodiscard constexpr inline std::string underlined_reset(void)       {return utils::iomanip::csi("24m");};
+_hot _nodiscard constexpr inline std::string flashing_fast_reset(void)    {return utils::iomanip::csi("25m");};
+_hot _nodiscard constexpr inline std::string flashing_slow_reset(void)    {return utils::iomanip::csi("25m");};
+_hot _nodiscard constexpr inline std::string reversed_reset(void)         {return utils::iomanip::csi("27m");};
+_hot _nodiscard constexpr inline std::string hide_reset(void)             {return utils::iomanip::csi("28m");};
+_hot _nodiscard constexpr inline std::string bar_reset(void)              {return utils::iomanip::csi("29m");};
+_hot _nodiscard constexpr inline std::string framed_encircled_reset(void) {return utils::iomanip::csi("54m");};
+_hot _nodiscard constexpr inline std::string overlined_reset(void)        {return utils::iomanip::csi("55m");};
+_hot _nodiscard constexpr inline std::string underline_color_reset(void)  {return utils::iomanip::csi("59m");};
+_hot _nodiscard constexpr inline std::string exposant_indice_reset(void)  {return utils::iomanip::csi("75m");};
+/* args */
+_hot _nodiscard constexpr inline std::string reset_style(utils::iomanip::ResetStyle style) {return utils::iomanip::csi(std::to_string(static_cast<std::uint8_t>(style)) + "m");};
 
-    /* ----------- style ----------- */
-    constexpr inline std::string strong(void)           {return csi("1m");}
-    constexpr inline std::string dark(void)             {return csi("2m");}
-    constexpr inline std::string italic(void)           {return csi("3m");}
-    constexpr inline std::string underlined(void)       {return csi("4m");}
-    constexpr inline std::string flashing_fast(void)    {return csi("5m");}
-    constexpr inline std::string flashing_slow(void)    {return csi("6m");}
-    constexpr inline std::string reversed(void)         {return csi("7m");}
-    constexpr inline std::string hide(void)             {return csi("8m");}
-    constexpr inline std::string bar(void)              {return csi("9m");}
-    constexpr inline std::string monospace(void)        {return csi("50m");}
-    constexpr inline std::string framed(void)           {return csi("51m");} // Rarely supported
-    constexpr inline std::string encircled(void)        {return csi("52m");} // Rarely supported
-    constexpr inline std::string overlined(void)        {return csi("53m");}
-    constexpr inline std::string exposant(void)         {return csi("73m");} // Rarely supported
-    constexpr inline std::string indice(void)           {return csi("74m");} // Rarely supported
-    /* args */
-    constexpr inline std::string setStyle(utils::iomanip::Style style)                                    {return csi(std::to_string(static_cast<std::uint8_t>(style)) + "m");}
-    constexpr inline std::string color(utils::iomanip::Color c)                                           {return csi(std::to_string(static_cast<std::uint8_t>(c)) + "m");}
-    constexpr inline std::string color(utils::iomanip::BackColor c)                                       {return csi(std::to_string(static_cast<std::uint8_t>(c)) + "m");}
-    constexpr inline std::string color_id(std::uint8_t id)                                              {return csi("38;5;" + std::to_string(id) + "m");}
-    constexpr inline std::string back_color_id(std::uint8_t id)                                         {return csi("48;5;" + std::to_string(id) + "m");}
-    constexpr inline std::string underline_color_id(std::uint8_t id)                                    {return csi("58;5;" + std::to_string(id) + "m");}
-    constexpr inline std::string color_rgb(std::uint8_t r, std::uint8_t g, std::uint8_t b)              {return csi("38;2;" + std::to_string(r) + ";" + std::to_string(g) + ";" + std::to_string(b) + "m");}
-    constexpr inline std::string back_color_rgb(std::uint8_t r, std::uint8_t g, std::uint8_t b)         {return csi("48;2;" + std::to_string(r) + ";" + std::to_string(g) + ";" + std::to_string(b) + "m");}
-    constexpr inline std::string underline_color_rgb(std::uint8_t r, std::uint8_t g, std::uint8_t b)    {return csi("58;2;" + std::to_string(r) + ";" + std::to_string(g) + ";" + std::to_string(b) + "m");}
+/* style */
+_hot _nodiscard constexpr inline std::string strong(void)        {return utils::iomanip::csi("1m");};
+_hot _nodiscard constexpr inline std::string dark(void)          {return utils::iomanip::csi("2m");};
+_hot _nodiscard constexpr inline std::string italic(void)        {return utils::iomanip::csi("3m");};
+_hot _nodiscard constexpr inline std::string underlined(void)    {return utils::iomanip::csi("4m");};
+_hot _nodiscard constexpr inline std::string flashing_fast(void) {return utils::iomanip::csi("6m");};
+_hot _nodiscard constexpr inline std::string flashing_slow(void) {return utils::iomanip::csi("5m");};
+_hot _nodiscard constexpr inline std::string reversed(void)      {return utils::iomanip::csi("7m");};
+_hot _nodiscard constexpr inline std::string hide(void)          {return utils::iomanip::csi("8m");};
+_hot _nodiscard constexpr inline std::string bar(void)           {return utils::iomanip::csi("9m");};
+_hot _nodiscard constexpr inline std::string monospace(void)     {return utils::iomanip::csi("50m");};
+_hot _nodiscard constexpr inline std::string framed(void)        {return utils::iomanip::csi("51m");}; // Rarely supported
+_hot _nodiscard constexpr inline std::string encircled(void)     {return utils::iomanip::csi("52m");}; // Rarely supported
+_hot _nodiscard constexpr inline std::string overlined(void)     {return utils::iomanip::csi("53m");};
+_hot _nodiscard constexpr inline std::string exposant(void)      {return utils::iomanip::csi("73m");}; // Rarely supported
+_hot _nodiscard constexpr inline std::string indice(void)        {return utils::iomanip::csi("74m");}; // Rarely supported
+/* args */
+_hot _nodiscard constexpr inline std::string set_style(utils::iomanip::Style style)                              {return utils::iomanip::csi(std::to_string(static_cast<std::uint8_t>(style)) + "m");};
+_hot _nodiscard constexpr inline std::string color(utils::iomanip::Color c)                                      {return utils::iomanip::csi(std::to_string(static_cast<std::uint8_t>(c)) + "m");};
+_hot _nodiscard constexpr inline std::string color(utils::iomanip::BackColor c)                                  {return utils::iomanip::csi(std::to_string(static_cast<std::uint8_t>(c)) + "m");};
+_hot _nodiscard constexpr inline std::string color_id(std::uint8_t id)                                           {return utils::iomanip::csi("38;5;" + std::to_string(id) + "m");};
+_hot _nodiscard constexpr inline std::string back_color_id(std::uint8_t id)                                      {return utils::iomanip::csi("48;5;" + std::to_string(id) + "m");};
+_hot _nodiscard constexpr inline std::string underline_color_id(std::uint8_t id)                                 {return utils::iomanip::csi("58;5;" + std::to_string(id) + "m");};
+_hot _nodiscard constexpr inline std::string color_rgb(std::uint8_t r, std::uint8_t g, std::uint8_t b)           {return utils::iomanip::csi("38;2;" + std::to_string(r) + ";" + std::to_string(g) + ";" + std::to_string(b) + "m");};
+_hot _nodiscard constexpr inline std::string back_color_rgb(std::uint8_t r, std::uint8_t g, std::uint8_t b)      {return utils::iomanip::csi("48;2;" + std::to_string(r) + ";" + std::to_string(g) + ";" + std::to_string(b) + "m");};
+_hot _nodiscard constexpr inline std::string underline_color_rgb(std::uint8_t r, std::uint8_t g, std::uint8_t b) {return utils::iomanip::csi("58;2;" + std::to_string(r) + ";" + std::to_string(g) + ";" + std::to_string(b) + "m");};
 
-    /* ---------- cursor ----------- */
-    constexpr inline std::string load_cur(void) {return csi("u");}
-    constexpr inline std::string save_cur(void) {return csi("s");}
-    /* args */
-    constexpr inline std::string up(std::size_t n)                      {return csi(std::to_string(n) + "A");}
-    constexpr inline std::string down(std::size_t n)                    {return csi(std::to_string(n) + "B");}
-    constexpr inline std::string right(std::size_t n)                   {return csi(std::to_string(n) + "C");}
-    constexpr inline std::string left(std::size_t n)                    {return csi(std::to_string(n) + "D");}
-    constexpr inline std::string next_line(std::size_t n)               {return csi(std::to_string(n) + "E");}
-    constexpr inline std::string previous_line(std::size_t n)           {return csi(std::to_string(n) + "F");}
-    constexpr inline std::string column(std::size_t col)                {return csi(std::to_string(col) + "G");}
-    constexpr inline std::string pos(std::size_t row, std::size_t col)  {return csi(std::to_string(row) + ";" + std::to_string(col) + "H");}
-    constexpr inline std::string scroll_up(std::size_t n)               {return csi(std::to_string(n) + "S");}
-    constexpr inline std::string scroll_down(std::size_t n)             {return csi(std::to_string(n) + "T");}
+/* cursor */
+_hot _nodiscard constexpr inline std::string load_cur(void) {return utils::iomanip::csi("u");};
+_hot _nodiscard constexpr inline std::string save_cur(void) {return utils::iomanip::csi("s");};
+/* args */
+_hot _nodiscard constexpr inline std::string up(std::size_t n)                     {return utils::iomanip::csi(std::to_string(n) + "A");};
+_hot _nodiscard constexpr inline std::string down(std::size_t n)                   {return utils::iomanip::csi(std::to_string(n) + "B");};
+_hot _nodiscard constexpr inline std::string right(std::size_t n)                  {return utils::iomanip::csi(std::to_string(n) + "C");};
+_hot _nodiscard constexpr inline std::string left(std::size_t n)                   {return utils::iomanip::csi(std::to_string(n) + "D");};
+_hot _nodiscard constexpr inline std::string next_line(std::size_t n)              {return utils::iomanip::csi(std::to_string(n) + "E");};
+_hot _nodiscard constexpr inline std::string previous_line(std::size_t n)          {return utils::iomanip::csi(std::to_string(n) + "F");};
+_hot _nodiscard constexpr inline std::string column(std::size_t col)               {return utils::iomanip::csi(std::to_string(col) + "G");};
+_hot _nodiscard constexpr inline std::string pos(std::size_t row, std::size_t col) {return utils::iomanip::csi(std::to_string(row) + ";" + std::to_string(col) + "H");};
+_hot _nodiscard constexpr inline std::string scroll_up(std::size_t n)              {return utils::iomanip::csi(std::to_string(n) + "S");};
+_hot _nodiscard constexpr inline std::string scroll_down(std::size_t n)            {return utils::iomanip::csi(std::to_string(n) + "T");};
 
-    /* ----------- erase ----------- */
-    constexpr inline std::string screen_end(void)           {return csi("0J");}
-    constexpr inline std::string screen_start(void)         {return csi("1J");}
-    constexpr inline std::string screen(void)               {return csi("2J");}
-    constexpr inline std::string scrollback_buffer(void)    {return csi("3J");} // Can delete the term history
-    constexpr inline std::string line_end(void)             {return csi("0K");}
-    constexpr inline std::string line_start(void)           {return csi("1K");}
-    constexpr inline std::string line(void)                 {return csi("2K");}
+/* erase */
+_hot _nodiscard constexpr inline std::string screen_end(void)        {return utils::iomanip::csi("0J");};
+_hot _nodiscard constexpr inline std::string screen_start(void)      {return utils::iomanip::csi("1J");};
+_hot _nodiscard constexpr inline std::string screen(void)            {return utils::iomanip::csi("2J");};
+_hot _nodiscard constexpr inline std::string scrollback_buffer(void) {return utils::iomanip::csi("3J");}; // Can delete the term history
+_hot _nodiscard constexpr inline std::string line_end(void)          {return utils::iomanip::csi("0K");};
+_hot _nodiscard constexpr inline std::string line_start(void)        {return utils::iomanip::csi("1K");};
+_hot _nodiscard constexpr inline std::string line(void)              {return utils::iomanip::csi("2K");};
 
-    /* ------ private-modes ------- */
-    constexpr inline std::string inverted_color_enable(void)    {return csi("?5h");}
-    constexpr inline std::string inverted_color_disable(void)   {return csi("?5l");}
-    constexpr inline std::string wrapping_enable(void)          {return csi("?7h");}
-    constexpr inline std::string wrapping_disable(void)         {return csi("?7l");}
-    constexpr inline std::string show_cur(void)                 {return csi("?25h");}
-    constexpr inline std::string hide_cur(void)                 {return csi("?25l");}
-    constexpr inline std::string save_screen(void)              {return csi("?1049h");}
-    constexpr inline std::string load_screen(void)              {return csi("?1049l");}
-    
-    /* --------- reports ---------- */
-    constexpr inline std::string get_pos(void)                      {return csi("6n");} // Reports cursor position as "ESC[row;colR"
-    constexpr inline std::string mouse_tracking_enable(void)        {return csi("?1000h");}
-    constexpr inline std::string mouse_tracking_disable(void)       {return csi("?1000l");}
-    constexpr inline std::string mouse_move_tracking_enable(void)   {return csi("?1002h");}
-    constexpr inline std::string mouse_move_tracking_disable(void)  {return csi("?1002l");}
-    // Reports mouse action as (each x&y value as a '+ 32') "ESC[Mb;x;y" -> 'b' is the boutton & modifier
-    // Boutton: 0 left, 1 mid, 2 right, 3 release
-    // Modifer: +4 shift, +8 alt, +16 ctrl
-    constexpr inline std::string mouse_adv_tracking_enable(void)    {return csi("?1006h");}
-    constexpr inline std::string mouse_adv_tracking_disable(void)   {return csi("?1006l");}
-    // Reports mouse action as "ESC[<b;x;y(M|m)" -> 'b' is the boutton & modifier -> M = pressed, m = released
-    // Boutton: 0 left, 1 mid, 2 right, 3 release
-    // Modifer: +4 shift, +8 alt, +16 ctrl
-    constexpr inline std::string report_focus_enable(void)          {return csi("?1004h");} // Focus in: "ESC[I" | Focus out: "ESC[O"
-    constexpr inline std::string report_focus_disabled(void)        {return csi("?1004l");}
-    constexpr inline std::string report_past_enable(void)           {return csi("?2004h");} // Reports for pasted data: "ESC[200~{data}ESC[201~"
-    constexpr inline std::string report_past_disable(void)          {return csi("?2004l");}
+/* private modes */
+_hot _nodiscard constexpr inline std::string inverted_color_enable(void)  {return utils::iomanip::csi("?5h");};
+_hot _nodiscard constexpr inline std::string inverted_color_disable(void) {return utils::iomanip::csi("?5l");};
+_hot _nodiscard constexpr inline std::string wrapping_enable(void)        {return utils::iomanip::csi("?7h");};
+_hot _nodiscard constexpr inline std::string wrapping_disable(void)       {return utils::iomanip::csi("?7l");};
+_hot _nodiscard constexpr inline std::string show_cur(void)               {return utils::iomanip::csi("?25h");};
+_hot _nodiscard constexpr inline std::string hide_cur(void)               {return utils::iomanip::csi("?25l");};
+_hot _nodiscard constexpr inline std::string save_screen(void)            {return utils::iomanip::csi("?1049h");};
+_hot _nodiscard constexpr inline std::string load_screen(void)            {return utils::iomanip::csi("?1049l");};
+
+/* reports */
+_hot _nodiscard constexpr inline std::string get_pos(void)                     {return utils::iomanip::csi("6n");}; // Reports cursor position as "ESC[row;colR"
+_hot _nodiscard constexpr inline std::string mouse_tracking_enable(void)       {return utils::iomanip::csi("?1000h");};
+_hot _nodiscard constexpr inline std::string mouse_tracking_disable(void)      {return utils::iomanip::csi("?1000l");};
+_hot _nodiscard constexpr inline std::string mouse_move_tracking_enable(void)  {return utils::iomanip::csi("?1002h");};
+_hot _nodiscard constexpr inline std::string mouse_move_tracking_disable(void) {return utils::iomanip::csi("?1002l");};
+// Reports mouse action as "ESC[M" Cb Cx Cy (3 raw bytes, each value + 32) -> 'Cb' is the button & modifier
+// Button: 0 left, 1 mid, 2 right, 3 release
+// Modifier: +4 shift, +8 alt, +16 ctrl
+_hot _nodiscard constexpr inline std::string mouse_adv_tracking_enable(void)  {return utils::iomanip::csi("?1006h");};
+_hot _nodiscard constexpr inline std::string mouse_adv_tracking_disable(void) {return utils::iomanip::csi("?1006l");};
+// Reports mouse action as "ESC[<b;x;y(M|m)" -> 'b' is the button & modifier -> M = pressed, m = released
+// Button: 0 left, 1 mid, 2 right, 3 release
+// Modifier: +4 shift, +8 alt, +16 ctrl
+_hot _nodiscard constexpr inline std::string report_focus_enable(void)   {return utils::iomanip::csi("?1004h");}; // Focus in: "ESC[I" | Focus out: "ESC[O"
+_hot _nodiscard constexpr inline std::string report_focus_disabled(void) {return utils::iomanip::csi("?1004l");};
+_hot _nodiscard constexpr inline std::string report_past_enable(void)    {return utils::iomanip::csi("?2004h");}; // Reports for pasted data: "ESC[200~{data}ESC[201~"
+_hot _nodiscard constexpr inline std::string report_past_disable(void)   {return utils::iomanip::csi("?2004l");};
 
 //----------------------------------------------------------------//
-/* TYPDEF */
+/* ENUM */
 
-/* mousse button */
+/* mouse button */
 enum class MouseButton {
     Left,
     Right,
     Middle,
     Release,
-    Unknown
+    Unknown,
 };
 
-/* mouse event -> "ESC[Mb;x;y" */
+//----------------------------------------------------------------//
+/* STRUCT */
+
+/* mouse event -> "ESC[M" Cb Cx Cy */
 struct MouseEvent {
     utils::iomanip::MouseButton button = utils::iomanip::MouseButton::Unknown;
     std::size_t x = 0;
@@ -164,10 +170,26 @@ struct AdvancedMouseEvent {
     bool pressed = false;
 };
 
-/* reports */
-std::pair<int, int> readCursorPosition(void);
-utils::iomanip::MouseEvent readMouseEvent(void);
-utils::iomanip::AdvancedMouseEvent readAdvancedMouseEvent(void);
+//----------------------------------------------------------------//
+/* PROTOTYPE */
 
-} // namespace ends
+/* reports */
+std::pair<int, int> read_cursor_position(void);
+utils::iomanip::MouseEvent read_mouse_event(void);
+utils::iomanip::AdvancedMouseEvent read_advanced_mouse_event(void);
+
+} // namespace end
+
+//----------------------------------------------------------------//
+/* MIGRATION */
+namespace utils::iomanip {
+    _migration(4, 0, 0) inline std::string setStyle(std::initializer_list<utils::iomanip::Style> styles)        {return utils::iomanip::set_style(styles);};
+    _migration(4, 0, 0) inline std::string setStyle(utils::iomanip::Style style)                                {return utils::iomanip::set_style(style);};
+    _migration(4, 0, 0) inline std::string resetStyle(std::initializer_list<utils::iomanip::ResetStyle> styles) {return utils::iomanip::reset_style(styles);};
+    _migration(4, 0, 0) inline std::string resetStyle(utils::iomanip::ResetStyle style)                         {return utils::iomanip::reset_style(style);};
+    _migration(4, 0, 0) inline std::pair<int, int> readCursorPosition(void)                                     {return utils::iomanip::read_cursor_position();};
+    _migration(4, 0, 0) inline utils::iomanip::MouseEvent readMouseEvent(void)                                  {return utils::iomanip::read_mouse_event();};
+    _migration(4, 0, 0) inline utils::iomanip::AdvancedMouseEvent readAdvancedMouseEvent(void)                  {return utils::iomanip::read_advanced_mouse_event();};
+}
+
 #endif /* ANSI_H */

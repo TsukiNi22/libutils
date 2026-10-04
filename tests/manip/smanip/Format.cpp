@@ -14,11 +14,11 @@ File Name:
 ##  @file Format.cpp
 
 File Description:
-##  Unit tests of the string format function (<style> sequences) & fixed_string
+##  Unit tests of the string format function (<style> sequences) & FixedString
 \**************************************************************/
 
 #include "utils.hpp"
-#include "utils/manip/smanip/fixed_string.hpp"
+#include "utils/manip/smanip/FixedString.hpp"
 #include <gtest/gtest.h>
 #include <string>
 
@@ -80,12 +80,12 @@ TEST(Format, ResetKeyword) {
     EXPECT_EQ(format("<reset>"), utils::iomanip::reset());
 }
 
-/* fixed_string */
-template<utils::smanip::fixed_string S>
+/* FixedString */
+template<utils::smanip::FixedString S>
 static constexpr std::string_view viewOf(void) {return S.view();}
 
 TEST(FixedString, ViewAndSize) {
-    constexpr utils::smanip::fixed_string s("hello");
+    constexpr utils::smanip::FixedString s("hello");
     EXPECT_EQ(s.size(), 5u);
     EXPECT_EQ(s.view(), "hello");
     EXPECT_EQ(viewOf<"template">(), "template");

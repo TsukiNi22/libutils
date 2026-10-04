@@ -36,7 +36,7 @@ _cold utils::encapsulation::SharedObject::SharedObject(const std::string& path)
 
 _cold utils::encapsulation::SharedObject::~SharedObject() noexcept
 {
-    if (this->_lib && dlclose(this->_lib) != 0) _unlikely {
+    if (this->_lib && ::dlclose(this->_lib) != 0) _unlikely {
         utils::exception::ErrorException e(utils::exception::InternalCode::Dlclose, ::dlerror());
         std::cerr << e.formated() << std::endl;
     }

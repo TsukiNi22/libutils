@@ -25,8 +25,8 @@ File Description:
 #include <cstdint>
 #include <limits>
 
-template <typename T>
-class IdHandlerTest : public ::testing::Test {
+template<typename T>
+class IdHandlerTest: public ::testing::Test {
     protected: utils::system::IdHandler<T> handler;
 };
 
@@ -87,7 +87,7 @@ TEST(IdHandler, ReallocationAfterFreeMultiThread) {
      * step 4 -> 5: Thread A allocate (wanted: 3)
     */
 
-    std::thread threadA([&] {
+    std::thread threadA([&](void) {
         T id{};
 
         sync.waitForStep(0);
@@ -107,7 +107,7 @@ TEST(IdHandler, ReallocationAfterFreeMultiThread) {
         sync.advanceTo(5);
     });
 
-    std::thread threadB([&] {
+    std::thread threadB([&](void) {
         T id{};
 
         sync.waitForStep(1);

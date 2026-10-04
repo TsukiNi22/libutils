@@ -29,6 +29,7 @@ File Description:
 #include <optional>
 #include <cstdlib>
 #include <vector>
+#include <deque>
 #include <string>
 
 utils::arguments::ArgParser::ArgParser(const std::string& binary, const std::string& description)
@@ -38,7 +39,7 @@ utils::arguments::ArgParser::ArgParser(const std::string& binary, const std::str
     this->resetHelpHook();
 }
 
-void utils::arguments::ArgParser::removeUsage(const std::string& id)
+_cold void utils::arguments::ArgParser::removeUsage(const std::string& id)
 {
     if (!this->_usages.contains(id)) {
         utils::exception::WarningException e(utils::exception::InternalCode::UnknownId, id);
@@ -48,13 +49,13 @@ void utils::arguments::ArgParser::removeUsage(const std::string& id)
     this->_usages.erase(id);
 }
 
-void utils::arguments::ArgParser::removeUsages(const std::vector<std::string>& ids)
+_cold void utils::arguments::ArgParser::removeUsages(const std::vector<std::string>& ids)
 {
     for (const std::string& id: ids)
         this->removeUsage(id);
 }
 
-void utils::arguments::ArgParser::removeOption(const std::string& id)
+_cold void utils::arguments::ArgParser::removeOption(const std::string& id)
 {
     if (!this->_options.contains(id)) {
         utils::exception::WarningException e(utils::exception::InternalCode::UnknownId, id);
@@ -64,13 +65,13 @@ void utils::arguments::ArgParser::removeOption(const std::string& id)
     this->_options.erase(id);
 }
 
-void utils::arguments::ArgParser::removeOptions(const std::vector<std::string>& ids)
+_cold void utils::arguments::ArgParser::removeOptions(const std::vector<std::string>& ids)
 {
     for (const std::string& id: ids)
         this->removeOption(id);
 }
 
-void utils::arguments::ArgParser::removeFlag(const std::string& id)
+_cold void utils::arguments::ArgParser::removeFlag(const std::string& id)
 {
     if (!this->_flags.contains(id)) {
         utils::exception::WarningException e(utils::exception::InternalCode::UnknownId, id);
@@ -80,13 +81,13 @@ void utils::arguments::ArgParser::removeFlag(const std::string& id)
     this->_flags.erase(id);
 }
 
-void utils::arguments::ArgParser::removeFlags(const std::vector<std::string>& ids)
+_cold void utils::arguments::ArgParser::removeFlags(const std::vector<std::string>& ids)
 {
     for (const std::string& id: ids)
         this->removeFlag(id);
 }
 
-void utils::arguments::ArgParser::help(void) const
+_cold void utils::arguments::ArgParser::help(void) const
 {
     try {
         this->_helpHook(*this);
@@ -95,11 +96,11 @@ void utils::arguments::ArgParser::help(void) const
     }
 }
 
-bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& usageFull, const std::vector<std::string>& argv, std::size_t& i, bool& alreadyFailed, const bool failsafe) const
+_hot _nodiscard bool utils::arguments::ArgParser::parseFlags_(utils::arguments::ParsedUsageFull& usageFull, const std::vector<std::string>& argv, std::size_t& i, bool& alreadyFailed, const bool failsafe) const
 {
     std::vector<std::string> ids, idsChecked; // <id>
     std::string arg = argv[i], sarg; // sarg is used for temporary sub edition
-    const std::string argOrigin = arg; // keep the orignal value
+    const std::string argOrigin = arg; // keep the original value
     bool isLong = arg.starts_with("--"), isShort = false;
     bool unknown = true;
     std::size_t f = 0; // short counter
@@ -118,7 +119,7 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
     if (isLong) {
         arg.erase(0, 2); // Remove '--'
 
-        // Is the flag know
+        // Is the flag known
         for (const auto &[fid, flag]: this->_flags) {
             const auto &[_, _, flong, _] = flag.flag;
             if (flong == arg) {ids.push_back(fid); unknown = false; break;}
@@ -131,16 +132,16 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
         arg.erase(0, 1); // Remove '-'
         sarg = arg; // Used for the short checking
 
-        // Is the flag know (Flag have the priority)
+        // Is the flag known (Flag have the priority)
         for (const auto &[fid, flag]: this->_flags) {
             const auto &[fshort, fflag, _, _] = flag.flag;
             if (fflag == arg) {ids.clear(); ids.push_back(fid); isShort = false; unknown = false; break;}
-            else if (size < arg.size() && (pos = sarg.find(fshort)) != std::string::npos) {
+            else if (!fshort.empty() && size < arg.size() && (pos = sarg.find(fshort)) != std::string::npos) {
                 ids.push_back(fid);
                 sarg.erase(pos, fshort.size());
                 size += fshort.size();
                 ++f;
-                if (size == arg.size()) {isShort = true; unknown = false;};
+                if (size == arg.size()) {isShort = true; unknown = false;}
             }
         }
     }
@@ -165,22 +166,29 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
         std::vector<std::string> options;
         const utils::arguments::Flag& flag = this->_flags.at(id);
 
-        // Check if they are allowed in the left over ids of the usage
-        if (!std::any_of(this->_usages.at(usageFull.id).ids.begin(), this->_usages.at(usageFull.id).ids.end(), [&](const auto& p) {return p.first == id;})) {
-            if (alreadyFailed) return false;
-            alreadyFailed = true;
-            std::string s = "The flag isn't allowed in this usage: " + id;
-            if (failsafe) {std::cerr << utils::exception::WarningException(utils::exception::InternalCode::FlagCombinaison, s).formated() << std::endl; return false;}
-            else throw utils::exception::ErrorException(utils::exception::InternalCode::FlagCombinaison, s);
+        // Check if they are allowed by the usage ('default' allow all flags)
+        // Not an error: only this usage is invalid, the other usages can still accept the flag
+        const utils::arguments::Usage& usage = this->_usages.at(usageFull.id);
+        if (usage.name != "default" && !std::any_of(usage.ids.begin(), usage.ids.end(), [&](const std::pair<std::string, bool>& p) {return p.first == id;}))
             return false;
+
+        // Check for redefinition (its option(s) are still consumed below, but it isn't stored)
+        bool redefined = false;
+        for (const auto &[fid, type, _]: usageFull.arguments) {
+            if (!type && fid == id) {
+                if (!alreadyFailed) std::cerr << utils::exception::WarningException(utils::exception::InternalCode::DuplicatedFlag, (isLong ? std::get<2>(flag.flag) : (isShort ? std::get<0>(flag.flag) : std::get<1>(flag.flag)))).formated() << std::endl;
+                alreadyFailed = true;
+                redefined = true;
+                break;
+            }
         }
 
-        // Check in ordered case if the flag is the next one
-        if (usageFull.ordered && usageFull.ids.size() > 0) {
+        // Check in ordered case if the flag is the next one (out of order: this usage is invalid)
+        if (usageFull.ordered && !redefined) {
             std::size_t index = 0;
-            for (index = 0; usageFull.ids.at(index).first != id && !usageFull.ids.at(index).second; ++index);
-            // Fail to setup a mandatory argument before the flag
-            if (usageFull.ids.at(index).first != id) continue;
+            for (index = 0; index < usageFull.ids.size() && usageFull.ids.at(index).first != id && !usageFull.ids.at(index).second; ++index);
+            // Fail to setup a mandatory argument before the flag (or no more place for it)
+            if (index >= usageFull.ids.size() || usageFull.ids.at(index).first != id) return false;
         }
 
         // Check if they can be combined
@@ -204,20 +212,6 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
             return false;
         }
 
-        // Check for redefinition
-        bool redefined = false;
-        for (const auto &[fid, type, _]: usageFull.arguments) {
-            if (!type && fid == id) {
-                if (!alreadyFailed) std::cerr << utils::exception::WarningException(utils::exception::InternalCode::DuplicatedFlag, (isLong ? std::get<2>(flag.flag) : (isShort ? std::get<0>(flag.flag) : std::get<1>(flag.flag)))).formated() << std::endl;
-                alreadyFailed = true;
-                redefined = true;
-                break;
-            }
-        }
-
-        // Exit and dosen't store the redefined one
-        if (redefined) return true;
-
         // Check for the option(s)
         std::optional<std::string> res;
         bool breaked = false;
@@ -231,7 +225,7 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
                 if (failsafe) {std::cerr << utils::exception::WarningException(utils::exception::InternalCode::FlagOptionsNumber, s).formated() << std::endl; return false;}
                 else throw utils::exception::ErrorException(utils::exception::InternalCode::FlagOptionsNumber, s);
                 return false;
-            } else if (!equalFound && j + 1 >= flag.options.size() && flag.unlimited.first && !flag.unlimited.second && argv[i + 1].front() == '-') { // Special case (unlimited can also accept no argument)
+            } else if (!equalFound && j + 1 >= flag.options.size() && flag.unlimited.first && !flag.unlimited.second && argv[i + 1].starts_with('-')) { // Special case (unlimited can also accept no argument)
                 breaked = true;
                 break;
             } else if ((equalFound && (res = check(equal)).has_value()) || (!equalFound && (res = check(argv[i + 1])).has_value())) {
@@ -252,33 +246,34 @@ bool utils::arguments::ArgParser::parseFlags(utils::arguments::ParsedUsageFull& 
             const auto &[_, _, check] = flag.options.back();
             while (true) {
                 if (argv.size() <= i + 1) break; // End of arguments
-                else if (!flag.unlimited.second && argv[i + 1].front() == '-') break; // Other flag
+                else if (!flag.unlimited.second && argv[i + 1].starts_with('-')) break; // Other flag
                 else if (check(argv[i + 1]).has_value()) break; // Non compliance
                 else options.push_back(argv[++i]);
             }
         }
 
+        // Exit and dosen't store the redefined one (its option(s) were consumed)
+        if (redefined) continue;
+
         // Store it
         usageFull.arguments.emplace_back(id, false, options);
-        if (usageFull.ordered) {
-            while (usageFull.ids.front().first != id) usageFull.ids.pop_front();
-            usageFull.ids.pop_front();
-        } else {
-            auto it = std::find_if(usageFull.ids.begin(), usageFull.ids.end(), [&](const auto& p) {return p.first == id;});
-            usageFull.ids.erase(it);
+        auto it = std::find_if(usageFull.ids.begin(), usageFull.ids.end(), [&](const std::pair<std::string, bool>& p) {return p.first == id;});
+        if (it != usageFull.ids.end()) {
+            if (usageFull.ordered) usageFull.ids.erase(usageFull.ids.begin(), it + 1); // the ids before are skipped (not mandatory)
+            else usageFull.ids.erase(it);
         }
     }
 
     return true;
 }
 
-bool utils::arguments::ArgParser::parseOption(utils::arguments::ParsedUsageFull& usageFull, const std::vector<std::string>& argv, const std::size_t i, bool& alreadyFailed, const bool failsafe) const
+_hot _nodiscard bool utils::arguments::ArgParser::parseOption_(utils::arguments::ParsedUsageFull& usageFull, const std::vector<std::string>& argv, const std::size_t i, bool& alreadyFailed, const bool failsafe) const
 {
     const std::string& option = argv[i];
     std::optional<std::string> res;
     std::vector<std::string> validIds;
     std::string id;
-    
+
     // Try to find the possible corresponding ids of the option
     //const bool alreadyFailedLocal = alreadyFailed;
     for (const auto &[oid, opt]: this->_options) {
@@ -310,13 +305,13 @@ bool utils::arguments::ArgParser::parseOption(utils::arguments::ParsedUsageFull&
     // Check if the actual usage allow the id (first valid correspondence win)
     for (const auto &[subId, mandatory]: usageFull.ids) {
         // Is the id in the valid id found
-        if (std::any_of(validIds.begin(), validIds.end(), [&](const auto& vid) {return vid == subId;})) {
+        if (std::any_of(validIds.begin(), validIds.end(), [&](const std::string& vid) {return vid == subId;})) {
             id = subId;
             break;
         }
 
-        // Fail to setup a mandatory argument before the option
-        if (mandatory) return false;
+        // Fail to setup a mandatory argument before the option (only the ordered usages care about the order)
+        if (usageFull.ordered && mandatory) return false;
     }
 
     // Check if no option where found
@@ -324,8 +319,9 @@ bool utils::arguments::ArgParser::parseOption(utils::arguments::ParsedUsageFull&
 
     // Store it
     usageFull.arguments.emplace_back(id, true, std::vector<std::string>{argv[i]});
-    while (usageFull.ids.front().first != id) usageFull.ids.pop_front();
-    usageFull.ids.pop_front();
+    auto it = std::find_if(usageFull.ids.begin(), usageFull.ids.end(), [&](const std::pair<std::string, bool>& p) {return p.first == id;});
+    if (usageFull.ordered) usageFull.ids.erase(usageFull.ids.begin(), it + 1); // the ids before are skipped (not mandatory)
+    else usageFull.ids.erase(it);
 
     return true;
 }
@@ -337,53 +333,44 @@ _hot _nodiscard static std::optional<std::string> get_env(const std::string& nam
     return std::string(value);
 }
 
-void utils::arguments::ArgParser::parseEnvironement(utils::arguments::ParsedUsageFull& usageFull) const noexcept
+_hot void utils::arguments::ArgParser::parseEnvironement_(utils::arguments::ParsedUsageFull& usageFull) const noexcept
 {
-    std::vector<std::string> validIds;
-
-    for (const auto &[id, mandatory]: usageFull.ids) {
+    // iterate on a copy: the ids found are removed from the usage
+    const std::deque<std::pair<std::string, bool>> ids = usageFull.ids;
+    for (const auto &[id, mandatory]: ids) {
         // try to find a corresponding flag
-        if (!this->_flags.contains(id)) {
-            if (mandatory) return;
-            continue;
-        }
+        if (!this->_flags.contains(id)) continue;
 
         // extract flag content and check it's requirement (only 1 arg is allowed)
         const utils::arguments::Flag& flag = this->_flags.at(id);
-        if (flag.options.size() != 1) {
-            if (mandatory) return;
-            continue;
-        }
+        if (flag.options.size() != 1) continue;
         auto [_, _, _, fenv] = flag.flag;
         auto [_, _, check] = flag.options.front();
 
         // check if it's in the env
+        if (fenv.empty()) continue;
         std::optional<std::string> res = get_env(fenv);
-        if (!res.has_value()) {
-            if (mandatory) return;
-            continue;
-        }
+        if (!res.has_value()) continue;
 
-        // check the value
-        if (check(*res).has_value()) {
-            if (mandatory) return;
-            continue;
-        }
+        // check the value (a throwing hook is an invalid value: this function is noexcept)
+        try {
+            if (check(*res).has_value()) continue;
+        } catch (...) {continue;}
 
         // store the value
         usageFull.arguments.emplace_back(id, false, std::vector<std::string>{*res});
-        while (usageFull.ids.front().first != id) usageFull.ids.pop_front();
-        usageFull.ids.pop_front();
+        auto it = std::find_if(usageFull.ids.begin(), usageFull.ids.end(), [&](const std::pair<std::string, bool>& p) {return p.first == id;});
+        if (it != usageFull.ids.end()) usageFull.ids.erase(it);
     }
 }
 
-_nodiscard utils::arguments::ParsedUsages utils::arguments::ArgParser::parse(const int argc, const char *const argv[], const bool failsafe) const
+_hot _nodiscard utils::arguments::ParsedUsages utils::arguments::ArgParser::parse(const int argc, const char *const argv[], const bool failsafe) const
 {
     std::vector<std::string> args(argv, argv + argc);
     return this->parse(args, failsafe);
 }
 
-_nodiscard utils::arguments::ParsedUsages utils::arguments::ArgParser::parse(const std::vector<std::string>& argv, const bool failsafe) const
+_hot _nodiscard utils::arguments::ParsedUsages utils::arguments::ArgParser::parse(const std::vector<std::string>& argv, const bool failsafe) const
 {
     std::vector<utils::arguments::ParsedUsageFull> usagesFull;
     utils::arguments::ParsedUsages usages;
@@ -400,8 +387,12 @@ _nodiscard utils::arguments::ParsedUsages utils::arguments::ArgParser::parse(con
 
     // Build the full usages
     for (const auto &[id, usage]: this->_usages) {
-        usagesFull.emplace_back(id, true, usage.ordered,
-            std::deque<std::pair<std::string, bool>>(usage.ids.begin(), usage.ids.end()),
+        std::deque<std::pair<std::string, bool>> ids(usage.ids.begin(), usage.ids.end());
+        if (usage.name == "default") { // allow every flag & option (not mandatory)
+            for (const auto &[fid, _]: this->_flags) ids.emplace_back(fid, false);
+            for (const auto &[oid, _]: this->_options) ids.emplace_back(oid, false);
+        }
+        usagesFull.emplace_back(id, true, usage.ordered, std::move(ids),
             std::vector<std::tuple<std::string, bool, std::vector<std::string>>>{}
         );
     }
@@ -418,12 +409,12 @@ _nodiscard utils::arguments::ParsedUsages utils::arguments::ArgParser::parse(con
 
             // Flag dectection
             if (arg.size() > 0 && arg.front() == '-') {
-                usageFull.valid &= this->parseFlags(usageFull, argv, subIndex, failed, failsafe);
+                usageFull.valid &= this->parseFlags_(usageFull, argv, subIndex, failed, failsafe);
             }
 
             // Option
             else {
-                usageFull.valid &= this->parseOption(usageFull, argv, subIndex, failed, failsafe);
+                usageFull.valid &= this->parseOption_(usageFull, argv, subIndex, failed, failsafe);
             }
 
             i = std::max(i, subIndex);
@@ -431,20 +422,20 @@ _nodiscard utils::arguments::ParsedUsages utils::arguments::ArgParser::parse(con
 
         // Remove invalid usage
         usagesFull.erase(
-            std::remove_if(usagesFull.begin(), usagesFull.end(), [&](const auto& usageFull) {return !usageFull.valid;}),
+            std::remove_if(usagesFull.begin(), usagesFull.end(), [&](const utils::arguments::ParsedUsageFull& usageFull) {return !usageFull.valid;}),
             usagesFull.end()
         );
     }
 
     // try to find the environement var still not found and asked (failsafe, no warning or error)
     for (utils::arguments::ParsedUsageFull& usageFull: usagesFull)
-        this->parseEnvironement(usageFull);
+        this->parseEnvironement_(usageFull);
 
     // Remove thoses who aren't fully done (still mandatory thing to parse)
     usagesFull.erase(
         std::remove_if(usagesFull.begin(), usagesFull.end(),
-            [&](const auto& usageFull) {
-                return std::any_of(usageFull.ids.begin(), usageFull.ids.end(), [&](const auto& p) {return p.second;});
+            [&](const utils::arguments::ParsedUsageFull& usageFull) {
+                return std::any_of(usageFull.ids.begin(), usageFull.ids.end(), [&](const std::pair<std::string, bool>& p) {return p.second;});
             }
         ),
         usagesFull.end()
@@ -459,7 +450,7 @@ _nodiscard utils::arguments::ParsedUsages utils::arguments::ArgParser::parse(con
         throw utils::exception::ErrorException(utils::exception::InternalCode::NoCompliantUsage);
 
     // Sort the usage from the one who match the most option to the least
-    std::stable_sort(usages.begin(), usages.end(), [](const ParsedUsage& lhs, const ParsedUsage& rhs) {return lhs.arguments.size() > rhs.arguments.size();});
+    std::stable_sort(usages.begin(), usages.end(), [](const utils::arguments::ParsedUsage& lhs, const utils::arguments::ParsedUsage& rhs) {return lhs.arguments.size() > rhs.arguments.size();});
 
     return usages;
 }

@@ -31,6 +31,7 @@ File Description:
     #include <unordered_set>                        // std::unordered_set
     #include <cstddef>                              // std::size_t
     #include <cstdint>                              // std::uint32_t
+    #include <utility>                              // std::move
     #include <vector>                               // std::vector
 
 namespace utils::encapsulation { // namespace start
@@ -58,8 +59,8 @@ class Poll: private utils::security::observer::Observer<"Poll"> {
 
         // ------------ Function ---------- //
         _hot _nodiscard inline std::size_t size(void) const {return this->_registered.size();};
-        _hot _nodiscard inline bool contains(int fd) const {return this->_registered.contains(fd);};
-        _cold _nodiscard inline int getFd(void) const {return this->_fd;};
+        _hot _nodiscard inline bool contains(int fd) const  {return this->_registered.contains(fd);};
+        _cold _nodiscard inline int getFd(void) const       {return this->_fd;};
 
         // ------------ Operator ---------- //
         Poll& operator=(const Poll& other) = delete;

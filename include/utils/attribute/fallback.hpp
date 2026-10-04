@@ -3,7 +3,7 @@ Edition:
 ##  @date 14/08/2026 by @author Tsukini
 
 File Name:
-##  @file Attribute-fallback.hpp
+##  @file fallback.hpp
 
 File Description:
 ##  Different attribute used for optimisation & other thing
@@ -19,6 +19,7 @@ File Description:
     /* attributes */
     #define _nodiscard
     #define _noinline
+    #define _noreturn
     #define _unused
     #define _hidden
     #define _ctor

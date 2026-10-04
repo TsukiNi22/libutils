@@ -21,6 +21,8 @@ File Description:
 #include "tools/TempDir.hpp"
 #include <gtest/gtest.h>
 #include <unistd.h>
+#include <fcntl.h>
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <algorithm>
@@ -45,7 +47,7 @@ static std::function<bool(char&)> script(const std::string& s)
     };
 }
 
-class CliTest : public ::testing::Test {
+class CliTest: public ::testing::Test {
     protected:
         tests::tools::TempDir _home;
         std::unique_ptr<tests::tools::ScopedEnv> _env;
@@ -406,7 +408,7 @@ TEST_F(CliTest, GetCHookException) {
     this->_cli->setGetCHook([](char&) -> bool {throw std::runtime_error("getc");});
     testing::internal::CaptureStderr();
     testing::internal::CaptureStdout();
-    std::thread killer([&] {std::this_thread::sleep_for(std::chrono::milliseconds(10)); this->_cli->kill();});
+    std::thread killer([&](void) {std::this_thread::sleep_for(std::chrono::milliseconds(10)); this->_cli->kill();});
     (void)this->_cli->start();
     killer.join();
     (void)testing::internal::GetCapturedStdout();
@@ -513,7 +515,7 @@ TEST_F(CliTest, FlagsEdition) {
     this->_cli->subFlags(Flag::TRIM);
     EXPECT_EQ(this->_cli->getFlags(), static_cast<std::uint32_t>(Flag::LOGIC | Flag::HINT));
     this->_cli->resetFlags();
-    EXPECT_EQ(this->_cli->getFlags(), utils::cli::Flags::DEFAULT);
+    EXPECT_EQ(this->_cli->getFlags(), utils::cli::flags::DEFAULT);
 }
 
 /* history */
@@ -542,8 +544,8 @@ TEST_F(CliTest, NotPersistentByDefault) {
 /* middlewares */
 TEST_F(CliTest, Middlewares) {
     std::vector<std::string> events;
-    utils::pool::Middleware<void> cliStart = [&] {events.push_back("cli:start");};
-    utils::pool::Middleware<void> cliEnd = [&] {events.push_back("cli:end");};
+    utils::pool::Middleware<void> cliStart = [&](void) {events.push_back("cli:start");};
+    utils::pool::Middleware<void> cliEnd = [&](void) {events.push_back("cli:end");};
     utils::pool::Middleware<const std::string&> cmdBefore = [&](const std::string& c) {events.push_back("cmd:" + c);};
     utils::pool::Middleware<const std::string&> parser = [&](const std::string& i) {events.push_back("parse:" + i);};
     this->_cli->cliMiddlewares.addBefore(cliStart);
@@ -564,7 +566,7 @@ TEST_F(CliTest, ErrorMiddlewares) {
 
 TEST_F(CliTest, ResetMiddlewares) {
     int count = 0;
-    utils::pool::Middleware<void> inc = [&] {++count;};
+    utils::pool::Middleware<void> inc = [&](void) {++count;};
     this->_cli->cliMiddlewares.addBefore(inc);
     this->_cli->resetMiddlewares();
     (void)this->run({"a"});
@@ -585,4 +587,182 @@ TEST(CliCode, Strcode) {
     EXPECT_EQ(cli.strcode(130), "Callback exception");
     EXPECT_EQ(cli.strcode(255), "Undefined error");
     EXPECT_EQ(cli.strcode(77), "No errors are associated with this code");
+}
+
+/* -------------------------------- edge cases -------------------------------- */
+TEST_F(CliTest, LogicMixed) {
+    this->_cli->addFlags(Flag::LOGIC);
+    (void)this->run({"fail && a || b"}); // bash: b is run
+    EXPECT_EQ(this->_calls, (std::vector<std::string>{"fail", "b"}));
+    this->_calls.clear();
+    (void)this->run({"a || fail && b"}); // bash: a then b
+    EXPECT_EQ(this->_calls, (std::vector<std::string>{"a", "b"}));
+}
+
+TEST_F(CliTest, CommandEditingCommands) {
+    this->_cli->setCommand("register", [this](const utils::cli::Cli&, const std::string&) {
+        this->_cli->setCommand<true>("new", [this](const utils::cli::Cli&, const std::string&) {this->_calls.push_back("new");});
+    });
+    (void)this->run({"register", "new"});
+    EXPECT_EQ(this->_calls, (std::vector<std::string>{"new"}));
+}
+
+TEST_F(CliTest, HookUsingTheCli) {
+    std::size_t history = 0;
+    std::shared_ptr<std::size_t> pos = std::make_shared<std::size_t>(0);
+    std::string typed = "a\n";
+    testing::internal::CaptureStdout();
+    this->_cli->setGetCHook([&, pos, typed](char& c) {
+        history = this->_cli->getHistory().size();
+        c = (*pos < typed.size()) ? typed[(*pos)++] : '\x04';
+        return true;
+    });
+    (void)this->_cli->start();
+    (void)testing::internal::GetCapturedStdout();
+    EXPECT_EQ(this->_calls, (std::vector<std::string>{"a"}));
+    EXPECT_EQ(history, 1u);
+}
+
+TEST_F(CliTest, ThreadExceptionDoesNotTerminate) {
+    this->_cli->setFlags(Flag::NO_TTY | Flag::THREAD);
+    testing::internal::CaptureStdout();
+    testing::internal::CaptureStderr();
+    std::optional<std::thread> thread = this->_cli->start(std::vector<std::string>{"fail"});
+    ASSERT_TRUE(thread.has_value());
+    thread->join();
+    (void)testing::internal::GetCapturedStderr();
+    (void)testing::internal::GetCapturedStdout();
+    EXPECT_FALSE(this->_cli->isRunning());
+}
+
+TEST_F(CliTest, PromptMiddlewareErrorCode) {
+    this->_cli->addFlags(Flag::PROMPT);
+    this->_cli->promptMiddlewares.addBefore([](void) {throw std::runtime_error("mw");});
+    (void)this->run({"a"});
+    EXPECT_EQ(this->_cli->getCode(), 3);
+}
+
+TEST_F(CliTest, CommandMiddlewareErrorCode) {
+    this->_cli->commandMiddlewares.addBefore([](const std::string&) {throw std::runtime_error("mw");});
+    (void)this->run({"a"});
+    EXPECT_EQ(this->_cli->getCode(), 3);
+}
+
+TEST_F(CliTest, CompletionWithoutCommand) {
+    this->_cli->addFlags(Flag::AUTO_COMPLETION);
+    this->_cli->clearCommands();
+    std::vector<std::string> parsed;
+    this->_cli->parserMiddlewares.addBefore([&](const std::string& input) {parsed.push_back(input);});
+    (void)this->run({}, "x\t\n");
+    EXPECT_EQ(parsed, (std::vector<std::string>{"x"}));
+}
+
+TEST_F(CliTest, DestructionStopRunningThread) {
+    this->_cli->setFlags(Flag::NO_TTY | Flag::THREAD | Flag::DETACHED);
+    this->_cli->setGetCHook([](char&) {return false;}); // never any input
+    testing::internal::CaptureStdout();
+    (void)this->_cli->start();
+    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    this->_cli.reset();
+    (void)testing::internal::GetCapturedStdout();
+    SUCCEED();
+}
+
+TEST(CliGetCHook, EndOfFile) {
+    // stdin at EOF
+    int fds[2];
+    ASSERT_EQ(::pipe(fds), 0);
+    ::close(fds[1]);
+    int saved = ::dup(STDIN_FILENO);
+    ::dup2(fds[0], STDIN_FILENO);
+    char c = 'x';
+    bool res = utils::cli::defaultGetCHook(c);
+    ::dup2(saved, STDIN_FILENO);
+    ::close(saved);
+    ::close(fds[0]);
+    EXPECT_TRUE(res);
+    EXPECT_EQ(c, 0);
+}
+
+/* hooks */
+// The prompt is only displayed on a tty: run the cli with stdout on a pseudo-terminal, return what was displayed
+static std::string runOnPty(utils::cli::Cli& cli, const std::vector<std::string>& inputs)
+{
+    int master = ::posix_openpt(O_RDWR | O_NOCTTY);
+    if (master == -1 || ::grantpt(master) != 0 || ::unlockpt(master) != 0) return "[pty error]";
+    int slave = ::open(::ptsname(master), O_RDWR | O_NOCTTY);
+    if (slave == -1) return "[pty error]";
+    std::cout.flush();
+    int saved = ::dup(STDOUT_FILENO);
+    ::dup2(slave, STDOUT_FILENO);
+    (void)cli.start(inputs);
+    std::cout.flush();
+    ::dup2(saved, STDOUT_FILENO);
+    ::close(saved);
+    ::close(slave);
+
+    std::string out;
+    char buf[256];
+    ::fcntl(master, F_SETFL, O_NONBLOCK);
+    for (ssize_t n = 0; (n = ::read(master, buf, sizeof(buf))) > 0;) out.append(buf, static_cast<std::size_t>(n));
+    ::close(master);
+    return out;
+}
+
+#define CLI_ISOLATED(...) EXPECT_EXIT({::alarm(10); __VA_ARGS__; std::exit(::testing::Test::HasFailure() ? 1 : 0);}, ::testing::ExitedWithCode(0), "")
+
+TEST_F(CliTest, CustomPromptHook) {
+    CLI_ISOLATED({
+        std::vector<std::uint8_t> codes;
+        this->_cli->setFlags(Flag::NO_TTY | Flag::CATCH | Flag::TRIM | Flag::PROMPT);
+        this->_cli->setPromptHook([&codes](const utils::cli::Cli&, std::uint8_t code) {codes.push_back(code); std::cout << "$ " << std::flush;});
+        std::string out = runOnPty(*this->_cli, {"record x"});
+        EXPECT_NE(out.find("$ "), std::string::npos) << out;
+        EXPECT_EQ(out.find("> "), std::string::npos) << out;
+        EXPECT_FALSE(codes.empty());
+    });
+}
+
+TEST_F(CliTest, ResetPromptHook) {
+    CLI_ISOLATED({
+        this->_cli->setFlags(Flag::NO_TTY | Flag::CATCH | Flag::TRIM | Flag::PROMPT);
+        this->_cli->setPromptHook([](const utils::cli::Cli&, std::uint8_t) {std::cout << "$ " << std::flush;});
+        this->_cli->resetPromptHook();
+        std::string out = runOnPty(*this->_cli, {"record x"});
+        EXPECT_NE(out.find("> "), std::string::npos) << out; // defaultPromptHook
+        EXPECT_EQ(out.find("$ "), std::string::npos) << out;
+    });
+}
+
+TEST_F(CliTest, DefaultPromptHook) {
+    testing::internal::CaptureStdout();
+    utils::cli::defaultPromptHook(*this->_cli, 0);
+    EXPECT_EQ(testing::internal::GetCapturedStdout(), "> ");
+}
+
+TEST_F(CliTest, ResetParserHook) {
+    std::size_t called = 0;
+    this->_cli->setParserHook([&called](const std::string& input, bool trim, bool logic, bool parse) {
+        ++called;
+        return utils::cli::defaultParserHook(input, trim, logic, parse);
+    });
+    (void)this->run({"record a"});
+    EXPECT_EQ(called, 1u);
+    this->_cli->resetParserHook();
+    (void)this->run({"record b"});
+    EXPECT_EQ(called, 1u); // custom hook no more used
+    ASSERT_EQ(this->_calls.size(), 2u);
+}
+
+TEST_F(CliTest, ResetHooks) {
+    CLI_ISOLATED({
+        bool customPrompt = false;
+        this->_cli->setFlags(Flag::NO_TTY | Flag::CATCH | Flag::TRIM | Flag::PROMPT);
+        this->_cli->setPromptHook([&customPrompt](const utils::cli::Cli&, std::uint8_t) {customPrompt = true;});
+        this->_cli->resetHooks();
+        this->_cli->setGetCHook(script("")); // the default one reads the real stdin
+        std::string out = runOnPty(*this->_cli, {"record x"});
+        EXPECT_FALSE(customPrompt);
+        EXPECT_NE(out.find("> "), std::string::npos) << out;
+    });
 }

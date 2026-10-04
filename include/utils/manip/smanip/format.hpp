@@ -11,21 +11,20 @@ Edition:
 ##  @date 15/09/2026 by @author Tsukini
 
 File Name:
-##  @file Format.hpp
+##  @file format.hpp
 
 File Description:
-##  Definition of the utils::iomanip::format & explication
+##  Definition of the utils::smanip::format & explication
 \**************************************************************/
 
 #ifndef FORMAT_H
     #define FORMAT_H
-    
+
     //----------------------------------------------------------------//
     /* INCLUDE */
 
     /* type */
-    #include "../../attribute/Attribute.hpp"    // _migration
-    #include <string>                           // std::string
+    #include <string>   // std::string
 
 namespace utils::smanip { // namespace start
 //----------------------------------------------------------------//
@@ -77,11 +76,4 @@ not for now:
 */
 
 } // namespace end
-
-//----------------------------------------------------------------//
-/* MIGRATION */
-namespace utils::iomanip {
-    _migration(3, 0, 0) inline std::string format(const std::string& s) {return utils::smanip::format(s);};
-}
-
 #endif /* FORMAT_H */

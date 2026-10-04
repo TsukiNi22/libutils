@@ -69,11 +69,13 @@ set(SRC
     security/encryption/RSAKey.cpp
     security/encryption/AESKey.cpp
     security/encryption/CommonRSAKey.cpp
+    security/encryption/Key.cpp
 
     # Security (sub-part: observer)
     security/observer/MemoryLeakNotifer.cpp
     security/observer/Observer.cpp
     security/observer/UnsafeObserver.cpp
+    security/observer/ANotifier.cpp
 )
 add_executable(${TARGET} ${SRC})
 

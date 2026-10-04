@@ -11,26 +11,28 @@ Edition:
 ##  @date 27/08/2026 by @author Tsukini
 
 File Name:
-##  @file BidirectionalLookupTable.hpp
+##  @file BidirectionalLookupTable_t.hpp
 
 File Description:
 ##  Class used for a bidirectional lookup table specialized for one type
 \**************************************************************/
 
-#ifndef BIDIRECTIONALLOOKUPTABLE_T_H
-    #define BIDIRECTIONALLOOKUPTABLE_T_H
+#ifndef BIDIRECTIONALLOOKUPTABLET_H
+    #define BIDIRECTIONALLOOKUPTABLET_H
 
     //----------------------------------------------------------------//
     /* INCLUDE */
 
     /* type */
-    #include "../../attribute/Attribute.hpp"                // _nodiscard, _unused
+    #include "../../attribute/Attribute.hpp"                // _cold, _hot, _nodiscard, _unlikely
     #include "../../security/observer/Observer.hpp"         // utils::security::observer::Observer
     #include "../../exception/basic/WarningException.hpp"   // utils::exception::WarningException
     #include "../../exception/basic/ErrorException.hpp"     // utils::exception::ErrorException
     #include "../../exception/ExceptionDefine.hpp"          // utils::exception::* (Type)
     #include "../../type/Freezable.hpp"                     // utils::type::Freezable
+    #include "BidirectionalLookupTable_t-t.hpp"             // utils::type::BidirectionalLookupTable<L, R, ...> (primary template)
     #include <unordered_map>                                // std::unordered_map
+    #include <functional>                                   // std::hash, std::equal_to
     #include <iostream>                                     // std::cerr, std::endl
     #include <vector>                                       // std::vector
 
@@ -55,30 +57,37 @@ class BidirectionalLookupTable<T, T, Hash, Hash, Equal, Equal>: public utils::ty
 
     public:
         // ------------ Function ---------- //
-        void clear(void)
+        _cold void clear(void)
         {
-            this->requireFrozen();
+            this->requireUnfrozen();
             this->_table.clear();
         };
-        void removeElement(const T& element) noexcept
+        _cold void removeElement(const T& element) // throw if frozen
         {
-            this->requireFrozen();
-            if (!this->_table.contains(element)) {
+            this->requireUnfrozen();
+            auto it = this->_table.find(element);
+            if (it == this->_table.end()) {
                 utils::exception::WarningException e(utils::exception::InternalCode::UnknownKey);
                 std::cerr << e.formated() << std::endl;
                 return;
             }
-            this->_table.erase(element);
+            const T other = it->second;
+            this->_table.erase(it);
+            this->_table.erase(other); // remove both side of the link
         };
-        void removeElements(const std::vector<T>& elements) noexcept {for (const T& element: elements) this->removeElement(element);};
-        void addElement(const T& left, const T& right) {this->setElement(left, right);};
+        _cold inline void removeElements(const std::vector<T>& elements) {for (const T& element: elements) this->removeElement(element);};
+        _cold inline void addElement(const T& left, const T& right)      {this->setElement(left, right);};
         template<bool force = false> // Can't override an exiting one by default, throw of error
-        void setElement(const T& left, const T& right)
+        _cold void setElement(const T& left, const T& right)
         {
-            this->requireFrozen();
+            this->requireUnfrozen();
             if constexpr (!force) {
                 if (this->_table.contains(left) || this->_table.contains(right))
                     throw utils::exception::ErrorException(utils::exception::InternalCode::Override, "The override is disabled for the BidirectionalLookupTable");
+            } else {
+                // Remove the old pairs to not keep a dangling reverse link
+                if (auto it = this->_table.find(left); it != this->_table.end()) {const T other = it->second; this->_table.erase(it); this->_table.erase(other);}
+                if (auto it = this->_table.find(right); it != this->_table.end()) {const T other = it->second; this->_table.erase(it); this->_table.erase(other);}
             }
             this->_table[left] = right;
             this->_table[right] = left;
@@ -87,12 +96,13 @@ class BidirectionalLookupTable<T, T, Hash, Hash, Equal, Equal>: public utils::ty
         // ------------ Operator ---------- //
         BidirectionalLookupTable& operator=(const BidirectionalLookupTable& other) = delete;
         BidirectionalLookupTable& operator=(BidirectionalLookupTable&& other) = default;
-        const T& operator[](const T& element) const
+        _hot _nodiscard const T& operator[](const T& element) const
         {
-            if (!this->_table.contains(element))
+            if (!this->_table.contains(element)) _unlikely {
                 throw utils::exception::ErrorException(utils::exception::InternalCode::UnknownKey);
+            }
             return this->_table.at(element);
-        }
+        };
 
         // ---------- Constructor --------- //
         BidirectionalLookupTable() = default;
@@ -104,4 +114,4 @@ class BidirectionalLookupTable<T, T, Hash, Hash, Equal, Equal>: public utils::ty
 };
 
 } // namespace end
-#endif /* BIDIRECTIONALLOOKUPTABLE_T_H */
+#endif /* BIDIRECTIONALLOOKUPTABLET_H */

@@ -80,7 +80,7 @@ TEST(C2dmp, RedirectionMatchesImplementations) {
     const std::vector<std::pair<std::string, std::string>> pairs = {
         {"hello", "hello"}, {"hello", "world"}, {"abc", "abcdef"}, {"abcdef", "abc"}, {"Test", "tset"}
     };
-    for (const auto& [a, b]: pairs) {
+    for (const auto &[a, b]: pairs) {
         EXPECT_FLOAT_EQ((c2dmp<3>(a, b)), (c2dmp_optimized<3>(a, b))) << a << " / " << b;
         EXPECT_FLOAT_EQ((c2dmp<3, std::uint_fast8_t, true>(a, b)), (c2dmp_foptimized<3>(a, b))) << a << " / " << b;
     }
@@ -92,7 +92,7 @@ TEST(C2dmp, FullVersionEqualOnSameLength) {
 }
 
 TEST(C2dmp, PrefixDepthVariants) {
-    for (const auto& [a, b]: std::vector<std::pair<std::string, std::string>>{{"hello", "help"}, {"exit", "exot"}}) {
+    for (const auto &[a, b]: std::vector<std::pair<std::string, std::string>>{{"hello", "help"}, {"exit", "exot"}}) {
         EXPECT_LE((c2dmp<1>(a, a)), (c2dmp<1>(a, b)));
         EXPECT_LE((c2dmp<5>(a, a)), (c2dmp<5>(a, b)));
     }
@@ -104,7 +104,7 @@ TEST(C2dmp, SimplifiedMatchesOptimized) {
     const std::vector<std::pair<std::string, std::string>> pairs = {
         {"hello", "hello"}, {"hello", "world"}, {"abc", "abcdef"}, {"abcdef", "abc"}, {"Test", "tset"}, {"exit", "exot"}
     };
-    for (const auto& [a, b]: pairs) {
+    for (const auto &[a, b]: pairs) {
         EXPECT_FLOAT_EQ(utils::algorithms::c2dmp::c2dmp_simplified(a, b), c2dmp_optimized(a, b)) << a << " / " << b;
         EXPECT_FLOAT_EQ(utils::algorithms::c2dmp::c2dmp_fsimplified(a, b), c2dmp_foptimized(a, b)) << a << " / " << b;
     }

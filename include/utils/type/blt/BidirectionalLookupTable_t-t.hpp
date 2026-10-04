@@ -11,26 +11,27 @@ Edition:
 ##  @date 27/08/2026 by @author Tsukini
 
 File Name:
-##  @file BidirectionalLookupTable.hpp
+##  @file BidirectionalLookupTable_t-t.hpp
 
 File Description:
 ##  Class used for a bidirectional lookup table
 \**************************************************************/
 
-#ifndef BIDIRECTIONALLOOKUPTABLE_T_T_H
-    #define BIDIRECTIONALLOOKUPTABLE_T_T_H
+#ifndef BIDIRECTIONALLOOKUPTABLETT_H
+    #define BIDIRECTIONALLOOKUPTABLETT_H
 
     //----------------------------------------------------------------//
     /* INCLUDE */
 
     /* type */
-    #include "../../attribute/Attribute.hpp"                // _nodiscard, _unused
+    #include "../../attribute/Attribute.hpp"                // _cold, _hot, _nodiscard, _unlikely
     #include "../../security/observer/Observer.hpp"         // utils::security::observer::Observer
     #include "../../exception/basic/WarningException.hpp"   // utils::exception::WarningException
     #include "../../exception/basic/ErrorException.hpp"     // utils::exception::ErrorException
     #include "../../exception/ExceptionDefine.hpp"          // utils::exception::* (Type)
     #include "../../type/Freezable.hpp"                     // utils::type::Freezable
     #include <unordered_map>                                // std::unordered_map
+    #include <functional>                                   // std::hash, std::equal_to
     #include <iostream>                                     // std::cerr, std::endl
     #include <vector>                                       // std::vector
 
@@ -53,15 +54,15 @@ class BidirectionalLookupTable: public utils::type::Freezable, private utils::se
 
     public:
         // ------------ Function ---------- //
-        void clear(void)
+        _cold void clear(void)
         {
-            this->requireFrozen();
+            this->requireUnfrozen();
             this->_left.clear();
             this->_right.clear();
         };
-        void removeElement(const L& left)
+        _cold void removeElement(const L& left)
         {
-            this->requireFrozen();
+            this->requireUnfrozen();
             if (!this->_left.contains(left)) {
                 utils::exception::WarningException e(utils::exception::InternalCode::UnknownKey);
                 std::cerr << e.formated() << std::endl;
@@ -70,10 +71,10 @@ class BidirectionalLookupTable: public utils::type::Freezable, private utils::se
             this->_right.erase(this->_left[left]);
             this->_left.erase(left);
         };
-        void removeElements(const std::vector<L>& lefts) {for (const L& left: lefts) this->removeElement(left);};
-        void removeElement(const R& right)
+        _cold inline void removeElements(const std::vector<L>& lefts) {for (const L& left: lefts) this->removeElement(left);};
+        _cold void removeElement(const R& right)
         {
-            this->requireFrozen();
+            this->requireUnfrozen();
             if (!this->_right.contains(right)) {
                 utils::exception::WarningException e(utils::exception::InternalCode::UnknownKey);
                 std::cerr << e.formated() << std::endl;
@@ -82,47 +83,44 @@ class BidirectionalLookupTable: public utils::type::Freezable, private utils::se
             this->_left.erase(this->_right[right]);
             this->_right.erase(right);
         };
-        void removeElements(const std::vector<R>& rights) {for (const R& right: rights) this->removeElement(right);};
-        void addElement(const L& left, const R& right) {this->setElement(left, right);};
-        void addElement(const R& right, const L& left) {this->setElement(right, left);};
+        _cold inline void removeElements(const std::vector<R>& rights) {for (const R& right: rights) this->removeElement(right);};
+        _cold inline void addElement(const L& left, const R& right)    {this->setElement(left, right);};
+        _cold inline void addElement(const R& right, const L& left)    {this->setElement(right, left);};
         template<bool force = false> // Can't override an exiting one by default, throw of error
-        void setElement(const L& left, const R& right)
+        _cold void setElement(const L& left, const R& right)
         {
-            this->requireFrozen();
+            this->requireUnfrozen();
             if constexpr (!force) {
                 if (this->_left.contains(left) || this->_right.contains(right))
                     throw utils::exception::ErrorException(utils::exception::InternalCode::Override, "The override is disabled for the BidirectionalLookupTable");
+            } else {
+                // Remove the old pairs to not keep a dangling reverse link
+                if (auto it = this->_left.find(left); it != this->_left.end()) {this->_right.erase(it->second); this->_left.erase(it);}
+                if (auto it = this->_right.find(right); it != this->_right.end()) {this->_left.erase(it->second); this->_right.erase(it);}
             }
             this->_left[left] = right;
             this->_right[right] = left;
         };
         template<bool force = false> // Can't override an exiting one by default, throw of error
-        void setElement(const R& right, const L& left)
-        {
-            this->requireFrozen();
-            if constexpr (!force) {
-                if (this->_right.contains(right) || this->_left.contains(left))
-                    throw utils::exception::ErrorException(utils::exception::InternalCode::Override, "The override is disabled for the BidirectionalLookupTable");
-            }
-            this->_right[right] = left;
-            this->_left[left] = right;
-        };
+        _cold inline void setElement(const R& right, const L& left) {this->template setElement<force>(left, right);};
 
         // ------------ Operator ---------- //
         BidirectionalLookupTable& operator=(const BidirectionalLookupTable& other) = delete;
         BidirectionalLookupTable& operator=(BidirectionalLookupTable&& other) = default;
-        const R& operator[](const L& left) const
+        _hot _nodiscard const R& operator[](const L& left) const
         {
-            if (!this->_left.contains(left))
+            if (!this->_left.contains(left)) _unlikely {
                 throw utils::exception::ErrorException(utils::exception::InternalCode::UnknownKey);
+            }
             return this->_left.at(left);
-        }
-        const L& operator[](const R& right) const
+        };
+        _hot _nodiscard const L& operator[](const R& right) const
         {
-            if (!this->_right.contains(right))
+            if (!this->_right.contains(right)) _unlikely {
                 throw utils::exception::ErrorException(utils::exception::InternalCode::UnknownKey);
+            }
             return this->_right.at(right);
-        }
+        };
 
         // ---------- Constructor --------- //
         BidirectionalLookupTable() = default;
@@ -134,4 +132,4 @@ class BidirectionalLookupTable: public utils::type::Freezable, private utils::se
 };
 
 } // namespace end
-#endif /* BIDIRECTIONALLOOKUPTABLE_T_T_H */
+#endif /* BIDIRECTIONALLOOKUPTABLETT_H */

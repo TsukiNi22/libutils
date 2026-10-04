@@ -44,7 +44,7 @@ static void expectNear(const M& m, std::size_t rows, std::size_t cols, const std
 }
 
 template<typename M>
-class MatrixTest : public ::testing::Test {};
+class MatrixTest: public ::testing::Test {};
 using MatrixTypes = ::testing::Types<utils::type::Matrix<double>, utils::type::OMatrix<double>>;
 TYPED_TEST_SUITE(MatrixTest, MatrixTypes);
 
@@ -350,8 +350,8 @@ TEST(OMatrix, ConvertingConstructor) {
 
 TEST(OMatrix, SameResultAsMatrix) {
     std::vector<double> values = {4, 7, 2, 3, 6, 1, 2, 5, 3};
-    auto m = make<utils::type::Matrix<double>>(3, 3, values);
-    auto o = make<utils::type::OMatrix<double>>(3, 3, values);
+    utils::type::Matrix<double> m = make<utils::type::Matrix<double>>(3, 3, values);
+    utils::type::OMatrix<double> o = make<utils::type::OMatrix<double>>(3, 3, values);
     EXPECT_NEAR(m.det(), o.det(), 1e-9);
     m.invert();
     o.invert();

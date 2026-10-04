@@ -24,7 +24,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"               // nodicard, _unused
+    #include "../attribute/Attribute.hpp"               // _cold, _hot, _nodiscard, _unused
     #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::* (Type)
@@ -51,7 +51,7 @@ std::optional<std::string> defaultDoubleParsingHook(const std::string& option); 
 std::optional<std::string> defaultFileParsingHook(const std::string& option);      // Check for file reading (only!)
 std::optional<std::string> defaultDirectoryParsingHook(const std::string& option); // Check for directory reading (only!)
 std::optional<std::string> defaultWritableParsingHook(const std::string& option);  // Check if the path/file is readable & writable (only!)
-inline std::optional<std::string> defaultTrueParsingHook(_unused const std::string&) {return std::nullopt;};
+_hot _nodiscard inline std::optional<std::string> defaultTrueParsingHook(_unused const std::string&) {return std::nullopt;};
 
 //----------------------------------------------------------------//
 /* CLASS */
@@ -68,9 +68,9 @@ class ArgParser: private utils::security::observer::Observer<"ArgParser"> {
 
         // ---------- Pre-Function -------- //
         /* sub parsing */
-        bool parseFlags(utils::arguments::ParsedUsageFull& usagesFull, const std::vector<std::string>& argv, std::size_t& i, bool& alreadyFailed, const bool failsafe = false) const;
-        bool parseOption(utils::arguments::ParsedUsageFull& usagesFull, const std::vector<std::string>& argv, const std::size_t i, bool& alreadyFailed, const bool failsafe = false) const;
-        void parseEnvironement(utils::arguments::ParsedUsageFull& usagesFull) const noexcept;
+        bool parseFlags_(utils::arguments::ParsedUsageFull& usagesFull, const std::vector<std::string>& argv, std::size_t& i, bool& alreadyFailed, const bool failsafe = false) const;
+        bool parseOption_(utils::arguments::ParsedUsageFull& usagesFull, const std::vector<std::string>& argv, const std::size_t i, bool& alreadyFailed, const bool failsafe = false) const;
+        void parseEnvironement_(utils::arguments::ParsedUsageFull& usagesFull) const noexcept;
 
     public:
         // ---------- Pre-Function -------- //
@@ -91,9 +91,9 @@ class ArgParser: private utils::security::observer::Observer<"ArgParser"> {
 
         // ------------ Function ---------- //
         /* setup */
-        void setDefaultUsage(void) {this->_usages["default"] = utils::arguments::Usage{"default", false, {}, "Default usage with all flag(s) & option(s)"};};
+        _cold inline void setDefaultUsage(void) {this->_usages["default"] = utils::arguments::Usage{"default", false, {}, "Default usage with all flag(s) & option(s)"};};
         template<bool force = false> // Can't override an exiting one by default, throw of error
-        void setUsage(const std::string& id, const std::string& name, const bool ordered, const std::vector<std::pair<std::string, bool>>& ids, const std::string& description = "[None]")
+        _cold void setUsage(const std::string& id, const std::string& name, const bool ordered, const std::vector<std::pair<std::string, bool>>& ids, const std::string& description = "[None]")
         {
             if constexpr (!force) {
                 if (this->_usages.contains(id))
@@ -101,9 +101,9 @@ class ArgParser: private utils::security::observer::Observer<"ArgParser"> {
             }
             this->_usages[id] = utils::arguments::Usage{name, ordered, ids, description};
         };
-        void resetUsages(void) {this->_usages.clear();};
+        _cold inline void resetUsages(void) {this->_usages.clear();};
         template<bool force = false> // Can't override an exiting one by default, throw of error
-        void setOption(const std::string& id, const std::string& name, std::function<std::optional<std::string>(const std::string&)> check, const std::string& description = "[None]")
+        _cold void setOption(const std::string& id, const std::string& name, std::function<std::optional<std::string>(const std::string&)> check, const std::string& description = "[None]")
         {
             if constexpr (!force) {
                 if (this->_options.contains(id) || this->_flags.contains(id))
@@ -112,7 +112,7 @@ class ArgParser: private utils::security::observer::Observer<"ArgParser"> {
             this->_options[id] = utils::arguments::Option{name, false, check, description};
         };
         template<bool force = false> // Can't override an exiting one by default, throw of error
-        void setOption(const std::string& id, const std::string& name, const std::string& description = "[None]")
+        _cold void setOption(const std::string& id, const std::string& name, const std::string& description = "[None]")
         {
             if constexpr (!force) {
                 if (this->_options.contains(id) || this->_flags.contains(id))
@@ -120,35 +120,36 @@ class ArgParser: private utils::security::observer::Observer<"ArgParser"> {
             }
             this->_options[id] = utils::arguments::Option{name, true, utils::arguments::defaultTrueParsingHook, description};
         };
-        void resetOptions(void) {this->_options.clear();};
+        _cold inline void resetOptions(void) {this->_options.clear();};
         template<bool force = false> // Can't override an exiting one by default, throw of error
-        void setFlag(const std::string& id, const std::tuple<std::string, std::string, std::string, std::string>& flag, const std::vector<std::tuple<std::string, bool, std::function<std::optional<std::string>(const std::string&)>>>& options, const std::string& description = "[None]", const bool unlimited = false, const bool ignore_case = false)
+        _cold void setFlag(const std::string& id, const std::tuple<std::string, std::string, std::string, std::string>& flag, const std::vector<std::tuple<std::string, bool, std::function<std::optional<std::string>(const std::string&)>>>& options, const std::string& description = "[None]", const bool unlimited = false, const bool ignore_case = false)
         {
             if constexpr (!force) {
                 if (this->_flags.contains(id) || this->_options.contains(id))
                     throw utils::exception::ErrorException(utils::exception::InternalCode::Override, std::string("A flag/option with this id is already defined: ") + id);
-            } else if (unlimited && options.empty()) {
+            }
+            if (unlimited && options.empty()) {
                 throw utils::exception::ErrorException(utils::exception::InternalCode::FlagOption, "An unlimited flag must have at least one option: " + id);
             }
             this->_flags[id] = utils::arguments::Flag{flag, {unlimited, ignore_case}, options, description};
         };
-        void resetFlags(void) {this->_flags.clear();};
+        _cold inline void resetFlags(void) {this->_flags.clear();};
 
         /* hook handling */
-        void setHelpHook(std::function<void(const utils::arguments::ArgParser& parser)> hook) {this->_helpHook = hook;};
-        void resetHelpHook(void) {this->_helpHook = defaultHelpHook;};
+        _cold inline void setHelpHook(std::function<void(const utils::arguments::ArgParser& parser)> hook) {this->_helpHook = hook;};
+        _cold inline void resetHelpHook(void)                                                              {this->_helpHook = utils::arguments::defaultHelpHook;};
 
         /* setter */
-        void disableHelp(void) {this->_help = false;};
-        void setBinary(const std::string& binary) {this->_binary = binary;};
-        void setDescription(const std::string& description) {this->_description = description;};
+        _cold inline void disableHelp(void)                              {this->_help = false;};
+        _cold inline void setBinary(const std::string& binary)           {this->_binary = binary;};
+        _cold inline void setDescription(const std::string& description) {this->_description = description;};
 
         /* getter */
-        _nodiscard const std::string& getBinary(void) const {return this->_binary;};
-        _nodiscard const std::string& getDescription(void) const {return this->_description;};
-        _nodiscard const std::unordered_map<std::string, utils::arguments::Usage>& getUsages(void) const {return this->_usages;};
-        _nodiscard const std::unordered_map<std::string, utils::arguments::Option>& getOptions(void) const {return this->_options;};
-        _nodiscard const std::unordered_map<std::string, utils::arguments::Flag>& getFlags(void) const {return this->_flags;};
+        _cold _nodiscard inline const std::string& getBinary(void) const                                                {return this->_binary;};
+        _cold _nodiscard inline const std::string& getDescription(void) const                                           {return this->_description;};
+        _cold _nodiscard inline const std::unordered_map<std::string, utils::arguments::Usage>& getUsages(void) const   {return this->_usages;};
+        _cold _nodiscard inline const std::unordered_map<std::string, utils::arguments::Option>& getOptions(void) const {return this->_options;};
+        _cold _nodiscard inline const std::unordered_map<std::string, utils::arguments::Flag>& getFlags(void) const     {return this->_flags;};
 
         // ------------ Operator ---------- //
         ArgParser& operator=(const ArgParser& other) = delete;

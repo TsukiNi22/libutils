@@ -70,20 +70,20 @@ TEST(SosConvert, Uint8ByteType) {
 TEST(SosThreshold, Index) {
     Bytes bytes = {0, 255, 256, 30000, 65280, 65281, 65535};
     std::vector<std::uint_fast32_t> index;
-    utils::algorithms::sos::tools::getThresholdIndex(index, bytes);
+    utils::algorithms::sos::tools::get_threshold_index(index, bytes);
     EXPECT_EQ(index, (std::vector<std::uint_fast32_t>{1, 2, 3, 4}));
 }
 
 TEST(SosThreshold, RemoveThresholdTooFewRange) {
     Bytes bytes(10000, 30000);
-    EXPECT_THROW(utils::algorithms::sos::tools::removeThreshold(bytes), std::out_of_range);
+    EXPECT_THROW(utils::algorithms::sos::tools::remove_threshold(bytes), std::out_of_range);
 }
 
 TEST(SosThreshold, RemoveThresholdMovesBoundaries) {
     Bytes bytes = makeCarrier(100000);
     bytes[0] = THRESHOLD_MIN(std::uint16_t);
     bytes[1] = THRESHOLD_MAX(std::uint16_t);
-    utils::algorithms::sos::tools::removeThreshold(bytes);
+    utils::algorithms::sos::tools::remove_threshold(bytes);
     EXPECT_NE(bytes[0], THRESHOLD_MIN(std::uint16_t));
     EXPECT_NE(bytes[1], THRESHOLD_MAX(std::uint16_t));
 }
@@ -108,7 +108,7 @@ TEST(SosNoise, ChangesValuesSlightly) {
 TEST(SosHash, Deterministic) {
     Bytes carrier = makeCarrier(5000);
     std::vector<std::uint_fast32_t> index;
-    utils::algorithms::sos::tools::getThresholdIndex(index, carrier);
+    utils::algorithms::sos::tools::get_threshold_index(index, carrier);
     EXPECT_EQ(utils::algorithms::sos::tools::hash(index, carrier), utils::algorithms::sos::tools::hash(index, carrier));
 }
 
@@ -143,7 +143,7 @@ TEST(Sos, WrongKeyDoesNotRevealPayload) {
 
 TEST(Sos, ExtractWithoutMessage) {
     Bytes carrier = makeCarrier(200000);
-    utils::algorithms::sos::tools::removeThreshold(carrier);
+    utils::algorithms::sos::tools::remove_threshold(carrier);
     EXPECT_THROW((void)utils::algorithms::sos::sos_extract(carrier), std::exception);
 }
 

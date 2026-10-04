@@ -28,12 +28,15 @@ File Description:
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
-#include <string.h>
+#include <sys/time.h>
+#include <unistd.h>
+#include <cstring>
+#include <cerrno>
 #include <cstddef>
 #include <vector>
 #include <string>
 
-_cold void utils::network::socket::TCPSocket::connect(const utils::network::Address& address)
+_cold void utils::network::TCPSocket::connect(const utils::network::Address& address)
 {
     // Check if connection is allowed
     if (this->_fd != -1) _unlikely {
@@ -44,38 +47,45 @@ _cold void utils::network::socket::TCPSocket::connect(const utils::network::Addr
     // Init the socket
     onAdvancedVerbose("Socket initialisation...");
     if ((this->_fd = ::socket(AF_INET, SOCK_STREAM, 0)) < 0)
-        throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, strerror(errno));
+        throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, std::strerror(errno));
 
-    // Setup the sockaddr_in
-    onAdvancedVerbose("Setup of the address 'ip:port' used for the connection...");
-    sockaddr_in addr{};
-    addr.sin_family = AF_INET;
-    addr.sin_port = ::htons(address.port);
-    if (::inet_pton(AF_INET, address.ip.first.c_str(), &addr.sin_addr) != 1)
-        throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, "Invalid ip given, can't convert it, excepted ipv4: x.x.x.x");
+    // Any error after the creation: close the socket
+    try {
+        // Setup the sockaddr_in
+        onAdvancedVerbose("Setup of the address 'ip:port' used for the connection...");
+        sockaddr_in addr{};
+        addr.sin_family = AF_INET;
+        addr.sin_port = ::htons(address.port);
+        if (::inet_pton(AF_INET, address.ip.first.c_str(), &addr.sin_addr) != 1)
+            throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, "Invalid ip given, can't convert it, excepted ipv4: x.x.x.x");
 
-    // Setup the timout
-    struct timeval tv;
-    tv.tv_sec = SOCKET_TIMEOUT;
-    tv.tv_usec = 0;
-    onAdvancedVerbose("Setup of the socket's parameters...");
-    if (::setsockopt(this->_fd, SOL_SOCKET, SO_SNDTIMEO, (const char*)&tv, sizeof(tv)) < 0)
-        throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, strerror(errno));
+        // Setup the timeout
+        struct timeval tv{};
+        tv.tv_sec = SOCKET_TIMEOUT;
+        tv.tv_usec = 0;
+        onAdvancedVerbose("Setup of the socket's parameters...");
+        if (::setsockopt(this->_fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) < 0)
+            throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, std::strerror(errno));
 
-    // Bind the socket with the parameter
-    onBasicVerbose("Connection to '" << address.ip.first << ":" << address.port << "'...");
-    if (::connect(this->_fd, (struct sockaddr *)&(addr), sizeof(addr)) < 0) {
-        onBasicVerbose("Failed to connect client to '" << address.ip.first << ":" << address.port << "'");
-        if (errno == EINPROGRESS || errno == EWOULDBLOCK)
-            throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, std::string("Connection timed out (") + std::to_string(SOCKET_TIMEOUT) + "s)");
-        else
-            throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, strerror(errno));
+        // Bind the socket with the parameter
+        onBasicVerbose("Connection to '" << address.ip.first << ":" << address.port << "'...");
+        if (::connect(this->_fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) < 0) {
+            onBasicVerbose("Failed to connect client to '" << address.ip.first << ":" << address.port << "'");
+            if (errno == EINPROGRESS || errno == EWOULDBLOCK)
+                throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, std::string("Connection timed out (") + std::to_string(SOCKET_TIMEOUT) + "s)");
+            else
+                throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, std::strerror(errno));
+        }
+    } catch (...) {
+        ::close(this->_fd);
+        this->_fd = -1;
+        throw;
     }
 
     onBasicVerbose("Client started!");
 }
 
-_cold void utils::network::socket::TCPSocket::listen(const utils::network::Address& address)
+_cold void utils::network::TCPSocket::listen(const utils::network::Address& address)
 {
     // Check if connection is allowed
     if (this->_fd != -1) _unlikely {
@@ -86,28 +96,36 @@ _cold void utils::network::socket::TCPSocket::listen(const utils::network::Addre
     // Init the socket
     onAdvancedVerbose("Socket initialisation...");
     if ((this->_fd = ::socket(AF_INET, SOCK_STREAM, 0)) < 0)
-        throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, strerror(errno));
+        throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, std::strerror(errno));
 
-    // Setup port to accept a reuse of the server before the tcp cooldown/TIME_WAIT
-    int opt = 1;
-    onAdvancedVerbose("Setup of the socket's parameters...");
-    if (::setsockopt(this->_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
-        throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, strerror(errno));
+    // Any error after the creation: close the socket
+    try {
+        // Setup port to accept a reuse of the server before the tcp cooldown/TIME_WAIT
+        int opt = 1;
+        onAdvancedVerbose("Setup of the socket's parameters...");
+        if (::setsockopt(this->_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
+            throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, std::strerror(errno));
 
-    // Setup the sockaddr_in
-    sockaddr_in addr{};
-    addr.sin_family = AF_INET;
-    addr.sin_port = ::htons(address.port);
-    addr.sin_addr.s_addr = INADDR_ANY;
- 
-    // Bind the socket with the parameter
-    onAdvancedVerbose("Binding of the socket...");
-    if (::bind(this->_fd, (struct sockaddr *)&(addr), sizeof(addr)) < 0)
-        throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, strerror(errno));
-    onBasicVerbose("Server started!");
+        // Setup the sockaddr_in
+        sockaddr_in addr{};
+        addr.sin_family = AF_INET;
+        addr.sin_port = ::htons(address.port);
+        addr.sin_addr.s_addr = INADDR_ANY;
 
-    // Init the listen of the server
-    if (::listen(this->_fd, SOMAXCONN) < 0)
-        throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, strerror(errno));
+        // Bind the socket with the parameter
+        onAdvancedVerbose("Binding of the socket...");
+        if (::bind(this->_fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) < 0)
+            throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, std::strerror(errno));
+        onBasicVerbose("Server started!");
+
+        // Init the listen of the server
+        if (::listen(this->_fd, SOMAXCONN) < 0)
+            throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, std::strerror(errno));
+    } catch (...) {
+        ::close(this->_fd);
+        this->_fd = -1;
+        throw;
+    }
+
     onBasicVerbose("Listening on '0.0.0.0:" << address.port << "'...");
 }

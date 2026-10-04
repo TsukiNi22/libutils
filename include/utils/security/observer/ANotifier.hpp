@@ -13,10 +13,10 @@ File Description:
     #define ANOTIFIER_H
 
     //----------------------------------------------------------------//
-    /* ANCLUDE */
+    /* INCLUDE */
 
     /* type */
-    #include "../../attribute/Attribute.hpp"                // _cold, _nodiscard, _unused
+    #include "../../attribute/Attribute.hpp"                // _cold, _hot, _nodiscard, _unused
     #include "../../exception/ExceptionDefine.hpp"          // utils::exception::InternalCode
     #include "../../exception/custom/FatalException.hpp"    // utils::exception::FatalException
     #include "INotifier.hpp"                                // utils::security::observer::INotifier
@@ -36,22 +36,22 @@ class ANotifier: public utils::security::observer::INotifier {
         std::string _origin = "[unknown]"; // module path/name
         std::unordered_map<std::uint64_t, std::string> _links;
 
-        // ---------- Pre-Function -------- //
-        void link_(_unused const std::uint64_t id, _unused std::string_view instance, _unused const bool safe_mode) override
+        // ------------ Function ---------- //
+        _cold void link_(_unused const std::uint64_t id, _unused std::string_view instance, _unused const bool safe_mode) override
         {throw utils::exception::FatalException(utils::exception::InternalCode::UndefinedCall);};
-        void unlink_(_unused const std::uint64_t id, _unused const bool safe_mode) override
+        _cold void unlink_(_unused const std::uint64_t id, _unused const bool safe_mode) override
         {throw utils::exception::FatalException(utils::exception::InternalCode::UndefinedCall);};
-        void clear_(_unused const bool safe_mode) override
+        _cold void clear_(_unused const bool safe_mode) override
         {throw utils::exception::FatalException(utils::exception::InternalCode::UndefinedCall);};
-        _hot _nodiscard bool hasLinkOverload(void) const override {return false;};
+        _hot _nodiscard bool hasLinkOverload(void) const override   {return false;};
         _hot _nodiscard bool hasUnlinkOverload(void) const override {return false;};
-        _hot _nodiscard bool hasClearOverload(void) const override {return false;};
+        _hot _nodiscard bool hasClearOverload(void) const override  {return false;};
 
     public:
         // ---------- Pre-Function -------- //
         void link(const std::uint64_t id, std::string_view instance, const bool safe_mode) final;
         void unlink(const std::uint64_t id, const bool safe_mode) final;
-    
+
         // !!! Should only be used if all the linked instances where vanished from existance !!!
         void clear(const bool safe_mode) final;
 

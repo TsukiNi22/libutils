@@ -24,6 +24,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
+    #include "../../attribute/Attribute.hpp"        // _migration
     #include "../../security/observer/Observer.hpp" // utils::security::observer::Observer
     #include "../NetworkType.hpp"                   // utils::network::Address
     #include <sys/socket.h>                         // socklen_t
@@ -32,7 +33,7 @@ File Description:
     #include <vector>                               // std::vector
     #include <string>                               // std::string
 
-namespace utils::network::socket { // namespace start
+namespace utils::network { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
@@ -76,6 +77,8 @@ class ISocket: private utils::security::observer::Observer<"ISocket"> {
         virtual std::string recv(int fd = -1) = 0; // (default) read by chunck of 4096, store the payload overflow into a buffer
         virtual std::vector<std::string> recvAll(int fd = -1) = 0; // read by chunck of 4096, return all valid payloads from the buffer, store the overflow into a buffer
         virtual void flush(int fd = -1) = 0; // send the internal buffer
+        virtual std::size_t receive(int fd = -1) = 0; // read once (after a poll event) into the internal buffer, never wait for a full payload
+        virtual void discard(int fd = -1) = 0; // forget the internal buffers of a fd (closed connection), -1 = every fd
         virtual void send(const std::string& s, int fd = -1) = 0; // (default) send it now
         virtual void sendBuffered(const std::string& s, int fd = -1) = 0; // store in a buffer
 
@@ -93,4 +96,11 @@ class ISocket: private utils::security::observer::Observer<"ISocket"> {
 };
 
 } // namespace end
+
+//----------------------------------------------------------------//
+/* MIGRATION */
+namespace utils::network::socket {
+    using ISocket _migration(4, 0, 0) = utils::network::ISocket;
+}
+
 #endif /* ISOCKET_H */

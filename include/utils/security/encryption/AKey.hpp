@@ -27,7 +27,7 @@ File Description:
     #include "../../exception/ExceptionDefine.hpp"          // utils::exception::InternalCode::*
     #include "../../exception/basic/ErrorException.hpp"     // utils::exception::ErrorException
     #include "../../exception/custom/FatalException.hpp"    // utils::exception::FatalException
-    #include "../../attribute/Attribute.hpp"                // _cold, _nodiscard, _unused
+    #include "../../attribute/Attribute.hpp"                // _cold, _hot, _nodiscard, _unused, _unlikely, _migration
     #include "IKey.hpp"                                     // utils::security::encryption::IKey
     #include <openssl/rand.h>                               // RAND_bytes
     #include <cstdint>                                      // std::uint16_t, std::uint8_t
@@ -36,11 +36,11 @@ File Description:
 
 namespace utils::security::encryption { // namespace start
 //----------------------------------------------------------------//
-/* STATIC */
+/* PROTOTYPE */
 
 /* tools */
-_hot _nodiscard static inline std::string keyToString(const std::vector<std::uint8_t>& data) {return std::string(data.begin(), data.end());}
-_hot _nodiscard static inline std::vector<std::uint8_t> stringToKey(const std::string& s) {return std::vector<std::uint8_t>(s.begin(), s.end());}
+_hot _nodiscard inline std::string key_to_string(const std::vector<std::uint8_t>& data) {return std::string(data.begin(), data.end());};
+_hot _nodiscard inline std::vector<std::uint8_t> string_to_key(const std::string& s)    {return std::vector<std::uint8_t>(s.begin(), s.end());};
 
 //----------------------------------------------------------------//
 /* CLASS */
@@ -49,14 +49,16 @@ _hot _nodiscard static inline std::vector<std::uint8_t> stringToKey(const std::s
 template<typename T>
 class AKey: public utils::security::encryption::IKey<T> {
     public:
+        // ------------ Function ---------- //
         /* tools */
         _hot _nodiscard std::string generateRandomBytes(std::uint16_t size) const final
         {
             std::vector<std::uint8_t> bytes(size);
-            if (!RAND_bytes(bytes.data(), bytes.size()))
+            if (!RAND_bytes(bytes.data(), static_cast<int>(bytes.size()))) _unlikely {
                 throw utils::exception::ErrorException(utils::exception::InternalCode::Encryption, "Failed to generate random bytes");
+            }
             return std::string(bytes.begin(), bytes.end());
-        }
+        };
 
         /* default definition */
         _cold void generate(void) override
@@ -72,9 +74,9 @@ class AKey: public utils::security::encryption::IKey<T> {
         // Auto fallback on simple encrypt/decrypt methods
         _cold std::string encrypt(const std::string& s, _unused T& data) const override {return this->encrypt(s);};
         _cold std::string decrypt(const std::string& s, _unused T& data) const override {return this->decrypt(s);};
-        _cold _nodiscard bool hasGenerateOverload(void) const override {return false;};
-        _cold _nodiscard bool hasSetOverload(void) const override {return false;};
-        _cold _nodiscard bool hasGetOverload(void) const override {return false;};
+        _cold _nodiscard bool hasGenerateOverload(void) const override                  {return false;};
+        _cold _nodiscard bool hasSetOverload(void) const override                       {return false;};
+        _cold _nodiscard bool hasGetOverload(void) const override                       {return false;};
 
         // ------------ Operator ---------- //
         AKey& operator=(const AKey& other) = default;
@@ -90,4 +92,12 @@ class AKey: public utils::security::encryption::IKey<T> {
 };
 
 } // namespace end
+
+//----------------------------------------------------------------//
+/* MIGRATION */
+namespace utils::security::encryption {
+    _migration(4, 0, 0) inline std::string keyToString(const std::vector<std::uint8_t>& data) {return utils::security::encryption::key_to_string(data);};
+    _migration(4, 0, 0) inline std::vector<std::uint8_t> stringToKey(const std::string& s)    {return utils::security::encryption::string_to_key(s);};
+}
+
 #endif /* AKEY_H */

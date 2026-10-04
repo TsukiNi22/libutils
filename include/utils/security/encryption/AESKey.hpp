@@ -28,6 +28,14 @@ File Description:
     #include "AKey.hpp"                         // utils::security::encryption::AKey
     #include <string>                           // std::string
 
+    //----------------------------------------------------------------//
+    /* DEFINE */
+
+    /* AES-256-GCM */
+    #define AES_KEY_SIZE 32     // 256 bits
+    #define AES_MIN_IV_SIZE 12  // 96 bits (GCM nonce)
+    #define AES_TAG_SIZE 16     // 128 bits
+
 namespace utils::security::encryption { // namespace start
 //----------------------------------------------------------------//
 /* STRUCT */

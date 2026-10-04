@@ -20,7 +20,7 @@ File Description:
 
 namespace utils::iomanip { // namespace start
 //----------------------------------------------------------------//
-/* TYPEDEF */
+/* ENUM */
 
 /* color */
 enum class Color: std::uint8_t {

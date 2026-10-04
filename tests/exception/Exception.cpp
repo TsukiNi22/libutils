@@ -165,3 +165,11 @@ TEST(FatalExceptionDeathTest, AbortFromOtherException) {
     utils::exception::ErrorException error(utils::exception::InternalCode::InvalidArgument, "from error");
     EXPECT_DEATH({utils::exception::FatalException e(error);}, "from error");
 }
+
+TEST(CustomException, DefaultAndTypeOnly) {
+    utils::exception::CustomException none;
+    EXPECT_EQ(none.getType(), utils::exception::Type::None);
+    utils::exception::CustomException error(utils::exception::Type::Error);
+    EXPECT_EQ(error.getType(), utils::exception::Type::Error);
+    EXPECT_EQ(error.getCode(), utils::exception::InternalCode::Undefined);
+}

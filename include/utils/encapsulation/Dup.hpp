@@ -41,22 +41,23 @@ class Dup: private utils::security::observer::Observer<"Dup"> {
         _cold inline void close_(int& fd) noexcept {if (fd != -1) ::close(fd); fd = -1;};
 
     public:
-        // ------------ Function ---------- //
+        // ---------- Pre-Function -------- //
         void trigger(void);
 
+        // ------------ Function ---------- //
         /* close */
         _cold inline void closeOrigin(void) noexcept {this->close_(this->_origin);};
-        _cold inline void closeClone(void) noexcept {this->close_(this->_clone);};
-        _cold inline void close(void) noexcept {this->closeOrigin(); this->closeClone();};
-        _cold inline void clear(void) {this->_origin = -1; this->_clone = -1;};
+        _cold inline void closeClone(void) noexcept  {this->close_(this->_clone);};
+        _cold inline void close(void) noexcept       {this->closeOrigin(); this->closeClone();};
+        _cold inline void clear(void)                {this->_origin = -1; this->_clone = -1;};
 
         /* getter */
         _cold _nodiscard inline int getOrigin(void) const {return this->_origin;};
-        _cold _nodiscard inline int getClone(void) const {return this->_clone;};
+        _cold _nodiscard inline int getClone(void) const  {return this->_clone;};
 
         /* setter */
         _cold inline void setOrigin(const int fd = -1) {this->_origin = fd;};
-        _cold inline void setClone(const int fd = -1) {this->_clone = fd;};
+        _cold inline void setClone(const int fd = -1)  {this->_clone = fd;};
 
         // ------------ Operator ---------- //
         Dup& operator=(const Dup& other) = delete;

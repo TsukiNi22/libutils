@@ -28,7 +28,7 @@ File Description:
 _cold void utils::encapsulation::Dup::trigger(void)
 {
     if (this->_origin == -1) _unlikely {
-        throw utils::exception::ErrorException(utils::exception::InternalCode::Dup, "The origin fd is close, please set a valid fd: setClone(int fd)");
+        throw utils::exception::ErrorException(utils::exception::InternalCode::Dup, "The origin fd is close, please set a valid fd: setOrigin(int fd)");
     }
 
     // Dispatch

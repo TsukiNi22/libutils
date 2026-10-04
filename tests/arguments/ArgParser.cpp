@@ -22,6 +22,7 @@ File Description:
 #include <gtest/gtest.h>
 #include <filesystem>
 #include <fstream>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <string>
 #include <vector>
@@ -33,7 +34,7 @@ using Arguments = std::vector<std::tuple<std::string, bool, std::vector<std::str
 // -v / --verbose
 // -a / --all
 // usage "main": number (mandatory), verbose, all
-class ArgParserTest : public ::testing::Test {
+class ArgParserTest: public ::testing::Test {
     protected:
         utils::arguments::ArgParser _parser{"bin", "A test binary"};
 
@@ -49,7 +50,7 @@ class ArgParserTest : public ::testing::Test {
 
         static bool has(const utils::arguments::ParsedUsage& usage, const std::string& id, const std::vector<std::string>& values = {})
         {
-            for (const auto& [aid, option, avalues]: usage.arguments)
+            for (const auto &[aid, option, avalues]: usage.arguments)
                 if (aid == id && avalues == values) return true;
             return false;
         };
@@ -259,7 +260,7 @@ TEST_F(ArgParserTest, InvalidEnvironmentValueIgnored) {
 }
 
 /* parsing: options */
-class ArgParserOptionTest : public ::testing::Test {
+class ArgParserOptionTest: public ::testing::Test {
     protected:
         utils::arguments::ArgParser _parser{"bin"};
 
@@ -352,6 +353,29 @@ TEST(ArgParserUsages, DefaultUsageAllowAllFlags) {
     ASSERT_NO_THROW(usages = parser.parse({"bin", "-v"}));
     ASSERT_EQ(usages.size(), 1u);
     EXPECT_EQ(usages[0].arguments.size(), 1u);
+}
+
+TEST(ArgParserUsages, DefaultUsageAllowEveryFlagForm) {
+    utils::arguments::ArgParser parser("bin");
+    parser.setFlag("a", {"a", "", "all", ""}, {});
+    parser.setFlag("b", {"b", "bee", "", ""}, {});
+    parser.setFlag("n", {"n", "", "number", ""}, {{"value", true, utils::arguments::defaultInt32ParsingHook}});
+    parser.setFlag("o", {"o", "", "opt", ""}, {{"value", false, utils::arguments::defaultInt32ParsingHook}});
+    parser.setFlag("l", {"l", "", "list", ""}, {{"value", true, utils::arguments::defaultTrueParsingHook}}, "[None]", true);
+    parser.setOption("file", "file");
+    parser.setDefaultUsage();
+    const std::vector<std::vector<std::string>> argvs = {
+        {"bin", "-a"}, {"bin", "-ab"}, {"bin", "-bee"}, {"bin", "--all"},
+        {"bin", "-n", "1"}, {"bin", "--number=-2"}, {"bin", "-o"}, {"bin", "--opt", "3"},
+        {"bin", "-l", "x", "y", "z"}, {"bin", "file", "-a", "-n", "1"},
+        {"bin", "-n", "1", "-a", "-b", "-l", "x", "y"}
+    };
+    for (const std::vector<std::string>& argv: argvs) {
+        utils::arguments::ParsedUsages usages;
+        EXPECT_NO_THROW(usages = parser.parse(argv)) << argv[1];
+        ASSERT_EQ(usages.size(), 1u) << argv[1];
+        EXPECT_FALSE(usages[0].arguments.empty()) << argv[1];
+    }
 }
 
 TEST(ArgParserUsages, OrderedFlags) {
@@ -476,4 +500,155 @@ TEST(ArgParserHooks, WritableNoPermission) {
     std::filesystem::permissions(dir / "ro", std::filesystem::perms::owner_read | std::filesystem::perms::owner_exec);
     EXPECT_TRUE(utils::arguments::defaultWritableParsingHook((dir / "ro/file.txt").string()).has_value());
     std::filesystem::permissions(dir / "ro", std::filesystem::perms::owner_all);
+}
+
+/* -------------------------------- edge cases -------------------------------- */
+TEST(ArgParserUsages, OptionBeforeFlagUnordered) {
+    utils::arguments::ArgParser parser("bin");
+    parser.setFlag("F", {"f", "", "", ""}, {});
+    parser.setOption("X", "x", utils::arguments::defaultTrueParsingHook);
+    parser.setUsage("u", "u", false, {{"F", false}, {"X", true}});
+    utils::arguments::ParsedUsages usages = parser.parse({"bin", "val", "-f"});
+    ASSERT_EQ(usages.size(), 1u);
+    EXPECT_EQ(usages[0].arguments.size(), 2u);
+}
+
+TEST(ArgParserUsages, MandatoryAfterOptionUnordered) {
+    utils::arguments::ArgParser parser("bin");
+    parser.setFlag("F", {"f", "", "", ""}, {});
+    parser.setOption("X", "x", utils::arguments::defaultTrueParsingHook);
+    parser.setUsage("u", "u", false, {{"F", true}, {"X", true}});
+    EXPECT_NO_THROW((void)parser.parse({"bin", "-f", "val"}));
+    EXPECT_NO_THROW((void)parser.parse({"bin", "val", "-f"})); // the order doesn't matter in an unordered usage
+}
+
+TEST(ArgParserUsages, DefaultUsageOptionThenFlag) {
+    utils::arguments::ArgParser parser("bin");
+    parser.setFlag("F", {"f", "", "", ""}, {});
+    parser.setOption("X", "x", utils::arguments::defaultTrueParsingHook);
+    parser.setDefaultUsage();
+    utils::arguments::ParsedUsages usages = parser.parse({"bin", "val", "-f"});
+    ASSERT_EQ(usages.size(), 1u);
+    EXPECT_EQ(usages[0].arguments.size(), 2u);
+}
+
+TEST(ArgParserUsages, OrderedReversedFlags) {
+    utils::arguments::ArgParser parser("bin");
+    parser.setFlag("A", {"a", "", "", ""}, {});
+    parser.setFlag("B", {"b", "", "", ""}, {});
+    parser.setUsage("u", "u", true, {{"A", false}, {"B", false}});
+    try {
+        (void)parser.parse({"bin", "-b", "-a"});
+        FAIL() << "Expected an exception";
+    } catch (const utils::exception::IException& e) {
+        EXPECT_EQ(e.getCode(), utils::exception::InternalCode::NoCompliantUsage);
+    }
+}
+
+TEST(ArgParserUsages, OrderedOutOfOrderFlagInvalidateUsage) {
+    utils::arguments::ArgParser parser("bin");
+    parser.setFlag("F", {"f", "", "", ""}, {{"v", true, utils::arguments::defaultTrueParsingHook}});
+    parser.setOption("X", "x", utils::arguments::defaultTrueParsingHook);
+    parser.setOption("Y", "y", utils::arguments::defaultTrueParsingHook);
+    parser.setUsage("u", "u", true, {{"X", true}, {"F", false}, {"Y", false}});
+    EXPECT_THROW((void)parser.parse({"bin", "-f", "fval", "xval"}), utils::exception::IException);
+}
+
+TEST(ArgParserUsages, UnlimitedFlagEmptyArgument) {
+    utils::arguments::ArgParser parser("bin");
+    parser.setFlag("F", {"f", "", "", ""}, {{"v", true, utils::arguments::defaultTrueParsingHook}}, "", true);
+    parser.setDefaultUsage();
+    utils::arguments::ParsedUsages usages = parser.parse({"bin", "-f", "a", ""});
+    ASSERT_EQ(usages.size(), 1u);
+    EXPECT_EQ(std::get<2>(usages[0].arguments[0]), (std::vector<std::string>{"a", ""}));
+}
+
+TEST(ArgParserUsages, EmptyShortNameNeverMatch) {
+    utils::arguments::ArgParser parser("bin");
+    parser.setFlag("a", {"a", "", "all", ""}, {});
+    parser.setFlag("verb", {"", "verbose", "verbose", ""}, {});
+    parser.setFlag("b", {"", "", "bee", ""}, {});
+    parser.setDefaultUsage();
+    utils::arguments::ParsedUsages usages = parser.parse({"bin", "-a"});
+    ASSERT_EQ(usages.size(), 1u);
+    EXPECT_EQ(usages[0].arguments.size(), 1u);
+}
+
+TEST(ArgParserUsages, DuplicatedFlagConsumeItsOption) {
+    utils::arguments::ArgParser parser("bin");
+    parser.setFlag("n", {"n", "", "", ""}, {{"v", true, utils::arguments::defaultInt32ParsingHook}});
+    parser.setDefaultUsage();
+    testing::internal::CaptureStderr();
+    utils::arguments::ParsedUsages usages;
+    EXPECT_NO_THROW(usages = parser.parse({"bin", "-n", "1", "-n", "2"}));
+    (void)testing::internal::GetCapturedStderr();
+    ASSERT_EQ(usages.size(), 1u);
+    EXPECT_EQ(usages[0].arguments, (Arguments{{"n", false, {"1"}}}));
+}
+
+TEST(ArgParserUsages, EnvironmentHookError) {
+    utils::arguments::ArgParser parser("bin");
+    parser.setFlag("F", {"f", "", "", "UTILS_TEST_FILE"}, {{"file", true, utils::arguments::defaultFileParsingHook}});
+    parser.setUsage("u", "u", false, {{"F", true}});
+    tests::tools::ScopedEnv env("UTILS_TEST_FILE", std::string(5000, 'a'));
+    EXPECT_THROW((void)parser.parse({"bin"}), utils::exception::IException);
+}
+
+TEST(ArgParserHooks, LongPath) {
+    EXPECT_TRUE(utils::arguments::defaultFileParsingHook(std::string(5000, 'a')).has_value());
+    EXPECT_TRUE(utils::arguments::defaultDirectoryParsingHook(std::string(5000, 'a')).has_value());
+}
+
+TEST(ArgParserHooks, WritableSpecialPaths) {
+    tests::tools::TempDir dir;
+    EXPECT_TRUE(utils::arguments::defaultWritableParsingHook("").has_value());
+
+    // fifo
+    ASSERT_EQ(::mkfifo((dir / "fifo").c_str(), 0600), 0);
+    EXPECT_TRUE(utils::arguments::defaultWritableParsingHook((dir / "fifo").string()).has_value());
+    EXPECT_TRUE(std::filesystem::exists(std::filesystem::symlink_status(dir / "fifo")));
+
+    // dangling symlink
+    std::filesystem::create_symlink(dir / "target", dir / "link");
+    EXPECT_TRUE(utils::arguments::defaultWritableParsingHook((dir / "link").string()).has_value());
+    EXPECT_TRUE(std::filesystem::is_symlink(std::filesystem::symlink_status(dir / "link")));
+    EXPECT_FALSE(std::filesystem::exists(dir / "target"));
+}
+
+TEST_F(ArgParserTest, ResetHelpHook) {
+    bool called = false;
+    this->_parser.setHelpHook([&called](const utils::arguments::ArgParser&) {called = true;});
+    this->_parser.resetHelpHook();
+    testing::internal::CaptureStdout();
+    this->_parser.help();
+    std::string out = testing::internal::GetCapturedStdout();
+    EXPECT_FALSE(called);
+    EXPECT_NE(out.find("USAGE"), std::string::npos); // defaultHelpHook
+}
+
+TEST_F(ArgParserTest, DefaultHelpHookContent) {
+    this->_parser.setOption("word", "word", "A word");
+    testing::internal::CaptureStdout();
+    utils::arguments::defaultHelpHook(this->_parser);
+    std::string out = testing::internal::GetCapturedStdout();
+    EXPECT_NE(out.find("./bin"), std::string::npos);
+    EXPECT_NE(out.find("--number"), std::string::npos);
+    EXPECT_NE(out.find("A number"), std::string::npos);
+    EXPECT_NE(out.find("A test binary"), std::string::npos);
+}
+
+/* remove */
+TEST_F(ArgParserTest, RemoveFlagsAndOptions) {
+    this->_parser.setOption("word", "word", "A word");
+    this->_parser.setOption("other", "other", "Another");
+    this->_parser.removeFlags({"verbose", "all"});
+    this->_parser.removeOptions({"word", "other"});
+    EXPECT_FALSE(this->_parser.getFlags().contains("verbose"));
+    EXPECT_FALSE(this->_parser.getFlags().contains("all"));
+    EXPECT_TRUE(this->_parser.getFlags().contains("number"));
+    EXPECT_TRUE(this->_parser.getOptions().empty());
+
+    testing::internal::CaptureStderr();
+    this->_parser.removeFlags({"verbose"}); // unknown: warning only
+    EXPECT_FALSE(testing::internal::GetCapturedStderr().empty());
 }

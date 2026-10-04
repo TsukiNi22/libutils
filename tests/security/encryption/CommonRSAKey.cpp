@@ -24,7 +24,7 @@ File Description:
 #include <fstream>
 #include <string>
 
-class CommonRSAKeyTest : public ::testing::Test {
+class CommonRSAKeyTest: public ::testing::Test {
     protected:
         tests::tools::TempDir _dir;
         utils::security::encryption::KeyPair _keys;

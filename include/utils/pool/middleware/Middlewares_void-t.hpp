@@ -11,14 +11,14 @@ Edition:
 ##  @date 19/08/2026 by @author Tsukini
 
 File Name:
-##  @file Middlewares.hpp
+##  @file Middlewares_void-t.hpp
 
 File Description:
 ##  Declaration of the Middlewares<void, T>
 \**************************************************************/
 
-#ifndef MIDDLEWARES_VOID_T_H
-    #define MIDDLEWARES_VOID_T_H
+#ifndef MIDDLEWARESVOIDT_H
+    #define MIDDLEWARESVOIDT_H
 
     //----------------------------------------------------------------//
     /* INCLUDE */
@@ -27,12 +27,16 @@ File Description:
     #include "../../security/observer/Observer.hpp"     // utils::security::observer::Observer
     #include "../../exception/ExceptionDefine.hpp"      // utils::exception::Type, utils::exception::InternalCode
     #include "../../exception/basic/ErrorException.hpp" // utils::exception::ErrorException
+    #include "../../attribute/Attribute.hpp"            // _cold, _hot
     #include "MiddlewaresType.hpp"                      // utils::pool::Middleware<...>
     #include <shared_mutex>                             // std::shared_mutex, std::unique_lock, std::shared_lock
     #include <functional>                               // std::function
     #include <exception>                                // std::exception
+    #include <utility>                                  // std::move
+    #include <vector>                                   // std::vector
+    #include <mutex>                                    // std::lock, std::scoped_lock, std::defer_lock
 
-namespace utils::pool { // namespace
+namespace utils::pool { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
@@ -44,51 +48,53 @@ class Middlewares<void, U>: private utils::security::observer::Observer<"Middlew
         std::vector<utils::pool::Middleware<U>> after;
 
         // ------------ Function ---------- //
-        void clear() {this->before.clear(); this->after.clear();}
+        _cold inline void clear(void) {std::unique_lock lock(this->_lock); this->before.clear(); this->after.clear();};
 
         /* adder */
-        void addBefore(utils::pool::Middleware<void>& toAdd)                     {std::unique_lock lock(this->_lock); this->before.push_back(toAdd);}
-        void addBefore(const std::vector<utils::pool::Middleware<void>>& toAdds) {std::unique_lock lock(this->_lock); this->before.insert(before.end(), toAdds.begin(), toAdds.end());}
-        void addAfter(utils::pool::Middleware<U>& toAdd)                         {std::unique_lock lock(this->_lock); this->after.push_back(toAdd);}
-        void addAfter(const std::vector<utils::pool::Middleware<U>>& toAdds)     {std::unique_lock lock(this->_lock); this->after.insert(after.end(), toAdds.begin(), toAdds.end());}
+        _cold inline void addBefore(const utils::pool::Middleware<void>& toAdd)               {std::unique_lock lock(this->_lock); this->before.push_back(toAdd);};
+        _cold inline void addBefore(const std::vector<utils::pool::Middleware<void>>& toAdds) {std::unique_lock lock(this->_lock); this->before.insert(this->before.end(), toAdds.begin(), toAdds.end());};
+        _cold inline void addAfter(const utils::pool::Middleware<U>& toAdd)                   {std::unique_lock lock(this->_lock); this->after.push_back(toAdd);};
+        _cold inline void addAfter(const std::vector<utils::pool::Middleware<U>>& toAdds)     {std::unique_lock lock(this->_lock); this->after.insert(this->after.end(), toAdds.begin(), toAdds.end());};
 
         /* caller */
-        void callBefore() const
+        _hot void callBefore(void) const
         {
-            std::shared_lock lock(this->_lock);
-            for (const utils::pool::Middleware<void>& middleware: this->before) {
+            std::vector<utils::pool::Middleware<void>> snapshot;
+            {std::shared_lock lock(this->_lock); snapshot = this->before;} // called without the lock: a middleware can edit the middlewares
+            for (const utils::pool::Middleware<void>& middleware: snapshot) {
                 try {middleware();}
                 catch (const std::exception& e) {throw utils::exception::ErrorException(utils::exception::InternalCode::MiddlewareCall, e.what());}
             }
-        }
-        void callAfter(U arg) const
+        };
+        _hot void callAfter(U arg) const
         {
-            std::shared_lock lock(this->_lock);
-            for (const utils::pool::Middleware<U>& middleware: this->after) {
+            std::vector<utils::pool::Middleware<U>> snapshot;
+            {std::shared_lock lock(this->_lock); snapshot = this->after;} // called without the lock: a middleware can edit the middlewares
+            for (const utils::pool::Middleware<U>& middleware: snapshot) {
                 try {middleware(arg);}
                 catch (const std::exception& e) {throw utils::exception::ErrorException(utils::exception::InternalCode::MiddlewareCall, e.what());}
             }
-        }
+        };
 
         // ------------ Operator ---------- //
         Middlewares& operator=(const Middlewares& other)
         {
             if (this == &other) return *this;
-            std::unique_lock localLock(_lock);
-            std::shared_lock lock(other._lock);
+            std::unique_lock localLock(this->_lock, std::defer_lock);
+            std::shared_lock lock(other._lock, std::defer_lock);
+            std::lock(localLock, lock);
             this->before = other.before;
             this->after = other.after;
             return *this;
-        }
+        };
         Middlewares& operator=(Middlewares&& other)
         {
             if (this == &other) return *this;
-            std::unique_lock localLock(_lock);
-            std::shared_lock lock(other._lock);
+            std::scoped_lock lock(this->_lock, other._lock);
             this->before = std::move(other.before);
             this->after = std::move(other.after);
             return *this;
-        }
+        };
 
         // ---------- Constructor --------- //
         Middlewares() = default;
@@ -97,17 +103,17 @@ class Middlewares<void, U>: private utils::security::observer::Observer<"Middlew
             std::shared_lock lock(other._lock);
             this->before = other.before;
             this->after = other.after;
-        }
+        };
         Middlewares(Middlewares&& other)
         {
             std::unique_lock lock(other._lock);
             this->before = std::move(other.before);
             this->after = std::move(other.after);
-        }
+        };
 
         // ----------- Destructor --------- //
         ~Middlewares() = default;
 };
 
 } // namespace end
-#endif /* MIDDLEWARES_VOID_T_H */
+#endif /* MIDDLEWARESVOIDT_H */

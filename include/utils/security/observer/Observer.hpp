@@ -16,7 +16,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../manip/smanip/fixed_string.hpp"  // utils::smanip::fixed_string
+    #include "../../manip/smanip/FixedString.hpp"   // utils::smanip::FixedString
     #include "AObserver.hpp"                        // utils::security::observer::AObserver
     #include <string>                               // std::string
 
@@ -24,8 +24,8 @@ namespace utils::security::observer { // namespace start
 //----------------------------------------------------------------//
 /* CLASS */
 
-template<utils::smanip::fixed_string __instance__>
-class Observer: public utils::security::observer::AObserver<__instance__, true> {
+template<utils::smanip::FixedString instance>
+class Observer: public utils::security::observer::AObserver<instance, true> {
     public:
         // ------------ Operator ---------- //
         Observer& operator=(const Observer& other) = default;

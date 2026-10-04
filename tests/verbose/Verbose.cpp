@@ -23,6 +23,9 @@ File Description:
 #include <functional>
 #include <optional>
 #include <string>
+#include <atomic>
+#include <thread>
+#include <vector>
 
 struct VerboseModeCase {
     std::string name;
@@ -36,14 +39,14 @@ std::ostream& operator<<(std::ostream& os, const VerboseModeCase& c) {return os 
 using VerboseTestParam = std::tuple<VerboseModeCase, std::string>;
 
 // Reset the global verbose mode around each test (the global state leaked between tests)
-class VerboseFixture : public ::testing::TestWithParam<VerboseTestParam>
+class VerboseFixture: public ::testing::TestWithParam<VerboseTestParam>
 {
     protected:
         void SetUp(void) override {utils::verbose::verbose = utils::verbose::Verbose::Basic;}; // default value of the lib
         void TearDown(void) override {utils::verbose::verbose = utils::verbose::Verbose::Basic;};
 };
-class VerboseTest : public VerboseFixture {};
-class VerboseRedirectTest : public VerboseFixture {};
+class VerboseTest: public VerboseFixture {};
+class VerboseRedirectTest: public VerboseFixture {};
 
 const std::vector<VerboseModeCase>& verboseModeCases() {
     static const std::vector<VerboseModeCase> cases = {
@@ -223,7 +226,7 @@ const std::vector<VerboseModeCase>& verboseRedirectModeCases() {
 }
 
 TEST_P(VerboseTest, ProducesExpectedOutput) {
-    const auto& [modeCase, input] = GetParam();
+    const auto &[modeCase, input] = GetParam();
 
     testing::internal::CaptureStdout();
     if (modeCase.mode.has_value())
@@ -235,7 +238,7 @@ TEST_P(VerboseTest, ProducesExpectedOutput) {
 }
 
 TEST_P(VerboseRedirectTest, ProducesExpectedOutputRedirect) {
-    const auto& [modeCase, input] = GetParam();
+    const auto &[modeCase, input] = GetParam();
 
     testing::internal::CaptureStderr();
     if (modeCase.mode.has_value())
@@ -271,3 +274,51 @@ INSTANTIATE_TEST_SUITE_P(InputCases, VerboseRedirectTest,
     ),
     [](const ::testing::TestParamInfo<VerboseTestParam>& info) {return std::get<0>(info.param).name + "_" + std::to_string(info.index);}
 );
+
+TEST(VerboseNested, VerboseInsideFn) {
+    utils::verbose::verbose = utils::verbose::Verbose::Basic;
+    testing::internal::CaptureStdout();
+    onBasicVerboseFn(onBasicVerbose("inner"););
+    EXPECT_EQ(testing::internal::GetCapturedStdout(), "inner\n");
+}
+
+TEST(VerboseLocked, RunTheFunction) {
+    int calls = 0;
+    utils::verbose::locked([&calls](void) {++calls;});
+    EXPECT_EQ(calls, 1);
+}
+
+TEST(VerboseLocked, SerializeConcurrentOutputs) {
+    utils::verbose::verbose = utils::verbose::Verbose::Basic;
+    std::atomic<int> inside = 0, maxInside = 0;
+    std::vector<std::thread> threads;
+    for (int t = 0; t < 4; ++t) {
+        threads.emplace_back([&](void) {
+            for (int i = 0; i < 200; ++i) {
+                utils::verbose::locked([&](void) {
+                    int now = ++inside;
+                    if (now > maxInside) maxInside = now;
+                    --inside;
+                });
+            }
+        });
+    }
+    for (std::thread& thread: threads) thread.join();
+    EXPECT_EQ(maxInside.load(), 1);
+}
+
+TEST(VerboseLevel, ConcurrentChangeAndRead) {
+    std::atomic<bool> stop = false;
+    std::thread writer([&](void) {
+        while (!stop) {
+            utils::verbose::verbose = utils::verbose::Verbose::None;
+            utils::verbose::verbose = utils::verbose::Verbose::Basic;
+        }
+    });
+    testing::internal::CaptureStdout();
+    for (int i = 0; i < 1000; ++i) onDebugVerbose("never"); // level always under Debug
+    stop = true;
+    writer.join();
+    EXPECT_EQ(testing::internal::GetCapturedStdout(), "");
+    utils::verbose::verbose = utils::verbose::Verbose::Basic;
+}

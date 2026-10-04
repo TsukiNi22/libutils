@@ -27,7 +27,8 @@ File Description:
     #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::Type, utils::exception::InternalCode
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
-    #include <dlfcn.h>                                  // dlsym, dlerror
+    #include "../attribute/Attribute.hpp"               // _cold, _hot, _nodiscard, _unlikely, _migration
+    #include <dlfcn.h>                                  // ::dlsym, ::dlerror, ::dlclose
     #include <string_view>                              // std::string_view
     #include <string>                                   // std::string
 
@@ -42,9 +43,12 @@ class SharedObject: private utils::security::observer::Observer<"SharedObject"> 
 
     public:
         // ------------ Function ---------- //
-        _cold _nodiscard inline bool isloaded(void) const {return this->_lib;};
+        _cold _nodiscard inline bool isLoaded(void) const         {return this->_lib != nullptr;};
         _cold _nodiscard inline std::string_view path(void) const {return this->_path;};
-        _cold _nodiscard inline void* get(void) const {return this->_lib;};
+        _cold _nodiscard inline void* get(void) const             {return this->_lib;};
+
+        /* migration */
+        _migration(4, 0, 0) _cold _nodiscard inline bool isloaded(void) const {return this->isLoaded();};
 
         /* tools */
         template<typename T>
@@ -59,7 +63,16 @@ class SharedObject: private utils::security::observer::Observer<"SharedObject"> 
 
         // ------------ Operator ---------- //
         SharedObject& operator=(const SharedObject& other) = delete;
-        SharedObject& operator=(SharedObject&& other) {this->_lib = other._lib; this->_path = other._path; other._lib = nullptr; other._path.clear(); return *this;};
+        SharedObject& operator=(SharedObject&& other)
+        {
+            if (this == &other) return *this;
+            if (this->_lib) ::dlclose(this->_lib); // release the previous library
+            this->_lib = other._lib;
+            this->_path = other._path;
+            other._lib = nullptr;
+            other._path.clear();
+            return *this;
+        };
 
         // ---------- Constructor --------- //
         SharedObject(const std::string& path);
