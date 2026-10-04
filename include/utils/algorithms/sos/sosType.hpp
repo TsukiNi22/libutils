@@ -24,6 +24,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
+    #include "utils/attribute/Attribute.hpp"
     #include <cstdint>  // std::uint16_t
     #include <vector>   // std::vector
 
