@@ -303,7 +303,7 @@ html, body { overscroll-behavior: none; }
 <body>
 <header class="topbar">
   <button class="icon-btn menu-btn" type="button" id="menuBtn" aria-label="Open the navigation" data-i18n-aria-label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
-  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v3.0.0</span></a>
+  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v4.0.0</span></a>
   <nav class="tabs" aria-label="Pages">
     <a href="index.html" class="current" aria-current="page" data-i18n>Technical</a>
     <a href="graph.html" data-i18n>Graph</a>
@@ -336,8 +336,9 @@ html, body { overscroll-behavior: none; }
   <a href="#errors"><span data-lang="en">4. Errors</span><span data-lang="fr">4. Erreurs</span></a>
   <a href="#network"><span data-lang="en">5. Network & EETP</span><span data-lang="fr">5. Réseau & EETP</span></a>
   <a href="#ipc"><span data-lang="en">6. Processes & IPC</span><span data-lang="fr">6. Processus & IPC</span></a>
-  <a href="#build"><span data-lang="en">7. Build, tests & CI</span><span data-lang="fr">7. Build, tests & CI</span></a>
-  <a href="#licenses"><span data-lang="en">8. Licenses</span><span data-lang="fr">8. Licences</span></a>
+  <a href="#platforms"><span data-lang="en">7. Platforms</span><span data-lang="fr">7. Plateformes</span></a>
+  <a href="#build"><span data-lang="en">8. Build, tests & CI</span><span data-lang="fr">8. Build, tests & CI</span></a>
+  <a href="#licenses"><span data-lang="en">9. Licenses</span><span data-lang="fr">9. Licences</span></a>
 </aside>
 
 <main>
@@ -387,8 +388,9 @@ html, body { overscroll-behavior: none; }
     <tbody>
       <tr><td><span data-lang="en">Language</span><span data-lang="fr">Langage</span></td><td><span data-lang="en">C++20, built with <code>clang++</code> and CMake (&gt;= 3.20)</span><span data-lang="fr">C++20, compilé avec <code>clang++</code> et CMake (&gt;= 3.20)</span></td></tr>
       <tr><td><span data-lang="en">Library</span><span data-lang="fr">Bibliothèque</span></td><td><span data-lang="en">static: <code>libutils.a</code> (optimized), <code>libutils_debug.a</code>, <code>libutils_asan.a</code></span><span data-lang="fr">statique : <code>libutils.a</code> (optimisée), <code>libutils_debug.a</code>, <code>libutils_asan.a</code></span></td></tr>
+      <tr><td><span data-lang="en">Platforms</span><span data-lang="fr">Plateformes</span></td><td><span data-lang="en">Unix (Linux, BSD, macOS) and Windows x86_64 (cross compiled with MinGW-w64), same API (<a href="#platforms">section 7</a>)</span><span data-lang="fr">Unix (Linux, BSD, macOS) et Windows x86_64 (compilation croisée MinGW-w64), même API (<a href="#platforms">section 7</a>)</span></td></tr>
       <tr><td><span data-lang="en">Dependency</span><span data-lang="fr">Dépendance</span></td><td><span data-lang="en">OpenSSL &gt;= 3.0 (encryption, Base64)</span><span data-lang="fr">OpenSSL &gt;= 3.0 (chiffrement, Base64)</span></td></tr>
-      <tr><td><span data-lang="en">Version</span><span data-lang="fr">Version</span></td><td><code>utils::version</code> (<code>"v3.0.0"</code>), <code>__LIBUTILS_VERSION__</code></td></tr>
+      <tr><td><span data-lang="en">Version</span><span data-lang="fr">Version</span></td><td><code>utils::version</code> (<code>"v4.0.0"</code>), <code>__LIBUTILS_VERSION__</code></td></tr>
     </tbody>
   </table></div>
 </section>
@@ -401,6 +403,7 @@ html, body { overscroll-behavior: none; }
     <button type="button" data-tab="rpm">Fedora / RPM</button>
     <button type="button" data-tab="deb">Debian / Ubuntu</button>
     <button type="button" data-tab="src"><span data-lang="en">Sources</span><span data-lang="fr">Sources</span></button>
+    <button type="button" data-tab="win">Windows (MinGW-w64)</button>
   </div>
   <div class="ctab-panel" data-tabs="install" data-tab="rpm">
 <pre data-title="Repository + package"><code>curl -fsSL https://raw.githubusercontent.com/TsukiNi22/libutils/main/setup.sh | bash -s
@@ -416,6 +419,13 @@ export BUILD_DIR=build
 cmake -S . -B $BUILD_DIR
 sudo cmake --build $BUILD_DIR --target install --parallel $(nproc)</code></pre>
   </div>
+  <div class="ctab-panel" data-tabs="install" data-tab="win">
+<pre data-title="Cross compilation from Linux (mingw64-gcc-c++, mingw64-openssl)"><code>export BUILD_DIR=build-windows
+cmake -S . -B $BUILD_DIR -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain/mingw-w64.cmake -DCMAKE_BUILD_TYPE=Optimized
+cmake --build $BUILD_DIR --parallel $(nproc)
+cmake --install $BUILD_DIR --prefix &lt;windows_prefix&gt;   # include/, lib/libutils.a, lib/cmake/utils/
+cmake --build $BUILD_DIR --target package               # ZIP archive</code></pre>
+  </div>
 
   <div class="table-wrap"><table>
     <thead><tr><th><span data-lang="en">Package</span><span data-lang="fr">Paquet</span></th><th><span data-lang="en">Content</span><span data-lang="fr">Contenu</span></th></tr></thead>
@@ -428,7 +438,7 @@ sudo cmake --build $BUILD_DIR --target install --parallel $(nproc)</code></pre>
   </table></div>
 
   <h3><span data-lang="en">2.2 Integrate</span><span data-lang="fr">2.2 Intégrer</span></h3>
-<pre data-title="CMakeLists.txt"><code>find_package(utils 3.0.0 REQUIRED)
+<pre data-title="CMakeLists.txt"><code>find_package(utils 4.0.0 REQUIRED)
 target_link_libraries(${TARGET} PRIVATE utils::utils)   # includes, static lib & OpenSSL</code></pre>
 <pre data-title="main.cpp"><code>#define _Network
 #define _Cli
@@ -457,6 +467,7 @@ target_link_libraries(${TARGET} PRIVATE utils::utils)   # includes, static lib &
       <tr><td><a href="https://github.com/TsukiNi22/libutils/wiki/Manip"><code>_Manip</code></a></td><td><code>utils::iomanip</code>, <code>utils::smanip</code></td><td><span data-lang="en">ANSI sequences, <code>format</code>, <code>FixedString</code>, <code>Base64Codec</code>, <code>EETPParser</code></span><span data-lang="fr">séquences ANSI, <code>format</code>, <code>FixedString</code>, <code>Base64Codec</code>, <code>EETPParser</code></span></td></tr>
       <tr><td><a href="https://github.com/TsukiNi22/libutils/wiki/Algorithms"><code>_Algorithms</code></a></td><td><code>utils::algorithms</code></td><td><span data-lang="en">c2dmp-hsm (string distance), s.o.s (steganography)</span><span data-lang="fr">c2dmp-hsm (distance entre chaînes), s.o.s (stéganographie)</span></td></tr>
       <tr><td><a href="https://github.com/TsukiNi22/libutils/wiki/Security"><code>_Security</code></a></td><td><code>utils::security</code></td><td><code>AESKey</code>, <code>RSAKey</code>, <code>CommonRSAKey</code>, <span data-lang="en">observers / memory leak notifier</span><span data-lang="fr">observers / notifier de fuites mémoire</span></td></tr>
+      <tr><td><a href="https://github.com/TsukiNi22/libutils/wiki/Platform"><code>_Platform</code></a></td><td><code>utils::platform</code></td><td><span data-lang="en">POSIX calls for Unix &amp; Windows (<code>close</code>, <code>socket</code>, <code>epoll_wait</code>, <code>dlopen</code>, <code>tcgetattr</code>...), <code>UTILS_UNIX</code> / <code>UTILS_WINDOWS</code></span><span data-lang="fr">appels POSIX pour Unix &amp; Windows (<code>close</code>, <code>socket</code>, <code>epoll_wait</code>, <code>dlopen</code>, <code>tcgetattr</code>...), <code>UTILS_UNIX</code> / <code>UTILS_WINDOWS</code></span></td></tr>
       <tr><td><a href="https://github.com/TsukiNi22/libutils/wiki/Attribute"><code>_Attribute</code></a></td><td><span data-lang="en">macros</span><span data-lang="fr">macros</span></td><td><code>_hot</code>, <code>_nodiscard</code>, <code>_likely</code>, <code>_migration(x, y, z)</code>...</td></tr>
     </tbody>
   </table></div>
@@ -489,7 +500,7 @@ target_link_libraries(${TARGET} PRIVATE utils::utils)   # includes, static lib &
 <!-- 5 -->
 <section id="network">
   <h2><span data-lang="en">5. Network & EETP</span><span data-lang="fr">5. Réseau & EETP</span></h2>
-  <p><span data-lang="en">A <code>Server</code> and a <code>Client</code> exchange <strong>payloads</strong> (strings ended by a separator, <code>'\n'</code> by default) through a socket object. <code>listen()</code> reads what is available without blocking, <code>join()</code> waits for the next epoll event; <code>stop()</code> / <code>kill()</code> can be called from another thread.</span><span data-lang="fr">Un <code>Server</code> et un <code>Client</code> échangent des <strong>payloads</strong> (chaînes terminées par un séparateur, <code>'\n'</code> par défaut) via un objet socket. <code>listen()</code> lit ce qui est disponible sans bloquer, <code>join()</code> attend le prochain événement epoll ; <code>stop()</code> / <code>kill()</code> peuvent être appelés depuis un autre thread.</span></p>
+  <p><span data-lang="en">A <code>Server</code> and a <code>Client</code> exchange <strong>payloads</strong> (strings ended by a separator, <code>'\n'</code> by default) through a socket object. <code>listen()</code> reads what is available without blocking, <code>join()</code> waits for the next epoll event; <code>stop()</code> / <code>kill()</code> can be called from another thread. On Windows the sockets use Winsock 2 and the epoll is emulated over <code>WSAPoll</code>.</span><span data-lang="fr">Un <code>Server</code> et un <code>Client</code> échangent des <strong>payloads</strong> (chaînes terminées par un séparateur, <code>'\n'</code> par défaut) via un objet socket. <code>listen()</code> lit ce qui est disponible sans bloquer, <code>join()</code> attend le prochain événement epoll ; <code>stop()</code> / <code>kill()</code> peuvent être appelés depuis un autre thread. Sous Windows les sockets utilisent Winsock 2 et l'epoll est émulé avec <code>WSAPoll</code>.</span></p>
   <figure>
     <svg viewBox="0 0 760 210" role="img" aria-label="Server and Client use an ISocket, the EETPParser frames the payloads">
       <defs>
@@ -535,7 +546,7 @@ target_link_libraries(${TARGET} PRIVATE utils::utils)   # includes, static lib &
 <!-- 6 -->
 <section id="ipc">
   <h2><span data-lang="en">6. Processes & IPC</span><span data-lang="fr">6. Processus & IPC</span></h2>
-  <p><span data-lang="en"><code>Process</code> wraps <code>fork</code> / <code>execvp</code> / <code>waitpid</code> with pipes and fd duplications applied in the child; <code>Poll</code> wraps <code>epoll</code>; <code>SharedObject</code> loads a <code>.so</code>. <code>SharedMemory</code> passes messages between processes through a POSIX shared memory split in slots.</span><span data-lang="fr"><code>Process</code> encapsule <code>fork</code> / <code>execvp</code> / <code>waitpid</code> avec pipes et duplications de fd appliquées dans le fils ; <code>Poll</code> encapsule <code>epoll</code> ; <code>SharedObject</code> charge un <code>.so</code>. <code>SharedMemory</code> fait passer des messages entre processus via une mémoire partagée POSIX découpée en slots.</span></p>
+  <p><span data-lang="en"><code>Process</code> wraps <code>fork</code> / <code>execvp</code> / <code>waitpid</code> with pipes and fd duplications applied in the child; <code>Poll</code> wraps <code>epoll</code>; <code>SharedObject</code> loads a <code>.so</code>. <code>SharedMemory</code> passes messages between processes through a POSIX shared memory split in slots. On Windows: <code>CreateProcess</code>, <code>WSAPoll</code>, <code>LoadLibrary</code> (<code>.dll</code>) and a file mapping with a named event (<a href="#platforms">section 7</a>).</span><span data-lang="fr"><code>Process</code> encapsule <code>fork</code> / <code>execvp</code> / <code>waitpid</code> avec pipes et duplications de fd appliquées dans le fils ; <code>Poll</code> encapsule <code>epoll</code> ; <code>SharedObject</code> charge un <code>.so</code>. <code>SharedMemory</code> fait passer des messages entre processus via une mémoire partagée POSIX découpée en slots. Sous Windows : <code>CreateProcess</code>, <code>WSAPoll</code>, <code>LoadLibrary</code> (<code>.dll</code>) et un file mapping avec un événement nommé (<a href="#platforms">section 7</a>).</span></p>
   <figure>
     <svg viewBox="0 0 760 200" role="img" aria-label="Shared memory with a metadata header and slots read by reader threads">
       <defs>
@@ -571,8 +582,49 @@ target_link_libraries(${TARGET} PRIVATE utils::utils)   # includes, static lib &
 </section>
 
 <!-- 7 -->
+<section id="platforms">
+  <h2><span data-lang="en">7. Platforms</span><span data-lang="fr">7. Plateformes</span></h2>
+  <p><span data-lang="en">Every class has the same API on Unix and Windows: the library only calls the system through <code>utils::platform::</code>, whose functions have the <strong>names, arguments and contract of POSIX</strong> (<code>-1</code> and <code>errno</code>). On Unix they are the system calls, on Windows a Win32 / Winsock / CRT implementation. The same calls are given to the programs by the section <code>_Platform</code>.</span><span data-lang="fr">Chaque classe a la même API sous Unix et Windows : la bibliothèque n'appelle le système que via <code>utils::platform::</code>, dont les fonctions ont les <strong>noms, arguments et contrat de POSIX</strong> (<code>-1</code> et <code>errno</code>). Sous Unix ce sont les appels système, sous Windows une implémentation Win32 / Winsock / CRT. Les mêmes appels sont donnés aux programmes par la section <code>_Platform</code>.</span></p>
+  <figure>
+    <svg viewBox="0 0 760 260" role="img" aria-label="The classes of libutils call utils::platform, implemented by the system calls on Unix and by Win32, Winsock and the CRT on Windows">
+      <defs>
+        <marker id="arr7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path class="arrow" d="M0 0L10 5L0 10z"/>
+        </marker>
+      </defs>
+      <rect class="box" x="140" y="20" width="480" height="50" rx="8"/>
+      <text class="lbl" x="380" y="50" text-anchor="middle">Server, Client, Poll, Process, Cli, SharedObject, Pipe...</text>
+      <rect class="box-alt" x="140" y="105" width="480" height="50" rx="8"/>
+      <text class="lbl" x="380" y="135" text-anchor="middle">utils::platform (close, socket, epoll_wait, dlopen...)</text>
+      <rect class="box" x="60" y="190" width="280" height="50" rx="8"/>
+      <text class="lbl" x="200" y="220" text-anchor="middle">Unix: system calls</text>
+      <rect class="box" x="420" y="190" width="280" height="50" rx="8"/>
+      <text class="lbl" x="560" y="220" text-anchor="middle">Windows: Win32 / Winsock / CRT</text>
+      <path class="edge" d="M380 70V101" marker-end="url(#arr7)"/>
+      <path class="edge" d="M260 155L204 186" marker-end="url(#arr7)"/>
+      <path class="edge" d="M500 155L556 186" marker-end="url(#arr7)"/>
+    </svg>
+    <figcaption><span data-lang="en">Figure 4: one code for both platforms, the difference is inside <code>utils::platform</code>.</span><span data-lang="fr">Figure 4 : un seul code pour les deux plateformes, la différence est dans <code>utils::platform</code>.</span></figcaption>
+  </figure>
+  <h3><span data-lang="en">7.1 Calls</span><span data-lang="fr">7.1 Appels</span></h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th><span data-lang="en">Header</span><span data-lang="fr">En-tête</span></th><th><span data-lang="en">Calls</span><span data-lang="fr">Appels</span></th><th><span data-lang="en">Windows implementation</span><span data-lang="fr">Implémentation Windows</span></th></tr></thead>
+    <tbody>
+      <tr><td><code>Unistd.hpp</code></td><td><code>close</code>, <code>read</code>, <code>write</code>, <code>pipe</code>, <code>dup</code>, <code>dup2</code>, <code>isatty</code>, <code>poll</code>, <code>getpid</code>, <code>readlink</code>, <code>strerror</code></td><td><span data-lang="en">CRT, or Winsock for a socket; <code>poll</code> also on the console / pipes / files; <code>strerror</code> knows the socket errors</span><span data-lang="fr">CRT, ou Winsock pour un socket ; <code>poll</code> aussi sur la console / les pipes / les fichiers ; <code>strerror</code> connaît les erreurs de socket</span></td></tr>
+      <tr><td><code>Socket.hpp</code></td><td><code>socket</code>, <code>connect</code>, <code>bind</code>, <code>listen</code>, <code>accept</code>, <code>recv</code>, <code>send</code>, <code>setsockopt</code>, <code>getsockname</code>, <code>getpeername</code>, <code>getaddrinfo</code></td><td><span data-lang="en">Winsock 2 started on the first use, errors translated in <code>errno</code></span><span data-lang="fr">Winsock 2 démarré au premier appel, erreurs traduites dans <code>errno</code></span></td></tr>
+      <tr><td><code>Epoll.hpp</code></td><td><code>epoll_create1</code>, <code>epoll_ctl</code>, <code>epoll_wait</code></td><td><span data-lang="en">emulation over <code>WSAPoll</code>: sockets only, level triggered, <code>EPOLLONESHOT</code> emulated</span><span data-lang="fr">émulation avec <code>WSAPoll</code> : sockets seulement, niveau, <code>EPOLLONESHOT</code> émulé</span></td></tr>
+      <tr><td><code>Dlfcn.hpp</code></td><td><code>dlopen</code>, <code>dlsym</code>, <code>dlclose</code>, <code>dlerror</code>, <code>dladdr</code></td><td><code>LoadLibraryA</code>, <code>GetProcAddress</code>, <code>FreeLibrary</code>, <code>GetModuleHandleExA</code></td></tr>
+      <tr><td><code>Termios.hpp</code></td><td><code>tcgetattr</code>, <code>tcsetattr</code></td><td><span data-lang="en">console mode (<code>ICANON</code> = line input, <code>ECHO</code>, <code>ISIG</code> = ctrl+c, VT input)</span><span data-lang="fr">mode de la console (<code>ICANON</code> = saisie en ligne, <code>ECHO</code>, <code>ISIG</code> = ctrl+c, entrée VT)</span></td></tr>
+    </tbody>
+  </table></div>
+  <h3><span data-lang="en">7.2 Differences</span><span data-lang="fr">7.2 Différences</span></h3>
+  <div class="callout warn"><p><span data-lang="en">No <code>fork</code> on Windows: <code>Process::spawn()</code> and a <code>dup</code> on a fd other than <code>0</code>, <code>1</code>, <code>2</code> raise a <code>FatalException</code> (<code>UndefinedCall</code>). <code>spawn(path, args)</code> uses <code>CreateProcess</code>.</span><span data-lang="fr">Pas de <code>fork</code> sous Windows : <code>Process::spawn()</code> et un <code>dup</code> sur un autre fd que <code>0</code>, <code>1</code>, <code>2</code> lèvent une <code>FatalException</code> (<code>UndefinedCall</code>). <code>spawn(path, args)</code> utilise <code>CreateProcess</code>.</span></p></div>
+  <div class="callout"><p><span data-lang="en">Other differences: <code>Poll</code> / <code>Client</code> / <code>Server</code> only handle sockets (at most 10 ms of latency), a <code>Process</code> has no signal, ctrl+z is a char for the <code>Cli</code>, a <code>SharedMemory</code> disappears with its last handle. Include <code>&lt;windows.h&gt;</code> before <code>&lt;utils/utils.hpp&gt;</code> (it declares a member named <code>_unused</code>, a libutils macro), or define <code>WIN32_LEAN_AND_MEAN</code>.</span><span data-lang="fr">Autres différences : <code>Poll</code> / <code>Client</code> / <code>Server</code> ne gèrent que des sockets (10 ms de latence au plus), un <code>Process</code> n'a pas de signal, ctrl+z est un caractère pour le <code>Cli</code>, une <code>SharedMemory</code> disparaît avec son dernier handle. Inclure <code>&lt;windows.h&gt;</code> avant <code>&lt;utils/utils.hpp&gt;</code> (il déclare un membre nommé <code>_unused</code>, une macro de libutils), ou définir <code>WIN32_LEAN_AND_MEAN</code>.</span></p></div>
+</section>
+
+<!-- 8 -->
 <section id="build">
-  <h2><span data-lang="en">7. Build, tests & CI</span><span data-lang="fr">7. Build, tests & CI</span></h2>
+  <h2><span data-lang="en">8. Build, tests & CI</span><span data-lang="fr">8. Build, tests & CI</span></h2>
   <div class="table-wrap"><table>
     <thead><tr><th><span data-lang="en">Command</span><span data-lang="fr">Commande</span></th><th><span data-lang="en">Result</span><span data-lang="fr">Résultat</span></th></tr></thead>
     <tbody>
@@ -580,6 +632,7 @@ target_link_libraries(${TARGET} PRIVATE utils::utils)   # includes, static lib &
       <tr><td><code>cmake --build build --target release</code></td><td><span data-lang="en">the 3 libraries</span><span data-lang="fr">les 3 bibliothèques</span></td></tr>
       <tr><td><code>cmake --build build --target package_release</code></td><td><span data-lang="en">every RPM / DEB package</span><span data-lang="fr">tous les paquets RPM / DEB</span></td></tr>
       <tr><td><code>-DBUILD_TESTS=ON</code> + <code>ctest --test-dir build</code></td><td><span data-lang="en">GoogleTest unit tests (<code>unit_tests</code> at the root)</span><span data-lang="fr">tests unitaires GoogleTest (<code>unit_tests</code> à la racine)</span></td></tr>
+      <tr><td><code>-DCMAKE_TOOLCHAIN_FILE=cmake/toolchain/mingw-w64.cmake</code></td><td><span data-lang="en">Windows build (MinGW-w64), tests run with <code>wine</code> by <code>ctest</code>, ZIP package</span><span data-lang="fr">build Windows (MinGW-w64), tests lancés avec <code>wine</code> par <code>ctest</code>, paquet ZIP</span></td></tr>
     </tbody>
   </table></div>
   <figure>
@@ -606,7 +659,7 @@ target_link_libraries(${TARGET} PRIVATE utils::utils)   # includes, static lib &
       <text class="small" x="345" y="56" text-anchor="middle">build</text>
       <text class="small" x="345" y="122" text-anchor="middle">else</text>
     </svg>
-    <figcaption><span data-lang="en">Figure 4: the CI on every push of <code>main</code> or of a <code>v*</code> tag (<code>[ignore]</code> skips it).</span><span data-lang="fr">Figure 4 : la CI à chaque push sur <code>main</code> ou d'un tag <code>v*</code> (<code>[ignore]</code> la saute).</span></figcaption>
+    <figcaption><span data-lang="en">Figure 5: the CI on every push of <code>main</code> or of a <code>v*</code> tag (<code>[ignore]</code> skips it).</span><span data-lang="fr">Figure 5 : la CI à chaque push sur <code>main</code> ou d'un tag <code>v*</code> (<code>[ignore]</code> la saute).</span></figcaption>
   </figure>
   <div class="table-wrap"><table>
     <thead><tr><th><span data-lang="en">Trigger</span><span data-lang="fr">Déclencheur</span></th><th><span data-lang="en">Result</span><span data-lang="fr">Résultat</span></th></tr></thead>
@@ -618,9 +671,9 @@ target_link_libraries(${TARGET} PRIVATE utils::utils)   # includes, static lib &
   </table></div>
 </section>
 
-<!-- 8 -->
+<!-- 9 -->
 <section id="licenses">
-  <h2><span data-lang="en">8. Licenses</span><span data-lang="fr">8. Licences</span></h2>
+  <h2><span data-lang="en">9. Licenses</span><span data-lang="fr">9. Licences</span></h2>
   <div class="table-wrap"><table>
     <thead><tr><th><span data-lang="en">Component</span><span data-lang="fr">Composant</span></th><th><span data-lang="en">License</span><span data-lang="fr">Licence</span></th></tr></thead>
     <tbody>
@@ -637,7 +690,7 @@ target_link_libraries(${TARGET} PRIVATE utils::utils)   # includes, static lib &
 </nav>
 </main>
 </div>
-<footer class="site"><span data-lang="en"><span class="repo-name">libutils</span> documentation · generated from the <a class="repo-link" href="https://github.com/TsukiNi22/libutils">repository</a> (<span class="repo-version">v3.0.0</span>, <span class="repo-license">MIT</span>)</span><span data-lang="fr">Documentation de <span class="repo-name">libutils</span> · générée depuis le <a class="repo-link" href="https://github.com/TsukiNi22/libutils">dépôt</a> (<span class="repo-version">v3.0.0</span>, <span class="repo-license">MIT</span>)</span></footer>
+<footer class="site"><span data-lang="en"><span class="repo-name">libutils</span> documentation · generated from the <a class="repo-link" href="https://github.com/TsukiNi22/libutils">repository</a> (<span class="repo-version">v4.0.0</span>, <span class="repo-license">MIT</span>)</span><span data-lang="fr">Documentation de <span class="repo-name">libutils</span> · générée depuis le <a class="repo-link" href="https://github.com/TsukiNi22/libutils">dépôt</a> (<span class="repo-version">v4.0.0</span>, <span class="repo-license">MIT</span>)</span></footer>
 <script>
 // French texts of the page (English text -> French text), extend it with the page content
 window.DOC_FR = {
