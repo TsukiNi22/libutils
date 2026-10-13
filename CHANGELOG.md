@@ -20,6 +20,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [pre-release] (empty)
 
+## v4.0.0 - 2026-10-07
+### Added
+- **[MAJOR]** Windows support, cross compiled from Linux with MinGW-w64 (`cmake/toolchain/mingw-w64.cmake`, `-DCMAKE_TOOLCHAIN_FILE=...`): every portable section builds for Windows, `ws2_32` is linked by `utils::utils`, the package is a `ZIP` archive
+- `utils/platform/Platform.hpp` (included by `utils.hpp`): `UTILS_UNIX` / `UTILS_WINDOWS` / `UTILS_PLATFORM`
+- Section `_Platform` (in `_Tools`): the POSIX calls for Unix & Windows in `utils::platform::`, with the **same names and contract** as the system calls (-1 & `errno`, the Winsock errors are translated in `errno`):
+  - `utils/platform/Unistd.hpp`: `close` (any fd: CRT, socket, epoll), `read`, `write`, `pipe`, `dup`, `dup2`, `isatty`, `poll` (sockets, console, pipes, files), `getpid`, `readlink` (`/proc/self/exe` on Windows), `strerror` (also the socket errors)
+  - `utils/platform/Socket.hpp`: `socket`, `connect`, `bind`, `listen`, `accept`, `recv`, `send`, `setsockopt` (`timeval` timeouts), `getsockname`, `getpeername`, `getaddrinfo`, `freeaddrinfo`, `gai_strerror`, `MSG_NOSIGNAL` (`0` on Windows)
+  - `utils/platform/Epoll.hpp`: `epoll_create1`, `epoll_ctl`, `epoll_wait` (emulation over `WSAPoll` on Windows: sockets only, `EPOLLONESHOT` emulated, `EPOLLET` refused), `struct epoll_event` & `EPOLL*` defined on Windows
+  - `utils/platform/Dlfcn.hpp`: `dlopen`, `dlsym`, `dlclose`, `dlerror`, `dladdr`, `Dl_info` & `RTLD_*` defined on Windows
+  - `utils/platform/Termios.hpp`: `tcgetattr`, `tcsetattr` (console mode on Windows), `struct termios`, `ICANON`, `ECHO`, `ISIG`, `TCSA*` defined on Windows
+- `utils::iomanip::enable_ansi()`: enables the virtual terminal mode of the Windows console (nothing to do on Unix)
+- Windows implementations, same API as on Unix: `TCPSocket` / `ASocket` & `is_ip` / `resolve_*` (Winsock 2, started on the first use), `Client` / `Server` & `Poll` (epoll emulated over `WSAPoll`), `Process` (`CreateProcess`, `WaitForSingleObject`, `TerminateProcess`, `_execvp`), `SharedMemory` (`CreateFileMapping`, `MapViewOfFile`, named event instead of the futex), `Cli` (console API), `SharedObject` (`LoadLibrary`, `GetProcAddress`, `FreeLibrary`), `Pipe` / `Dup` (CRT `_pipe`, `_dup`, `_dup2`), the `iomanip` reports (CRT `_read`)
+- Unit tests of the `utils::platform` calls (`tests/platform/Platform.cpp`, both platforms) and of the Windows ports (`tests/platform/Windows.cpp`, `tests/tools/RawSocket.hpp`), the `Cli`, `SharedMemory` and `Client` / `Server` tests run on both platforms, GoogleTest built from the sources when cross compiling and the tests run with `wine` (`CMAKE_CROSSCOMPILING_EMULATOR`)
+
+### Changed
+- **[MAJOR]** Without equivalent on Windows, `FatalException` (`UndefinedCall`): `Process::spawn(void)` (fork) and a `Process::dup` on a fd other than `0`, `1`, `2`
+- `SharedMemory::init` opens / maps the memory in the library (`map_` / `unmap_`), the public header doesn't include `<sys/mman.h>` / `<unistd.h>` / `<fcntl.h>` anymore, the default ownership is `utils::platform::getpid()`
+- `Process` keeps the `HANDLE` of the child on Windows (`_handle`), `Status::sig` is always `0` on Windows
+- `Cli` (Windows): `utils::platform::tcgetattr` / `tcsetattr` on the console, no `SIGTSTP` (ctrl+z is a char), history in `%USERPROFILE%` when `HOME` is not set
+- Every system call of the library goes through `utils::platform::` (same code on both platforms): the public headers include `utils/platform/*.hpp` instead of `<unistd.h>`, `<sys/socket.h>`, `<sys/epoll.h>`, `<dlfcn.h>`, `<termios.h>` (no `windows.h` in the public headers on Windows)
+- `utils::math::trigo` uses `std::numbers::pi` (`M_PI` is not standard)
+- `_hidden` is empty on Windows (no ELF visibility)
+- The `clang++` compiler is now really used: `CMAKE_CXX_COMPILER` was set after `project()` (ignored, the default `c++` was used), it's set before unless a toolchain file is given
+- `Asan` with MinGW is built like `Debug` (no AddressSanitizer), no `-fno-plt` on Windows
+- `CommonRSAKey`: `~` uses `%USERPROFILE%` on Windows when `HOME` is not set (`~\...` accepted)
+
+### Fixed
+- The high level `accept()` / `recv()` / `send()` of `ASocket` were hidden by the raw overloads of `TCPSocket` (only usable through an `ISocket&`)
+- The unit tests couldn't be linked in `Asan` mode (`unit_tests` wasn't linked with `-fsanitize=address`)
+
+### Removed
+- **[MAJOR]** Every migration kept until v4.0.0:
+  - `Settings::auto_cast` (-> `autoCast`)
+  - `utils::cli::Flags` (-> `utils::cli::flags`)
+  - `SharedObject::isloaded` (-> `isLoaded`)
+  - `utils::iomanip::setStyle` / `resetStyle` / `readCursorPosition` / `readMouseEvent` / `readAdvancedMouseEvent` (-> `set_style` / `reset_style` / `read_cursor_position` / `read_mouse_event` / `read_advanced_mouse_event`)
+  - `utils::security::encryption::keyToString` / `stringToKey` (-> `key_to_string` / `string_to_key`)
+  - `utils::smanip::fixed_string` and `utils/manip/smanip/fixed_string.hpp` (-> `utils::smanip::FixedString`, `FixedString.hpp`)
+  - `utils::network::socket` (`ISocket`, `ASocket`, `TCPSocket`, `is_ip`, `resolve_hostname`, `resolve_address`) (-> `utils::network`)
+  - `utils::concepts::convertible_to` (-> `utils::concepts::ConvertibleTo`)
+
 ## v3.0.0 - 2026-10-05
 ### Changed
 - `utils::verbose::verbose` is a `std::atomic<utils::verbose::Verbose>` (was `volatile`): the level can be changed while other threads log
