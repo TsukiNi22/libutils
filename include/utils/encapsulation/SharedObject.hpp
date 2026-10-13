@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -24,9 +24,9 @@ File Description:
     /* INCLUDE */
 
     /* type */
+    #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::Type, utils::exception::InternalCode
-    #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "../attribute/Attribute.hpp"               // _cold, _hot, _nodiscard, _unlikely
     #include "../platform/Dlfcn.hpp"                    // utils::platform::dlsym, utils::platform::dlerror, utils::platform::dlclose
     #include <string_view>                              // std::string_view

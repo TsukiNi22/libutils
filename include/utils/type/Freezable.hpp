@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -25,10 +25,10 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"               // _nodiscard, _hot, _cold, _unlikely
+    #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::* (Type)
-    #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
+    #include "../attribute/Attribute.hpp"               // _nodiscard, _hot, _cold, _unlikely
     #include <atomic>                                   // std::atomic
 
 namespace utils::type { // namespace start

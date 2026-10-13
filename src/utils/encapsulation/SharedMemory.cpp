@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -17,11 +17,11 @@ File Description:
 ##  Methods definition for the shared memory encapsulation
 \**************************************************************/
 
-#include "utils/attribute/Attribute.hpp"
-#include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/basic/ErrorException.hpp"
 #include "utils/exception/basic/NoneException.hpp"
 #include "utils/encapsulation/SharedMemory.hpp"
+#include "utils/exception/ExceptionDefine.hpp"
+#include "utils/attribute/Attribute.hpp"
 #include "utils/platform/Platform.hpp"
 #ifdef UTILS_WINDOWS
     #include "../platform/Windows.hpp"
@@ -33,15 +33,15 @@ File Description:
     #include <unistd.h>
     #include <fcntl.h>
 #endif
-#include <cerrno>
 #include <unordered_map>
-#include <algorithm>
 #include <functional>
+#include <algorithm>
 #include <optional>
 #include <utility>
 #include <cstddef>
 #include <cstring>
 #include <cstdint>
+#include <cerrno>
 #include <thread>
 #include <atomic>
 #include <vector>
@@ -248,16 +248,10 @@ _hot void utils::encapsulation::SharedMemory::read_(void)
             if (slot.metadata->flag.load(std::memory_order_acquire) != 2) _unlikely {
                 slot.metadata->reader.fetch_sub(1, std::memory_order_release);
                 continue;
-            }
-
-            // already read by this instance (a global request stay readable until all the readers read it)
-            else if (slot.metadata->sequence == this->_seen[i]) {
+            } else if (slot.metadata->sequence == this->_seen[i]) {
                 slot.metadata->reader.fetch_sub(1, std::memory_order_release);
                 continue;
-            }
-
-            // check if it's was destined to itself
-            else if (slot.metadata->target.sender == this->_ownership || (slot.metadata->target.ownership != this->_ownership && !slot.metadata->target.global)) {
+            } else if (slot.metadata->target.sender == this->_ownership || (slot.metadata->target.ownership != this->_ownership && !slot.metadata->target.global)) {
                 slot.metadata->reader.fetch_sub(1, std::memory_order_release);
                 continue;
             }

@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -24,10 +24,10 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"               // _cold, _hot, _nodiscard, _unused
-    #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
+    #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::* (Type)
+    #include "../attribute/Attribute.hpp"               // _cold, _hot, _nodiscard, _unused
     #include "ArgParserType.hpp"                        // utils::arguments::* (Type)
     #include <unordered_map>                            // std::unordered_map
     #include <functional>                               // std::function
@@ -78,7 +78,7 @@ class ArgParser: private utils::security::observer::Observer<"ArgParser"> {
 
         /* parsing */
         // Allways ignore the first argument, return a list of flag's found
-        utils::arguments::ParsedUsages parse(const int argc, const char *const argv[], const bool failsafe = false) const;
+        utils::arguments::ParsedUsages parse(const int argc, const char* const argv[], const bool failsafe = false) const;
         utils::arguments::ParsedUsages parse(const std::vector<std::string>& argv, const bool failsafe = false) const;
 
         /* setup */

@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -25,9 +25,9 @@ File Description:
 
     /* type */
     #include "../../attribute/Attribute.hpp"    // _hot, _nodiscard
+    #include "../../platform/Socket.hpp"        // utils::platform::accept, utils::platform::recv, utils::platform::send, MSG_NOSIGNAL
     #include "../NetworkType.hpp"               // utils::network::Address
     #include "ASocket.hpp"                      // utils::network::ASocket
-    #include "../../platform/Socket.hpp"       // utils::platform::accept, utils::platform::recv, utils::platform::send, MSG_NOSIGNAL
     #include <unordered_map>                    // std::unordered_map
     #include <cstddef>                          // std::size_t
     #include <vector>                           // std::vector

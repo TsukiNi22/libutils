@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -73,8 +73,8 @@ File Description:
         #warning "fallback (x86-64) - hardware interference size = 64"
         #include <cstddef>  // std::size_t
         namespace std { // namespace start
-            inline constexpr std::size_t hardware_destructive_interference_size = 64;
-            inline constexpr std::size_t hardware_constructive_interference_size = 64;
+            inline constexpr std::size_t hardware_destructive_interference_size = 64; // xstyle: ignore CPP-NAMESPACE-INDENT (fallback in the include region)
+            inline constexpr std::size_t hardware_constructive_interference_size = 64; // xstyle: ignore CPP-NAMESPACE-INDENT
         } // namespace end
     #endif
 

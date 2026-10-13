@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -17,13 +17,13 @@ File Description:
 ##  Unit tests of the ArgParser (flags, options, usages, environment, help) & its default hooks
 \**************************************************************/
 
-#include "utils.hpp"
 #include "tools/TempDir.hpp"
+#include "utils.hpp"
 #include <gtest/gtest.h>
 #include <filesystem>
-#include <fstream>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <fstream>
 #include <string>
 #include <vector>
 

@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -168,9 +168,11 @@ TEST(Vector2, FloatingNormalize) {
 
 TEST(Vector2, CommonTypePromotion) {
     utils::type::Vector2<int> a(1, 2);
+    // xstyle: ignore-next CPP-AUTO (the deduced type is what is tested)
     auto b = a + utils::type::Vector2<double>(0.5, 0.5);
     EXPECT_TRUE((std::is_same_v<decltype(b), utils::type::Vector2<double>>));
     EXPECT_DOUBLE_EQ(b.x, 1.5);
+    // xstyle: ignore-next CPP-AUTO (the deduced type is what is tested)
     auto c = a * 1.5;
     EXPECT_TRUE((std::is_same_v<decltype(c), utils::type::Vector2<double>>));
     EXPECT_DOUBLE_EQ(c.y, 3.0);
@@ -326,6 +328,7 @@ TEST(VectorTypes, DotCrossCommonType) {
     EXPECT_DOUBLE_EQ(utils::type::Vector2<int>(1, 0).dot(utils::type::Vector2<double>(0.5, 0.0)), 0.5);
     EXPECT_DOUBLE_EQ(utils::type::Vector2<int>(1, 0).cross(utils::type::Vector2<double>(0.0, 0.5)), 0.5);
     EXPECT_DOUBLE_EQ(utils::type::Vector3<int>(1, 0, 0).dot(utils::type::Vector3<double>(0.5, 0.0, 0.0)), 0.5);
+    // xstyle: ignore-next CPP-AUTO (the deduced type is what is tested)
     auto c = utils::type::Vector3<int>(1, 0, 0).cross(utils::type::Vector3<double>(0.0, 0.5, 0.0));
     EXPECT_TRUE((std::is_same_v<decltype(c), utils::type::Vector3<double>>));
     EXPECT_DOUBLE_EQ(c.z, 0.5);

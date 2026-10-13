@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -17,17 +17,17 @@ File Description:
 ##  Definition of the main cli functions
 \**************************************************************/
 
-#include "utils/attribute/Attribute.hpp"
-#include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/basic/WarningException.hpp"
-#include "utils/exception/basic/NoneException.hpp"
 #include "utils/exception/basic/ErrorException.hpp"
-#include "utils/exception/IException.hpp"
 #include "utils/algorithms/c2dmp-hsm/c2dmp-hsm.hpp"
+#include "utils/exception/basic/NoneException.hpp"
+#include "utils/exception/ExceptionDefine.hpp"
+#include "utils/exception/IException.hpp"
+#include "utils/attribute/Attribute.hpp"
 #include "utils/manip/iomanip/ANSI.hpp"
-#include "utils/cli/Cli.hpp"
-#include "utils/cli/Flags.hpp"
 #include "utils/platform/Unistd.hpp"
+#include "utils/cli/Flags.hpp"
+#include "utils/cli/Cli.hpp"
 #include <unordered_map>
 #include <shared_mutex>
 #include <functional>
@@ -297,10 +297,7 @@ _hot _nodiscard std::string utils::cli::Cli::getInput_(void)
         this->_initInput.pop();
         if (echo && utils::platform::isatty(STDOUT_FILENO)) std::cout << input << std::flush;
         return input;
-    }
-
-    // Use of internal input buffer stored (input was previously interrupted)
-    else if (!this->_input.empty()) {
+    } else if (!this->_input.empty()) {
         input = this->_input;
         this->_input.clear();
         indexBuffer = input.size();
@@ -341,10 +338,7 @@ _hot _nodiscard std::string utils::cli::Cli::getInput_(void)
             if (utils::platform::isatty(STDOUT_FILENO))
                 std::cout << std::endl << "Detected Ctrl+D, exiting..." << std::endl;
             throw utils::exception::NoneException(utils::exception::InternalCode::Exit);
-        }
-
-        // Auto completion
-        else if (this->_flags & utils::cli::Flag::AUTO_COMPLETION && c == '\t' && trim(input).find(" ", 0) == std::string::npos) {
+        } else if (this->_flags & utils::cli::Flag::AUTO_COMPLETION && c == '\t' && trim(input).find(" ", 0) == std::string::npos) {
             std::shared_lock lock(this->_commandsLock);
 
             // Setup the commands
@@ -362,27 +356,20 @@ _hot _nodiscard std::string utils::cli::Cli::getInput_(void)
                 input = get_hint<2>(commands, input);
                 indexBuffer = input.size();
             }
-        }
-
-        // Arrow left, write
-        else if (this->_flags & utils::cli::Flag::ARROW && escape && (indexBuffer > 0 && input[indexBuffer - 1] == '[') && (c == 'C' || c == 'D')) {
+        } else if (this->_flags & utils::cli::Flag::ARROW && escape && (indexBuffer > 0 && input[indexBuffer - 1] == '[') && (c == 'C' || c == 'D')) {
             input.erase(--indexBuffer, 1);
             if (c == 'C' && indexBuffer < input.size()) // right
                 ++indexBuffer;
             else if (c == 'D' && indexBuffer > 0) // left
                 --indexBuffer;
-        }
-
-        // History with arrow up, down
-        else if (this->_flags & utils::cli::Flag::HISTORY && escape && (indexBuffer > 0 && input[indexBuffer - 1] == '[') && (c == 'A' || c == 'B')) {
+        } else if (this->_flags & utils::cli::Flag::HISTORY && escape && (indexBuffer > 0 && input[indexBuffer - 1] == '[') && (c == 'A' || c == 'B')) {
             input.erase(--indexBuffer, 1);
             std::shared_lock historyLock(this->_historyLock);
             onInput = (indexHistory == this->_history.size());
             if (c == 'A') { // Up
                 if (indexHistory == 0) indexHistory = this->_history.size();
                 else --indexHistory;
-            }
-            else if (c == 'B') { // Down
+            } else if (c == 'B') { // Down
                 if (indexHistory >= this->_history.size()) indexHistory = 0;
                 else ++indexHistory;
             }
@@ -393,22 +380,13 @@ _hot _nodiscard std::string utils::cli::Cli::getInput_(void)
                 std::swap(inputBuff, input);
             } else input = this->_history[indexHistory];
             indexBuffer = input.size();
-        }
-
-        // Delete char
-        else if (c == 127 || c == '\b') {
+        } else if (c == 127 || c == '\b') {
             if (indexBuffer > 0)
                 input.erase(--indexBuffer, 1);
-        }
-
-        // End of input
-        else if (c == this->_inputDelimitor) {
+        } else if (c == this->_inputDelimitor) {
             if (utils::platform::isatty(STDOUT_FILENO)) std::cout << std::endl;
             break;
-        }
-
-        // Add char to the input
-        else if (std::isprint(static_cast<unsigned char>(c))) _likely {
+        } else if (std::isprint(static_cast<unsigned char>(c))) _likely {
             input.insert(indexBuffer++, 1, c);
         }
 
@@ -536,20 +514,14 @@ _hot void utils::cli::Cli::exec_(const utils::cli::ParsedData& parsedInput)
                 } else
                     throw utils::exception::ErrorException(utils::exception::InternalCode::CliExecution, "Command not implemented");
                 this->commandMiddlewares.callAfter(command.front());
-            }
-
-            // Raw
-            else if (rawFound) {
+            } else if (rawFound) {
                 this->commandMiddlewares.callBefore(command.front());
                 if (rawFn) // Check the command existense
                     rawFn(*this, command[1]);
                 else
                     throw utils::exception::ErrorException(utils::exception::InternalCode::CliExecution, "Command not implemented");
                 this->commandMiddlewares.callAfter(command.front());
-            }
-
-            // Error
-            else {
+            } else {
                 if (this->_flags & utils::cli::Flag::HINT) {
                     std::cout << "Did you mean '" << get_hint<3>(commands, command.front()) << "'?" << std::endl;
                     status = 4;

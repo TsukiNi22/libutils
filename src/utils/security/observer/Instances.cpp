@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -17,9 +17,9 @@ File Description:
 ##  Declaration fo the physic version for the observer statique instances
 \**************************************************************/
 
+#include "utils/security/observer/MemoryLeakNotifier.hpp"
 #include "utils/security/observer/Instances.hpp"
 #include "utils/security/observer/INotifier.hpp"
-#include "utils/security/observer/MemoryLeakNotifier.hpp"
 #include "utils/system/IdHandler.hpp"
 #include <cstdint>
 #include <memory>

@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -17,12 +17,12 @@ File Description:
 ##  Definition of the Poll's methods
 \**************************************************************/
 
-#include "utils/attribute/Attribute.hpp"
-#include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/basic/ErrorException.hpp"
+#include "utils/exception/ExceptionDefine.hpp"
+#include "utils/attribute/Attribute.hpp"
 #include "utils/encapsulation/Poll.hpp"
-#include "utils/platform/Epoll.hpp"
 #include "utils/platform/Unistd.hpp"
+#include "utils/platform/Epoll.hpp"
 #include <cstddef>
 #include <cstring>
 #include <utility>

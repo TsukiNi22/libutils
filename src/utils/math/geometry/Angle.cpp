@@ -9,9 +9,9 @@ File Description:
 ##  Geometry angle handling
 \**************************************************************/
 
+#include "utils/math/trigo/Convertion.hpp"
 #include "utils/attribute/Attribute.hpp"
 #include "utils/math/geometry/Angle.hpp"
-#include "utils/math/trigo/Convertion.hpp"
 #include "utils/math/MathType.hpp"
 #include <cmath>
 

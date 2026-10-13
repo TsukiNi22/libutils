@@ -16,8 +16,8 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../attribute/Attribute.hpp"        // _hot, _unused
     #include "../../manip/smanip/FixedString.hpp"   // utils::smanip::FixedString
+    #include "../../attribute/Attribute.hpp"        // _hot, _unused
     #include "IObserver.hpp"                        // utils::security::observer::IObserver
     #include "INotifier.hpp"                        // utils::security::observer::INotifier
     #include "Instances.hpp"                        // utils::security::observer::instances::*

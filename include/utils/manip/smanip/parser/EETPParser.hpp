@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -24,14 +24,14 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../../attribute/Attribute.hpp"                 // _cold, _nodiscard, _unlikely
-    #include "../codec/ICodec.hpp"                              // utils::smanip::codec::ICodec
-    #include "../codec/Base64Codec.hpp"                         // utils::smanip::codec::Base64Codec
-    #include "../../../exception/ExceptionDefine.hpp"           // utils::exception::InternalCode::*
-    #include "../../../exception/basic/ErrorException.hpp"      // utils::exception::ErrorException
     #include "../../../security/encryption/CommonRSAKey.hpp"    // utils::security::encryption::CommonRSAKey
+    #include "../../../exception/basic/ErrorException.hpp"      // utils::exception::ErrorException
     #include "../../../security/encryption/RSAKey.hpp"          // utils::security::encryption::RSAKey
     #include "../../../security/encryption/AESKey.hpp"          // utils::security::encryption::AESKey
+    #include "../../../exception/ExceptionDefine.hpp"           // utils::exception::InternalCode::*
+    #include "../../../attribute/Attribute.hpp"                 // _cold, _nodiscard, _unlikely
+    #include "../codec/Base64Codec.hpp"                         // utils::smanip::codec::Base64Codec
+    #include "../codec/ICodec.hpp"                              // utils::smanip::codec::ICodec
     #include "AParser.hpp"                                      // utils::smanip::parser::AParser
     #include <unordered_map>                                    // std::unordered_map
     #include <cstddef>                                          // std::size_t

@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -48,9 +48,9 @@ File Description:
 /* TYPEDEF */
 
 #ifdef UTILS_WINDOWS
-    typedef unsigned int tcflag_t;
-    typedef unsigned char cc_t;
-    typedef unsigned int speed_t;
+    using tcflag_t = unsigned int;
+    using cc_t = unsigned char;
+    using speed_t = unsigned int;
 #endif
 
 //----------------------------------------------------------------//
@@ -58,7 +58,7 @@ File Description:
 
 #ifdef UTILS_WINDOWS
     // Same fields as Linux (<termios.h>) + the console mode
-    struct termios {
+    struct termios { // xstyle: ignore CPP-CLASS-NAME (POSIX name)
         tcflag_t c_iflag;
         tcflag_t c_oflag;
         tcflag_t c_cflag;

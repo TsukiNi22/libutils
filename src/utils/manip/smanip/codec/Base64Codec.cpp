@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -17,10 +17,10 @@ File Description:
 ##  Declaration of the base 64 codec methods
 \**************************************************************/
 
-#include "utils/attribute/Attribute.hpp"
-#include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/basic/ErrorException.hpp"
 #include "utils/manip/smanip/codec/Base64Codec.hpp"
+#include "utils/exception/ExceptionDefine.hpp"
+#include "utils/attribute/Attribute.hpp"
 #include <openssl/evp.h>
 #include <cstddef>
 #include <cstdint>

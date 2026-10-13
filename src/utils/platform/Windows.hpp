@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -36,8 +36,8 @@ File Description:
     #include <windows.h>                // HANDLE, DWORD, FormatMessage
     #include <process.h>                // _getpid
     #include <fcntl.h>                  // _O_BINARY
-    #include <io.h>                     // _read, _write, _close, _pipe, _dup
     #include <string>                   // std::string
+    #include <io.h>                     // _read, _write, _close, _pipe, _dup
 
 namespace utils::platform::windows { // namespace start
 //----------------------------------------------------------------//

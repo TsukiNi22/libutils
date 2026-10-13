@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -56,7 +56,7 @@ File Description:
 /* TYPEDEF */
 
 #ifdef UTILS_WINDOWS
-    typedef int socklen_t; // <ws2tcpip.h>
+    using socklen_t = int; // <ws2tcpip.h>
 #endif
 
 namespace utils::platform { // namespace start
@@ -81,7 +81,7 @@ void freeaddrinfo(struct addrinfo* res);
 #endif
 const char* gai_strerror(int code);
 #ifdef UTILS_WINDOWS
-    inline const char* gai_strerrorA(int code) {return utils::platform::gai_strerror(code);} // call renamed by the <ws2tcpip.h> macro
+    inline const char* gai_strerrorA(int code) {return utils::platform::gai_strerror(code);}; // call renamed by the <ws2tcpip.h> macro
     #pragma pop_macro("gai_strerror")
 #endif
 

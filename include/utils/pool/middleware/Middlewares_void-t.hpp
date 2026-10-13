@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -24,9 +24,9 @@ File Description:
     /* INCLUDE */
 
     /* type */
+    #include "../../exception/basic/ErrorException.hpp" // utils::exception::ErrorException
     #include "../../security/observer/Observer.hpp"     // utils::security::observer::Observer
     #include "../../exception/ExceptionDefine.hpp"      // utils::exception::Type, utils::exception::InternalCode
-    #include "../../exception/basic/ErrorException.hpp" // utils::exception::ErrorException
     #include "../../attribute/Attribute.hpp"            // _cold, _hot
     #include "MiddlewaresType.hpp"                      // utils::pool::Middleware<...>
     #include <shared_mutex>                             // std::shared_mutex, std::unique_lock, std::shared_lock

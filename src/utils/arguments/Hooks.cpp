@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -17,15 +17,15 @@ File Description:
 ##  Default hooks used by the ArgParser
 \**************************************************************/
 
-#include "utils/attribute/Attribute.hpp"
-#include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/basic/WarningException.hpp"
-#include "utils/arguments/ArgParser.hpp"
+#include "utils/exception/ExceptionDefine.hpp"
 #include "utils/arguments/ArgParserType.hpp"
+#include "utils/attribute/Attribute.hpp"
+#include "utils/arguments/ArgParser.hpp"
 #include "utils/manip/iomanip/Color.hpp"
-#include "utils/manip/iomanip/ANSI.hpp"
 #include "utils/manip/iomanip/Style.hpp"
 #include "utils/manip/smanip/format.hpp"
+#include "utils/manip/iomanip/ANSI.hpp"
 #include <unordered_map>
 #include <filesystem>
 #include <exception>
@@ -81,10 +81,7 @@ _cold void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& 
                 std::cout << it->second.name;
                 if (!it->second.exact) std::cout << ">";
                 if (!mandatory) std::cout << "]";
-            }
-
-            // Flags
-            else if (flags.contains(id)) {
+            } else if (flags.contains(id)) {
                 auto it = flags.find(id);
                 if (it == flags.end()) continue;
                 const auto &[fshort, fflag, flong, _] = it->second.flag;
@@ -96,10 +93,7 @@ _cold void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& 
                     std::cout << " " << (fmandatory ? "" : "[") << "<" << name << ">" << (fmandatory ? "" : "]");
                 if (it->second.unlimited.first) std::cout << "*";
                 if (!mandatory) std::cout << "]";
-            }
-
-            // Error
-            else {
+            } else {
                 throw utils::exception::WarningException(utils::exception::InternalCode::UnknownId, id);
             }
         }

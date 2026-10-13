@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -39,8 +39,7 @@ std::ostream& operator<<(std::ostream& os, const VerboseModeCase& c) {return os 
 using VerboseTestParam = std::tuple<VerboseModeCase, std::string>;
 
 // Reset the global verbose mode around each test (the global state leaked between tests)
-class VerboseFixture: public ::testing::TestWithParam<VerboseTestParam>
-{
+class VerboseFixture: public ::testing::TestWithParam<VerboseTestParam> {
     protected:
         void SetUp(void) override {utils::verbose::verbose = utils::verbose::Verbose::Basic;}; // default value of the lib
         void TearDown(void) override {utils::verbose::verbose = utils::verbose::Verbose::Basic;};
@@ -48,7 +47,8 @@ class VerboseFixture: public ::testing::TestWithParam<VerboseTestParam>
 class VerboseTest: public VerboseFixture {};
 class VerboseRedirectTest: public VerboseFixture {};
 
-const std::vector<VerboseModeCase>& verboseModeCases() {
+const std::vector<VerboseModeCase>& verboseModeCases(void)
+{
     static const std::vector<VerboseModeCase> cases = {
         {
             "DefaultMode",
@@ -164,7 +164,8 @@ const std::vector<VerboseModeCase>& verboseModeCases() {
     return cases;
 }
 
-const std::vector<VerboseModeCase>& verboseRedirectModeCases() {
+const std::vector<VerboseModeCase>& verboseRedirectModeCases(void)
+{
     static const std::vector<VerboseModeCase> cases = {
         {
             "DefaultMode",

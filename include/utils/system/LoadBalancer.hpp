@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -24,10 +24,10 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
-    #include "../attribute/Attribute.hpp"               // _cold, _hot, _nodiscard, _unlikely, _likely
-    #include "../exception/ExceptionDefine.hpp"         // utils::exception::Type, utils::exception::InternalCode
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
+    #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
+    #include "../exception/ExceptionDefine.hpp"         // utils::exception::Type, utils::exception::InternalCode
+    #include "../attribute/Attribute.hpp"               // _cold, _hot, _nodiscard, _unlikely, _likely
     #include "../type/Worker.hpp"                       // utils::type::Worker
     #include "IdHandler.hpp"                            // utils::system::IdHandler
     #include <condition_variable>                       // std::condition_variable_any
@@ -41,8 +41,8 @@ File Description:
     #include <atomic>                                   // std::atomic
     #include <chrono>                                   // std::chrono::milliseconds, std::chrono::steady_clock::now
     #include <string>                                   // std::to_string
-    #include <list>                                     // std::list
     #include <mutex>                                    // std::mutex, std::lock_guard
+    #include <list>                                     // std::list
 
 namespace utils::system { // namespace start
 //----------------------------------------------------------------//

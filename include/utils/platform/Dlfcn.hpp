@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -46,7 +46,7 @@ File Description:
 
 #ifdef UTILS_WINDOWS
     // Same fields as Linux (<dlfcn.h>)
-    struct Dl_info {
+    struct Dl_info { // xstyle: ignore CPP-CLASS-NAME (POSIX name)
         const char* dli_fname; // path of the module (thread local storage, valid until the next dladdr of the thread)
         void* dli_fbase; // base address of the module
         const char* dli_sname; // always nullptr on Windows

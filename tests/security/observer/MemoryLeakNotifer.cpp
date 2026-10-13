@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -18,10 +18,10 @@ File Description:
 ##  for me, life is all about functions...
 \**************************************************************/
 
-#include "utils.hpp"
-#include "utils/security/observer/UnsafeObserver.hpp"
 #include "utils/security/observer/MemoryLeakNotifier.hpp"
+#include "utils/security/observer/UnsafeObserver.hpp"
 #include "utils/security/observer/INotifier.hpp"
+#include "utils.hpp"
 #include <gtest/gtest.h>
 #include <functional>
 #include <memory>
@@ -68,8 +68,7 @@ TEST_P(MemoryLeasNotifierTest, DetectsLeak) {
 // local to this test file
 namespace {
 class SimpleClass: private utils::security::observer::UnsafeObserver<"SimpleClass"> {};
-class SubClass: private utils::security::observer::Observer<"SubClass">
-{
+class SubClass: private utils::security::observer::Observer<"SubClass"> {
     private:
         SimpleClass _class1;
         SimpleClass _class2;

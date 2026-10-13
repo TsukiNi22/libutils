@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -24,10 +24,10 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../attribute/Attribute.hpp"            // _cold, _hot, _nodiscard, _unlikely
+    #include "../../exception/basic/ErrorException.hpp" // utils::exception::ErrorException
     #include "../../concepts/OperationConcepts.hpp"     // Operation Concepts
     #include "../../exception/ExceptionDefine.hpp"      // utils::exception::InternalCode
-    #include "../../exception/basic/ErrorException.hpp" // utils::exception::ErrorException
+    #include "../../attribute/Attribute.hpp"            // _cold, _hot, _nodiscard, _unlikely
     #include "IVector.hpp"                              // utils::type::IVector
     #include <type_traits>                              // std::common_type_t
     #include <algorithm>                                // std::min, std::max, std::clamp

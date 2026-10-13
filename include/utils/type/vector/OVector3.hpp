@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -25,10 +25,10 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../attribute/Attribute.hpp"            // _cold, _hot, _nodiscard, _unlikely, _deprecated
+    #include "../../exception/basic/ErrorException.hpp" // utils::exception::ErrorException
     #include "../../concepts/OperationConcepts.hpp"     // Operation Concepts
     #include "../../exception/ExceptionDefine.hpp"      // utils::exception::InternalCode
-    #include "../../exception/basic/ErrorException.hpp" // utils::exception::ErrorException
+    #include "../../attribute/Attribute.hpp"            // _cold, _hot, _nodiscard, _unlikely, _deprecated
     #include <type_traits>                              // std::common_type_t
     #include <algorithm>                                // std::min, std::max, std::clamp
     #include <concepts>                                 // std::assignable_from, std::constructible_from

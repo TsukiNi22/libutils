@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -17,11 +17,11 @@ File Description:
 ##  Different ANSI method definition
 \**************************************************************/
 
-#include "utils/attribute/Attribute.hpp"
-#include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/basic/ErrorException.hpp"
-#include "utils/manip/iomanip/ANSI.hpp"
+#include "utils/exception/ExceptionDefine.hpp"
+#include "utils/attribute/Attribute.hpp"
 #include "utils/manip/iomanip/Style.hpp"
+#include "utils/manip/iomanip/ANSI.hpp"
 #include "utils/platform/Platform.hpp"
 #include "utils/platform/Unistd.hpp"
 #ifdef UTILS_WINDOWS

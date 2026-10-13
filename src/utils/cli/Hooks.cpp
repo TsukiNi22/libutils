@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -18,8 +18,8 @@ File Description:
 \**************************************************************/
 
 #include "utils/attribute/Attribute.hpp"
-#include "utils/cli/Cli.hpp"
 #include "utils/platform/Unistd.hpp"
+#include "utils/cli/Cli.hpp"
 #ifdef UTILS_WINDOWS
     #include "../platform/Windows.hpp"
 #endif
@@ -42,6 +42,7 @@ _hot _nodiscard static std::string trim_string(const std::string& s)
     return s.substr(start, end - start + 1);
 }
 
+// xstyle: ignore-next CPP-SINGLE-STATEMENT (default hook, given by address)
 _hot void utils::cli::defaultPromptHook(_unused const utils::cli::Cli& cli, _unused std::uint8_t code)
 {
     std::cout << "> " << std::flush;
@@ -81,10 +82,7 @@ _hot _nodiscard static std::vector<std::string> split_command(const std::string&
                 splited.push_back(token);
                 token.clear();
             }
-        }
-
-        // Separator "&&", "||", ";"
-        else if (c == '&' && i + 1 < command.size() && command[i + 1] == '&') {
+        } else if (c == '&' && i + 1 < command.size() && command[i + 1] == '&') {
             if (!token.empty()) {
                 splited.push_back(token);
                 token.clear();
@@ -104,10 +102,7 @@ _hot _nodiscard static std::vector<std::string> split_command(const std::string&
                 token.clear();
             }
             splited.push_back(";");
-        }
-
-        // Basic char
-        else _likely {
+        } else _likely {
             token += c;
         }
     }

@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -17,23 +17,23 @@ File Description:
 ##  Settings methods definition
 \**************************************************************/
 
-#include "utils/attribute/Attribute.hpp"
-#include "utils/exception/ExceptionDefine.hpp"
-#include "utils/exception/IException.hpp"
 #include "utils/exception/basic/ErrorException.hpp"
-#include "utils/arguments/Settings.hpp"
+#include "utils/exception/ExceptionDefine.hpp"
 #include "utils/arguments/SettingsDefine.hpp"
+#include "utils/exception/IException.hpp"
+#include "utils/attribute/Attribute.hpp"
+#include "utils/arguments/Settings.hpp"
 #include <filesystem>
 #include <stdexcept>
 #include <algorithm>
 #include <iterator>
 //#include <cstdfloat> -> handled by SettingsDefine
+#include <string_view>
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
 #include <cerrno>
 #include <cctype>
-#include <string_view>
 #include <string>
 #include <limits>
 #include <regex>

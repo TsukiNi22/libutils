@@ -16,9 +16,9 @@ File Description:
     /* INCLUDE */
 
     /* type */
+    #include "../../attribute/Attribute.hpp"    // _cold, _noreturn
     #include "../IException.hpp"                // utils::exception::IException
     #include "../AException.hpp"                // utils::exception::AException
-    #include "../../attribute/Attribute.hpp"    // _cold, _noreturn
     #include <source_location>                  // std::source_location
     #include <iostream>                         // std::cerr
     #include <cstdlib>                          // std::abort

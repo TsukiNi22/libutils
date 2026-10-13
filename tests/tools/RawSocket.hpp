@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -47,8 +47,8 @@ namespace tests::tools { // namespace start
 //----------------------------------------------------------------//
 /* FUNCTION */
 
-inline int raw_close(int fd) {return utils::platform::close(fd);}
-inline long raw_write(int fd, const char* data, std::size_t size) {return static_cast<long>(utils::platform::write(fd, data, size));}
+inline int raw_close(int fd) {return utils::platform::close(fd);};
+inline long raw_write(int fd, const char* data, std::size_t size) {return static_cast<long>(utils::platform::write(fd, data, size));};
 
 // Port the socket is bound to (0 on error)
 inline std::uint16_t local_port(int fd)

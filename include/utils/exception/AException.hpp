@@ -16,9 +16,9 @@ File Description:
     /* INCLUDE */
 
     /* type/class */
-    #include "IException.hpp"               // utils::exception::IException
-    #include "ExceptionDefine.hpp"          // utils::exception::* (define / vars)
     #include "../attribute/Attribute.hpp"   // _cold, _nodiscard
+    #include "ExceptionDefine.hpp"          // utils::exception::* (define / vars)
+    #include "IException.hpp"               // utils::exception::IException
     #include <source_location>              // std::source_location
     #include <unordered_map>                // std::unordered_map
     #include <iterator>                     // std::begin, std::end

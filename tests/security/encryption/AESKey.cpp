@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -22,10 +22,10 @@ File Description:
 #include <gtest/gtest.h>
 #include <string>
 
-class AESKeyTest: public ::testing::Test, public ::testing::WithParamInterface<std::string>
-{
+class AESKeyTest: public ::testing::Test, public ::testing::WithParamInterface<std::string> {
     protected:
-        void SetUp(void) final {
+        void SetUp(void) final
+        {
             this->_AES.AES = this->_key.generateRandomBytes(32);
             this->_AES.iv = this->_key.generateRandomBytes(16);
         };

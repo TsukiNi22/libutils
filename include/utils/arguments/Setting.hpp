@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -24,10 +24,10 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"               // _cold, _hot, _nodiscard, _unlikely
-    #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
+    #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::* (Type)
+    #include "../attribute/Attribute.hpp"               // _cold, _hot, _nodiscard, _unlikely
     #include <type_traits>                              // std::remove_cvref_t
     #include <cxxabi.h>                                 // abi::__cxa_demangle
     #include <typeinfo>                                 // typeid

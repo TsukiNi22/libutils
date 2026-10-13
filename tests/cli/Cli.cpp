@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -17,25 +17,25 @@ File Description:
 ##  Unit tests of the Cli (commands, parser, logic, flags, input editing, history, middlewares)
 \**************************************************************/
 
-#include "utils.hpp"
 #include "tools/TempDir.hpp"
+#include "utils.hpp"
 #include <gtest/gtest.h>
 #ifdef _WIN32
-    #include <io.h>
     #include <fcntl.h>
+    #include <io.h>
 #else
     #include <unistd.h>
     #include <fcntl.h>
 #endif
-#include <cstdlib>
-#include <filesystem>
-#include <fstream>
-#include <algorithm>
-#include <functional>
-#include <optional>
 #include <unordered_map>
-#include <memory>
+#include <filesystem>
+#include <functional>
+#include <algorithm>
 #include <stdexcept>
+#include <optional>
+#include <cstdlib>
+#include <fstream>
+#include <memory>
 #include <string>
 #include <thread>
 #include <vector>

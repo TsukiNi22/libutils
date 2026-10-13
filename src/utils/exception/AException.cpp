@@ -9,13 +9,13 @@ File Description:
 ##  Definition of the function used in the abstract for exception
 \**************************************************************/
 
-#include "utils/attribute/Attribute.hpp"
+#include "utils/exception/custom/FatalException.hpp"
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/AException.hpp"
-#include "utils/exception/custom/FatalException.hpp"
+#include "utils/attribute/Attribute.hpp"
 #include "utils/manip/iomanip/Color.hpp"
-#include "utils/manip/iomanip/ANSI.hpp"
 #include "utils/manip/iomanip/Style.hpp"
+#include "utils/manip/iomanip/ANSI.hpp"
 #include "utils/platform/Unistd.hpp"
 #include "utils/platform/Dlfcn.hpp"
 #include <source_location>

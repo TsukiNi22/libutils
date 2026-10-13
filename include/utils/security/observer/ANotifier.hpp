@@ -16,9 +16,9 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../attribute/Attribute.hpp"                // _cold, _hot, _nodiscard, _unused
-    #include "../../exception/ExceptionDefine.hpp"          // utils::exception::InternalCode
     #include "../../exception/custom/FatalException.hpp"    // utils::exception::FatalException
+    #include "../../exception/ExceptionDefine.hpp"          // utils::exception::InternalCode
+    #include "../../attribute/Attribute.hpp"                // _cold, _hot, _nodiscard, _unused
     #include "INotifier.hpp"                                // utils::security::observer::INotifier
     #include <unordered_map>                                // std::unordered_map
     #include <string_view>                                  // std::string_view

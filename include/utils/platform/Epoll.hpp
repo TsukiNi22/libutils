@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -59,14 +59,14 @@ File Description:
 
 #ifdef UTILS_WINDOWS
     // Same layout as Linux (<sys/epoll.h>)
-    union epoll_data {
+    union epoll_data { // xstyle: ignore CPP-CLASS-NAME (POSIX name)
         void* ptr;
         int fd;
         std::uint32_t u32;
         std::uint64_t u64;
     };
 
-    struct epoll_event {
+    struct epoll_event { // xstyle: ignore CPP-CLASS-NAME (POSIX name)
         std::uint32_t events;
         union epoll_data data;
     };
@@ -76,7 +76,7 @@ File Description:
 /* TYPEDEF */
 
 #ifdef UTILS_WINDOWS
-    typedef union epoll_data epoll_data_t;
+    using epoll_data_t = union epoll_data;
 #endif
 
 namespace utils::platform { // namespace start

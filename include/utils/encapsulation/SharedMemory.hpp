@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -20,30 +20,29 @@ File Description:
 #ifndef SHAREDMEMORY_H
     #define SHAREDMEMORY_H
 
-
     //----------------------------------------------------------------//
     /* INCLUDE */
 
     /* type */
-    #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
-    #include "../attribute/Attribute.hpp"               // _cold, _hot, _nodiscard, _unlikely, _deprecated, _legacy, std::hardware_destructive_interference_size
-    #include "../exception/ExceptionDefine.hpp"         // utils::exception::Type, utils::exception::InternalCode
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
-    #include "../system/IdHandler.hpp"                  // utils::system::IdHandler<T>
+    #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
+    #include "../exception/ExceptionDefine.hpp"         // utils::exception::Type, utils::exception::InternalCode
+    #include "../attribute/Attribute.hpp"               // _cold, _hot, _nodiscard, _unlikely, _deprecated, _legacy, std::hardware_destructive_interference_size
     #include "../platform/Platform.hpp"                 // UTILS_WINDOWS
+    #include "../system/IdHandler.hpp"                  // utils::system::IdHandler<T>
     #include "../platform/Unistd.hpp"                   // utils::platform::getpid
-    #include <sys/types.h>                              // pid_t (also on MinGW)
     #include <condition_variable>                       // std::condition_variable
     #include <unordered_map>                            // std::unordered_map
     #include <unordered_set>                            // std::unordered_set
+    #include <sys/types.h>                              // pid_t (also on MinGW)
     #include <type_traits>                              // std::is_standard_layout_v
     #include <functional>                               // std::hash
     #include <optional>                                 // std::optional
     #include <compare>                                  // std::strong_ordering
     #include <utility>                                  // std::pair
-    #include <memory>                                   // std::construct_at
     #include <cstddef>                                  // std::size_t, std::byte
     #include <cstdint>                                  // std::uint8_t, std::uint16_t, std::uint32_t, std::uint64_t
+    #include <memory>                                   // std::construct_at
     #include <thread>                                   // std::jthread, std::this_thread::yield
     #include <atomic>                                   // std::atomic
     #include <vector>                                   // std::vector

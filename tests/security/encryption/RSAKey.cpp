@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -22,8 +22,7 @@ File Description:
 #include <gtest/gtest.h>
 #include <string>
 
-class RSAKeyTest: public ::testing::Test, public ::testing::WithParamInterface<std::string>
-{
+class RSAKeyTest: public ::testing::Test, public ::testing::WithParamInterface<std::string> {
     protected:
         void SetUp(void) final {this->_key.generate();};
 

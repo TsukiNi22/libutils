@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -141,6 +141,7 @@ _cold _nodiscard int utils::platform::getaddrinfo(const char* node, const char* 
     return ::getaddrinfo(node, service, hints, res);
 }
 
+// xstyle: ignore-next CPP-SINGLE-STATEMENT (the header does not include <netdb.h> / <ws2tcpip.h>)
 _cold void utils::platform::freeaddrinfo(struct addrinfo* res)
 {
     ::freeaddrinfo(res);

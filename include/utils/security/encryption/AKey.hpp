@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -24,9 +24,9 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../exception/ExceptionDefine.hpp"          // utils::exception::InternalCode::*
-    #include "../../exception/basic/ErrorException.hpp"     // utils::exception::ErrorException
     #include "../../exception/custom/FatalException.hpp"    // utils::exception::FatalException
+    #include "../../exception/basic/ErrorException.hpp"     // utils::exception::ErrorException
+    #include "../../exception/ExceptionDefine.hpp"          // utils::exception::InternalCode::*
     #include "../../attribute/Attribute.hpp"                // _cold, _hot, _nodiscard, _unused, _unlikely
     #include "IKey.hpp"                                     // utils::security::encryption::IKey
     #include <openssl/rand.h>                               // RAND_bytes

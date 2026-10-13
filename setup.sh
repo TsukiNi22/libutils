@@ -12,7 +12,7 @@ usage() {
     echo "  --no-sudo   Run without sudo (requires the script to be run as root already)"
     exit 1
 }
- 
+
 for arg in "$@"; do
     case "$arg" in
         --no-sudo)
@@ -31,7 +31,7 @@ done
 # =========================
 # Find the os
 # =========================
-if [ -f /etc/os-release ]; then
+if [[ -f /etc/os-release ]]; then
     . /etc/os-release
     OS_ID="${ID:-unknown}"
     OS_ID_LIKE="${ID_LIKE:-}"

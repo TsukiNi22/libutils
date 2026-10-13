@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -17,16 +17,16 @@ File Description:
 ##  Setup functions of the cli
 \**************************************************************/
 
-#include "utils/attribute/Attribute.hpp"
-#include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/basic/NoneException.hpp"
-#include "utils/manip/iomanip/ANSI.hpp"
+#include "utils/exception/ExceptionDefine.hpp"
+#include "utils/attribute/Attribute.hpp"
 #include "utils/manip/smanip/format.hpp"
-#include "utils/cli/Cli.hpp"
+#include "utils/manip/iomanip/ANSI.hpp"
 #include "utils/manip/iomanip/ANSI.hpp"
 #include "utils/platform/Platform.hpp"
 #include "utils/platform/Termios.hpp"
 #include "utils/platform/Unistd.hpp"
+#include "utils/cli/Cli.hpp"
 #include <shared_mutex>
 #include <functional>
 #include <filesystem>

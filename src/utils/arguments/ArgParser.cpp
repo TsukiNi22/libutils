@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -17,20 +17,20 @@ File Description:
 ##  ArgParser methods definition
 \**************************************************************/
 
-#include "utils/attribute/Attribute.hpp"
-#include "utils/exception/ExceptionDefine.hpp"
-#include "utils/exception/basic/NoneException.hpp"
-#include "utils/exception/basic/ErrorException.hpp"
 #include "utils/exception/basic/WarningException.hpp"
-#include "utils/arguments/ArgParser.hpp"
+#include "utils/exception/basic/ErrorException.hpp"
+#include "utils/exception/basic/NoneException.hpp"
+#include "utils/exception/ExceptionDefine.hpp"
 #include "utils/arguments/ArgParserType.hpp"
+#include "utils/attribute/Attribute.hpp"
+#include "utils/arguments/ArgParser.hpp"
 #include <algorithm>
 #include <iostream>
 #include <optional>
 #include <cstdlib>
 #include <vector>
-#include <deque>
 #include <string>
+#include <deque>
 
 utils::arguments::ArgParser::ArgParser(const std::string& binary, const std::string& description)
 : _binary{binary}, _description{description}
@@ -124,10 +124,7 @@ _hot _nodiscard bool utils::arguments::ArgParser::parseFlags_(utils::arguments::
             const auto &[_, _, flong, _] = flag.flag;
             if (flong == arg) {ids.push_back(fid); unknown = false; break;}
         }
-    }
-
-    // Short & Flag
-    else {
+    } else {
         std::size_t size = 0;
         arg.erase(0, 1); // Remove '-'
         sarg = arg; // Used for the short checking
@@ -364,7 +361,7 @@ _hot void utils::arguments::ArgParser::parseEnvironement_(utils::arguments::Pars
     }
 }
 
-_hot _nodiscard utils::arguments::ParsedUsages utils::arguments::ArgParser::parse(const int argc, const char *const argv[], const bool failsafe) const
+_hot _nodiscard utils::arguments::ParsedUsages utils::arguments::ArgParser::parse(const int argc, const char* const argv[], const bool failsafe) const
 {
     std::vector<std::string> args(argv, argv + argc);
     return this->parse(args, failsafe);
@@ -410,10 +407,7 @@ _hot _nodiscard utils::arguments::ParsedUsages utils::arguments::ArgParser::pars
             // Flag dectection
             if (arg.size() > 0 && arg.front() == '-') {
                 usageFull.valid &= this->parseFlags_(usageFull, argv, subIndex, failed, failsafe);
-            }
-
-            // Option
-            else {
+            } else {
                 usageFull.valid &= this->parseOption_(usageFull, argv, subIndex, failed, failsafe);
             }
 

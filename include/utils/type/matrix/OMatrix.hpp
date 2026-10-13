@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -26,9 +26,9 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../attribute/Attribute.hpp"            // _hot, _cold, _nodiscard, _likely, _unlikely, _deprecated
-    #include "../../exception/ExceptionDefine.hpp"      // utils::exception::InternalCode
     #include "../../exception/basic/ErrorException.hpp" // utils::exception::ErrorException
+    #include "../../exception/ExceptionDefine.hpp"      // utils::exception::InternalCode
+    #include "../../attribute/Attribute.hpp"            // _hot, _cold, _nodiscard, _likely, _unlikely, _deprecated
     #include <type_traits>                              // std::is_integral_v, std::is_floating_point_v
     #include <algorithm>                                // std::fill, std::copy, std::swap_ranges
     #include <iterator>                                 // std::input_iterator, std::forward_iterator, std::iter_value_t, std::distance

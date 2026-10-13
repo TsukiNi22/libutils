@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -25,11 +25,11 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../attribute/Attribute.hpp"            // _hot, _cold, _nodiscard, _likely, _unlikely
+    #include "../../exception/basic/ErrorException.hpp" // utils::exception::ErrorException
     #include "../../security/observer/Observer.hpp"     // utils::security::observer::Observer
     #include "../../concepts/OperationConcepts.hpp"     // Operation Concepts
     #include "../../exception/ExceptionDefine.hpp"      // utils::exception::InternalCode
-    #include "../../exception/basic/ErrorException.hpp" // utils::exception::ErrorException
+    #include "../../attribute/Attribute.hpp"            // _hot, _cold, _nodiscard, _likely, _unlikely
     #include <type_traits>                              // std::common_type_t, std::is_integral_v, std::is_floating_point_v
     #include <algorithm>                                // std::fill
     #include <iterator>                                 // std::input_iterator, std::forward_iterator, std::iter_value_t, std::distance

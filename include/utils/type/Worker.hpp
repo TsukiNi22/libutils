@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -25,8 +25,8 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"               // _nodiscard, _hot, _cold
     #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
+    #include "../attribute/Attribute.hpp"               // _nodiscard, _hot, _cold
     #include <chrono>                                   // std::chrono::steady_clock::time_point, std::chrono::steady_clock::now
     #include <atomic>                                   // std::atomic
 

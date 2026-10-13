@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -17,19 +17,18 @@ File Description:
 ##  Unit tests of the network Client & Server (status, connection, exchange, buffering)
 \**************************************************************/
 
-#include "utils.hpp"
 #include "tools/RawSocket.hpp"
+#include "utils.hpp"
 #include <gtest/gtest.h>
-#include <algorithm>
-#include <filesystem>
-#include <atomic>
 #include <unordered_map>
+#include <filesystem>
+#include <algorithm>
+#include <atomic>
 #include <chrono>
 #include <memory>
 #include <string>
 #include <thread>
 #include <vector>
-
 
 template<typename Fn>
 static bool waitFor(Fn condition, std::chrono::milliseconds timeout = std::chrono::milliseconds{2000})

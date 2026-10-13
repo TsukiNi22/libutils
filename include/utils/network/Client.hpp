@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -20,21 +20,20 @@ File Description:
 #ifndef CLIENT_H
     #define CLIENT_H
 
-
     //----------------------------------------------------------------//
     /* INCLUDE */
 
     /* type */
     #include "../security/observer/Observer.hpp"    // utils::security::observer::Observer
-    #include "../attribute/Attribute.hpp"           // _cold, _hot, _nodiscard
-    #include "NetworkDefine.hpp"                    // utils::network::Status
-    #include "NetworkType.hpp"                      // utils::network::Address, utils::network::Payload, utils::network::Payloads
     #include "../exception/IException.hpp"          // utils::exception::IException
+    #include "../attribute/Attribute.hpp"           // _cold, _hot, _nodiscard
+    #include "../platform/Unistd.hpp"               // utils::platform::close
+    #include "NetworkDefine.hpp"                    // utils::network::Status
     #include "socket/Socket.hpp"                    // utils::network::ISocket, utils::network::TCPSocket, utils::network::resolve_address
+    #include "NetworkType.hpp"                      // utils::network::Address, utils::network::Payload, utils::network::Payloads
     #include <cstddef>                              // std::size_t
     #include <memory>                               // std::shared_ptr, std::make_shared
     #include <atomic>                               // std::atomic
-    #include "../platform/Unistd.hpp"               // utils::platform::close
     #include <vector>                               // std::vector
     #include <mutex>                                // std::recursive_mutex
 

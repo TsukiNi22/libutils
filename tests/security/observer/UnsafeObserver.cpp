@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -18,9 +18,9 @@ File Description:
 ##  for me, life is all about functions...
 \**************************************************************/
 
-#include "utils.hpp"
 #include "utils/security/observer/UnsafeObserver.hpp"
 #include "utils/security/observer/INotifier.hpp"
+#include "utils.hpp"
 #include <gtest/gtest.h>
 #include <functional>
 #include <memory>
@@ -58,8 +58,7 @@ TEST_P(UnsafeObserverTest, DetectsLeak) {
 // local to this test file
 namespace {
 class SimpleClass: private utils::security::observer::UnsafeObserver<"SimpleClass"> {};
-class SubClass: private utils::security::observer::UnsafeObserver<"SubClass">
-{
+class SubClass: private utils::security::observer::UnsafeObserver<"SubClass"> {
     private:
         SimpleClass _class1;
         SimpleClass _class2;

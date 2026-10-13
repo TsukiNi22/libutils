@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -17,27 +17,27 @@ File Description:
 ##  Different method of the server class
 \**************************************************************/
 
-#include "utils/attribute/Attribute.hpp"
-#include "utils/exception/ExceptionDefine.hpp"
-#include "utils/exception/IException.hpp"
-#include "utils/exception/basic/ErrorException.hpp"
 #include "utils/exception/basic/WarningException.hpp"
+#include "utils/exception/basic/ErrorException.hpp"
 #include "utils/exception/basic/NoneException.hpp"
+#include "utils/exception/ExceptionDefine.hpp"
 #include "utils/network/NetworkDefine.hpp"
-#include "utils/network/Server.hpp"
+#include "utils/exception/IException.hpp"
+#include "utils/attribute/Attribute.hpp"
 #include "utils/verbose/Verbose.hpp"
-#include "utils/platform/Epoll.hpp"
 #include "utils/platform/Socket.hpp"
 #include "utils/platform/Unistd.hpp"
+#include "utils/network/Server.hpp"
+#include "utils/platform/Epoll.hpp"
 #ifdef UTILS_WINDOWS
     #include "../platform/Windows.hpp"
 #else
     #include <netinet/in.h>
     #include <arpa/inet.h>
 #endif
+#include <iostream>
 #include <cstring>
 #include <cerrno>
-#include <iostream>
 #include <thread>
 #include <format>
 #include <vector>

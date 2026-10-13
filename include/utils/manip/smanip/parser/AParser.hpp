@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -24,8 +24,8 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../../exception/ExceptionDefine.hpp"       // utils::exception::InternalCode::*
     #include "../../../exception/custom/FatalException.hpp" // utils::exception::FatalException
+    #include "../../../exception/ExceptionDefine.hpp"       // utils::exception::InternalCode::*
     #include "../../../attribute/Attribute.hpp"             // _cold, _nodiscard, _unused
     #include "IParser.hpp"                                  // utils::smanip::parser::IParser
     #include <string>                                       // std::string

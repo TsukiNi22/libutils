@@ -16,9 +16,9 @@ File Description:
     /* INCLUDE */
 
     /* type */
+    #include "../../attribute/Attribute.hpp"    // _cold
     #include "../ExceptionDefine.hpp"           // utils::exception::InternalCode, utils::exception::Type
     #include "../AException.hpp"                // utils::exception::AException
-    #include "../../attribute/Attribute.hpp"    // _cold
     #include <source_location>                  // std::source_location
 
 namespace utils::exception { // namespace start

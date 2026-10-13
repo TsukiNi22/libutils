@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -17,8 +17,8 @@ File Description:
 ##  Declaration of the memory leak notifier destructor
 \**************************************************************/
 
-#include "utils/attribute/Attribute.hpp"
 #include "utils/security/observer/MemoryLeakNotifier.hpp"
+#include "utils/attribute/Attribute.hpp"
 #include <iostream>
 #include <sstream>
 

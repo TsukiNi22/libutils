@@ -16,10 +16,10 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "Color.hpp"                        // utils::iomanip::Color, utils::iomanip::BackColor
-    #include "Char.hpp"                         // utils::iomanip::Char
-    #include "Style.hpp"                        // utils::iomanip::Style, utils::iomanip::ResetStyle
     #include "../../attribute/Attribute.hpp"    // _cold, _hot, _nodiscard
+    #include "Color.hpp"                        // utils::iomanip::Color, utils::iomanip::BackColor
+    #include "Style.hpp"                        // utils::iomanip::Style, utils::iomanip::ResetStyle
+    #include "Char.hpp"                         // utils::iomanip::Char
     #include <initializer_list>                 // std::initializer_list
     #include <cstddef>                          // std::size_t
     #include <cstdint>                          // std::uint8_t

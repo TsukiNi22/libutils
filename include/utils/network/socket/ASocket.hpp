@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -24,9 +24,9 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../attribute/Attribute.hpp"                // _cold, _hot, _nodiscard, _unused
-    #include "../../exception/ExceptionDefine.hpp"          // utils::exception::InternalCode
     #include "../../exception/custom/FatalException.hpp"    // utils::exception::FatalException
+    #include "../../exception/ExceptionDefine.hpp"          // utils::exception::InternalCode
+    #include "../../attribute/Attribute.hpp"                // _cold, _hot, _nodiscard, _unused
     #include "../NetworkDefine.hpp"                         // SOCKET_CHUNK_SIZE, OVERFLOW_LIMIT
     #include "../NetworkType.hpp"                           // utils::network::Address
     #include "ISocket.hpp"                                  // utils::network::ISocket

@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -25,8 +25,8 @@ File Description:
 
     /* type */
     #include "../../security/observer/Observer.hpp" // utils::security::observer::Observer
+    #include "../../platform/Socket.hpp"            // sockaddr, socklen_t, ssize_t (Unix & Windows)
     #include "../NetworkType.hpp"                   // utils::network::Address
-    #include "../../platform/Socket.hpp"       // sockaddr, socklen_t, ssize_t (Unix & Windows)
     #include <cstddef>                              // std::size_t
     #include <vector>                               // std::vector
     #include <string>                               // std::string

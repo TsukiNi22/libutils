@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -19,9 +19,9 @@ File Description:
 
 #include "utils.hpp"
 #include <gtest/gtest.h>
+#include <iterator>
 #include <sstream>
 #include <vector>
-#include <iterator>
 
 // Build a matrix of the given size filled row by row
 template<typename M, typename T>
@@ -325,9 +325,11 @@ TEST(Matrix, IntegerInvertDisabled) {
 TEST(Matrix, CommonTypePromotion) {
     utils::type::Matrix<int> a = make<utils::type::Matrix<int>>(1, 2, std::vector<int>{1, 2});
     utils::type::Matrix<double> b = make<utils::type::Matrix<double>>(1, 2, std::vector<double>{0.5, 0.5});
+    // xstyle: ignore-next CPP-AUTO (the deduced type is what is tested)
     auto c = a + b;
     EXPECT_TRUE((std::is_same_v<decltype(c), utils::type::Matrix<double>>));
     expectNear(c, 1, 2, std::vector<double>{1.5, 2.5});
+    // xstyle: ignore-next CPP-AUTO (the deduced type is what is tested)
     auto d = a * 0.5;
     EXPECT_TRUE((std::is_same_v<decltype(d), utils::type::Matrix<double>>));
 }

@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -20,23 +20,22 @@ File Description:
 #ifndef CLI_H
     #define CLI_H
 
-
     //----------------------------------------------------------------//
     /* INCLUDE */
 
     /* type */
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
-    #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
     #include "../pool/middleware/Middlewares.hpp"       // utils::pool::Middlewares
+    #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::InternalCode
     #include "../attribute/Attribute.hpp"               // _cold, _nodiscard
-    #include "Flags.hpp"                                // utils::cli::Flag, utils::cli::flags::* (preset)
     #include "../platform/Termios.hpp"                  // termios (Unix & Windows)
-    #include <csignal>                                  // SIG_DFL
+    #include "Flags.hpp"                                // utils::cli::Flag, utils::cli::flags::* (preset)
     #include <unordered_map>                            // std::unordered_map
     #include <shared_mutex>                             // std::shared_mutex, std::unique_lock, std::shared_lock
     #include <functional>                               // std::function
     #include <optional>                                 // std::optional
+    #include <csignal>                                  // SIG_DFL
     #include <cstddef>                                  // std::size_t
     #include <cstdint>                                  // std::uint8_t, std::int16_t, std::uint32_t
     #include <thread>                                   // std::thread
@@ -61,12 +60,13 @@ namespace utils::cli { // namespace start
 // Return of the parser
 using ParsedData =
 std::vector< // Group of commands, separated by '&&', '||' and ';'
+    // xstyle: ignore-next CPP-NAMESPACE-INDENT (template arguments of the alias)
     std::vector< // Command separated by ' ' and '\t'
         // the first std::string represent only the command
         // The input parsed (depends on the parser mode)
         // the last std::string represent the separator '&&', '||', ';' or '' for nothing/last
-        std::string
-    >
+        std::string // xstyle: ignore CPP-NAMESPACE-INDENT
+    > // xstyle: ignore CPP-NAMESPACE-INDENT
 >;
 
 //----------------------------------------------------------------//

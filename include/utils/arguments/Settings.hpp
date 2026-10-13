@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -24,14 +24,14 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"           // _cold, _hot, _nodiscard
     #include "../security/observer/Observer.hpp"    // utils::security::observer::Observer
+    #include "../attribute/Attribute.hpp"           // _cold, _hot, _nodiscard
     #include "SettingsDefine.hpp"                   // utils::arguments::CastType
     #include "Setting.hpp"                          // utils::arguments::Setting
     #include <unordered_map>                        // std::unordered_map
+    #include <string_view>                          // std::string_view
     #include <filesystem>                           // std::filesystem::path
     #include <functional>                           // std::equal_to, std::hash
-    #include <string_view>                          // std::string_view
     #include <utility>                              // std::forward
     //#include <cstdfloat> -> handled by SettingsDefine
     #include <cstddef>                              // std::* (type)

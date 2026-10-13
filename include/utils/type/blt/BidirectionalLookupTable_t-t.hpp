@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -24,11 +24,11 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../attribute/Attribute.hpp"                // _cold, _hot, _nodiscard, _unlikely
-    #include "../../security/observer/Observer.hpp"         // utils::security::observer::Observer
     #include "../../exception/basic/WarningException.hpp"   // utils::exception::WarningException
     #include "../../exception/basic/ErrorException.hpp"     // utils::exception::ErrorException
+    #include "../../security/observer/Observer.hpp"         // utils::security::observer::Observer
     #include "../../exception/ExceptionDefine.hpp"          // utils::exception::* (Type)
+    #include "../../attribute/Attribute.hpp"                // _cold, _hot, _nodiscard, _unlikely
     #include "../../type/Freezable.hpp"                     // utils::type::Freezable
     #include <unordered_map>                                // std::unordered_map
     #include <functional>                                   // std::hash, std::equal_to

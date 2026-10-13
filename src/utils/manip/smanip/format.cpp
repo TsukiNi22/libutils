@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -18,8 +18,8 @@ File Description:
 \**************************************************************/
 
 #include "utils/attribute/Attribute.hpp"
-#include "utils/manip/iomanip/ANSI.hpp"
 #include "utils/manip/smanip/format.hpp"
+#include "utils/manip/iomanip/ANSI.hpp"
 #include <unordered_map>
 #include <functional>
 #include <algorithm>
@@ -60,10 +60,7 @@ _hot _nodiscard std::string utils::smanip::format(const std::string& s)
         if (s[i] == '\\' && i + 1 < s.size() && (s[i + 1] == '<' || s[i + 1] == '>')) {
             formated += s[i + 1];
             i += 2;
-        }
-
-        // Detect the start of sequence
-        else if (s[i] == '<') {
+        } else if (s[i] == '<') {
 
             // Search for the end of the sequence, ignore "\>"
             std::size_t end = s.find('>', i + 1);
@@ -103,10 +100,7 @@ _hot _nodiscard std::string utils::smanip::format(const std::string& s)
 
             // inc
             i = end + 1;
-        }
-
-        // Add char for those out of sequence
-        else
+        } else
             formated += s[i++];
     }
 

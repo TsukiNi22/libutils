@@ -1,6 +1,6 @@
 /**************************************************************\
 
- ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗ 
+ ██╗  ██╗ █████╗ ██████╗ ████████╗ █████╗ ███╗   ██╗██╗ █████╗
  ╚██╗██╔╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║██║██╔══██╗
   ╚███╔╝ ███████║██████╔╝   ██║   ███████║██╔██╗ ██║██║███████║
   ██╔██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║╚██╗██║██║██╔══██║
@@ -20,22 +20,21 @@ File Description:
 #ifndef SERVER_H
     #define SERVER_H
 
-
     //----------------------------------------------------------------//
     /* INCLUDE */
 
     /* type */
     #include "../security/observer/Observer.hpp"    // utils::security::observer::Observer
     #include "../attribute/Attribute.hpp"           // _cold, _hot, _nodiscard, _noreturn
+    #include "../platform/Unistd.hpp"               // utils::platform::close
     #include "NetworkDefine.hpp"                    // utils::network::Status
-    #include "NetworkType.hpp"                      // utils::network::Address, utils::network::Payload, utils::network::Payloads
     #include "socket/Socket.hpp"                    // utils::network::ISocket, utils::network::TCPSocket
+    #include "NetworkType.hpp"                      // utils::network::Address, utils::network::Payload, utils::network::Payloads
     #include <unordered_map>                        // std::unordered_map
     #include <memory>                               // std::shared_ptr, std::make_shared
     #include <atomic>                               // std::atomic
     #include <vector>                               // std::vector
     #include <string>                               // std::string
-    #include "../platform/Unistd.hpp"               // utils::platform::close
     #include <mutex>                                // std::recursive_mutex
 
 namespace utils::network { // namespace start
