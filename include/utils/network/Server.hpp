@@ -20,6 +20,7 @@ File Description:
 #ifndef SERVER_H
     #define SERVER_H
 
+
     //----------------------------------------------------------------//
     /* INCLUDE */
 
@@ -34,7 +35,7 @@ File Description:
     #include <atomic>                               // std::atomic
     #include <vector>                               // std::vector
     #include <string>                               // std::string
-    #include <unistd.h>                             // ::close
+    #include "../platform/Unistd.hpp"               // utils::platform::close
     #include <mutex>                                // std::recursive_mutex
 
 namespace utils::network { // namespace start
@@ -108,7 +109,7 @@ class Server: private utils::security::observer::Observer<"Server"> {
         Server(Server&& other) = delete;
 
         // ----------- Destructor --------- //
-        ~Server() {this->kill(); for (const int epfd: this->_retired) ::close(epfd);};
+        ~Server() {this->kill(); for (const int epfd: this->_retired) utils::platform::close(epfd);};
 };
 
 } // namespace end

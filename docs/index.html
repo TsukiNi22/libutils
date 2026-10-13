@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="en" data-page="technical" data-storage-key="libutils-doc" data-repo="TsukiNi22/libutils">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>libutils · Technical documentation</title>
+<style>
+:root {
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --text: #1d1f23;
+  --muted: #5d636e;
+  --border: #dfe1e5;
+  --accent: #2f5bd3;
+  --accent-soft: #e6ecfb;
+  --warn: #a8540a;
+  --warn-soft: #fbefe3;
+  --ok: #1f7a4a;
+  --ok-soft: #e3f4ea;
+  --code-bg: #f1f2f4;
+  --node: #ffffff;
+  --node-alt: #eef1f8;
+  --line: #8a909b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15171b;
+    --surface: #1d2025;
+    --text: #e6e7ea;
+    --muted: #9aa0ab;
+    --border: #30343b;
+    --accent: #7d9cf0;
+    --accent-soft: #232c45;
+    --warn: #f0a868;
+    --warn-soft: #3a2a1b;
+    --ok: #6fcf97;
+    --ok-soft: #1b3326;
+    --code-bg: #24272d;
+    --node: #23262c;
+    --node-alt: #283043;
+    --line: #747a85;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15171b;
+  --surface: #1d2025;
+  --text: #e6e7ea;
+  --muted: #9aa0ab;
+  --border: #30343b;
+  --accent: #7d9cf0;
+  --accent-soft: #232c45;
+  --warn: #f0a868;
+  --warn-soft: #3a2a1b;
+  --ok: #6fcf97;
+  --ok-soft: #1b3326;
+  --code-bg: #24272d;
+  --node: #23262c;
+  --node-alt: #283043;
+  --line: #747a85;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.layout {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: 40px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+main { min-width: 0; }
+header h1 { font-size: 34px; line-height: 1.2; margin: 0 0 8px; }
+header p { color: var(--muted); margin: 0 0 32px; max-width: 70ch; }
+section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 28px 32px;
+  margin-bottom: 24px;
+  scroll-margin-top: 72px;
+}
+h2 { font-size: 22px; margin: 0 0 16px; }
+h3 { font-size: 17px; margin: 28px 0 10px; }
+p, li { max-width: 75ch; }
+a { color: var(--accent); }
+code {
+  font: 0.9em ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--code-bg);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+pre {
+  background: var(--code-bg);
+  border-radius: 8px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  font: 13.5px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+pre code { background: none; padding: 0; }
+.table-wrap { overflow-x: auto; margin: 12px 0; }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
+.callout {
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  padding: 12px 16px;
+  border-radius: 0 6px 6px 0;
+  margin: 16px 0;
+}
+.callout.warn { background: var(--warn-soft); border-left-color: var(--warn); }
+.callout.ok { background: var(--ok-soft); border-left-color: var(--ok); }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+figure { margin: 20px 0; }
+figure svg { width: 100%; height: auto; display: block; }
+figcaption { color: var(--muted); font-size: 13px; margin-top: 6px; }
+svg .box { fill: var(--node); stroke: var(--line); stroke-width: 1.2; }
+svg .box-alt { fill: var(--node-alt); stroke: var(--accent); stroke-width: 1.2; }
+svg .group { fill: none; stroke: var(--border); stroke-width: 1.5; stroke-dasharray: 5 4; }
+svg .lbl { fill: var(--text); font: 13px system-ui, sans-serif; }
+svg .small { fill: var(--muted); font: 11.5px system-ui, sans-serif; }
+svg .title { fill: var(--muted); font: 600 12px system-ui, sans-serif; letter-spacing: .05em; }
+svg .edge { stroke: var(--line); stroke-width: 1.4; fill: none; }
+svg .edge-accent { stroke: var(--accent); stroke-width: 1.6; fill: none; }
+svg .dash { stroke-dasharray: 4 4; }
+svg .arrow { fill: var(--line); }
+svg .arrow-accent { fill: var(--accent); }
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: 18px;
+  height: 56px; padding: 0 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.tabs { display: flex; gap: 4px; margin-left: 8px; overflow-x: auto; }
+.tabs[hidden] { display: none; }
+.tabs a {
+  padding: 6px 12px; border-radius: 6px;
+  color: var(--muted); text-decoration: none; font-size: 14px; white-space: nowrap;
+}
+.tabs a:hover { color: var(--text); background: var(--code-bg); }
+.tabs a.current { color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+.topbar .spacer { flex: 1; }
+.icon-btn {
+  display: grid; place-items: center;
+  width: 36px; height: 36px; padding: 0;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: 50%;
+  cursor: pointer; text-decoration: none;
+  transition: border-color .15s, color .15s;
+}
+.icon-btn:hover { color: var(--accent); border-color: var(--accent); }
+.icon-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.icon-btn svg { width: 18px; height: 18px; }
+@media (max-width: 860px) {
+  .layout { grid-template-columns: 1fr; padding: 24px 16px 60px; gap: 16px; }
+  .topbar { gap: 10px; padding: 0 12px; }
+  .brand .ver { display: none; }
+  .menu-btn { display: grid; }
+  .sidebar { position: fixed; top: 56px; left: 0; bottom: 0; z-index: 25; width: min(300px, 85vw); max-height: none; padding: 16px 10px; background: var(--bg); border-right: 1px solid var(--border); transform: translateX(-105%); transition: transform .2s; }
+  .sidebar.open { transform: none; box-shadow: 0 10px 40px rgba(0, 0, 0, .25); }
+  section { padding: 20px 16px; }
+  header h1 { font-size: 27px; }
+}
+/* Language switch (EN / FR pill) */
+.lang-switch {
+  display: inline-flex; align-items: center; gap: 2px; padding: 3px;
+  border: 1.5px solid var(--border); border-radius: 999px; background: var(--surface);
+}
+.lang-switch button {
+  border: 0; background: none; color: var(--text); cursor: pointer;
+  font: 600 12.5px system-ui, sans-serif; letter-spacing: .03em;
+  padding: 4px 11px; border-radius: 999px; transition: background .2s, color .2s;
+}
+.lang-switch button.on { background: var(--accent); color: var(--surface); }
+.lang-switch button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* Theme switch: blue track + sun (light), black track + moon and stars (dark) */
+.theme-switch {
+  position: relative; width: 58px; height: 30px; flex: none; padding: 0; border: 0; border-radius: 999px;
+  background: #2196f3; cursor: pointer; transition: background .3s;
+}
+.theme-switch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.theme-switch .knob {
+  position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%;
+  display: grid; place-items: center; transition: transform .3s, background .3s;
+}
+.theme-switch .knob svg { width: 22px; height: 22px; }
+.theme-switch .sun { display: block; }
+.theme-switch .moon, .theme-switch .stars { display: none; }
+.theme-switch .stars { position: absolute; inset: 0; }
+.theme-switch .stars i { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #fff; }
+.theme-switch .stars i:nth-child(1) { left: 9px; top: 9px; }
+.theme-switch .stars i:nth-child(2) { left: 16px; top: 18px; width: 1.5px; height: 1.5px; }
+.theme-switch .stars i:nth-child(3) { left: 21px; top: 8px; width: 1.5px; height: 1.5px; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-switch { background: #0b0b0d; box-shadow: inset 0 0 0 1px #2a2c31; }
+  :root:not([data-theme="light"]) .theme-switch .knob { transform: translateX(28px); background: #ffffff; }
+  :root:not([data-theme="light"]) .theme-switch .sun { display: none; }
+  :root:not([data-theme="light"]) .theme-switch .moon, :root:not([data-theme="light"]) .theme-switch .stars { display: block; }
+}
+:root[data-theme="dark"] .theme-switch { background: #0b0b0d; box-shadow: inset 0 0 0 1px #2a2c31; }
+:root[data-theme="dark"] .theme-switch .knob { transform: translateX(28px); background: #ffffff; }
+:root[data-theme="dark"] .theme-switch .sun { display: none; }
+:root[data-theme="dark"] .theme-switch .moon, :root[data-theme="dark"] .theme-switch .stars { display: block; }
+/* Bilingual content: only the active language is shown */
+:root[lang="en"] [data-lang="fr"], :root[lang="fr"] [data-lang="en"] { display: none !important; }
+/* ---------- Header: logo + version badge, mobile menu ---------- */
+.brand { display: flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; font-weight: 700; white-space: nowrap; }
+.brand .logo { width: 26px; height: 26px; flex: none; color: var(--accent); }
+.brand .ver { font-size: 12px; color: var(--muted); font-weight: 500; padding: 2px 6px; border: 1px solid var(--border); border-radius: 6px; }
+.menu-btn { display: none; }
+/* ---------- Sidebar tree (pages > sections of the current page) ---------- */
+.sidebar { position: sticky; top: 80px; align-self: start; max-height: calc(100vh - 100px); overflow-y: auto; font-size: 14px; }
+.sidebar p { margin: 0 0 8px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; font-size: 12px; }
+.sidebar a { display: block; padding: 5px 10px; color: var(--muted); text-decoration: none; border-left: 2px solid var(--border); }
+.sidebar a:hover, .sidebar a.active { color: var(--accent); border-left-color: var(--accent); }
+/* ---------- Page header: eyebrow + title + lead ---------- */
+.page-eyebrow { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); margin-bottom: 6px; }
+header .lead { font-size: 17px; color: var(--muted); margin: 0 0 32px; max-width: 70ch; }
+/* ---------- Heading anchors ---------- */
+h2 .anchor, h3 .anchor { margin-left: 8px; color: var(--muted); font-weight: 400; text-decoration: none; opacity: 0; transition: opacity .15s; }
+h2:hover .anchor, h3:hover .anchor, .anchor:focus { opacity: 1; }
+/* ---------- Code blocks: title bar + copy button ---------- */
+pre { position: relative; }
+pre[data-title]::before {
+  content: attr(data-title); display: block; margin: -14px -16px 12px; padding: 6px 16px;
+  font: 12px system-ui, sans-serif; color: var(--muted); border-bottom: 1px solid var(--border);
+  background: var(--surface); border-radius: 8px 8px 0 0;
+}
+pre .copy {
+  position: absolute; top: 8px; right: 8px; font: 12px system-ui, sans-serif; cursor: pointer;
+  border: 1px solid var(--border); background: var(--surface); color: var(--muted);
+  border-radius: 6px; padding: 3px 8px; opacity: 0; transition: opacity .15s;
+}
+pre[data-title] .copy { top: 5px; }
+pre:hover .copy, pre .copy:focus { opacity: 1; }
+pre .copy:hover { color: var(--text); }
+/* ---------- Content tabs ---------- */
+.ctabs { display: flex; gap: 4px; flex-wrap: wrap; border-bottom: 1px solid var(--border); margin: 12px 0; }
+.ctabs button { background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; padding: 8px 12px; cursor: pointer; color: var(--muted); font: 500 14px system-ui, sans-serif; }
+.ctabs button.active { color: var(--accent); border-bottom-color: var(--accent); }
+.ctab-panel { display: none; }
+.ctab-panel.active { display: block; }
+/* ---------- Previous / next page ---------- */
+.pager { display: flex; justify-content: space-between; gap: 16px; margin-top: 32px; }
+.pager a { flex: 1; padding: 14px 16px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text); text-decoration: none; }
+.pager a:hover { border-color: var(--accent); }
+.pager a span { display: block; font-size: 12px; color: var(--muted); }
+.pager a.next { text-align: right; }
+.pager:empty { display: none; }
+/* ---------- Footer ---------- */
+footer.site { max-width: 1180px; margin: 0 auto; padding: 22px 24px 30px; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; }
+footer.site a { color: var(--accent); }
+@media (max-width: 860px) {
+  .menu-btn { display: grid; }
+  footer.site { padding: 20px 16px; }
+  .topbar .tabs { display: none; } /* the sidebar (menu) gives the navigation on mobile */
+}
+.topbar .icon-btn, .topbar .lang-switch, .topbar .theme-switch { flex: none; }
+.topbar .tabs { min-width: 0; }
+@media (max-width: 860px) {
+  .topbar .spacer { display: none; }
+  .topbar .tabs { flex: 1 1 auto; }
+  .topbar .icon-btn { width: 32px; height: 32px; }
+}
+@media (max-width: 480px) {
+  .topbar { gap: 8px; padding: 0 10px; }
+  .topbar a.icon-btn[href] { display: none; } /* GitHub link: also in the footer / graph panel */
+  .lang-switch button { padding: 4px 9px; }
+}
+@media (min-width: 1340px) {
+  .layout { grid-template-columns: minmax(0, 1fr) minmax(0, 880px) minmax(0, 1fr); max-width: none; }
+  .layout > .sidebar { grid-column: 1; justify-self: end; width: 230px; }
+  .layout > main { grid-column: 2; }
+  footer.site { max-width: 880px; }
+}
+/* ---------- No scroll beyond the page ---------- */
+html, body { overscroll-behavior: none; }
+/* ---------- Top right actions: same height, grouped, divider ---------- */
+.top-actions { display: flex; align-items: center; gap: 8px; flex: none; }
+.top-actions .divider { width: 1px; height: 22px; background: var(--border); margin: 0 2px; }
+.top-actions .icon-btn { width: 34px; height: 34px; }
+.top-actions .lang-switch { height: 34px; padding: 3px; background: var(--code-bg); border: 1px solid var(--border); }
+.top-actions .lang-switch button { height: 26px; padding: 0 10px; font-size: 12px; }
+.top-actions .theme-switch { width: 56px; height: 30px; border: 1px solid transparent; }
+.top-actions .theme-switch .knob { top: 2px; left: 2px; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .top-actions .theme-switch { border-color: var(--border); box-shadow: none; }
+  :root:not([data-theme="light"]) .top-actions .theme-switch .knob { transform: translateX(26px); }
+}
+:root[data-theme="dark"] .top-actions .theme-switch { border-color: var(--border); box-shadow: none; }
+:root[data-theme="dark"] .top-actions .theme-switch .knob { transform: translateX(26px); }
+@media (max-width: 480px) { .top-actions .divider { display: none; } }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" id="menuBtn" aria-label="Open the navigation" data-i18n-aria-label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v3.0.0</span></a>
+  <nav class="tabs" aria-label="Pages">
+    <a href="index.html" class="current" aria-current="page" data-i18n>Technical</a>
+    <a href="graph.html" data-i18n>Graph</a>
+  </nav>
+  <span class="spacer"></span>
+  <div class="top-actions">
+  <a class="icon-btn repo-link" href="https://github.com/TsukiNi22/libutils" title="GitHub repository" data-i18n-title aria-label="GitHub repository" data-i18n-aria-label>
+    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.93-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.71 1.23 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+  </a>
+  <span class="divider" aria-hidden="true"></span>
+  <div class="lang-switch" role="group" aria-label="Language">
+    <button type="button" data-set-lang="en" class="on">EN</button>
+    <button type="button" data-set-lang="fr">FR</button>
+  </div>
+  <button class="theme-switch" type="button" id="themeToggle" role="switch" aria-checked="false" aria-label="Toggle theme" data-i18n-aria-label title="Toggle theme" data-i18n-title>
+    <span class="stars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="knob" aria-hidden="true">
+      <svg class="sun" viewBox="0 0 24 24" fill="#ffffff"><circle cx="12" cy="12" r="5.2"/><g stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"><path d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6M4.8 4.8l1.8 1.8M17.4 17.4l1.8 1.8M4.8 19.2l1.8-1.8M17.4 6.6l1.8-1.8"/></g></svg>
+      <svg class="moon" viewBox="0 0 24 24"><path d="M15.6 4.2a8 8 0 1 0 4.2 11.6A7 7 0 0 1 15.6 4.2z" fill="#f6c343"/></svg>
+    </span>
+  </button>
+  </div>
+</header>
+<div class="layout">
+<aside class="sidebar" id="sidebar" aria-label="Contents" data-i18n-aria-label>
+  <p data-i18n>Contents</p>
+  <a href="#overview"><span data-lang="en">1. Overview</span><span data-lang="fr">1. Vue d'ensemble</span></a>
+  <a href="#install"><span data-lang="en">2. Install & integrate</span><span data-lang="fr">2. Installer & intégrer</span></a>
+  <a href="#sections"><span data-lang="en">3. Sections</span><span data-lang="fr">3. Sections</span></a>
+  <a href="#errors"><span data-lang="en">4. Errors</span><span data-lang="fr">4. Erreurs</span></a>
+  <a href="#network"><span data-lang="en">5. Network & EETP</span><span data-lang="fr">5. Réseau & EETP</span></a>
+  <a href="#ipc"><span data-lang="en">6. Processes & IPC</span><span data-lang="fr">6. Processus & IPC</span></a>
+  <a href="#build"><span data-lang="en">7. Build, tests & CI</span><span data-lang="fr">7. Build, tests & CI</span></a>
+  <a href="#licenses"><span data-lang="en">8. Licenses</span><span data-lang="fr">8. Licences</span></a>
+</aside>
+
+<main>
+<header>
+  <div class="page-eyebrow" data-i18n>Technical documentation</div>
+  <h1><span data-lang="en">libutils, a C++20 utility library</span><span data-lang="fr">libutils, une bibliothèque utilitaire C++20</span></h1>
+  <p class="lead"><span data-lang="en">Exceptions, verbose, CLI, arguments, TCP network, processes and shared memory, encryption, custom types and algorithms, in one static library distributed as RPM / DEB packages. The details of every class are in the <a href="https://github.com/TsukiNi22/libutils/wiki">wiki</a>.</span><span data-lang="fr">Exceptions, verbose, CLI, arguments, réseau TCP, processus et mémoire partagée, chiffrement, types et algorithmes, dans une seule bibliothèque statique distribuée en paquets RPM / DEB. Le détail de chaque classe est dans le <a href="https://github.com/TsukiNi22/libutils/wiki">wiki</a>.</span></p>
+</header>
+
+<!-- 1 -->
+<section id="overview">
+  <h2><span data-lang="en">1. Overview</span><span data-lang="fr">1. Vue d'ensemble</span></h2>
+  <p><span data-lang="en">Everything is in the namespace <code>utils::</code>. A project includes only the root header <code>&lt;utils/utils.hpp&gt;</code> and chooses the sections it needs with defines placed before it; nothing defined means everything.</span><span data-lang="fr">Tout est dans le namespace <code>utils::</code>. Un projet inclut seulement l'en-tête racine <code>&lt;utils/utils.hpp&gt;</code> et choisit les sections voulues avec des defines placés avant ; sans define, tout est inclus.</span></p>
+
+  <figure>
+    <svg viewBox="0 0 760 300" role="img" aria-label="utils.hpp includes the Handling and Tools groups and their sections">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path class="arrow" d="M0 0L10 5L0 10z"/>
+        </marker>
+      </defs>
+      <rect class="box-alt" x="300" y="16" width="160" height="44" rx="8"/>
+      <text class="lbl" x="380" y="43" text-anchor="middle">utils/utils.hpp</text>
+      <path class="edge" d="M330 60L190 98" marker-end="url(#arr)"/>
+      <path class="edge" d="M430 60L570 98" marker-end="url(#arr)"/>
+      <path class="edge dash" d="M380 60V250" marker-end="url(#arr)"/>
+      <rect class="group" x="20" y="100" width="330" height="140" rx="10"/>
+      <text class="title" x="36" y="124">_Handling</text>
+      <text class="small" x="36" y="150">_Exception · _Verbose · _Pool (_Middleware)</text>
+      <text class="small" x="36" y="174">_Cli · _Arguments</text>
+      <text class="small" x="36" y="198">_Network (_Socket)</text>
+      <text class="small" x="36" y="222">utils::exception, verbose, pool, cli, arguments, network</text>
+      <rect class="group" x="410" y="100" width="330" height="140" rx="10"/>
+      <text class="title" x="426" y="124">_Tools</text>
+      <text class="small" x="426" y="150">_Math (_Geometry, _Trigo) · _Concepts</text>
+      <text class="small" x="426" y="174">_Encapsulation · _System</text>
+      <text class="small" x="426" y="198">_CustomType (_Vector, _Matrix, _BLT)</text>
+      <text class="small" x="426" y="222">_Manip · _Algorithms · _Security</text>
+      <rect class="box" x="300" y="252" width="160" height="38" rx="8"/>
+      <text class="lbl" x="380" y="276" text-anchor="middle">_Attribute</text>
+    </svg>
+    <figcaption><span data-lang="en">Figure 1: the defines of <code>utils.hpp</code> (a group enables its sections, a section its sub-sections).</span><span data-lang="fr">Figure 1 : les defines de <code>utils.hpp</code> (un groupe active ses sections, une section ses sous-sections).</span></figcaption>
+  </figure>
+
+  <div class="table-wrap"><table>
+    <thead><tr><th><span data-lang="en">Point</span><span data-lang="fr">Point</span></th><th><span data-lang="en">Value</span><span data-lang="fr">Valeur</span></th></tr></thead>
+    <tbody>
+      <tr><td><span data-lang="en">Language</span><span data-lang="fr">Langage</span></td><td><span data-lang="en">C++20, built with <code>clang++</code> and CMake (&gt;= 3.20)</span><span data-lang="fr">C++20, compilé avec <code>clang++</code> et CMake (&gt;= 3.20)</span></td></tr>
+      <tr><td><span data-lang="en">Library</span><span data-lang="fr">Bibliothèque</span></td><td><span data-lang="en">static: <code>libutils.a</code> (optimized), <code>libutils_debug.a</code>, <code>libutils_asan.a</code></span><span data-lang="fr">statique : <code>libutils.a</code> (optimisée), <code>libutils_debug.a</code>, <code>libutils_asan.a</code></span></td></tr>
+      <tr><td><span data-lang="en">Dependency</span><span data-lang="fr">Dépendance</span></td><td><span data-lang="en">OpenSSL &gt;= 3.0 (encryption, Base64)</span><span data-lang="fr">OpenSSL &gt;= 3.0 (chiffrement, Base64)</span></td></tr>
+      <tr><td><span data-lang="en">Version</span><span data-lang="fr">Version</span></td><td><code>utils::version</code> (<code>"v3.0.0"</code>), <code>__LIBUTILS_VERSION__</code></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 2 -->
+<section id="install">
+  <h2><span data-lang="en">2. Install & integrate</span><span data-lang="fr">2. Installer & intégrer</span></h2>
+  <h3><span data-lang="en">2.1 Install</span><span data-lang="fr">2.1 Installation</span></h3>
+  <div class="ctabs" data-tabs="install">
+    <button type="button" data-tab="rpm">Fedora / RPM</button>
+    <button type="button" data-tab="deb">Debian / Ubuntu</button>
+    <button type="button" data-tab="src"><span data-lang="en">Sources</span><span data-lang="fr">Sources</span></button>
+  </div>
+  <div class="ctab-panel" data-tabs="install" data-tab="rpm">
+<pre data-title="Repository + package"><code>curl -fsSL https://raw.githubusercontent.com/TsukiNi22/libutils/main/setup.sh | bash -s
+sudo dnf install libutils</code></pre>
+  </div>
+  <div class="ctab-panel" data-tabs="install" data-tab="deb">
+<pre data-title="Repository + package"><code>curl -fsSL https://raw.githubusercontent.com/TsukiNi22/libutils/main/setup.sh | bash -s
+sudo apt install libutils</code></pre>
+  </div>
+  <div class="ctab-panel" data-tabs="install" data-tab="src">
+<pre data-title="Build & install (/usr/local)"><code>git clone https://github.com/TsukiNi22/libutils.git && cd libutils
+export BUILD_DIR=build
+cmake -S . -B $BUILD_DIR
+sudo cmake --build $BUILD_DIR --target install --parallel $(nproc)</code></pre>
+  </div>
+
+  <div class="table-wrap"><table>
+    <thead><tr><th><span data-lang="en">Package</span><span data-lang="fr">Paquet</span></th><th><span data-lang="en">Content</span><span data-lang="fr">Contenu</span></th></tr></thead>
+    <tbody>
+      <tr><td><code>libutils</code></td><td><code>libutils-dev</code> + <code>libutils-op</code></td></tr>
+      <tr><td><code>libutils-dev</code></td><td><span data-lang="en">headers, CMake configuration (requires <code>openssl-devel</code> / <code>libssl-dev</code>)</span><span data-lang="fr">en-têtes, configuration CMake (nécessite <code>openssl-devel</code> / <code>libssl-dev</code>)</span></td></tr>
+      <tr><td><code>libutils-op</code> / <code>-db</code> / <code>-as</code></td><td><span data-lang="en">optimized / debug / asan library (+ <code>libutils-dev-op</code>, <code>-db</code>, <code>-as</code>)</span><span data-lang="fr">bibliothèque optimisée / debug / asan (+ <code>libutils-dev-op</code>, <code>-db</code>, <code>-as</code>)</span></td></tr>
+      <tr><td><code>*-pre</code></td><td><span data-lang="en">pre-release channel, replaced by any release of the same version or higher</span><span data-lang="fr">canal pre-release, remplacé par toute release de version égale ou supérieure</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3><span data-lang="en">2.2 Integrate</span><span data-lang="fr">2.2 Intégrer</span></h3>
+<pre data-title="CMakeLists.txt"><code>find_package(utils 3.0.0 REQUIRED)
+target_link_libraries(${TARGET} PRIVATE utils::utils)   # includes, static lib & OpenSSL</code></pre>
+<pre data-title="main.cpp"><code>#define _Network
+#define _Cli
+#include &lt;utils/utils.hpp&gt;</code></pre>
+  <div class="callout"><p><span data-lang="en">The library linked follows the <code>CMAKE_BUILD_TYPE</code> of the project: <code>Debug</code> uses <code>libutils_debug.a</code>, <code>Asan</code> <code>libutils_asan.a</code>, anything else <code>libutils.a</code>; a missing package stops the configuration with the name of the package to install.</span><span data-lang="fr">La bibliothèque liée suit le <code>CMAKE_BUILD_TYPE</code> du projet : <code>Debug</code> utilise <code>libutils_debug.a</code>, <code>Asan</code> <code>libutils_asan.a</code>, le reste <code>libutils.a</code> ; un paquet manquant arrête la configuration en donnant le paquet à installer.</span></p></div>
+  <div class="callout warn"><p><span data-lang="en"><code>utils.hpp</code> has no global guard: put the defines before <strong>every</strong> include of it, a bare include after a partial one only gets the sections already defined.</span><span data-lang="fr"><code>utils.hpp</code> n'a pas de garde globale : mettre les defines avant <strong>chaque</strong> include, un include nu après un include partiel n'obtient que les sections déjà définies.</span></p></div>
+</section>
+
+<!-- 3 -->
+<section id="sections">
+  <h2><span data-lang="en">3. Sections</span><span data-lang="fr">3. Sections</span></h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Define</th><th>Namespace</th><th><span data-lang="en">Content</span><span data-lang="fr">Contenu</span></th></tr></thead>
+    <tbody>
+      <tr><td><a href="https://github.com/TsukiNi22/libutils/wiki/Exception"><code>_Exception</code></a></td><td><code>utils::exception</code></td><td><span data-lang="en">exceptions with a type and a code, formatted output</span><span data-lang="fr">exceptions avec un type et un code, sortie formatée</span></td></tr>
+      <tr><td><a href="https://github.com/TsukiNi22/libutils/wiki/Verbose"><code>_Verbose</code></a></td><td><code>utils::verbose</code></td><td><span data-lang="en">atomic global level, locked output macros</span><span data-lang="fr">niveau global atomique, macros de sortie verrouillées</span></td></tr>
+      <tr><td><a href="https://github.com/TsukiNi22/libutils/wiki/Pool"><code>_Pool</code></a></td><td><code>utils::pool</code></td><td><code>Cluster&lt;T&gt;</code>, <code>Middlewares&lt;T, U&gt;</code></td></tr>
+      <tr><td><a href="https://github.com/TsukiNi22/libutils/wiki/Cli"><code>_Cli</code></a></td><td><code>utils::cli</code></td><td><span data-lang="en">interactive command line: commands, history, hints, completion, hooks, middlewares</span><span data-lang="fr">ligne de commande interactive : commandes, historique, indices, complétion, hooks, middlewares</span></td></tr>
+      <tr><td><a href="https://github.com/TsukiNi22/libutils/wiki/Arguments"><code>_Arguments</code></a></td><td><code>utils::arguments</code></td><td><code>ArgParser</code> (usages, flags, options, env), <code>Settings</code> (typed values, casts)</td></tr>
+      <tr><td><a href="https://github.com/TsukiNi22/libutils/wiki/Network"><code>_Network</code></a></td><td><code>utils::network</code></td><td><code>Server</code>, <code>Client</code>, <code>ISocket</code> / <code>ASocket</code> / <code>TCPSocket</code></td></tr>
+      <tr><td><a href="https://github.com/TsukiNi22/libutils/wiki/Math"><code>_Math</code></a></td><td><code>utils::math</code></td><td><span data-lang="en">coordinates, <code>CFrame</code>, point rotation, look vector, deg / rad</span><span data-lang="fr">coordonnées, <code>CFrame</code>, rotation de points, vecteur de visée, deg / rad</span></td></tr>
+      <tr><td><a href="https://github.com/TsukiNi22/libutils/wiki/Concepts"><code>_Concepts</code></a></td><td><code>utils::concepts</code></td><td><span data-lang="en">operation concepts (<code>AddableWith</code>, <code>Comparable</code>...)</span><span data-lang="fr">concepts d'opérations (<code>AddableWith</code>, <code>Comparable</code>...)</span></td></tr>
+      <tr><td><a href="https://github.com/TsukiNi22/libutils/wiki/Encapsulation"><code>_Encapsulation</code></a></td><td><code>utils::encapsulation</code></td><td><code>Pipe</code>, <code>Dup</code>, <code>Process</code>, <code>Poll</code>, <code>SharedObject</code>, <code>SharedMemory</code></td></tr>
+      <tr><td><a href="https://github.com/TsukiNi22/libutils/wiki/System"><code>_System</code></a></td><td><code>utils::system</code></td><td><code>IdHandler</code>, <code>Scheduler</code>, <code>LoadBalancer</code></td></tr>
+      <tr><td><a href="https://github.com/TsukiNi22/libutils/wiki/Type"><code>_CustomType</code></a></td><td><code>utils::type</code></td><td><code>Vector2/3</code>, <code>OVector2/3</code>, <code>Matrix</code>, <code>OMatrix</code>, <code>BidirectionalLookupTable</code>, <code>Freezable</code>, <code>Worker</code></td></tr>
+      <tr><td><a href="https://github.com/TsukiNi22/libutils/wiki/Manip"><code>_Manip</code></a></td><td><code>utils::iomanip</code>, <code>utils::smanip</code></td><td><span data-lang="en">ANSI sequences, <code>format</code>, <code>FixedString</code>, <code>Base64Codec</code>, <code>EETPParser</code></span><span data-lang="fr">séquences ANSI, <code>format</code>, <code>FixedString</code>, <code>Base64Codec</code>, <code>EETPParser</code></span></td></tr>
+      <tr><td><a href="https://github.com/TsukiNi22/libutils/wiki/Algorithms"><code>_Algorithms</code></a></td><td><code>utils::algorithms</code></td><td><span data-lang="en">c2dmp-hsm (string distance), s.o.s (steganography)</span><span data-lang="fr">c2dmp-hsm (distance entre chaînes), s.o.s (stéganographie)</span></td></tr>
+      <tr><td><a href="https://github.com/TsukiNi22/libutils/wiki/Security"><code>_Security</code></a></td><td><code>utils::security</code></td><td><code>AESKey</code>, <code>RSAKey</code>, <code>CommonRSAKey</code>, <span data-lang="en">observers / memory leak notifier</span><span data-lang="fr">observers / notifier de fuites mémoire</span></td></tr>
+      <tr><td><a href="https://github.com/TsukiNi22/libutils/wiki/Attribute"><code>_Attribute</code></a></td><td><span data-lang="en">macros</span><span data-lang="fr">macros</span></td><td><code>_hot</code>, <code>_nodiscard</code>, <code>_likely</code>, <code>_migration(x, y, z)</code>...</td></tr>
+    </tbody>
+  </table></div>
+  <p><span data-lang="en">The full dependency view of the headers, classes and calls is on the <a href="graph.html">graph</a> page.</span><span data-lang="fr">La vue complète des dépendances entre en-têtes, classes et appels est sur la page <a href="graph.html">graphe</a>.</span></p>
+</section>
+
+<!-- 4 -->
+<section id="errors">
+  <h2><span data-lang="en">4. Errors</span><span data-lang="fr">4. Erreurs</span></h2>
+  <p><span data-lang="en">Every error is an exception carrying a <strong>type</strong> and a <strong>code</strong>, never a return code. The codes are generated at the build from <code>cmake/config/exceptions/**/*.json</code>; a project adds its own codes (<code>ExternalCode</code>) with the same JSON format.</span><span data-lang="fr">Chaque erreur est une exception portant un <strong>type</strong> et un <strong>code</strong>, jamais un code de retour. Les codes sont générés au build depuis <code>cmake/config/exceptions/**/*.json</code> ; un projet ajoute ses propres codes (<code>ExternalCode</code>) avec le même format JSON.</span></p>
+  <div class="table-wrap"><table>
+    <thead><tr><th><span data-lang="en">Class</span><span data-lang="fr">Classe</span></th><th>Type</th><th><span data-lang="en">Meaning</span><span data-lang="fr">Sens</span></th></tr></thead>
+    <tbody>
+      <tr><td><code>NoneException</code></td><td><code>None</code></td><td><span data-lang="en">not an error (ex: help displayed, <code>Exit</code>)</span><span data-lang="fr">pas une erreur (ex : aide affichée, <code>Exit</code>)</span></td></tr>
+      <tr><td><code>WarningException</code></td><td><code>Warning</code></td><td><span data-lang="en">the program can continue</span><span data-lang="fr">le programme peut continuer</span></td></tr>
+      <tr><td><code>ErrorException</code></td><td><code>Error</code></td><td><span data-lang="en">error of the call</span><span data-lang="fr">erreur de l'appel</span></td></tr>
+      <tr><td><code>CustomException</code></td><td><span data-lang="en">given</span><span data-lang="fr">donné</span></td><td><span data-lang="en">combination of types</span><span data-lang="fr">combinaison de types</span></td></tr>
+      <tr><td><code>FatalException</code></td><td><code>Fatal</code></td><td><span data-lang="en">prints and calls <code>std::abort()</code> from its constructor</span><span data-lang="fr">affiche puis appelle <code>std::abort()</code> depuis son constructeur</span></td></tr>
+    </tbody>
+  </table></div>
+<pre data-title="Catch"><code>try {
+    server.start();
+} catch (const utils::exception::IException&amp; e) {
+    if (e.getCode() == utils::exception::InternalCode::AlreadyRunning) return;
+    std::cerr &lt;&lt; e.formated() &lt;&lt; std::endl; // [Error] file:line (origin) -&gt; message / function = info
+}</code></pre>
+  <div class="callout"><p><span data-lang="en">A code can restrict its allowed types; a forbidden combination ends with <code>FatalException(ExceptionCodeRestriction)</code>. Many methods take <code>failsafe</code> (print a warning instead of throwing) or <code>safe_mode</code> (lock).</span><span data-lang="fr">Un code peut restreindre ses types autorisés ; une combinaison interdite finit en <code>FatalException(ExceptionCodeRestriction)</code>. Beaucoup de méthodes prennent <code>failsafe</code> (avertir au lieu de lever) ou <code>safe_mode</code> (verrou).</span></p></div>
+</section>
+
+<!-- 5 -->
+<section id="network">
+  <h2><span data-lang="en">5. Network & EETP</span><span data-lang="fr">5. Réseau & EETP</span></h2>
+  <p><span data-lang="en">A <code>Server</code> and a <code>Client</code> exchange <strong>payloads</strong> (strings ended by a separator, <code>'\n'</code> by default) through a socket object. <code>listen()</code> reads what is available without blocking, <code>join()</code> waits for the next epoll event; <code>stop()</code> / <code>kill()</code> can be called from another thread.</span><span data-lang="fr">Un <code>Server</code> et un <code>Client</code> échangent des <strong>payloads</strong> (chaînes terminées par un séparateur, <code>'\n'</code> par défaut) via un objet socket. <code>listen()</code> lit ce qui est disponible sans bloquer, <code>join()</code> attend le prochain événement epoll ; <code>stop()</code> / <code>kill()</code> peuvent être appelés depuis un autre thread.</span></p>
+  <figure>
+    <svg viewBox="0 0 760 210" role="img" aria-label="Server and Client use an ISocket, the EETPParser frames the payloads">
+      <defs>
+        <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path class="arrow" d="M0 0L10 5L0 10z"/>
+        </marker>
+        <marker id="arr2a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path class="arrow-accent" d="M0 0L10 5L0 10z"/>
+        </marker>
+      </defs>
+      <rect class="box" x="30" y="30" width="180" height="50" rx="8"/>
+      <text class="lbl" x="120" y="60" text-anchor="middle">Client</text>
+      <rect class="box" x="550" y="30" width="180" height="50" rx="8"/>
+      <text class="lbl" x="640" y="60" text-anchor="middle">Server</text>
+      <rect class="box-alt" x="30" y="130" width="180" height="50" rx="8"/>
+      <text class="lbl" x="120" y="160" text-anchor="middle">TCPSocket</text>
+      <rect class="box-alt" x="550" y="130" width="180" height="50" rx="8"/>
+      <text class="lbl" x="640" y="160" text-anchor="middle">TCPSocket + epoll</text>
+      <path class="edge" d="M120 80V126" marker-end="url(#arr2)"/>
+      <path class="edge" d="M640 80V126" marker-end="url(#arr2)"/>
+      <path class="edge-accent" d="M210 155H546" marker-start="url(#arr2a)" marker-end="url(#arr2a)"/>
+      <text class="small" x="378" y="146" text-anchor="middle">payload '\n' payload '\n' ...</text>
+      <text class="small" x="378" y="176" text-anchor="middle">TCP</text>
+      <path class="edge dash" d="M210 55H546" marker-end="url(#arr2)"/>
+      <text class="small" x="378" y="47" text-anchor="middle">EETPParser::format / parse</text>
+    </svg>
+    <figcaption><span data-lang="en">Figure 2: the network layers; the EETP parser is optional, on top of the payloads.</span><span data-lang="fr">Figure 2 : les couches réseau ; le parser EETP est optionnel, au-dessus des payloads.</span></figcaption>
+  </figure>
+  <h3><span data-lang="en">5.1 EETP protocol</span><span data-lang="fr">5.1 Protocole EETP</span></h3>
+  <p><span data-lang="en"><code>EETPParser</code> keeps the keys of each peer: the client sends <code>SYN</code> (its RSA public key, encrypted with the common RSA key of <code>~/.ssh/common</code>), the server answers <code>SO</code> (a new AES-256 key, encrypted with the client key), then every message is AES-256-GCM encrypted with a new random iv.</span><span data-lang="fr"><code>EETPParser</code> garde les clés de chaque pair : le client envoie <code>SYN</code> (sa clé publique RSA, chiffrée avec la clé RSA commune de <code>~/.ssh/common</code>), le serveur répond <code>SO</code> (une nouvelle clé AES-256, chiffrée avec la clé du client), puis chaque message est chiffré en AES-256-GCM avec un nouvel iv aléatoire.</span></p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Type</th><th><span data-lang="en">Direction</span><span data-lang="fr">Sens</span></th><th><span data-lang="en">Content</span><span data-lang="fr">Contenu</span></th></tr></thead>
+    <tbody>
+      <tr><td><code>SYN</code></td><td>client → server</td><td><span data-lang="en">client RSA public key (common RSA)</span><span data-lang="fr">clé publique RSA du client (RSA commune)</span></td></tr>
+      <tr><td><code>SO</code></td><td>server → client</td><td><span data-lang="en">AES-256 key (client RSA)</span><span data-lang="fr">clé AES-256 (RSA du client)</span></td></tr>
+      <tr><td><span data-lang="en">other</span><span data-lang="fr">autre</span></td><td>↔</td><td><span data-lang="en">AES-256-GCM, frame <code>&lt;iv&gt;&lt;tag&gt; ETB &lt;content&gt;</code>, Base64 encoded</span><span data-lang="fr">AES-256-GCM, trame <code>&lt;iv&gt;&lt;tag&gt; ETB &lt;contenu&gt;</code>, encodée en Base64</span></td></tr>
+      <tr><td><code>EM</code></td><td>↔</td><td><span data-lang="en">disconnection, never encrypted</span><span data-lang="fr">déconnexion, jamais chiffrée</span></td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout warn"><p><span data-lang="en">The framing changed in <code>v3.0.0</code>: both sides must use <code>v3.0.0</code> or later.</span><span data-lang="fr">Le format des trames a changé en <code>v3.0.0</code> : les deux côtés doivent utiliser <code>v3.0.0</code> ou plus.</span></p></div>
+</section>
+
+<!-- 6 -->
+<section id="ipc">
+  <h2><span data-lang="en">6. Processes & IPC</span><span data-lang="fr">6. Processus & IPC</span></h2>
+  <p><span data-lang="en"><code>Process</code> wraps <code>fork</code> / <code>execvp</code> / <code>waitpid</code> with pipes and fd duplications applied in the child; <code>Poll</code> wraps <code>epoll</code>; <code>SharedObject</code> loads a <code>.so</code>. <code>SharedMemory</code> passes messages between processes through a POSIX shared memory split in slots.</span><span data-lang="fr"><code>Process</code> encapsule <code>fork</code> / <code>execvp</code> / <code>waitpid</code> avec pipes et duplications de fd appliquées dans le fils ; <code>Poll</code> encapsule <code>epoll</code> ; <code>SharedObject</code> charge un <code>.so</code>. <code>SharedMemory</code> fait passer des messages entre processus via une mémoire partagée POSIX découpée en slots.</span></p>
+  <figure>
+    <svg viewBox="0 0 760 200" role="img" aria-label="Shared memory with a metadata header and slots read by reader threads">
+      <defs>
+        <marker id="arr3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path class="arrow" d="M0 0L10 5L0 10z"/>
+        </marker>
+      </defs>
+      <rect class="group" x="170" y="20" width="420" height="160" rx="10"/>
+      <text class="title" x="186" y="44">/name (shm)</text>
+      <rect class="box-alt" x="186" y="56" width="388" height="30" rx="6"/>
+      <text class="small" x="380" y="76" text-anchor="middle">ShmMetadata: size, queue, connected, readable (futex), sequence</text>
+      <rect class="box" x="186" y="100" width="90" height="60" rx="6"/>
+      <text class="small" x="231" y="126" text-anchor="middle">slot 0</text>
+      <text class="small" x="231" y="146" text-anchor="middle">flag · target</text>
+      <rect class="box" x="285" y="100" width="90" height="60" rx="6"/>
+      <text class="small" x="330" y="134" text-anchor="middle">slot 1</text>
+      <rect class="box" x="384" y="100" width="90" height="60" rx="6"/>
+      <text class="small" x="429" y="134" text-anchor="middle">slot ...</text>
+      <rect class="box" x="483" y="100" width="90" height="60" rx="6"/>
+      <text class="small" x="528" y="134" text-anchor="middle">slot n-1</text>
+      <rect class="box" x="20" y="100" width="120" height="60" rx="8"/>
+      <text class="lbl" x="80" y="126" text-anchor="middle">process A</text>
+      <text class="small" x="80" y="146" text-anchor="middle">send(bytes, target)</text>
+      <rect class="box" x="620" y="100" width="120" height="60" rx="8"/>
+      <text class="lbl" x="680" y="126" text-anchor="middle">process B</text>
+      <text class="small" x="680" y="146" text-anchor="middle">reader thread</text>
+      <path class="edge" d="M140 130H182" marker-end="url(#arr3)"/>
+      <path class="edge" d="M574 130H616" marker-end="url(#arr3)"/>
+    </svg>
+    <figcaption><span data-lang="en">Figure 3: a writer claims a free slot (flag 0 → 1), writes, publishes it (flag 2) and wakes the readers; the reader thread of each instance copies the messages addressed to it into a local storage read with <code>read()</code>.</span><span data-lang="fr">Figure 3 : un écrivain réserve un slot libre (flag 0 → 1), écrit, le publie (flag 2) et réveille les lecteurs ; le thread lecteur de chaque instance copie les messages qui lui sont adressés dans un stockage local lu avec <code>read()</code>.</span></figcaption>
+  </figure>
+  <div class="callout"><p><span data-lang="en">A message is addressed to one reader (<code>Target(limit, ownership)</code>) or to every reader (<code>Target(limit)</code>, <code>0</code> = all the connected ones). An <code>Id{id, ownership}</code> links the answers of a conversation, <code>join()</code> waits for a message and returns when the memory is closed.</span><span data-lang="fr">Un message vise un lecteur (<code>Target(limit, ownership)</code>) ou tous (<code>Target(limit)</code>, <code>0</code> = tous les connectés). Un <code>Id{id, ownership}</code> relie les réponses d'une conversation, <code>join()</code> attend un message et rend la main quand la mémoire est fermée.</span></p></div>
+</section>
+
+<!-- 7 -->
+<section id="build">
+  <h2><span data-lang="en">7. Build, tests & CI</span><span data-lang="fr">7. Build, tests & CI</span></h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th><span data-lang="en">Command</span><span data-lang="fr">Commande</span></th><th><span data-lang="en">Result</span><span data-lang="fr">Résultat</span></th></tr></thead>
+    <tbody>
+      <tr><td><code>cmake -S . -B build -DCMAKE_BUILD_TYPE=Optimized|Debug|Asan</code></td><td><code>libutils.a</code> / <code>libutils_debug.a</code> / <code>libutils_asan.a</code></td></tr>
+      <tr><td><code>cmake --build build --target release</code></td><td><span data-lang="en">the 3 libraries</span><span data-lang="fr">les 3 bibliothèques</span></td></tr>
+      <tr><td><code>cmake --build build --target package_release</code></td><td><span data-lang="en">every RPM / DEB package</span><span data-lang="fr">tous les paquets RPM / DEB</span></td></tr>
+      <tr><td><code>-DBUILD_TESTS=ON</code> + <code>ctest --test-dir build</code></td><td><span data-lang="en">GoogleTest unit tests (<code>unit_tests</code> at the root)</span><span data-lang="fr">tests unitaires GoogleTest (<code>unit_tests</code> à la racine)</span></td></tr>
+    </tbody>
+  </table></div>
+  <figure>
+    <svg viewBox="0 0 760 170" role="img" aria-label="Dispatch runs the unit tests, then builds the packages or the libraries, then notifies docker-image">
+      <defs>
+        <marker id="arr4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path class="arrow" d="M0 0L10 5L0 10z"/>
+        </marker>
+      </defs>
+      <rect class="box-alt" x="20" y="60" width="130" height="50" rx="8"/>
+      <text class="lbl" x="85" y="90" text-anchor="middle">Dispatch</text>
+      <rect class="box" x="190" y="60" width="130" height="50" rx="8"/>
+      <text class="lbl" x="255" y="90" text-anchor="middle">Unit Tests</text>
+      <rect class="box" x="370" y="16" width="170" height="50" rx="8"/>
+      <text class="lbl" x="455" y="46" text-anchor="middle">Build Packages</text>
+      <rect class="box" x="370" y="104" width="170" height="50" rx="8"/>
+      <text class="lbl" x="455" y="134" text-anchor="middle">Build Libraries</text>
+      <rect class="box-alt" x="590" y="16" width="150" height="50" rx="8"/>
+      <text class="lbl" x="665" y="46" text-anchor="middle">docker-image</text>
+      <path class="edge" d="M150 85H186" marker-end="url(#arr4)"/>
+      <path class="edge" d="M320 78L366 48" marker-end="url(#arr4)"/>
+      <path class="edge dash" d="M320 92L366 124" marker-end="url(#arr4)"/>
+      <path class="edge" d="M540 41H586" marker-end="url(#arr4)"/>
+      <text class="small" x="345" y="56" text-anchor="middle">build</text>
+      <text class="small" x="345" y="122" text-anchor="middle">else</text>
+    </svg>
+    <figcaption><span data-lang="en">Figure 4: the CI on every push of <code>main</code> or of a <code>v*</code> tag (<code>[ignore]</code> skips it).</span><span data-lang="fr">Figure 4 : la CI à chaque push sur <code>main</code> ou d'un tag <code>v*</code> (<code>[ignore]</code> la saute).</span></figcaption>
+  </figure>
+  <div class="table-wrap"><table>
+    <thead><tr><th><span data-lang="en">Trigger</span><span data-lang="fr">Déclencheur</span></th><th><span data-lang="en">Result</span><span data-lang="fr">Résultat</span></th></tr></thead>
+    <tbody>
+      <tr><td><span data-lang="en">tag <code>vX.Y.Z</code></span><span data-lang="fr">tag <code>vX.Y.Z</code></span></td><td><span data-lang="en">stable packages</span><span data-lang="fr">paquets stables</span></td></tr>
+      <tr><td><span data-lang="en">tag <code>vX.Y.Z-&lt;suffix&gt;</code> or commit <code>[build]</code></span><span data-lang="fr">tag <code>vX.Y.Z-&lt;suffixe&gt;</code> ou commit <code>[build]</code></span></td><td><span data-lang="en"><code>-pre</code> packages (5 last versions kept)</span><span data-lang="fr">paquets <code>-pre</code> (5 dernières versions gardées)</span></td></tr>
+      <tr><td><span data-lang="en">commit <code>[release]</code> or any package build</span><span data-lang="fr">commit <code>[release]</code> ou tout build de paquets</span></td><td><span data-lang="en">notification of <code>docker-image</code></span><span data-lang="fr">notification de <code>docker-image</code></span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 8 -->
+<section id="licenses">
+  <h2><span data-lang="en">8. Licenses</span><span data-lang="fr">8. Licences</span></h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th><span data-lang="en">Component</span><span data-lang="fr">Composant</span></th><th><span data-lang="en">License</span><span data-lang="fr">Licence</span></th></tr></thead>
+    <tbody>
+      <tr><td><span data-lang="en">libutils (its own code)</span><span data-lang="fr">libutils (son propre code)</span></td><td>MIT</td></tr>
+      <tr><td><code>include/utils/algorithms/</code> (c2dmp-hsm, s.o.s)</td><td>CC BY-NC-SA 4.0</td></tr>
+      <tr><td>OpenSSL</td><td><span data-lang="en">Apache-2.0 (linked, system package)</span><span data-lang="fr">Apache-2.0 (liée, paquet système)</span></td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout warn"><p><span data-lang="en">The MIT license doesn't apply to the dependencies: the synced algorithms can't be used commercially without an agreement with the author (<code>THIRD_PARTY_NOTICES.md</code>).</span><span data-lang="fr">La licence MIT ne s'applique pas aux dépendances : les algorithmes synchronisés ne peuvent pas être utilisés commercialement sans accord de l'auteur (<code>THIRD_PARTY_NOTICES.md</code>).</span></p></div>
+</section>
+
+<nav class="pager" aria-label="Pages">
+  <a class="next" href="graph.html"><span data-i18n>Next</span><b data-i18n>Graph</b></a>
+</nav>
+</main>
+</div>
+<footer class="site"><span data-lang="en"><span class="repo-name">libutils</span> documentation · generated from the <a class="repo-link" href="https://github.com/TsukiNi22/libutils">repository</a> (<span class="repo-version">v3.0.0</span>, <span class="repo-license">MIT</span>)</span><span data-lang="fr">Documentation de <span class="repo-name">libutils</span> · générée depuis le <a class="repo-link" href="https://github.com/TsukiNi22/libutils">dépôt</a> (<span class="repo-version">v3.0.0</span>, <span class="repo-license">MIT</span>)</span></footer>
+<script>
+// French texts of the page (English text -> French text), extend it with the page content
+window.DOC_FR = {
+  "Guide": "Guide",
+  "Technical": "Technique",
+  "Graph": "Graphe",
+  "GitHub repository": "Dépôt GitHub",
+  "Toggle theme": "Changer de thème",
+  "Contents": "Sommaire",
+  "Language": "Langue",
+  "Pages": "Pages",
+  "Copy": "Copier",
+  "Copied": "Copié",
+  "Select & copy": "Sélectionner et copier",
+  "Link to this section": "Lien vers cette section",
+  "Navigation": "Navigation",
+  "Open the navigation": "Ouvrir la navigation",
+  "User guide": "Guide utilisateur",
+  "Developer guide": "Guide développeur",
+  "Technical documentation": "Documentation technique",
+  "Previous": "Précédent",
+  "Next": "Suivant"
+};
+</script>
+<script>
+// Language (English by default, French on demand): [data-i18n] elements and [data-i18n-<attr>] attributes are
+// translated with window.DOC_FR (English text -> French text), [data-lang] blocks are shown for their language only.
+(function () {
+  var root = document.documentElement;
+  var key = (root.getAttribute('data-storage-key') || 'doc') + '-lang';
+  var FR = window.DOC_FR || {};
+  var listeners = [];
+  function tr(s) { return root.lang === 'fr' && Object.prototype.hasOwnProperty.call(FR, s) ? FR[s] : s; }
+  function apply() {
+    document.querySelectorAll('[data-i18n]').forEach(function (el) {
+      if (el.dataset.i18nEn === undefined) el.dataset.i18nEn = el.innerHTML.trim();
+      el.innerHTML = tr(el.dataset.i18nEn);
+    });
+    ['aria-label', 'title', 'placeholder'].forEach(function (attr) {
+      document.querySelectorAll('[data-i18n-' + attr + ']').forEach(function (el) {
+        var store = 'i18nEn' + attr.replace(/-(\w)/g, function (m, c) { return c.toUpperCase(); });
+        if (el.dataset[store] === undefined) el.dataset[store] = el.getAttribute(attr) || '';
+        el.setAttribute(attr, tr(el.dataset[store]));
+      });
+    });
+    document.querySelectorAll('[data-set-lang]').forEach(function (b) {
+      b.classList.toggle('on', b.dataset.setLang === root.lang);
+      b.setAttribute('aria-pressed', b.dataset.setLang === root.lang ? 'true' : 'false');
+    });
+  }
+  function set(lang) {
+    root.lang = lang === 'fr' ? 'fr' : 'en';
+    try { localStorage.setItem(key, root.lang); } catch (e) { /* storage unavailable */ }
+    apply();
+    listeners.forEach(function (f) { f(root.lang); });
+  }
+  var saved = null;
+  try { saved = localStorage.getItem(key); } catch (e) { /* storage unavailable */ }
+  root.lang = saved === 'fr' ? 'fr' : 'en';
+  window.docI18n = { tr: tr, set: set, onChange: function (f) { listeners.push(f); }, lang: function () { return root.lang; } };
+  document.querySelectorAll('[data-set-lang]').forEach(function (b) {
+    b.addEventListener('click', function () { set(b.dataset.setLang); });
+  });
+  apply();
+})();
+</script>
+<script>
+// Project data from the linked GitHub repository (<html data-repo="owner/repo">): name, latest version, license and
+// URL are fetched (cached 1 h) and replace the written values in .repo-name / .repo-version / .repo-license /
+// .repo-link and in the page title. Offline, private repository or API limit: the written values stay.
+(function () {
+  var root = document.documentElement, repo = root.getAttribute('data-repo') || '';
+  if (!/^[\w.-]+\/[\w.-]+$/.test(repo)) return;
+  var key = (root.getAttribute('data-storage-key') || 'doc') + '-repo', TTL = 3600 * 1000;
+  function apply(info) {
+    if (!info) return;
+    var oldName = (document.querySelector('.repo-name') || {}).textContent;
+    if (info.name) document.querySelectorAll('.repo-name').forEach(function (e) { e.textContent = info.name; });
+    if (info.version) document.querySelectorAll('.repo-version').forEach(function (e) { e.textContent = info.version; });
+    if (info.license) document.querySelectorAll('.repo-license').forEach(function (e) { e.textContent = info.license; });
+    if (info.url) document.querySelectorAll('a.repo-link').forEach(function (e) { e.href = info.url; });
+    if (info.name && oldName && document.title.indexOf(oldName) === 0) document.title = info.name + document.title.slice(oldName.length);
+  }
+  var cached = null;
+  try { cached = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { /* storage unavailable */ }
+  if (cached && cached.repo === repo) apply(cached);
+  // A language change rewrites the translated texts from their original: apply the fetched data again
+  if (window.docI18n) window.docI18n.onChange(function () { var c = null; try { c = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { /* storage unavailable */ } apply(window.docRepoInfo || c); });
+  if (cached && cached.repo === repo && Date.now() - cached.time < TTL) return;
+  var api = 'https://api.github.com/repos/' + repo;
+  var get = function (u) { return fetch(u, { headers: { Accept: 'application/vnd.github+json' } }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }); };
+  get(api).then(function (r) {
+    var info = { repo: repo, time: Date.now(), name: r.name, url: r.html_url, license: r.license && r.license.spdx_id && r.license.spdx_id !== 'NOASSERTION' ? r.license.spdx_id : '' };
+    return get(api + '/releases/latest').then(function (rel) { info.version = rel.tag_name; return info; })
+      .catch(function () { return get(api + '/tags?per_page=1').then(function (tags) { if (tags[0]) info.version = tags[0].name; return info; }); })
+      .catch(function () { return info; });
+  }).then(function (info) {
+    window.docRepoInfo = info;
+    apply(info);
+    try { localStorage.setItem(key, JSON.stringify(info)); } catch (e) { /* storage unavailable */ }
+  }).catch(function () { /* keep the written values */ });
+})();
+</script>
+<script>
+(function () {
+  var root = document.documentElement;
+  var key = 'libutils-doc-theme';
+  var btn = document.getElementById('themeToggle');
+  try { var saved = localStorage.getItem(key); if (saved) root.setAttribute('data-theme', saved); } catch (e) {}
+  function isDark() {
+    return root.getAttribute('data-theme') === 'dark' ||
+      (!root.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  }
+  btn.setAttribute('aria-checked', isDark() ? 'true' : 'false');
+  btn.addEventListener('click', function () {
+    var next = isDark() ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    btn.setAttribute('aria-checked', next === 'dark' ? 'true' : 'false');
+    try { localStorage.setItem(key, next); } catch (e) {}
+  });
+
+  // Highlight the section visible in the summary
+  var links = document.querySelectorAll('.sidebar a[href^="#"]');
+  if (!('IntersectionObserver' in window)) return;
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      links.forEach(function (a) { a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id); });
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  document.querySelectorAll('main section[id]').forEach(function (s) { observer.observe(s); });
+})();
+
+// Hide the tabs of the pages that don't exist, and the whole bar when a single page remains
+// (online: HEAD request; file://: the page is loaded as a hidden script, a missing file fails to load)
+(function () {
+  var nav = document.querySelector('nav.tabs');
+  if (!nav) return;
+  function done(a, ok) {
+    if (!ok) a.remove();
+    if (nav.querySelectorAll('a').length < 2) nav.hidden = true;
+  }
+  nav.querySelectorAll('a:not(.current)').forEach(function (a) {
+    if (/^https?:$/.test(location.protocol)) {
+      fetch(a.href, { method: 'HEAD' }).then(function (r) { done(a, r.ok); }).catch(function () {});
+      return;
+    }
+    var s = document.createElement('script');
+    var mute = function (e) { if (e.filename === s.src) { e.preventDefault(); e.stopImmediatePropagation(); } }; // an HTML page is not JS
+    window.addEventListener('error', mute, true);
+    s.src = a.href;
+    s.onload = function () { window.removeEventListener('error', mute, true); s.remove(); done(a, true); };
+    s.onerror = function () { window.removeEventListener('error', mute, true); s.remove(); done(a, false); };
+    document.head.appendChild(s);
+  });
+  if (nav.querySelectorAll('a').length < 2) nav.hidden = true;
+})();
+
+// Sidebar (mobile), copy buttons, heading anchors, content tabs
+(function () {
+  var tr = function (s) { return window.docI18n ? window.docI18n.tr(s) : s; };
+  var menu = document.getElementById('menuBtn'), side = document.getElementById('sidebar');
+  if (menu && side) {
+    menu.addEventListener('click', function () { side.classList.toggle('open'); });
+    document.addEventListener('click', function (e) { if (!side.contains(e.target) && !menu.contains(e.target)) side.classList.remove('open'); });
+  }
+  document.querySelectorAll('main pre').forEach(function (pre) {
+    if (pre.dataset.nocopy !== undefined) return;
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'copy'; b.textContent = tr('Copy');
+    b.addEventListener('click', function () {
+      var code = pre.querySelector('code') || pre;
+      var done = function () { b.textContent = tr('Copied'); setTimeout(function () { b.textContent = tr('Copy'); }, 1400); };
+      if (navigator.clipboard) navigator.clipboard.writeText(code.innerText).then(done, function () { b.textContent = tr('Select & copy'); });
+      else b.textContent = tr('Select & copy');
+    });
+    pre.appendChild(b);
+  });
+  document.querySelectorAll('main h2[id], main h3[id], main section[id] > h2').forEach(function (h) {
+    var id = h.id || h.parentElement.id;
+    if (!id || h.querySelector('.anchor')) return;
+    var a = document.createElement('a');
+    a.className = 'anchor'; a.href = '#' + id; a.textContent = '#';
+    a.setAttribute('aria-label', tr('Link to this section'));
+    h.appendChild(a);
+  });
+  document.querySelectorAll('.ctabs').forEach(function (bar) {
+    var group = bar.dataset.tabs;
+    var buttons = bar.querySelectorAll('button');
+    var panels = document.querySelectorAll('.ctab-panel[data-tabs="' + group + '"]');
+    function show(name) {
+      buttons.forEach(function (b) { b.classList.toggle('active', b.dataset.tab === name); });
+      panels.forEach(function (p) { p.classList.toggle('active', p.dataset.tab === name); });
+    }
+    buttons.forEach(function (b) { b.addEventListener('click', function () { show(b.dataset.tab); }); });
+    if (buttons.length) show(buttons[0].dataset.tab);
+  });
+  if (window.docI18n) window.docI18n.onChange(function () {
+    document.querySelectorAll('main pre .copy').forEach(function (b) { b.textContent = tr('Copy'); });
+    document.querySelectorAll('.anchor').forEach(function (a) { a.setAttribute('aria-label', tr('Link to this section')); });
+  });
+})();
+</script>
+</body>
+</html>

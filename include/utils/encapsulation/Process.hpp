@@ -20,6 +20,7 @@ File Description:
 #ifndef PROCESS_H
     #define PROCESS_H
 
+
     //----------------------------------------------------------------//
     /* INCLUDE */
 
@@ -28,7 +29,7 @@ File Description:
     #include "../attribute/Attribute.hpp"           // _cold, _hot, _nodiscard, _noreturn
     #include "Pipe.hpp"                             // utils::encapsulation::Pipe
     #include "Dup.hpp"                              // utils::encapsulation::Dup
-    #include <unistd.h>                             // pid_t
+    #include <sys/types.h>                          // pid_t (also on MinGW)
     #include <iterator>                             // std::make_move_iterator
     #include <utility>                              // std::exchange, std::move
     #include <vector>                               // std::vector
@@ -53,16 +54,17 @@ class Process: private utils::security::observer::Observer<"Process"> {
         std::vector<utils::encapsulation::Pipe> _pipes;
         std::vector<utils::encapsulation::Dup> _dups;
         pid_t _pid = -1; // -1 not spawned
+        void* _handle = nullptr; // Windows: HANDLE of the child (nullptr on Unix)
 
     public:
         // ---------- Pre-Function -------- //
         /* process */
         bool is(void) const;
-        pid_t spawn(void); // fork
-        pid_t spawn(const std::string& path, const std::vector<std::string>& args); // execvp
-        _noreturn void replace(const std::string& path, const std::vector<std::string>& args); // execvp (never return: exec or _exit)
-        utils::encapsulation::Status wait(void); // waitpid
-        void kill(void); // -s 9
+        pid_t spawn(void); // fork (Windows: FatalException UndefinedCall, no fork)
+        pid_t spawn(const std::string& path, const std::vector<std::string>& args); // execvp (Windows: CreateProcess, only the fds 0, 1 & 2 can be dup)
+        _noreturn void replace(const std::string& path, const std::vector<std::string>& args); // execvp (Windows: _execvp) (never return: exec or _exit)
+        utils::encapsulation::Status wait(void); // waitpid (Windows: WaitForSingleObject, never killed by a signal)
+        void kill(void); // -s 9 (Windows: TerminateProcess)
 
         // ------------ Function ---------- //
         _cold inline void clear(void) {this->_pipes.clear(); this->_dups.clear();}; // clear Pipe/Dup (close fd)
@@ -94,13 +96,14 @@ class Process: private utils::security::observer::Observer<"Process"> {
             this->_pipes = std::move(other._pipes);
             this->_dups = std::move(other._dups);
             this->_pid = std::exchange(other._pid, -1); // the moved-from doesn't own the child
+            this->_handle = std::exchange(other._handle, nullptr);
             return *this;
         };
 
         // ---------- Constructor --------- //
         Process() = default;
         Process(const Process& other) = delete;
-        Process(Process&& other): utils::security::observer::Observer<"Process">(std::move(other)), _pipes{std::move(other._pipes)}, _dups{std::move(other._dups)}, _pid{std::exchange(other._pid, -1)} {};
+        Process(Process&& other): utils::security::observer::Observer<"Process">(std::move(other)), _pipes{std::move(other._pipes)}, _dups{std::move(other._dups)}, _pid{std::exchange(other._pid, -1)}, _handle{std::exchange(other._handle, nullptr)} {};
 
         // ----------- Destructor --------- //
         ~Process() // only the parent kill the child

@@ -119,7 +119,11 @@ TEST_F(CommonRSAKeyTest, DefaultPath) {
 
 TEST_F(CommonRSAKeyTest, TildeWithoutHome) {
     tests::tools::ScopedEnv env("HOME", "");
-    ::unsetenv("HOME");
+    tests::tools::ScopedEnv::unset("HOME");
+    #ifdef _WIN32
+        tests::tools::ScopedEnv profile("USERPROFILE", "");
+        tests::tools::ScopedEnv::unset("USERPROFILE");
+    #endif
     utils::security::encryption::CommonRSAKey key;
     try {
         key.loadCommon("~/common");

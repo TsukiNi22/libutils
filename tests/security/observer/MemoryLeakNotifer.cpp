@@ -76,6 +76,26 @@ class SubClass: private utils::security::observer::Observer<"SubClass">
 };
 } // namespace
 
+// Client is Unix only: TCPSocket (ISocket observer) on Windows
+#ifdef _WIN32
+    #define SUBCLASS_LEAK_CASE MemoryLeasNotifierLeakCase{ \
+        "SubClass", \
+        [](void) {void* ptr = new utils::network::TCPSocket(); (void)ptr;}, \
+        "[WARNING] Memory leak detected (origin: X)\n" \
+        "-- At least one instance wasn't properly closed --\n" \
+        "  1 - ISocket\n" \
+    }
+#else
+    #define SUBCLASS_LEAK_CASE MemoryLeasNotifierLeakCase{ \
+        "SubClass", \
+        [](void) {void* ptr = new utils::network::Client(); (void)ptr;}, \
+        "[WARNING] Memory leak detected (origin: X)\n" \
+        "-- At least one instance wasn't properly closed --\n" \
+        "  2 - ISocket\n" \
+        "  1 - Client\n" \
+    }
+#endif
+
 INSTANTIATE_TEST_SUITE_P(LeakCases, MemoryLeasNotifierTest,
     ::testing::Values(
         MemoryLeasNotifierLeakCase{
@@ -88,17 +108,7 @@ INSTANTIATE_TEST_SUITE_P(LeakCases, MemoryLeasNotifierTest,
             "-- At least one instance wasn't properly closed --\n"
             "  1 - Settings\n"
         },
-        MemoryLeasNotifierLeakCase{
-            "SubClass",
-            [](void) {
-                void* ptr = new utils::network::Client();
-                (void)ptr;
-            },
-            "[WARNING] Memory leak detected (origin: X)\n"
-            "-- At least one instance wasn't properly closed --\n"
-            "  2 - ISocket\n"
-            "  1 - Client\n"
-        },
+        SUBCLASS_LEAK_CASE,
         MemoryLeasNotifierLeakCase{
             "UnsafeSimpleClass",
             [](void) {

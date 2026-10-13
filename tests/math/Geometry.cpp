@@ -20,20 +20,21 @@ File Description:
 #include "utils.hpp"
 #include <gtest/gtest.h>
 #include <cmath>
+#include <numbers>
 
 #define EPS 1e-9
 
 /* Convertion */
 TEST(Trigo, DegToRad) {
     EXPECT_NEAR(utils::math::trigo::deg_to_rad(0.0), 0.0, EPS);
-    EXPECT_NEAR(utils::math::trigo::deg_to_rad(180.0), M_PI, EPS);
-    EXPECT_NEAR(utils::math::trigo::deg_to_rad(90.0), M_PI / 2.0, EPS);
-    EXPECT_NEAR(utils::math::trigo::deg_to_rad(-360.0), -2.0 * M_PI, EPS);
+    EXPECT_NEAR(utils::math::trigo::deg_to_rad(180.0), std::numbers::pi, EPS);
+    EXPECT_NEAR(utils::math::trigo::deg_to_rad(90.0), std::numbers::pi / 2.0, EPS);
+    EXPECT_NEAR(utils::math::trigo::deg_to_rad(-360.0), -2.0 * std::numbers::pi, EPS);
 }
 
 TEST(Trigo, RadToDeg) {
-    EXPECT_NEAR(utils::math::trigo::rad_to_deg(M_PI), 180.0, EPS);
-    EXPECT_NEAR(utils::math::trigo::rad_to_deg(M_PI / 4.0), 45.0, EPS);
+    EXPECT_NEAR(utils::math::trigo::rad_to_deg(std::numbers::pi), 180.0, EPS);
+    EXPECT_NEAR(utils::math::trigo::rad_to_deg(std::numbers::pi / 4.0), 45.0, EPS);
 }
 
 TEST(Trigo, RoundTrip) {
@@ -49,7 +50,7 @@ TEST(Point, Rotate2DDeg) {
 }
 
 TEST(Point, Rotate2DRad) {
-    utils::math::Coord2D p = utils::math::geometry::rotate_point_2D({0.0, 0.0}, {1.0, 0.0}, M_PI, true);
+    utils::math::Coord2D p = utils::math::geometry::rotate_point_2D({0.0, 0.0}, {1.0, 0.0}, std::numbers::pi, true);
     EXPECT_NEAR(p.x, -1.0, EPS);
     EXPECT_NEAR(p.y, 0.0, EPS);
 }

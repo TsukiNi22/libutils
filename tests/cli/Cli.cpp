@@ -20,8 +20,13 @@ File Description:
 #include "utils.hpp"
 #include "tools/TempDir.hpp"
 #include <gtest/gtest.h>
-#include <unistd.h>
-#include <fcntl.h>
+#ifdef _WIN32
+    #include <io.h>
+    #include <fcntl.h>
+#else
+    #include <unistd.h>
+    #include <fcntl.h>
+#endif
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
@@ -671,68 +676,83 @@ TEST_F(CliTest, DestructionStopRunningThread) {
 TEST(CliGetCHook, EndOfFile) {
     // stdin at EOF
     int fds[2];
-    ASSERT_EQ(::pipe(fds), 0);
-    ::close(fds[1]);
-    int saved = ::dup(STDIN_FILENO);
-    ::dup2(fds[0], STDIN_FILENO);
-    char c = 'x';
-    bool res = utils::cli::defaultGetCHook(c);
-    ::dup2(saved, STDIN_FILENO);
-    ::close(saved);
-    ::close(fds[0]);
+    #ifdef _WIN32
+        ASSERT_EQ(::_pipe(fds, 4096, _O_BINARY), 0);
+        ::_close(fds[1]);
+        int saved = ::_dup(0);
+        ::_dup2(fds[0], 0);
+        char c = 'x';
+        bool res = utils::cli::defaultGetCHook(c);
+        ::_dup2(saved, 0);
+        ::_close(saved);
+        ::_close(fds[0]);
+    #else
+        ASSERT_EQ(::pipe(fds), 0);
+        ::close(fds[1]);
+        int saved = ::dup(STDIN_FILENO);
+        ::dup2(fds[0], STDIN_FILENO);
+        char c = 'x';
+        bool res = utils::cli::defaultGetCHook(c);
+        ::dup2(saved, STDIN_FILENO);
+        ::close(saved);
+        ::close(fds[0]);
+    #endif
     EXPECT_TRUE(res);
     EXPECT_EQ(c, 0);
 }
 
 /* hooks */
-// The prompt is only displayed on a tty: run the cli with stdout on a pseudo-terminal, return what was displayed
-static std::string runOnPty(utils::cli::Cli& cli, const std::vector<std::string>& inputs)
-{
-    int master = ::posix_openpt(O_RDWR | O_NOCTTY);
-    if (master == -1 || ::grantpt(master) != 0 || ::unlockpt(master) != 0) return "[pty error]";
-    int slave = ::open(::ptsname(master), O_RDWR | O_NOCTTY);
-    if (slave == -1) return "[pty error]";
-    std::cout.flush();
-    int saved = ::dup(STDOUT_FILENO);
-    ::dup2(slave, STDOUT_FILENO);
-    (void)cli.start(inputs);
-    std::cout.flush();
-    ::dup2(saved, STDOUT_FILENO);
-    ::close(saved);
-    ::close(slave);
+#ifndef _WIN32 // pseudo-terminal (posix_openpt): Unix only
+    // The prompt is only displayed on a tty: run the cli with stdout on a pseudo-terminal, return what was displayed
+    static std::string runOnPty(utils::cli::Cli& cli, const std::vector<std::string>& inputs)
+    {
+        int master = ::posix_openpt(O_RDWR | O_NOCTTY);
+        if (master == -1 || ::grantpt(master) != 0 || ::unlockpt(master) != 0) return "[pty error]";
+        int slave = ::open(::ptsname(master), O_RDWR | O_NOCTTY);
+        if (slave == -1) return "[pty error]";
+        std::cout.flush();
+        int saved = ::dup(STDOUT_FILENO);
+        ::dup2(slave, STDOUT_FILENO);
+        (void)cli.start(inputs);
+        std::cout.flush();
+        ::dup2(saved, STDOUT_FILENO);
+        ::close(saved);
+        ::close(slave);
 
-    std::string out;
-    char buf[256];
-    ::fcntl(master, F_SETFL, O_NONBLOCK);
-    for (ssize_t n = 0; (n = ::read(master, buf, sizeof(buf))) > 0;) out.append(buf, static_cast<std::size_t>(n));
-    ::close(master);
-    return out;
-}
+        std::string out;
+        char buf[256];
+        ::fcntl(master, F_SETFL, O_NONBLOCK);
+        for (ssize_t n = 0; (n = ::read(master, buf, sizeof(buf))) > 0;) out.append(buf, static_cast<std::size_t>(n));
+        ::close(master);
+        return out;
+    }
 
-#define CLI_ISOLATED(...) EXPECT_EXIT({::alarm(10); __VA_ARGS__; std::exit(::testing::Test::HasFailure() ? 1 : 0);}, ::testing::ExitedWithCode(0), "")
+    #define CLI_ISOLATED(...) EXPECT_EXIT({::alarm(10); __VA_ARGS__; std::exit(::testing::Test::HasFailure() ? 1 : 0);}, ::testing::ExitedWithCode(0), "")
 
-TEST_F(CliTest, CustomPromptHook) {
-    CLI_ISOLATED({
-        std::vector<std::uint8_t> codes;
-        this->_cli->setFlags(Flag::NO_TTY | Flag::CATCH | Flag::TRIM | Flag::PROMPT);
-        this->_cli->setPromptHook([&codes](const utils::cli::Cli&, std::uint8_t code) {codes.push_back(code); std::cout << "$ " << std::flush;});
-        std::string out = runOnPty(*this->_cli, {"record x"});
-        EXPECT_NE(out.find("$ "), std::string::npos) << out;
-        EXPECT_EQ(out.find("> "), std::string::npos) << out;
-        EXPECT_FALSE(codes.empty());
-    });
-}
+    TEST_F(CliTest, CustomPromptHook) {
+        CLI_ISOLATED({
+            std::vector<std::uint8_t> codes;
+            this->_cli->setFlags(Flag::NO_TTY | Flag::CATCH | Flag::TRIM | Flag::PROMPT);
+            this->_cli->setPromptHook([&codes](const utils::cli::Cli&, std::uint8_t code) {codes.push_back(code); std::cout << "$ " << std::flush;});
+            std::string out = runOnPty(*this->_cli, {"record x"});
+            EXPECT_NE(out.find("$ "), std::string::npos) << out;
+            EXPECT_EQ(out.find("> "), std::string::npos) << out;
+            EXPECT_FALSE(codes.empty());
+        });
+    }
 
-TEST_F(CliTest, ResetPromptHook) {
-    CLI_ISOLATED({
-        this->_cli->setFlags(Flag::NO_TTY | Flag::CATCH | Flag::TRIM | Flag::PROMPT);
-        this->_cli->setPromptHook([](const utils::cli::Cli&, std::uint8_t) {std::cout << "$ " << std::flush;});
-        this->_cli->resetPromptHook();
-        std::string out = runOnPty(*this->_cli, {"record x"});
-        EXPECT_NE(out.find("> "), std::string::npos) << out; // defaultPromptHook
-        EXPECT_EQ(out.find("$ "), std::string::npos) << out;
-    });
-}
+    TEST_F(CliTest, ResetPromptHook) {
+        CLI_ISOLATED({
+            this->_cli->setFlags(Flag::NO_TTY | Flag::CATCH | Flag::TRIM | Flag::PROMPT);
+            this->_cli->setPromptHook([](const utils::cli::Cli&, std::uint8_t) {std::cout << "$ " << std::flush;});
+            this->_cli->resetPromptHook();
+            std::string out = runOnPty(*this->_cli, {"record x"});
+            EXPECT_NE(out.find("> "), std::string::npos) << out; // defaultPromptHook
+            EXPECT_EQ(out.find("$ "), std::string::npos) << out;
+        });
+    }
+
+#endif
 
 TEST_F(CliTest, DefaultPromptHook) {
     testing::internal::CaptureStdout();
@@ -754,15 +774,17 @@ TEST_F(CliTest, ResetParserHook) {
     ASSERT_EQ(this->_calls.size(), 2u);
 }
 
-TEST_F(CliTest, ResetHooks) {
-    CLI_ISOLATED({
-        bool customPrompt = false;
-        this->_cli->setFlags(Flag::NO_TTY | Flag::CATCH | Flag::TRIM | Flag::PROMPT);
-        this->_cli->setPromptHook([&customPrompt](const utils::cli::Cli&, std::uint8_t) {customPrompt = true;});
-        this->_cli->resetHooks();
-        this->_cli->setGetCHook(script("")); // the default one reads the real stdin
-        std::string out = runOnPty(*this->_cli, {"record x"});
-        EXPECT_FALSE(customPrompt);
-        EXPECT_NE(out.find("> "), std::string::npos) << out;
-    });
-}
+#ifndef _WIN32 // pseudo-terminal (posix_openpt): Unix only
+    TEST_F(CliTest, ResetHooks) {
+        CLI_ISOLATED({
+            bool customPrompt = false;
+            this->_cli->setFlags(Flag::NO_TTY | Flag::CATCH | Flag::TRIM | Flag::PROMPT);
+            this->_cli->setPromptHook([&customPrompt](const utils::cli::Cli&, std::uint8_t) {customPrompt = true;});
+            this->_cli->resetHooks();
+            this->_cli->setGetCHook(script("")); // the default one reads the real stdin
+            std::string out = runOnPty(*this->_cli, {"record x"});
+            EXPECT_FALSE(customPrompt);
+            EXPECT_NE(out.find("> "), std::string::npos) << out;
+        });
+    }
+#endif

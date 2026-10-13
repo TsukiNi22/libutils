@@ -27,8 +27,8 @@ File Description:
     #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::Type, utils::exception::InternalCode
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
-    #include "../attribute/Attribute.hpp"               // _cold, _hot, _nodiscard, _unlikely, _migration
-    #include <dlfcn.h>                                  // ::dlsym, ::dlerror, ::dlclose
+    #include "../attribute/Attribute.hpp"               // _cold, _hot, _nodiscard, _unlikely
+    #include "../platform/Dlfcn.hpp"                    // utils::platform::dlsym, utils::platform::dlerror, utils::platform::dlclose
     #include <string_view>                              // std::string_view
     #include <string>                                   // std::string
 
@@ -47,16 +47,13 @@ class SharedObject: private utils::security::observer::Observer<"SharedObject"> 
         _cold _nodiscard inline std::string_view path(void) const {return this->_path;};
         _cold _nodiscard inline void* get(void) const             {return this->_lib;};
 
-        /* migration */
-        _migration(4, 0, 0) _cold _nodiscard inline bool isloaded(void) const {return this->isLoaded();};
-
         /* tools */
         template<typename T>
         _hot _nodiscard T loadFunction(const std::string& name)
         {
-            T fn = reinterpret_cast<T>(::dlsym(this->_lib, name.c_str()));
+            T fn = reinterpret_cast<T>(utils::platform::dlsym(this->_lib, name.c_str()));
             if (!fn) _unlikely {
-                throw utils::exception::ErrorException(utils::exception::InternalCode::Dlsym, ::dlerror());
+                throw utils::exception::ErrorException(utils::exception::InternalCode::Dlsym, utils::platform::dlerror());
             }
             return fn;
         };
@@ -66,7 +63,7 @@ class SharedObject: private utils::security::observer::Observer<"SharedObject"> 
         SharedObject& operator=(SharedObject&& other)
         {
             if (this == &other) return *this;
-            if (this->_lib) ::dlclose(this->_lib); // release the previous library
+            if (this->_lib) utils::platform::dlclose(this->_lib); // release the previous library
             this->_lib = other._lib;
             this->_path = other._path;
             other._lib = nullptr;

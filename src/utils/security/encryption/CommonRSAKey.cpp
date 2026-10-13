@@ -21,6 +21,7 @@ File Description:
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/basic/ErrorException.hpp"
 #include "utils/security/encryption/CommonRSAKey.hpp"
+#include "utils/platform/Platform.hpp"
 #include <fstream>
 #include <sstream>
 #include <cstdlib>
@@ -33,14 +34,25 @@ _cold _nodiscard static std::string expand_tilde(const std::string& path)
     if (path.empty() || path[0] != '~')
         return path;
 
-    // "~" or "~/..." -> $HOME
-    if (path.size() == 1 || path[1] == '/') {
-        const char* home = std::getenv("HOME");
-        if (!home) _unlikely {
-            throw utils::exception::ErrorException(
-                utils::exception::InternalCode::Encryption,
-                "Can't resolve '~': HOME environment variable not set");
-        }
+    // "~" or "~/..." -> $HOME (Windows: %USERPROFILE% when HOME is not set, "~\\..." accepted)
+    #ifdef UTILS_WINDOWS
+        if (path.size() == 1 || path[1] == '/' || path[1] == '\\') {
+            const char* home = std::getenv("HOME");
+            if (!home || !*home) home = std::getenv("USERPROFILE");
+            if (!home || !*home) _unlikely {
+                throw utils::exception::ErrorException(
+                    utils::exception::InternalCode::Encryption,
+                    "Can't resolve '~': HOME and USERPROFILE environment variables not set");
+            }
+    #else
+        if (path.size() == 1 || path[1] == '/') {
+            const char* home = std::getenv("HOME");
+            if (!home) _unlikely {
+                throw utils::exception::ErrorException(
+                    utils::exception::InternalCode::Encryption,
+                    "Can't resolve '~': HOME environment variable not set");
+            }
+    #endif
         return std::string(home) + path.substr(1);
     }
 

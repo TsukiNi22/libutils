@@ -21,7 +21,11 @@ File Description:
     #define _noinline       __attribute__((noinline))               // Cancel any auto inline from the compiler
     #define _noreturn       [[noreturn]]                            // Signal a function that never return
     #define _unused         __attribute__((unused))                 // Signal an unused variable
-    #define _hidden         __attribute__((visibility("hidden")))   // Change the visibility on a shared lib
+    #ifdef _WIN32
+        #define _hidden                                     // No ELF visibility on Windows (dllexport/dllimport model)
+    #else
+        #define _hidden         __attribute__((visibility("hidden")))   // Change the visibility on a shared lib
+    #endif
     #define _ctor           __attribute__((constructor))            // Execute before the main
     #define _dtor           __attribute__((destructor))             // Execute after the main
     #define _fallthrough    __attribute__((fallthrough))            // Ingore warn for no break in switch

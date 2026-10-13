@@ -20,6 +20,7 @@ File Description:
 #ifndef CLI_H
     #define CLI_H
 
+
     //----------------------------------------------------------------//
     /* INCLUDE */
 
@@ -30,7 +31,7 @@ File Description:
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::InternalCode
     #include "../attribute/Attribute.hpp"               // _cold, _nodiscard
     #include "Flags.hpp"                                // utils::cli::Flag, utils::cli::flags::* (preset)
-    #include <termios.h>                                // termios
+    #include "../platform/Termios.hpp"                  // termios (Unix & Windows)
     #include <csignal>                                  // SIG_DFL
     #include <unordered_map>                            // std::unordered_map
     #include <shared_mutex>                             // std::shared_mutex, std::unique_lock, std::shared_lock
@@ -55,7 +56,7 @@ File Description:
 
 namespace utils::cli { // namespace start
 //----------------------------------------------------------------//
-/* TYPE */
+/* TYPEDEF */
 
 // Return of the parser
 using ParsedData =
@@ -88,7 +89,7 @@ class Cli: private utils::security::observer::Observer<"Cli"> {
         bool _termios = false; // terminal setup done (to restore)
         bool _sig = false;
         void (*_oldSigInt)(int) = SIG_DFL; // handlers before the cli (restored at the destruction)
-        void (*_oldSigTstp)(int) = SIG_DFL;
+        void (*_oldSigTstp)(int) = SIG_DFL; // unused without SIGTSTP (Windows)
         std::atomic<bool> _interrupted = false;
         std::atomic<bool> _killed = false; // Can't be undone
         std::atomic<bool> _running = false;

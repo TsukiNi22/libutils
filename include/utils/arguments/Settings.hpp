@@ -24,7 +24,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"           // _cold, _hot, _nodiscard, _migration
+    #include "../attribute/Attribute.hpp"           // _cold, _hot, _nodiscard
     #include "../security/observer/Observer.hpp"    // utils::security::observer::Observer
     #include "SettingsDefine.hpp"                   // utils::arguments::CastType
     #include "Setting.hpp"                          // utils::arguments::Setting
@@ -232,10 +232,6 @@ class Settings: private utils::security::observer::Observer<"Settings"> {
         _hot _nodiscard inline T& get(std::string_view id)                                     {return this->at(id).template get<T>();};
         _hot _nodiscard inline const utils::arguments::Setting& get(std::string_view id) const {return this->at(id);};
         _hot _nodiscard inline bool contains(std::string_view id) const                        {return this->_settings.contains(id);};
-
-        /* migration */
-        template<bool force = false>
-        _migration(4, 0, 0) inline utils::arguments::CastType auto_cast(const std::string& id, const std::string& setting) {return this->autoCast<force>(id, setting);};
 
         // ------------ Operator ---------- //
         Settings& operator=(const Settings& other) = delete;

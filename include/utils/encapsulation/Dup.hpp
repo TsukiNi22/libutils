@@ -26,7 +26,7 @@ File Description:
     /* type */
     #include "../security/observer/Observer.hpp"    // utils::security::observer::Observer
     #include "../attribute/Attribute.hpp"           // _cold, _nodiscard
-    #include <unistd.h>                             // ::close
+    #include "../platform/Unistd.hpp"               // utils::platform::close
 
 namespace utils::encapsulation { // namespace start
 //----------------------------------------------------------------//
@@ -38,7 +38,7 @@ class Dup: private utils::security::observer::Observer<"Dup"> {
         int _clone = -1;
 
         // ------------ Function ---------- //
-        _cold inline void close_(int& fd) noexcept {if (fd != -1) ::close(fd); fd = -1;};
+        _cold inline void close_(int& fd) noexcept {if (fd != -1) utils::platform::close(fd); fd = -1;};
 
     public:
         // ---------- Pre-Function -------- //

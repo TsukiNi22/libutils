@@ -27,7 +27,7 @@ File Description:
     #include "../../exception/ExceptionDefine.hpp"          // utils::exception::InternalCode::*
     #include "../../exception/basic/ErrorException.hpp"     // utils::exception::ErrorException
     #include "../../exception/custom/FatalException.hpp"    // utils::exception::FatalException
-    #include "../../attribute/Attribute.hpp"                // _cold, _hot, _nodiscard, _unused, _unlikely, _migration
+    #include "../../attribute/Attribute.hpp"                // _cold, _hot, _nodiscard, _unused, _unlikely
     #include "IKey.hpp"                                     // utils::security::encryption::IKey
     #include <openssl/rand.h>                               // RAND_bytes
     #include <cstdint>                                      // std::uint16_t, std::uint8_t
@@ -92,12 +92,5 @@ class AKey: public utils::security::encryption::IKey<T> {
 };
 
 } // namespace end
-
-//----------------------------------------------------------------//
-/* MIGRATION */
-namespace utils::security::encryption {
-    _migration(4, 0, 0) inline std::string keyToString(const std::vector<std::uint8_t>& data) {return utils::security::encryption::key_to_string(data);};
-    _migration(4, 0, 0) inline std::vector<std::uint8_t> stringToKey(const std::string& s)    {return utils::security::encryption::string_to_key(s);};
-}
 
 #endif /* AKEY_H */

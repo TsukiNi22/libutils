@@ -27,7 +27,7 @@ File Description:
 #include "utils/manip/iomanip/ANSI.hpp"
 #include "utils/cli/Cli.hpp"
 #include "utils/cli/Flags.hpp"
-#include <unistd.h>
+#include "utils/platform/Unistd.hpp"
 #include <unordered_map>
 #include <shared_mutex>
 #include <functional>
@@ -181,7 +181,7 @@ _cold std::optional<std::thread> utils::cli::Cli::start(const std::string& input
 _cold std::optional<std::thread> utils::cli::Cli::start(const std::vector<std::string>& inputs, const std::size_t call, const bool failsafe)
 {
     // Check status
-    if (!(this->_flags & utils::cli::Flag::NO_TTY) && !isatty(STDOUT_FILENO)) {
+    if (!(this->_flags & utils::cli::Flag::NO_TTY) && !utils::platform::isatty(STDOUT_FILENO)) {
         if (failsafe) return std::nullopt;
         throw utils::exception::ErrorException(utils::exception::InternalCode::CliTTY);
     } else if (this->_killed) {
@@ -243,7 +243,7 @@ _hot void utils::cli::Cli::prompt_(void)
     this->promptMiddlewares.callBefore();
 
     // Call the hook
-    if (isatty(STDOUT_FILENO)) {
+    if (utils::platform::isatty(STDOUT_FILENO)) {
         std::function<void(const utils::cli::Cli&, std::uint8_t)> hook;
         {std::lock_guard lock(this->_hooksLock); hook = this->_promptHook;} // called without the lock
         if (hook) _likely {
@@ -295,7 +295,7 @@ _hot _nodiscard std::string utils::cli::Cli::getInput_(void)
     if (this->_initInput.size() > 0) {
         input = this->_initInput.front();
         this->_initInput.pop();
-        if (echo && isatty(STDOUT_FILENO)) std::cout << input << std::flush;
+        if (echo && utils::platform::isatty(STDOUT_FILENO)) std::cout << input << std::flush;
         return input;
     }
 
@@ -306,7 +306,7 @@ _hot _nodiscard std::string utils::cli::Cli::getInput_(void)
         indexBuffer = input.size();
         lastInputSize = indexBuffer;
         lastIndexBuffer = indexBuffer;
-        if (echo && isatty(STDOUT_FILENO)) std::cout << input << std::flush;
+        if (echo && utils::platform::isatty(STDOUT_FILENO)) std::cout << input << std::flush;
     }
 
     // Loop to get full input
@@ -331,14 +331,14 @@ _hot _nodiscard std::string utils::cli::Cli::getInput_(void)
 
         // EOF handling
         if (c == 0) {
-            if (isatty(STDOUT_FILENO))
+            if (utils::platform::isatty(STDOUT_FILENO))
                 std::cout << std::endl << "Detected EOF, exiting..." << std::endl;
             throw utils::exception::NoneException(utils::exception::InternalCode::Exit);
         }
 
         // Ctrl+D handling
         if (c == 4) {
-            if (isatty(STDOUT_FILENO))
+            if (utils::platform::isatty(STDOUT_FILENO))
                 std::cout << std::endl << "Detected Ctrl+D, exiting..." << std::endl;
             throw utils::exception::NoneException(utils::exception::InternalCode::Exit);
         }
@@ -403,7 +403,7 @@ _hot _nodiscard std::string utils::cli::Cli::getInput_(void)
 
         // End of input
         else if (c == this->_inputDelimitor) {
-            if (isatty(STDOUT_FILENO)) std::cout << std::endl;
+            if (utils::platform::isatty(STDOUT_FILENO)) std::cout << std::endl;
             break;
         }
 
@@ -419,7 +419,7 @@ _hot _nodiscard std::string utils::cli::Cli::getInput_(void)
             escape = false;
         }
 
-        if (echo && isatty(STDOUT_FILENO)) {
+        if (echo && utils::platform::isatty(STDOUT_FILENO)) {
             // Reset the cursor place
             if (lastInputSize - lastIndexBuffer > 0)
                 std::cout << utils::iomanip::right(lastInputSize - lastIndexBuffer);
@@ -441,7 +441,7 @@ _hot _nodiscard std::string utils::cli::Cli::getInput_(void)
 
     if (this->_killed) return "";
     else if (this->_interrupted) {
-        if (isatty(STDOUT_FILENO)) std::cout << std::endl;
+        if (utils::platform::isatty(STDOUT_FILENO)) std::cout << std::endl;
         this->_input = input;
         return "";
     }

@@ -19,8 +19,10 @@ File Description:
 
 #include "utils/attribute/Attribute.hpp"
 #include "utils/cli/Cli.hpp"
-#include <unistd.h>
-#include <poll.h>
+#include "utils/platform/Unistd.hpp"
+#ifdef UTILS_WINDOWS
+    #include "../platform/Windows.hpp"
+#endif
 #include <stdexcept>
 #include <iostream>
 #include <sstream>
@@ -166,14 +168,14 @@ _hot _nodiscard bool utils::cli::defaultGetCHook(char& c)
     pfd.events = POLLIN;
 
     // poll call
-    int res = poll(&pfd, 1, 0);
+    int res = utils::platform::poll(&pfd, 1, 0);
     if (res == 0) return false;
-    if (res < 0) throw std::runtime_error(strerror(errno));
+    if (res < 0) throw std::runtime_error(utils::platform::strerror(errno));
 
     // poll -> thing to read
-    ssize_t bytes = read(STDIN_FILENO, &c, 1);
+    ssize_t bytes = utils::platform::read(STDIN_FILENO, &c, 1);
     if (bytes < 0)
-        throw std::runtime_error(strerror(errno));
+        throw std::runtime_error(utils::platform::strerror(errno));
     if (bytes == 0) c = 0; // EOF
     return true;
 }

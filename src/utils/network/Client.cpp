@@ -26,8 +26,15 @@ File Description:
 #include "utils/network/NetworkDefine.hpp"
 #include "utils/network/Client.hpp"
 #include "utils/verbose/Verbose.hpp"
-#include <sys/epoll.h>
-#include <unistd.h>
+#include "utils/platform/Epoll.hpp"
+#include "utils/platform/Socket.hpp"
+#include "utils/platform/Unistd.hpp"
+#ifdef UTILS_WINDOWS
+    #include "../platform/Windows.hpp"
+#else
+    #include <netinet/in.h>
+    #include <arpa/inet.h>
+#endif
 #include <cstring>
 #include <cerrno>
 #include <iostream>
@@ -43,7 +50,7 @@ _cold void utils::network::Client::retire_(const int epfd)
 
     // a join may still be in epoll_wait on it: closing it now would let the fd number be reused under it
     if (this->_waiting > 0) this->_retired.push_back(epfd);
-    else ::close(epfd);
+    else utils::platform::close(epfd);
 }
 
 // Close the connection & the epoll
@@ -77,9 +84,9 @@ _cold void utils::network::Client::start(void)
 
         // Setup the epoll
         const int fd = this->_socket->getFd();
-        int epfd = epoll_create1(0);
+        int epfd = utils::platform::epoll_create1(0);
         if (epfd < 0) _unlikely {
-            throw utils::exception::ErrorException(utils::exception::InternalCode::Poll, std::strerror(errno));
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Poll, utils::platform::strerror(errno));
         }
         this->_epfd = epfd;
 
@@ -87,8 +94,8 @@ _cold void utils::network::Client::start(void)
         struct epoll_event ev{};
         ev.events = EPOLLIN;
         ev.data.fd = fd;
-        if (epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &ev) < 0) _unlikely {
-            throw utils::exception::ErrorException(utils::exception::InternalCode::Poll, std::strerror(errno));
+        if (utils::platform::epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &ev) < 0) _unlikely {
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Poll, utils::platform::strerror(errno));
         }
 
         this->_status = utils::network::Status::Up;
@@ -149,14 +156,14 @@ _hot _nodiscard const utils::network::Payloads& utils::network::Client::listen(v
     // Read the events
     struct epoll_event events[1];
     while (this->_status == utils::network::Status::Up) {
-        int res = epoll_wait(this->_epfd, events, 1, 0);
+        int res = utils::platform::epoll_wait(this->_epfd, events, 1, 0);
 
         if (res < 0) _unlikely {
             if (errno == EINTR) return this->_payloads; // handle the ctrl-c before the first connection
             if (this->_status != utils::network::Status::Up) return this->_payloads; // stopped meanwhile
             this->stop();
             this->_status = utils::network::Status::Crashed;
-            throw utils::exception::ErrorException(utils::exception::InternalCode::Poll, std::strerror(errno));
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Poll, utils::platform::strerror(errno));
         }
 
         // No event
@@ -217,12 +224,12 @@ _hot void utils::network::Client::join(void)
             epfd = this->_epfd;
             ++this->_waiting; // the epoll stays open until the wait is done
         }
-        int res = epoll_wait(epfd, events, 1, 10); // wake up at least evry 10ms
+        int res = utils::platform::epoll_wait(epfd, events, 1, 10); // wake up at least evry 10ms
         int error = errno;
 
         std::lock_guard lock(this->_lock);
         if (--this->_waiting == 0) {
-            for (const int retired: this->_retired) ::close(retired);
+            for (const int retired: this->_retired) utils::platform::close(retired);
             this->_retired.clear();
         }
         errno = error;
@@ -231,7 +238,7 @@ _hot void utils::network::Client::join(void)
             if (this->_status != utils::network::Status::Up) return; // stopped meanwhile
             this->stop();
             this->_status = utils::network::Status::Crashed;
-            throw utils::exception::ErrorException(utils::exception::InternalCode::Poll, std::strerror(errno));
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Poll, utils::platform::strerror(errno));
         }
 
         // Break the waiting when there is valid event (data, close or error: handled by listen)

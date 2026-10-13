@@ -24,11 +24,9 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../attribute/Attribute.hpp"        // _migration
     #include "../../security/observer/Observer.hpp" // utils::security::observer::Observer
     #include "../NetworkType.hpp"                   // utils::network::Address
-    #include <sys/socket.h>                         // socklen_t
-    #include <sys/types.h>                          // ssize_t
+    #include "../../platform/Socket.hpp"       // sockaddr, socklen_t, ssize_t (Unix & Windows)
     #include <cstddef>                              // std::size_t
     #include <vector>                               // std::vector
     #include <string>                               // std::string
@@ -96,11 +94,5 @@ class ISocket: private utils::security::observer::Observer<"ISocket"> {
 };
 
 } // namespace end
-
-//----------------------------------------------------------------//
-/* MIGRATION */
-namespace utils::network::socket {
-    using ISocket _migration(4, 0, 0) = utils::network::ISocket;
-}
 
 #endif /* ISOCKET_H */

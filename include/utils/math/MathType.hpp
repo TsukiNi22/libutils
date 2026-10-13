@@ -22,7 +22,7 @@ File Description:
 
 namespace utils::math { // namespace start
 //----------------------------------------------------------------//
-/* TYPE */
+/* TYPEDEF */
 
 using Type = double; // Type used everywhere for coord, angle, direction, ...
 using UType = std::uint64_t; // Type used everywhere for unsigned coord, angle, direction, ...

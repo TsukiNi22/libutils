@@ -31,7 +31,7 @@ File Description:
 
 namespace utils::arguments { // namespace start
 //----------------------------------------------------------------//
-/* TYPE */
+/* TYPEDEF */
 
 #if __has_include(<cstdfloat>)
     using float16_t  = std::float16_t;

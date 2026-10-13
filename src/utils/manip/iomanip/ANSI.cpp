@@ -22,7 +22,11 @@ File Description:
 #include "utils/exception/basic/ErrorException.hpp"
 #include "utils/manip/iomanip/ANSI.hpp"
 #include "utils/manip/iomanip/Style.hpp"
-#include <unistd.h>
+#include "utils/platform/Platform.hpp"
+#include "utils/platform/Unistd.hpp"
+#ifdef UTILS_WINDOWS
+    #include "../../platform/Windows.hpp"
+#endif
 #include <initializer_list>
 #include <stdexcept>
 #include <iostream>
@@ -33,6 +37,31 @@ File Description:
 #include <cstdio>
 #include <format>
 #include <string>
+
+_cold bool utils::iomanip::enable_ansi(void)
+{
+    #ifdef UTILS_WINDOWS
+        bool enabled = true;
+
+        // Output: interpret the sequences
+        for (DWORD id: {STD_OUTPUT_HANDLE, STD_ERROR_HANDLE}) {
+            HANDLE handle = ::GetStdHandle(id);
+            DWORD mode = 0;
+            if (handle == INVALID_HANDLE_VALUE || !::GetConsoleMode(handle, &mode)
+                || !::SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING | ENABLE_PROCESSED_OUTPUT))
+                enabled = false;
+        }
+
+        // Input: receive the reports (cursor position, mouse) as sequences
+        HANDLE input = ::GetStdHandle(STD_INPUT_HANDLE);
+        DWORD mode = 0;
+        if (input != INVALID_HANDLE_VALUE && ::GetConsoleMode(input, &mode))
+            ::SetConsoleMode(input, mode | ENABLE_VIRTUAL_TERMINAL_INPUT);
+        return enabled;
+    #else
+        return true;
+    #endif
+}
 
 _hot _nodiscard std::string utils::iomanip::reset_style(std::initializer_list<utils::iomanip::ResetStyle> styles)
 {
@@ -74,7 +103,7 @@ _cold _nodiscard std::pair<int, int> utils::iomanip::read_cursor_position(void)
 
     // Get the answer from the term
     for (; i < sizeof(buffer) - 1; ++i) {
-        if (::read(STDIN_FILENO, &buffer[i], 1) != 1)
+        if (utils::platform::read(STDIN_FILENO, &buffer[i], 1) != 1)
             break;
         if (buffer[i] == 'R')
             break;

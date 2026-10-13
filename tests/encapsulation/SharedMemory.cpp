@@ -19,8 +19,16 @@ File Description:
 
 #include "utils.hpp"
 #include <gtest/gtest.h>
-#include <sys/mman.h>
-#include <unistd.h>
+#ifdef _WIN32
+    #include <process.h>
+    #define TESTS_ALARM(s)      // no alarm: the death test sub-process has no timeout
+    #define TESTS_PID()         ::_getpid()
+#else
+    #include <sys/mman.h>
+    #include <unistd.h>
+    #define TESTS_ALARM(s)      ::alarm(s)
+    #define TESTS_PID()         ::getpid()
+#endif
 #include <cstdlib>
 #include <chrono>
 #include <cstddef>
@@ -61,7 +69,7 @@ static bool waitFor(Fn condition, std::chrono::milliseconds timeout = std::chron
 }
 
 // Run the scenario in a sub-process with a timeout: a hang (or crash) of the shared memory is reported as a failure
-#define SHM_ISOLATED(...) EXPECT_EXIT({::alarm(10); __VA_ARGS__; std::exit(::testing::Test::HasFailure() ? 1 : 0);}, ::testing::ExitedWithCode(0), "")
+#define SHM_ISOLATED(...) EXPECT_EXIT({TESTS_ALARM(10); __VA_ARGS__; std::exit(::testing::Test::HasFailure() ? 1 : 0);}, ::testing::ExitedWithCode(0), "")
 
 class SharedMemoryTest: public ::testing::Test {
     protected:
@@ -70,9 +78,13 @@ class SharedMemoryTest: public ::testing::Test {
         void SetUp(void) override
         {
             static int counter = 0;
-            this->_name = "/utils-tests-" + std::to_string(::getpid()) + "-" + std::to_string(counter++);
+            this->_name = "/utils-tests-" + std::to_string(TESTS_PID()) + "-" + std::to_string(counter++);
         };
-        void TearDown(void) override {::shm_unlink(this->_name.c_str());};
+        #ifdef _WIN32
+            void TearDown(void) override {}; // the mapping is destroyed with its last handle
+        #else
+            void TearDown(void) override {::shm_unlink(this->_name.c_str());};
+        #endif
 };
 
 static void CreateAndOpenScenario(const std::string& name)
@@ -90,7 +102,7 @@ TEST_F(SharedMemoryTest, CreateAndOpen) {SHM_ISOLATED(CreateAndOpenScenario(this
 static void DefaultOwnershipIsPidScenario(_unused const std::string& name)
 {
     utils::encapsulation::SharedMemory memory;
-    EXPECT_EQ(memory.ownership(), ::getpid());
+    EXPECT_EQ(memory.ownership(), TESTS_PID());
     memory.ownership(12);
     EXPECT_EQ(memory.ownership(), 12);
 }

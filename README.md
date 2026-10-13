@@ -1,16 +1,19 @@
 # Utils
 
 > [!TIP]
-> Documentation [TsukiNi22/libutils/wiki](https://github.com/TsukiNi22/libutils/wiki) (v3.0.0).
+> Documentation [TsukiNi22/libutils/wiki](https://github.com/TsukiNi22/libutils/wiki) (v4.0.0).
+> Technical documentation and project graph: [tsukini22.github.io/libutils/docs](https://tsukini22.github.io/libutils/docs/).
 
 C++20 utility library (`utils::`): exceptions, verbose, CLI, arguments, network, IPC, encryption, custom types, algorithms.
 Built as a static library and distributed as RPM/DEB packages (optimized, debug and asan variants), or installed from the sources with CMake.
+Runs on Unix (Linux, BSD, macOS) and on Windows (cross compiled with MinGW-w64), see [Windows](#windows-cross-compilation).
 
 ### Table of Contents
  - [Dependencies](#dependencies)
  - [Packages](#packages)
  - [Quick Setup 1 (All)](#quick-setup---1-all)
  - [Quick Setup 2 (Limited)](#quick-setup---2-limited)
+ - [Windows (cross compilation)](#windows-cross-compilation)
  - [Usage](#usage)
  - [Unit tests](#unit-tests)
  - [Workflows/Release](#workflowsrelease)
@@ -35,6 +38,8 @@ Built as a static library and distributed as RPM/DEB packages (optimized, debug 
 | `cmake` | >= 3.20 | `cmake` | `cmake` |
 | OpenSSL | >= 3.0 | `openssl-devel` | `libssl-dev` |
 | GoogleTest (tests only) | — | `gtest-devel` | `libgtest-dev` |
+| MinGW-w64 (Windows only) | GCC >= 13 | `mingw64-gcc-c++ mingw64-openssl` | `g++-mingw-w64-x86-64` + OpenSSL built for MinGW (no package) |
+| Wine (Windows tests only) | — | `wine` | `wine64` |
 
 ## Packages
 
@@ -105,10 +110,66 @@ Then install the packages: `sudo dnf install libutils` or `sudo apt install libu
 | `--no-sudo` | Run without `sudo` (the script must already run as root) |
 | `-h`, `--help` | Display the usage |
 
+## Windows (cross compilation)
+> Build `libutils.a` for Windows (x86_64) from Linux with the MinGW-w64 toolchain
+
+```bash
+export BUILD_DIR=build-windows
+cmake -S . -B $BUILD_DIR -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain/mingw-w64.cmake -DCMAKE_BUILD_TYPE=Optimized
+cmake --build $BUILD_DIR --parallel $(nproc)
+cmake --install $BUILD_DIR --prefix <windows_prefix>          # include/, lib/libutils.a, lib/cmake/utils/
+cmake --build $BUILD_DIR --target package                       # ZIP archive of the install tree
+```
+
+> [!NOTE]
+> Every class has the same API on Unix and Windows: a program builds for both without any change, only the implementation used by the library differs.
+
+| Part | Windows implementation |
+| ---- | ---------------------- |
+| `utils::network::TCPSocket` (and `is_ip`, `resolve_*`) | Winsock 2 (`ws2_32`, linked by `utils::utils`), started on the first use |
+| `utils::network::Client` / `Server` | `utils::platform::epoll_*` (emulation over `WSAPoll`) |
+| `utils::encapsulation::Poll` | Same `struct epoll_event` / `EPOLL*` API, emulated over `WSAPoll` |
+| `utils::encapsulation::Process` | `CreateProcess` / `WaitForSingleObject` / `TerminateProcess`, `replace` with the CRT `_execvp` |
+| `utils::encapsulation::SharedMemory` | `CreateFileMapping` / `MapViewOfFile` (`Local\utils-shm-<name>`), named event instead of the futex |
+| `utils::encapsulation::SharedObject` | `LoadLibrary` / `GetProcAddress` / `FreeLibrary` (`.dll`) |
+| `utils::encapsulation::Pipe` / `Dup` | CRT `_pipe` (binary mode) / `_dup` / `_dup2` |
+| `utils::cli::Cli` | `utils::platform::tcgetattr` / `tcsetattr` on the console (VT input), `utils::platform::poll` / `read` on the console input |
+| `utils::iomanip` reports (`read_cursor_position`, mouse) | CRT `_read` on the standard input |
+| `utils::iomanip::enable_ansi()` | Enables the virtual terminal mode of the console (call it once at the start, `true` on Unix) |
+| Exceptions / observers module name | `utils::platform::dladdr` / `readlink("/proc/self/exe")` (`GetModuleHandleEx` / `GetModuleFileName`) |
+
+> [!TIP]
+> The library only calls the system through `utils::platform::` (section `_Platform`), the same calls are usable by a program:
+> same names and contract as the POSIX functions (-1 & `errno`, the Winsock errors are translated in `errno`), so the same code builds on Unix and Windows.
+>
+> | Header | Calls |
+> | ------ | ----- |
+> | `utils/platform/Unistd.hpp` | `close`, `read`, `write`, `pipe`, `dup`, `dup2`, `isatty`, `poll`, `getpid`, `readlink`, `strerror` |
+> | `utils/platform/Socket.hpp` | `socket`, `connect`, `bind`, `listen`, `accept`, `recv`, `send`, `setsockopt`, `getsockname`, `getpeername`, `getaddrinfo`, `freeaddrinfo`, `gai_strerror` |
+> | `utils/platform/Epoll.hpp` | `epoll_create1`, `epoll_ctl`, `epoll_wait` (closed by `close`) |
+> | `utils/platform/Dlfcn.hpp` | `dlopen`, `dlsym`, `dlclose`, `dlerror`, `dladdr` |
+> | `utils/platform/Termios.hpp` | `tcgetattr`, `tcsetattr` |
+>
+> On Windows the structures of Winsock (`sockaddr_in`, `addrinfo`, `pollfd`...) come from `<winsock2.h>` / `<ws2tcpip.h>`, included by the program (not by libutils).
+
+> [!WARNING]
+> Without equivalent on Windows, `FatalException` with `UndefinedCall` (like the raw calls of `ASocket`):
+> - `Process::spawn(void)`: a `fork`, use `spawn(path, args)`
+> - `Process::dup(origin, clone)` with a `clone` other than `0`, `1`, `2`: only the standard fds are given to the child
+>
+> Different behaviors: `Poll` / `Client` / `Server` only handle sockets (`ENOTSOCK` -> `EPoll` error for a pipe), `EPOLLET` is refused (level triggered only), a `Process` has no signal (`Status::sig` = `0`, killed = exit code `137`), ctrl+z is a char for the `Cli` (no `SIGTSTP`), a `SharedMemory` is destroyed with its last handle (no `shm_unlink` persistence).
+
+> [!IMPORTANT]
+> The complete `<windows.h>` declares a member named `_unused` (`winioctl.h`), which is a libutils attribute macro.
+> Include `<windows.h>` **before** `<utils/utils.hpp>`, or define `WIN32_LEAN_AND_MEAN` before including it.
+
+> [!NOTE]
+> No AddressSanitizer with MinGW: the `Asan` mode is built like `Debug`. The tests (`-DBUILD_TESTS=ON`) download GoogleTest and run with `wine` through `ctest`.
+
 ## Usage
 
 ```cmake
-find_package(utils 3.0.0 REQUIRED)                      # installed CMake configuration
+find_package(utils 4.0.0 REQUIRED)                      # installed CMake configuration
 target_link_libraries(${TARGET} PRIVATE utils::utils)   # includes, OpenSSL & library
 ```
 
@@ -124,13 +185,15 @@ target_link_libraries(${TARGET} PRIVATE utils::utils)   # includes, OpenSSL & li
 | ----- | ------- |
 | `_Utils` | Every section below (`_Handling`, `_Tools`, `_Attribute`) |
 | `_Handling` | `_Exception`, `_Verbose`, `_Pool`, `_Cli`, `_Arguments`, `_Network` |
-| `_Tools` | `_Math`, `_Concepts`, `_Encapsulation`, `_System`, `_CustomType`, `_Manip`, `_Algorithms`, `_Security` |
+| `_Tools` | `_Math`, `_Concepts`, `_Encapsulation`, `_System`, `_CustomType`, `_Manip`, `_Algorithms`, `_Security`, `_Platform` |
 | `_Exception` | `utils::exception::` error / warning / fatal exceptions with codes |
 | `_Network` | `utils::network::` sockets, `Client`, `Server` |
 | `_CustomType` | `utils::type::` `BidirectionalLookupTable`, vectors, matrices |
 | `_Algorithms` | `utils::algorithms::` `c2dmp-hsm`, `s.o.s` |
 | `_Security` | `utils::security::` encryption (AES, RSA), observers |
 | `_Warning` / `_NoWarning` | Enable / disable every deprecation, linker and usage warning |
+| `_Platform` | `utils::platform::` POSIX calls for Unix & Windows (`close`, `socket`, `epoll_*`, `dlopen`, `tcgetattr`...) |
+| `UTILS_UNIX` / `UTILS_WINDOWS` | Platform detected by `<utils/platform/Platform.hpp>` (always included), `UTILS_PLATFORM` = `"unix"` / `"windows"` |
 
 ## Unit tests
 
@@ -159,14 +222,14 @@ ctest --test-dir $BUILD_DIR --output-on-failure --timeout 30   # or ./unit_tests
 
 ### Pre-Release (unstable)
 The pre-release of the packages (`<package_name>-pre`) is triggered by:
-- a tag with a suffix, matching `vx.x.x-<suffix>` (ex: `v3.0.1-pre`, `x` = `major`, `minor`, `fix`)
+- a tag with a suffix, matching `vx.x.x-<suffix>` (ex: `v4.0.1-pre`, `x` = `major`, `minor`, `fix`)
 - or a commit containing `[build]`, preferably in the description
 
 > [!NOTE]
 > Only the 5 last versions of each `-pre` package are kept in the package repository, every release is kept.
 
 ### Release (stable)
-The release of the packages (channel `stable`) is only triggered by a tag matching exactly `vx.x.x` (ex: `v3.0.0`).
+The release of the packages (channel `stable`) is only triggered by a tag matching exactly `vx.x.x` (ex: `v4.0.0`).
 
 ### Downstream notification
 `Dispatch (CI/CD)` notifies the `docker-image` repository (`repository_dispatch`) after the packages are published:

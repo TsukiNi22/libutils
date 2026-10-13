@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 21/09/2026 by @author Tsukini
+##  @date 13/10/2026 by @author Tsukini
 
 File Name:
 ##  @file SharedMemory.hpp
@@ -20,6 +20,7 @@ File Description:
 #ifndef SHAREDMEMORY_H
     #define SHAREDMEMORY_H
 
+
     //----------------------------------------------------------------//
     /* INCLUDE */
 
@@ -29,11 +30,9 @@ File Description:
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::Type, utils::exception::InternalCode
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "../system/IdHandler.hpp"                  // utils::system::IdHandler<T>
-    #include <sys/mman.h>                               // mmap, shm_open
-    #include <sys/types.h>                              // pid_t, off_t
-    #include <sys/stat.h>                               // fstat
-    #include <unistd.h>                                 // close, ftruncate, getpid
-    #include <fcntl.h>                                  // O_CREAT, O_RDWR
+    #include "../platform/Platform.hpp"                 // UTILS_WINDOWS
+    #include "../platform/Unistd.hpp"                   // utils::platform::getpid
+    #include <sys/types.h>                              // pid_t (also on MinGW)
     #include <condition_variable>                       // std::condition_variable
     #include <unordered_map>                            // std::unordered_map
     #include <unordered_set>                            // std::unordered_set
@@ -43,14 +42,12 @@ File Description:
     #include <compare>                                  // std::strong_ordering
     #include <utility>                                  // std::pair
     #include <memory>                                   // std::construct_at
-    #include <cstring>                                  // strerror
     #include <cstddef>                                  // std::size_t, std::byte
     #include <cstdint>                                  // std::uint8_t, std::uint16_t, std::uint32_t, std::uint64_t
     #include <thread>                                   // std::jthread, std::this_thread::yield
     #include <atomic>                                   // std::atomic
     #include <vector>                                   // std::vector
     #include <string>                                   // std::string
-    #include <cerrno>                                   // errno
     #include <mutex>                                    // std::mutex
 
 namespace utils::encapsulation::shm { // namespace start
@@ -152,17 +149,21 @@ _cold _nodiscard inline std::size_t align_ceil(const std::size_t size)
 
 } // namespace end
 
-// Simple hash function for Id class
 namespace std { // namespace start
-    template<>
-    struct hash<utils::encapsulation::shm::Id> {
-        _hot _nodiscard std::size_t operator()(const utils::encapsulation::shm::Id& id) const
-        {
-            std::size_t h1 = std::hash<std::size_t>{}(id.id);
-            std::size_t h2 = std::hash<pid_t>{}(id.ownership);
-            return h1 ^ (h2 << 1);
-        };
+//----------------------------------------------------------------//
+/* STRUCT */
+
+// Simple hash function for Id class
+template<>
+struct hash<utils::encapsulation::shm::Id> {
+    _hot _nodiscard std::size_t operator()(const utils::encapsulation::shm::Id& id) const
+    {
+        std::size_t h1 = std::hash<std::size_t>{}(id.id);
+        std::size_t h2 = std::hash<pid_t>{}(id.ownership);
+        return h1 ^ (h2 << 1);
     };
+};
+
 } // namespace end
 
 namespace utils::encapsulation { // namespace start
@@ -185,7 +186,12 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
         std::size_t _queue = 1;
         std::size_t _size = 0;
         pid_t _ownership = 0; // 0 is reserved for unilateral sending
-        int _fd = -1;
+        #ifdef UTILS_WINDOWS
+            void* _handle = nullptr; // file mapping HANDLE
+            void* _event = nullptr; // named event waking the readers (futex on Unix)
+        #else
+            int _fd = -1; // shm_open fd
+        #endif
         void* _ptr = nullptr;
         std::size_t _mapped = 0; // size of the mapping (for munmap)
         utils::encapsulation::shm::ShmMetadata* _metadata = nullptr;
@@ -200,6 +206,10 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
         void init_(void); // create the internal thread
         void read_(void); // function call by the thread
         void send_(const std::vector<std::byte>& bytes, const utils::encapsulation::shm::Id& id, const utils::encapsulation::shm::Target& target, std::pair<bool, bool> last, bool failsafe);
+        void* map_(const std::string& name, bool create, std::size_t size); // open/create & map the memory (create: size bytes, open: whole memory), set _mapped
+        void unmap_(void) noexcept; // unmap & close what map_ opened
+        void wait_(std::uint32_t expected) const; // wait a wake_ while readable == expected (futex | event, can wake up spuriously)
+        void wake_(void) const; // wake the readers (futex | event)
 
     public:
         // ---------- Pre-Function -------- //
@@ -231,37 +241,9 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
             this->_queue = queue;
             this->_size = size;
 
-            // open the shm
-            this->_fd = ::shm_open(name.data(), (create ? (O_CREAT | O_RDWR) : O_RDWR), 0600);
-            if (this->_fd == -1) _unlikely {
-                throw utils::exception::ErrorException(utils::exception::InternalCode::ShmOpen, ::strerror(errno));
-            }
-
-            // In 'client' mode extract size/queue
+            // In 'client' mode open the whole memory & extract size/queue
             if constexpr (!create) {
-                struct stat st{};
-                if (::fstat(this->_fd, &st) == -1) _unlikely {
-                    ::close(this->_fd);
-                    this->_fd = -1;
-                    throw utils::exception::ErrorException(utils::exception::InternalCode::Fstat, ::strerror(errno));
-                }
-
-                // Alloc using real size
-                this->_mapped = static_cast<std::size_t>(st.st_size);
-                this->_ptr = ::mmap(
-                    nullptr,
-                    this->_mapped,
-                    PROT_READ | PROT_WRITE,
-                    MAP_SHARED,
-                    this->_fd,
-                    0
-                );
-                if (this->_ptr == MAP_FAILED) _unlikely {
-                    ::close(this->_fd);
-                    this->_fd = -1;
-                    this->_ptr = nullptr;
-                    throw utils::exception::ErrorException(utils::exception::InternalCode::Mmap, ::strerror(errno));
-                }
+                this->_ptr = this->map_(name, false, 0);
 
                 // Extract sub size information
                 utils::encapsulation::shm::ShmMetadata* metadata = static_cast<utils::encapsulation::shm::ShmMetadata*>(this->_ptr);
@@ -284,28 +266,7 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
 
             // setup the memory in create mode
             if constexpr (create) {
-                if (::ftruncate(this->_fd, static_cast<off_t>(memSize)) == -1) _unlikely {
-                    ::close(this->_fd);
-                    this->_fd = -1;
-                    throw utils::exception::ErrorException(utils::exception::InternalCode::Ftruncate, ::strerror(errno));
-                }
-
-                // Allocate the memory
-                this->_mapped = memSize;
-                this->_ptr = ::mmap(
-                    nullptr,
-                    memSize,
-                    PROT_READ | PROT_WRITE,
-                    MAP_SHARED,
-                    this->_fd,
-                    0
-                );
-                if (this->_ptr == MAP_FAILED) _unlikely {
-                    ::close(this->_fd);
-                    this->_fd = -1;
-                    this->_ptr = nullptr;
-                    throw utils::exception::ErrorException(utils::exception::InternalCode::Mmap, ::strerror(errno));
-                }
+                this->_ptr = this->map_(name, true, memSize);
             }
 
             // init global metadata and starting address
@@ -384,7 +345,7 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
 
         // ---------- Constructor --------- //
         _legacy SharedMemory(std::uint16_t ownership): _ownership{static_cast<pid_t>(ownership)} {};
-        SharedMemory(pid_t ownership = ::getpid()): _ownership{ownership} {};
+        SharedMemory(pid_t ownership = utils::platform::getpid()): _ownership{ownership} {};
         SharedMemory(const SharedMemory& other) = delete;
         SharedMemory(SharedMemory&& other) = delete;
 

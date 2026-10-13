@@ -8,7 +8,19 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}) # TARGET destination
 # =========================
 # Requirement
 # =========================
-find_package(GTest REQUIRED)
+if(CMAKE_CROSSCOMPILING)
+    # No GTest package for the target (ex: MinGW): built from the sources
+    include(FetchContent)
+    FetchContent_Declare(googletest
+        URL https://github.com/google/googletest/releases/download/v1.17.0/googletest-1.17.0.tar.gz
+        DOWNLOAD_EXTRACT_TIMESTAMP ON
+    )
+    set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
+    set(BUILD_GMOCK OFF CACHE BOOL "" FORCE)
+    FetchContent_MakeAvailable(googletest)
+else()
+    find_package(GTest REQUIRED)
+endif()
 
 # =========================
 # Sources
@@ -23,9 +35,6 @@ set(SRC
     # Verbose
     verbose/Verbose.cpp
 
-    # IO - Manip
-    manip/iomanip/ANSI.cpp
-
     # S - Manip
     manip/smanip/Format.cpp
     manip/smanip/Base64Codec.cpp
@@ -35,16 +44,16 @@ set(SRC
     cli/Cli.cpp
 
     # Arguments
-    arguments/ArgParser.cpp
     arguments/Settings.cpp
 
     # Network
-    network/Socket.cpp
     network/ClientServer.cpp
 
     # Encapsulation
-    encapsulation/Encapsulation.cpp
     encapsulation/SharedMemory.cpp
+
+    # Platform
+    platform/Platform.cpp
 
     # Math
     math/Geometry.cpp
@@ -77,6 +86,33 @@ set(SRC
     security/observer/UnsafeObserver.cpp
     security/observer/ANotifier.cpp
 )
+
+# Unix test fixtures (fork, socketpair, epoll, mkfifo...): the Windows versions are in platform/Windows.cpp
+set(SRC_UNIX
+    # IO - Manip
+    manip/iomanip/ANSI.cpp
+
+    # Arguments
+    arguments/ArgParser.cpp
+
+    # Network
+    network/Socket.cpp
+
+    # Encapsulation
+    encapsulation/Encapsulation.cpp
+)
+
+# Windows only (ports of Pipe, Dup, SharedObject, Process, Poll, TCPSocket, Client, Server, ANSI)
+set(SRC_WINDOWS
+    # Platform
+    platform/Windows.cpp
+)
+
+if(WIN32)
+    list(APPEND SRC ${SRC_WINDOWS})
+else()
+    list(APPEND SRC ${SRC_UNIX})
+endif()
 add_executable(${TARGET} ${SRC})
 
 # =========================
@@ -84,11 +120,27 @@ add_executable(${TARGET} ${SRC})
 # =========================
 target_include_directories(${TARGET} PRIVATE ../include/ .)
 target_link_libraries(${TARGET} PRIVATE utils GTest::gtest GTest::gtest_main)
+if(WIN32)
+    target_link_options(${TARGET} PRIVATE -static-libgcc -static-libstdc++ -static) # standalone .exe (no MinGW runtime dll)
+endif()
 
 # =========================
 # Modes
 # =========================
 target_compile_options(${TARGET} PRIVATE -g -ggdb3)
+if(NOT WIN32)
+    # libutils_asan.a needs the AddressSanitizer runtime at the link
+    target_compile_options(${TARGET} PRIVATE $<$<CONFIG:Asan>:-fsanitize=address -fno-omit-frame-pointer>)
+    target_link_options(${TARGET} PRIVATE $<$<CONFIG:Asan>:-fsanitize=address>)
+endif()
 
 include(GoogleTest)
-gtest_discover_tests(${TARGET})
+if(CMAKE_CROSSCOMPILING)
+    # Listed when ctest runs (CMAKE_CROSSCOMPILING_EMULATOR, ex: wine), not at the build
+    gtest_discover_tests(${TARGET}
+        DISCOVERY_MODE PRE_TEST
+        DISCOVERY_TIMEOUT 120 # first start of wine
+    )
+else()
+    gtest_discover_tests(${TARGET})
+endif()

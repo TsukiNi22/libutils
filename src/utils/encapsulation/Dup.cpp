@@ -21,7 +21,7 @@ File Description:
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/basic/ErrorException.hpp"
 #include "utils/encapsulation/Dup.hpp"
-#include <unistd.h>
+#include "utils/platform/Unistd.hpp"
 #include <cstring>
 #include <cerrno>
 
@@ -32,9 +32,9 @@ _cold void utils::encapsulation::Dup::trigger(void)
     }
 
     // Dispatch
-    if (this->_clone == -1 && (this->_clone = ::dup(this->_origin)) == -1) _unlikely {
-        throw utils::exception::ErrorException(utils::exception::InternalCode::Dup, ::strerror(errno));
-    } else if (::dup2(this->_origin, this->_clone) == -1) _unlikely {
-        throw utils::exception::ErrorException(utils::exception::InternalCode::Dup, ::strerror(errno));
+    if (this->_clone == -1 && (this->_clone = utils::platform::dup(this->_origin)) == -1) _unlikely {
+        throw utils::exception::ErrorException(utils::exception::InternalCode::Dup, utils::platform::strerror(errno));
+    } else if (utils::platform::dup2(this->_origin, this->_clone) == -1) _unlikely {
+        throw utils::exception::ErrorException(utils::exception::InternalCode::Dup, utils::platform::strerror(errno));
     }
 }

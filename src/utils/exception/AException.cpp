@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 19/08/2026 by @author Tsukini
+##  @date 13/10/2026 by @author Tsukini
 
 File Name:
 ##  @file AException.cpp
@@ -16,8 +16,8 @@ File Description:
 #include "utils/manip/iomanip/Color.hpp"
 #include "utils/manip/iomanip/ANSI.hpp"
 #include "utils/manip/iomanip/Style.hpp"
-#include <unistd.h>
-#include <dlfcn.h>
+#include "utils/platform/Unistd.hpp"
+#include "utils/platform/Dlfcn.hpp"
 #include <source_location>
 #include <filesystem>
 #include <sstream>
@@ -71,24 +71,23 @@ _cold _nodiscard static inline std::string module_name(const void* addr, const s
 
     // Get the module information
     Dl_info info{};
-    if (!addr || !::dladdr(addr, &info) || !info.dli_fname)
+    if (!addr || !utils::platform::dladdr(addr, &info) || !info.dli_fname)
         return "";
     std::string modulePath = canonical_or_raw(info.dli_fname);
 
     // Get the binary name
     static const std::string selfExe = [](void) {
         char buf[4096];
-        ssize_t len = ::readlink("/proc/self/exe", buf, sizeof(buf) - 1);
-        return (len > 0) ? std::string(buf, static_cast<std::size_t>(len)) : std::string();
+        ssize_t len = utils::platform::readlink("/proc/self/exe", buf, sizeof(buf) - 1);
+        return (len > 0) ? canonical_or_raw(std::string(buf, static_cast<std::size_t>(len))) : std::string();
     }();
 
     // Check if the actual module is the binary
     if (modulePath == selfExe)
         return "";
 
-    // Only keep the module name
-    std::size_t slash = modulePath.rfind('/');
-    return (slash != std::string::npos) ? modulePath.substr(slash + 1) : modulePath;
+    // Only keep the module name ('/' or '\\' separator)
+    return std::filesystem::path(modulePath).filename().string();
 }
 
 _cold _nodiscard std::string utils::exception::AException::formated(void) const noexcept

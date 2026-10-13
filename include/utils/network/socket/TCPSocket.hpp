@@ -24,11 +24,10 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../attribute/Attribute.hpp"    // _hot, _nodiscard, _migration
+    #include "../../attribute/Attribute.hpp"    // _hot, _nodiscard
     #include "../NetworkType.hpp"               // utils::network::Address
     #include "ASocket.hpp"                      // utils::network::ASocket
-    #include <sys/socket.h>                     // ::accept, ::send, ::recv, socklen_t
-    #include <sys/types.h>                      // ssize_t
+    #include "../../platform/Socket.hpp"       // utils::platform::accept, utils::platform::recv, utils::platform::send, MSG_NOSIGNAL
     #include <unordered_map>                    // std::unordered_map
     #include <cstddef>                          // std::size_t
     #include <vector>                           // std::vector
@@ -51,13 +50,16 @@ class TCPSocket: public utils::network::ASocket {
         _hot _nodiscard bool hasRecvOverload(void) const final   {return true;};
         _hot _nodiscard bool hasSendOverload(void) const final   {return true;};
 
-        /* raw */
+        /* raw (the high level overloads of ASocket stay visible) */
+        using utils::network::ASocket::accept;
+        using utils::network::ASocket::recv;
+        using utils::network::ASocket::send;
         _hot _nodiscard int accept(int fd, sockaddr* addr, socklen_t* len) const final
-        {return ::accept(fd, addr, len);};
+        {return utils::platform::accept(fd, addr, len);};
         _hot _nodiscard ssize_t recv(int fd, char* buf, std::size_t len) const final
-        {return ::recv(fd, buf, len, 0);};
+        {return utils::platform::recv(fd, buf, len, 0);};
         _hot _nodiscard ssize_t send(int fd, const char* buf, std::size_t len) const final
-        {return ::send(fd, buf, len, MSG_NOSIGNAL);}; // no SIGPIPE on a closed peer (EPIPE error)
+        {return utils::platform::send(fd, buf, len, MSG_NOSIGNAL);}; // no SIGPIPE on a closed peer (EPIPE error)
 
         // ------------ Operator ---------- //
         TCPSocket& operator=(const TCPSocket& other) = delete;
@@ -73,11 +75,5 @@ class TCPSocket: public utils::network::ASocket {
 };
 
 } // namespace end
-
-//----------------------------------------------------------------//
-/* MIGRATION */
-namespace utils::network::socket {
-    using TCPSocket _migration(4, 0, 0) = utils::network::TCPSocket;
-}
 
 #endif /* TCPSOCKET_H */

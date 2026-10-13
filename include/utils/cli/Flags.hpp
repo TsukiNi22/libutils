@@ -24,7 +24,6 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"   // _migration
     #include <cstdint>                      // std::uint32_t
 
 namespace utils::cli { // namespace start
@@ -90,19 +89,5 @@ constexpr std::uint32_t MULTI_THREADING = THREAD | DETACHED;
 */
 
 } // namespace end
-
-//----------------------------------------------------------------//
-/* MIGRATION */
-namespace utils::cli::Flags {
-    _migration(4, 0, 0) inline constexpr std::uint32_t ALL = utils::cli::flags::ALL;
-    _migration(4, 0, 0) inline constexpr std::uint32_t DEFAULT = utils::cli::flags::DEFAULT;
-    _migration(4, 0, 0) inline constexpr std::uint32_t DUMB = utils::cli::flags::DUMB;
-    _migration(4, 0, 0) inline constexpr std::uint32_t TERM1 = utils::cli::flags::TERM1;
-    _migration(4, 0, 0) inline constexpr std::uint32_t TERM2 = utils::cli::flags::TERM2;
-    _migration(4, 0, 0) inline constexpr std::uint32_t TERM3 = utils::cli::flags::TERM3;
-    _migration(4, 0, 0) inline constexpr std::uint32_t LOG = utils::cli::flags::LOG;
-    _migration(4, 0, 0) inline constexpr std::uint32_t DEV = utils::cli::flags::DEV;
-    _migration(4, 0, 0) inline constexpr std::uint32_t MULTI_THREADING = utils::cli::flags::MULTI_THREADING;
-}
 
 #endif /* FLAGS_H */

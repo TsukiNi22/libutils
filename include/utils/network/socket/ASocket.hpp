@@ -24,14 +24,12 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../attribute/Attribute.hpp"                // _cold, _hot, _nodiscard, _unused, _migration
+    #include "../../attribute/Attribute.hpp"                // _cold, _hot, _nodiscard, _unused
     #include "../../exception/ExceptionDefine.hpp"          // utils::exception::InternalCode
     #include "../../exception/custom/FatalException.hpp"    // utils::exception::FatalException
     #include "../NetworkDefine.hpp"                         // SOCKET_CHUNK_SIZE, OVERFLOW_LIMIT
     #include "../NetworkType.hpp"                           // utils::network::Address
     #include "ISocket.hpp"                                  // utils::network::ISocket
-    #include <sys/socket.h>                                 // socklen_t, sockaddr
-    #include <sys/types.h>                                  // ssize_t
     #include <unordered_map>                                // std::unordered_map
     #include <cstddef>                                      // std::size_t
     #include <vector>                                       // std::vector
@@ -121,14 +119,5 @@ class ASocket: public utils::network::ISocket {
 };
 
 } // namespace end
-
-//----------------------------------------------------------------//
-/* MIGRATION */
-namespace utils::network::socket {
-    _migration(4, 0, 0) inline bool is_ip(const std::string& s)                          {return utils::network::is_ip(s);};
-    _migration(4, 0, 0) inline std::string resolve_hostname(const std::string& hostname) {return utils::network::resolve_hostname(hostname);};
-    _migration(4, 0, 0) inline void resolve_address(utils::network::Address& address)    {utils::network::resolve_address(address);};
-    using ASocket _migration(4, 0, 0) = utils::network::ASocket;
-}
 
 #endif /* ASOCKET_H */

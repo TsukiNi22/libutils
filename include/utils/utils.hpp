@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 27/09/2026 by @author Tsukini
+##  @date 13/10/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -26,6 +26,23 @@ File Description:
         #warning "libutils(__LIBUTILS_VERSION__): utils/version.hpp not found, using fallback value"
         #define __LIBUTILS_VERSION__ "[unknown]" //  (fallback)
     #endif
+#endif
+
+/* Platform */
+#if __has_include("platform/Platform.hpp")
+    #include "platform/Platform.hpp"
+#else
+    #pragma message( \
+        "\n\n" \
+        "-----------------------------------------------------------------------\n" \
+        "libutils: could not locate utils/platform/Platform.hpp\n" \
+        "Try reinstalling the library. (actual version: " __LIBUTILS_VERSION__ ")\n" \
+        "If the problem persists, open an issue at: https://github.com/TsukiNi22/libutils/issues\n" \
+        "Please include how you installed libutils, plus the output of:\n" \
+        "  ls /usr/include/utils /usr/local/include/utils /usr/local/include/utils/platform\n" \
+        "-----------------------------------------------------------------------\n\n" \
+    )
+    #error "utils/platform/Platform.hpp not found - see message above"
 #endif
 
 //----------------------------------------------------------------//
@@ -76,7 +93,7 @@ File Description:
     /* _Handling */\
     !defined(_Exception) && !defined(_Verbose) && !defined(_Pool) && !defined(_Cli) && !defined(_Arguments) && !defined(_Network) && \
     /* _Tools */\
-    !defined(_Concepts) && !defined(_System) && !defined(_Encapsulation) && !defined(_CustomType) && !defined(_Math) && !defined(_Manip) && !defined(_Algorithms) && !defined(_Security) && \
+    !defined(_Concepts) && !defined(_System) && !defined(_Encapsulation) && !defined(_CustomType) && !defined(_Math) && !defined(_Manip) && !defined(_Algorithms) && !defined(_Security) && !defined(_Platform) && \
     /* _Pool */\
     !defined(_Middleware) && \
     /* _Network */\
@@ -122,6 +139,7 @@ File Description:
     #define _Manip
     #define _Algorithms
     #define _Security
+    #define _Platform
 #endif
 
 /* Activate all pool sub-include */
@@ -254,8 +272,8 @@ File Description:
     #include "encapsulation/Pipe.hpp"           // utils::encapsulation::Pipe
     #include "encapsulation/Dup.hpp"            // utils::encapsulation::Dup
     #include "encapsulation/Process.hpp"        // utils::encapsulation::Process
-    #include "encapsulation/SharedMemory.hpp"   // utils::encapsulation::SharedMemory
     #include "encapsulation/Poll.hpp"           // utils::encapsulation::Poll
+    #include "encapsulation/SharedMemory.hpp"   // utils::encapsulation::SharedMemory
 #endif
 
 /* System */
@@ -339,6 +357,16 @@ File Description:
     #include "algorithms/sos/algorithm/embed_optimized.hpp"     // utils::algorithms::sos::sos_embed_optimized
     #include "algorithms/sos/algorithm/extract_optimized.hpp"   // utils::algorithms::sos::sos_extract_optimized
     #include "algorithms/sos/tools/convert.hpp"                 // utils::algorithms::sos::to_bytes, utils::algorithms::sos::bytes_to
+#endif
+
+/* Platform */
+#ifdef _Platform
+    // -> POSIX calls for Unix & Windows (same names & contract as the system ones: -1 & errno)
+    #include "platform/Unistd.hpp"  // utils::platform::close/read/write/pipe/dup/dup2/isatty/poll/getpid/readlink/strerror
+    #include "platform/Socket.hpp"  // utils::platform::socket/connect/bind/listen/accept/recv/send/setsockopt/getsockname/getpeername/getaddrinfo
+    #include "platform/Epoll.hpp"   // utils::platform::epoll_create1/epoll_ctl/epoll_wait, struct epoll_event
+    #include "platform/Dlfcn.hpp"   // utils::platform::dlopen/dlsym/dlclose/dlerror/dladdr, Dl_info
+    #include "platform/Termios.hpp" // utils::platform::tcgetattr/tcsetattr, struct termios
 #endif
 
 /* Security */

@@ -21,7 +21,7 @@ File Description:
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/exception/basic/ErrorException.hpp"
 #include "utils/encapsulation/Pipe.hpp"
-#include <unistd.h>
+#include "utils/platform/Unistd.hpp"
 #include <cstring>
 #include <cerrno>
 
@@ -31,7 +31,7 @@ _cold void utils::encapsulation::Pipe::trigger(void)
         throw utils::exception::ErrorException(utils::exception::InternalCode::Pipe, "The read fd is already open, close it before a new trigger: closeRead()");
     } else if (this->_fds[1] != -1) _unlikely {
         throw utils::exception::ErrorException(utils::exception::InternalCode::Pipe, "The write fd is already open, close it before a new trigger: closeWrite()");
-    } else if (::pipe(this->_fds.data()) == -1) _unlikely {
-        throw utils::exception::ErrorException(utils::exception::InternalCode::Pipe, ::strerror(errno));
+    } else if (utils::platform::pipe(this->_fds.data()) == -1) _unlikely {
+        throw utils::exception::ErrorException(utils::exception::InternalCode::Pipe, utils::platform::strerror(errno));
     }
 }

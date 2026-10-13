@@ -53,12 +53,4 @@ concept ConvertibleTo = std::is_convertible_v<T, U> && requires {
 
 } // namespace end
 
-//----------------------------------------------------------------//
-/* MIGRATION */
-namespace utils::concepts {
-    // A concept can't be deprecated: kept until the next major (~v4.0.0)
-    template<typename T, typename U>
-    concept convertible_to = utils::concepts::ConvertibleTo<T, U>;
-}
-
 #endif /* GLOBALCONCEPTS_H */

@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 21/09/2026 by @author Tsukini
+##  @date 13/10/2026 by @author Tsukini
 
 File Name:
 ##  @file SharedMemory.cpp
@@ -22,11 +22,20 @@ File Description:
 #include "utils/exception/basic/ErrorException.hpp"
 #include "utils/exception/basic/NoneException.hpp"
 #include "utils/encapsulation/SharedMemory.hpp"
-#include <linux/futex.h>
-#include <sys/syscall.h>
-#include <sys/mman.h>
-#include <unistd.h>
+#include "utils/platform/Platform.hpp"
+#ifdef UTILS_WINDOWS
+    #include "../platform/Windows.hpp"
+#else
+    #include <linux/futex.h>
+    #include <sys/syscall.h>
+    #include <sys/mman.h>
+    #include <sys/stat.h>
+    #include <unistd.h>
+    #include <fcntl.h>
+#endif
+#include <cerrno>
 #include <unordered_map>
+#include <algorithm>
 #include <functional>
 #include <optional>
 #include <utility>
@@ -40,31 +49,150 @@ File Description:
 #include <limits>
 #include <mutex>
 
-_hot static inline void futex_wait(std::atomic<std::uint32_t>* addr, std::uint32_t expected)
+#ifdef UTILS_WINDOWS
+    // Kernel object name of the memory ('/name' like shm_open -> 'Local\utils-shm-name<suffix>', no '\' allowed)
+    _cold static std::string object_name(const std::string& name, const std::string& suffix)
+    {
+        std::string base = (!name.empty() && name.front() == '/') ? name.substr(1) : name;
+        std::replace(base.begin(), base.end(), '\\', '_');
+        return "Local\\utils-shm-" + base + suffix;
+    }
+#else
+    _hot static inline void futex_wait(std::atomic<std::uint32_t>* addr, std::uint32_t expected)
+    {
+        (void)static_cast<int>(::syscall(
+            SYS_futex,
+            reinterpret_cast<std::uint32_t*>(addr),
+            FUTEX_WAIT,
+            expected,
+            nullptr,
+            nullptr,
+            0
+        ));
+    }
+
+    // wake every waiter (the number of waiters to wake is an int)
+    _hot static inline void futex_wake(std::atomic<std::uint32_t>* addr)
+    {
+        (void)static_cast<int>(::syscall(
+            SYS_futex,
+            reinterpret_cast<std::uint32_t*>(addr),
+            FUTEX_WAKE,
+            std::numeric_limits<int>::max(),
+            nullptr,
+            nullptr,
+            0
+        ));
+    }
+#endif
+
+_hot void utils::encapsulation::SharedMemory::wait_(std::uint32_t expected) const
 {
-    (void)static_cast<int>(::syscall(
-        SYS_futex,
-        reinterpret_cast<std::uint32_t*>(addr),
-        FUTEX_WAIT,
-        expected,
-        nullptr,
-        nullptr,
-        0
-    ));
+    #ifdef UTILS_WINDOWS
+        // No futex between processes: auto reset event + timeout (the other readers see the change within 10ms)
+        if (this->_metadata->readable.load(std::memory_order_acquire) != expected) return;
+        (void)::WaitForSingleObject(reinterpret_cast<HANDLE>(this->_event), 10);
+    #else
+        futex_wait(&this->_metadata->readable, expected);
+    #endif
 }
 
-// wake every waiter (the number of waiters to wake is an int)
-_hot static inline void futex_wake(std::atomic<std::uint32_t>* addr)
+_hot void utils::encapsulation::SharedMemory::wake_(void) const
 {
-    (void)static_cast<int>(::syscall(
-        SYS_futex,
-        reinterpret_cast<std::uint32_t*>(addr),
-        FUTEX_WAKE,
-        std::numeric_limits<int>::max(),
-        nullptr,
-        nullptr,
-        0
-    ));
+    #ifdef UTILS_WINDOWS
+        if (this->_event) ::SetEvent(reinterpret_cast<HANDLE>(this->_event));
+    #else
+        futex_wake(&this->_metadata->readable);
+    #endif
+}
+
+_cold _nodiscard void* utils::encapsulation::SharedMemory::map_(const std::string& name, bool create, std::size_t size)
+{
+    #ifdef UTILS_WINDOWS
+        // Open/create the mapping (backed by the paging file, destroyed when the last handle is closed)
+        const std::string mapping = object_name(name, "");
+        HANDLE handle = nullptr;
+        if (create) {
+            const unsigned long long total = size;
+            handle = ::CreateFileMappingA(INVALID_HANDLE_VALUE, nullptr, PAGE_READWRITE, static_cast<DWORD>(total >> 32), static_cast<DWORD>(total & 0xFFFFFFFFull), mapping.c_str());
+        } else {
+            handle = ::OpenFileMappingA(FILE_MAP_ALL_ACCESS, FALSE, mapping.c_str());
+        }
+        if (!handle) _unlikely {
+            throw utils::exception::ErrorException(utils::exception::InternalCode::ShmOpen, utils::platform::windows::strerror(::GetLastError()));
+        }
+        this->_handle = handle;
+
+        // Map the whole memory
+        void* ptr = ::MapViewOfFile(handle, FILE_MAP_ALL_ACCESS, 0, 0, create ? size : 0);
+        if (!ptr) _unlikely {
+            const std::string error = utils::platform::windows::strerror(::GetLastError());
+            this->unmap_();
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Mmap, error);
+        }
+        MEMORY_BASIC_INFORMATION info{};
+        this->_mapped = (create || !::VirtualQuery(ptr, &info, sizeof(info))) ? size : info.RegionSize;
+
+        // Event waking the readers (shared by every process of this memory)
+        this->_event = ::CreateEventA(nullptr, FALSE, FALSE, object_name(name, "-readable").c_str());
+        if (!this->_event) _unlikely {
+            const std::string error = utils::platform::windows::strerror(::GetLastError());
+            ::UnmapViewOfFile(ptr);
+            this->unmap_();
+            throw utils::exception::ErrorException(utils::exception::InternalCode::ShmOpen, error);
+        }
+        return ptr;
+    #else
+        // open the shm
+        this->_fd = ::shm_open(name.data(), (create ? (O_CREAT | O_RDWR) : O_RDWR), 0600);
+        if (this->_fd == -1) _unlikely {
+            throw utils::exception::ErrorException(utils::exception::InternalCode::ShmOpen, ::strerror(errno));
+        }
+
+        // size: given (create) or real one (open)
+        if (create) {
+            if (::ftruncate(this->_fd, static_cast<off_t>(size)) == -1) _unlikely {
+                const std::string error = ::strerror(errno);
+                this->unmap_();
+                throw utils::exception::ErrorException(utils::exception::InternalCode::Ftruncate, error);
+            }
+        } else {
+            struct stat st{};
+            if (::fstat(this->_fd, &st) == -1) _unlikely {
+                const std::string error = ::strerror(errno);
+                this->unmap_();
+                throw utils::exception::ErrorException(utils::exception::InternalCode::Fstat, error);
+            }
+            size = static_cast<std::size_t>(st.st_size);
+        }
+
+        // map the memory
+        void* ptr = ::mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, this->_fd, 0);
+        if (ptr == MAP_FAILED) _unlikely {
+            const std::string error = ::strerror(errno);
+            this->unmap_();
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Mmap, error);
+        }
+        this->_mapped = size;
+        return ptr;
+    #endif
+}
+
+_cold void utils::encapsulation::SharedMemory::unmap_(void) noexcept
+{
+    #ifdef UTILS_WINDOWS
+        if (this->_ptr) ::UnmapViewOfFile(this->_ptr);
+        if (this->_event) ::CloseHandle(reinterpret_cast<HANDLE>(this->_event));
+        if (this->_handle) ::CloseHandle(reinterpret_cast<HANDLE>(this->_handle));
+        this->_event = nullptr;
+        this->_handle = nullptr;
+    #else
+        if (this->_ptr) ::munmap(this->_ptr, this->_mapped);
+        if (this->_fd != -1) ::close(this->_fd);
+        this->_fd = -1;
+    #endif
+    this->_ptr = nullptr;
+    this->_mapped = 0;
 }
 
 _cold void utils::encapsulation::SharedMemory::init_(void)
@@ -80,7 +208,7 @@ _cold void utils::encapsulation::SharedMemory::init_(void)
         // allow the thread to be awake when a stop is requested
         std::stop_callback wakeOnStop(stoken, [this](void) {
             this->_metadata->readable.fetch_add(1, std::memory_order_release);
-            futex_wake(&this->_metadata->readable);
+            this->wake_();
         });
 
         // read the requests already waiting (sent before the connection)
@@ -92,7 +220,7 @@ _cold void utils::encapsulation::SharedMemory::init_(void)
             const std::uint32_t observed = this->_metadata->readable.load(std::memory_order_acquire);
             if (current >= observed) {
                 // wait for trigger from atomic notifier in metatdata
-                futex_wait(&this->_metadata->readable, observed);
+                this->wait_(observed);
             } else ++current;
 
             // awake can also be trigger by a stop request
@@ -252,13 +380,12 @@ _cold void utils::encapsulation::SharedMemory::close(void)
         // stop the internal reader thread
         this->_thread.request_stop();
         this->_metadata->readable.fetch_add(1, std::memory_order_relaxed);
-        futex_wake(&this->_metadata->readable);
+        this->wake_();
         if (this->_thread.joinable()) this->_thread.join(); // wait for the stop
     }
 
     // close
-    if (this->_ptr) ::munmap(this->_ptr, this->_mapped);
-    if (this->_fd != -1) ::close(this->_fd);
+    this->unmap_();
 
     // reset (the join calls are woken up, nothing more will be read)
     std::lock_guard<std::mutex> lock(this->_lock);
@@ -273,9 +400,6 @@ _cold void utils::encapsulation::SharedMemory::close(void)
     this->_seen.clear();
     this->_lastIds.clear();
     this->_last = 0;
-    this->_ptr = nullptr;
-    this->_mapped = 0;
-    this->_fd = -1;
 }
 
 _hot void utils::encapsulation::SharedMemory::send_(const std::vector<std::byte>& bytes, const utils::encapsulation::shm::Id& id, const utils::encapsulation::shm::Target& target, std::pair<bool, bool> last, bool failsafe)
@@ -328,7 +452,7 @@ _hot void utils::encapsulation::SharedMemory::send_(const std::vector<std::byte>
     // set the flag to: data to read
     emptySlot.metadata->flag.store(2, std::memory_order_release);
     this->_metadata->readable.fetch_add(1, std::memory_order_relaxed);
-    futex_wake(&this->_metadata->readable);
+    this->wake_();
 }
 
 _hot void utils::encapsulation::SharedMemory::send(const std::vector<std::byte>& bytes, const utils::encapsulation::shm::Id& id, const utils::encapsulation::shm::Target& target, bool lastSending, bool lastTransmission, bool failsafe)

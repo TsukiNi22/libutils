@@ -24,12 +24,15 @@ File Description:
 #include "utils/network/NetworkDefine.hpp"
 #include "utils/network/NetworkType.hpp"
 #include "utils/verbose/Verbose.hpp"
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <sys/types.h>
-#include <sys/time.h>
-#include <unistd.h>
+#include "utils/platform/Socket.hpp"
+#include "utils/platform/Unistd.hpp"
+#ifdef UTILS_WINDOWS
+    #include "../../platform/Windows.hpp"
+#else
+    #include <netinet/in.h>
+    #include <arpa/inet.h>
+    #include <sys/time.h>
+#endif
 #include <cstring>
 #include <cerrno>
 #include <cstddef>
@@ -46,8 +49,8 @@ _cold void utils::network::TCPSocket::connect(const utils::network::Address& add
 
     // Init the socket
     onAdvancedVerbose("Socket initialisation...");
-    if ((this->_fd = ::socket(AF_INET, SOCK_STREAM, 0)) < 0)
-        throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, std::strerror(errno));
+    if ((this->_fd = utils::platform::socket(AF_INET, SOCK_STREAM, 0)) < 0)
+        throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, utils::platform::strerror(errno));
 
     // Any error after the creation: close the socket
     try {
@@ -64,20 +67,22 @@ _cold void utils::network::TCPSocket::connect(const utils::network::Address& add
         tv.tv_sec = SOCKET_TIMEOUT;
         tv.tv_usec = 0;
         onAdvancedVerbose("Setup of the socket's parameters...");
-        if (::setsockopt(this->_fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) < 0)
-            throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, std::strerror(errno));
+        if (utils::platform::setsockopt(this->_fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) < 0)
+            throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, utils::platform::strerror(errno));
 
         // Bind the socket with the parameter
         onBasicVerbose("Connection to '" << address.ip.first << ":" << address.port << "'...");
-        if (::connect(this->_fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) < 0) {
+        if (utils::platform::connect(this->_fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) < 0) {
+            const int error = errno; // the verbose output can change it
             onBasicVerbose("Failed to connect client to '" << address.ip.first << ":" << address.port << "'");
+            errno = error;
             if (errno == EINPROGRESS || errno == EWOULDBLOCK)
                 throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, std::string("Connection timed out (") + std::to_string(SOCKET_TIMEOUT) + "s)");
             else
-                throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, std::strerror(errno));
+                throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, utils::platform::strerror(errno));
         }
     } catch (...) {
-        ::close(this->_fd);
+        utils::platform::close(this->_fd);
         this->_fd = -1;
         throw;
     }
@@ -95,16 +100,16 @@ _cold void utils::network::TCPSocket::listen(const utils::network::Address& addr
 
     // Init the socket
     onAdvancedVerbose("Socket initialisation...");
-    if ((this->_fd = ::socket(AF_INET, SOCK_STREAM, 0)) < 0)
-        throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, std::strerror(errno));
+    if ((this->_fd = utils::platform::socket(AF_INET, SOCK_STREAM, 0)) < 0)
+        throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, utils::platform::strerror(errno));
 
     // Any error after the creation: close the socket
     try {
         // Setup port to accept a reuse of the server before the tcp cooldown/TIME_WAIT
         int opt = 1;
         onAdvancedVerbose("Setup of the socket's parameters...");
-        if (::setsockopt(this->_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
-            throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, std::strerror(errno));
+        if (utils::platform::setsockopt(this->_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
+            throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, utils::platform::strerror(errno));
 
         // Setup the sockaddr_in
         sockaddr_in addr{};
@@ -114,15 +119,15 @@ _cold void utils::network::TCPSocket::listen(const utils::network::Address& addr
 
         // Bind the socket with the parameter
         onAdvancedVerbose("Binding of the socket...");
-        if (::bind(this->_fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) < 0)
-            throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, std::strerror(errno));
+        if (utils::platform::bind(this->_fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) < 0)
+            throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, utils::platform::strerror(errno));
         onBasicVerbose("Server started!");
 
         // Init the listen of the server
-        if (::listen(this->_fd, SOMAXCONN) < 0)
-            throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, std::strerror(errno));
+        if (utils::platform::listen(this->_fd, SOMAXCONN) < 0)
+            throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, utils::platform::strerror(errno));
     } catch (...) {
-        ::close(this->_fd);
+        utils::platform::close(this->_fd);
         this->_fd = -1;
         throw;
     }

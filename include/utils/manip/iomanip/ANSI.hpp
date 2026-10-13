@@ -19,7 +19,7 @@ File Description:
     #include "Color.hpp"                        // utils::iomanip::Color, utils::iomanip::BackColor
     #include "Char.hpp"                         // utils::iomanip::Char
     #include "Style.hpp"                        // utils::iomanip::Style, utils::iomanip::ResetStyle
-    #include "../../attribute/Attribute.hpp"    // _cold, _hot, _nodiscard, _migration
+    #include "../../attribute/Attribute.hpp"    // _cold, _hot, _nodiscard
     #include <initializer_list>                 // std::initializer_list
     #include <cstddef>                          // std::size_t
     #include <cstdint>                          // std::uint8_t
@@ -33,6 +33,7 @@ namespace utils::iomanip { // namespace start
 /* function */
 std::string set_style(std::initializer_list<utils::iomanip::Style> styles);
 std::string reset_style(std::initializer_list<utils::iomanip::ResetStyle> styles);
+bool enable_ansi(void); // Windows: enable the virtual terminal mode of the console (ANSI sequences), Unix: nothing to do (true)
 
 /* internal */
 _hot _nodiscard constexpr inline std::string esc(void)                    {return std::string(1, static_cast<char>(utils::iomanip::Char::ESC));};
@@ -179,17 +180,5 @@ utils::iomanip::MouseEvent read_mouse_event(void);
 utils::iomanip::AdvancedMouseEvent read_advanced_mouse_event(void);
 
 } // namespace end
-
-//----------------------------------------------------------------//
-/* MIGRATION */
-namespace utils::iomanip {
-    _migration(4, 0, 0) inline std::string setStyle(std::initializer_list<utils::iomanip::Style> styles)        {return utils::iomanip::set_style(styles);};
-    _migration(4, 0, 0) inline std::string setStyle(utils::iomanip::Style style)                                {return utils::iomanip::set_style(style);};
-    _migration(4, 0, 0) inline std::string resetStyle(std::initializer_list<utils::iomanip::ResetStyle> styles) {return utils::iomanip::reset_style(styles);};
-    _migration(4, 0, 0) inline std::string resetStyle(utils::iomanip::ResetStyle style)                         {return utils::iomanip::reset_style(style);};
-    _migration(4, 0, 0) inline std::pair<int, int> readCursorPosition(void)                                     {return utils::iomanip::read_cursor_position();};
-    _migration(4, 0, 0) inline utils::iomanip::MouseEvent readMouseEvent(void)                                  {return utils::iomanip::read_mouse_event();};
-    _migration(4, 0, 0) inline utils::iomanip::AdvancedMouseEvent readAdvancedMouseEvent(void)                  {return utils::iomanip::read_advanced_mouse_event();};
-}
 
 #endif /* ANSI_H */

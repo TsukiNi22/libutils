@@ -21,7 +21,11 @@ File Description:
     #define _noinline       [[noinline]]                    // Cancel any auto inline from the compiler
     #define _noreturn       [[noreturn]]                    // Signal a function that never return
     #define _unused         [[maybe_unused]]                // Signal an unused variable
-    #define _hidden         [[gnu::visibility("hidden")]]   // Change the visibility on a shared lib
+    #ifdef _WIN32
+        #define _hidden                                     // No ELF visibility on Windows (dllexport/dllimport model)
+    #else
+        #define _hidden         [[gnu::visibility("hidden")]]   // Change the visibility on a shared lib
+    #endif
     #define _ctor           [[gnu::constructor]]            // Execute before the main
     #define _dtor           [[gnu::destructor]]             // Execute after the main
     #define _fallthrough    [[fallthrough]]                 // Ingore warn for no break in switch

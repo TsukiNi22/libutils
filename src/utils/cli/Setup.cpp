@@ -23,8 +23,10 @@ File Description:
 #include "utils/manip/iomanip/ANSI.hpp"
 #include "utils/manip/smanip/format.hpp"
 #include "utils/cli/Cli.hpp"
-#include <termios.h>
-#include <unistd.h>
+#include "utils/manip/iomanip/ANSI.hpp"
+#include "utils/platform/Platform.hpp"
+#include "utils/platform/Termios.hpp"
+#include "utils/platform/Unistd.hpp"
 #include <shared_mutex>
 #include <functional>
 #include <filesystem>
@@ -48,16 +50,19 @@ utils::cli::Cli::Cli(const bool sig)
     this->resetMiddlewares();
 
     // Setup the term
-    if (isatty(STDIN_FILENO) && tcgetattr(STDIN_FILENO, &this->_orig) == 0) {
+    if (utils::platform::isatty(STDIN_FILENO) && utils::platform::tcgetattr(STDIN_FILENO, &this->_orig) == 0) {
         termios raw = this->_orig;
         raw.c_lflag &= ~static_cast<tcflag_t>(ICANON | ECHO);
-        this->_termios = (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == 0);
+        this->_termios = (utils::platform::tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == 0);
+        (void)utils::iomanip::enable_ansi(); // Windows console: escape sequences of the output (nothing to do on Unix)
     }
 
     // Signal handling (keep the previous handlers to restore them)
     if (this->_sig) {
         this->_oldSigInt = std::signal(SIGINT, SIG_IGN); // ctrl+c
-        this->_oldSigTstp = std::signal(SIGTSTP, SIG_IGN); // ctrl+z
+        #ifdef SIGTSTP // not on Windows (ctrl+z is a char)
+            this->_oldSigTstp = std::signal(SIGTSTP, SIG_IGN); // ctrl+z
+        #endif
     }
 
     // Load history from persistent storage
@@ -74,12 +79,14 @@ utils::cli::Cli::~Cli()
 
     // Reset the term (only if it was setup)
     if (this->_termios)
-        tcsetattr(STDIN_FILENO, TCSAFLUSH, &this->_orig);
+        utils::platform::tcsetattr(STDIN_FILENO, TCSAFLUSH, &this->_orig);
 
     // Reset signal (previous handlers)
     if (this->_sig) {
         std::signal(SIGINT, this->_oldSigInt == SIG_ERR ? SIG_DFL : this->_oldSigInt); // ctrl+c
-        std::signal(SIGTSTP, this->_oldSigTstp == SIG_ERR ? SIG_DFL : this->_oldSigTstp); // ctrl+z
+        #ifdef SIGTSTP
+            std::signal(SIGTSTP, this->_oldSigTstp == SIG_ERR ? SIG_DFL : this->_oldSigTstp); // ctrl+z
+        #endif
     }
 
     // Save history if persistent is enable
@@ -90,6 +97,9 @@ utils::cli::Cli::~Cli()
 _cold _nodiscard static std::filesystem::path get_history_file_path(void)
 {
     const char* home = std::getenv("HOME");
+    #ifdef UTILS_WINDOWS
+        if (!home || !*home) home = std::getenv("USERPROFILE");
+    #endif
     if (!home) home = ".";
     return std::filesystem::path(home) / HISTORY_FILE;
 }

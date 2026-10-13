@@ -18,10 +18,8 @@ File Description:
 \**************************************************************/
 
 #include "utils.hpp"
+#include "tools/RawSocket.hpp"
 #include <gtest/gtest.h>
-#include <netinet/in.h>
-#include <unistd.h>
-#include <sys/socket.h>
 #include <algorithm>
 #include <filesystem>
 #include <atomic>
@@ -44,13 +42,15 @@ static bool waitFor(Fn condition, std::chrono::milliseconds timeout = std::chron
     return true;
 }
 
-// Number of fds opened by the process
-static std::size_t openFds(void)
-{
-    std::size_t count = 0;
-    for (_unused const std::filesystem::directory_entry& entry: std::filesystem::directory_iterator("/proc/self/fd")) ++count;
-    return count;
-}
+#ifndef _WIN32
+    // Number of fds opened by the process
+    static std::size_t openFds(void)
+    {
+        std::size_t count = 0;
+        for (_unused const std::filesystem::directory_entry& entry: std::filesystem::directory_iterator("/proc/self/fd")) ++count;
+        return count;
+    }
+#endif
 
 static bool contains(const utils::network::Payloads& payloads, const std::string& s)
 {
@@ -71,10 +71,7 @@ class ClientServerTest: public ::testing::Test {
             this->_server = std::make_unique<utils::network::Server>(this->_serverSocket, utils::network::Address{{"", ""}, 0});
             ASSERT_NO_THROW(this->_server->start());
 
-            sockaddr_in addr{};
-            socklen_t len = sizeof(addr);
-            ::getsockname(this->_serverSocket->getFd(), reinterpret_cast<sockaddr*>(&addr), &len);
-            this->_port = ntohs(addr.sin_port);
+            this->_port = tests::tools::local_port(this->_serverSocket->getFd());
 
             this->_client = std::make_unique<utils::network::Client>(
                 std::make_shared<utils::network::TCPSocket>(),
@@ -308,18 +305,6 @@ TEST_F(ClientServerTest, JoinWhenDownReturnImmediately) {
 }
 
 /* -------------------------------- edge cases -------------------------------- */
-// Raw tcp client (to send partial payloads)
-static int rawConnect(std::uint16_t port)
-{
-    int fd = ::socket(AF_INET, SOCK_STREAM, 0);
-    sockaddr_in addr{};
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(port);
-    addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-    if (::connect(fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) < 0) {::close(fd); return -1;}
-    return fd;
-}
-
 TEST_F(ClientServerTest, SendToClosedPeerNoSigpipe) {
     int fd = this->connect();
     ASSERT_NE(fd, -1);
@@ -333,50 +318,50 @@ TEST_F(ClientServerTest, SendToClosedPeerNoSigpipe) {
 }
 
 TEST_F(ClientServerTest, PartialPayloadDoesNotBlock) {
-    int fd = rawConnect(this->_port);
+    int fd = tests::tools::raw_connect(this->_port);
     ASSERT_NE(fd, -1);
     ASSERT_TRUE(waitFor([&](void) {(void)this->_server->listen(); return this->_server->getFds().size() == 1;}));
     int sfd = this->_server->getFds().front();
-    ASSERT_EQ(::write(fd, "partial", 7), 7);
+    ASSERT_EQ(tests::tools::raw_write(fd, "partial", 7), 7);
     std::this_thread::sleep_for(std::chrono::milliseconds{20});
     std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
     (void)this->_server->listen();
     EXPECT_LT(std::chrono::steady_clock::now() - start, std::chrono::milliseconds{500});
-    ASSERT_EQ(::write(fd, " end\n", 5), 5);
+    ASSERT_EQ(tests::tools::raw_write(fd, " end\n", 5), 5);
     EXPECT_TRUE(this->serverReceive(sfd, "partial end"));
-    ::close(fd);
+    tests::tools::raw_close(fd);
 }
 
 TEST_F(ClientServerTest, ListenFdWithOtherClientsPending) {
-    int a = rawConnect(this->_port), b = rawConnect(this->_port);
+    int a = tests::tools::raw_connect(this->_port), b = tests::tools::raw_connect(this->_port);
     ASSERT_TRUE(waitFor([&](void) {(void)this->_server->listen(); return this->_server->getFds().size() == 2;}));
-    ASSERT_EQ(::write(a, "x\n", 2), 2);
-    ASSERT_EQ(::write(b, "y\n", 2), 2);
+    ASSERT_EQ(tests::tools::raw_write(a, "x\n", 2), 2);
+    ASSERT_EQ(tests::tools::raw_write(b, "y\n", 2), 2);
     std::this_thread::sleep_for(std::chrono::milliseconds{20});
     std::vector<int> fds = this->_server->getFds();
     std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
     (void)this->_server->listen(fds[0]);
     (void)this->_server->listen(fds[1]);
     EXPECT_LT(std::chrono::steady_clock::now() - start, std::chrono::milliseconds{500});
-    ::close(a);
-    ::close(b);
+    tests::tools::raw_close(a);
+    tests::tools::raw_close(b);
 }
 
 TEST_F(ClientServerTest, ClosedConnectionBufferNotReused) {
-    int a = rawConnect(this->_port);
+    int a = tests::tools::raw_connect(this->_port);
     ASSERT_TRUE(waitFor([&](void) {(void)this->_server->listen(); return this->_server->getFds().size() == 1;}));
-    ASSERT_EQ(::write(a, "ok\nGARBAGE", 10), 10);
+    ASSERT_EQ(tests::tools::raw_write(a, "ok\nGARBAGE", 10), 10);
     std::this_thread::sleep_for(std::chrono::milliseconds{20});
     (void)this->_server->listen();
-    ::close(a);
+    tests::tools::raw_close(a);
     ASSERT_TRUE(waitFor([&](void) {(void)this->_server->listen(); return this->_server->getFds().empty();}));
 
-    int b = rawConnect(this->_port); // usually the same fd number
+    int b = tests::tools::raw_connect(this->_port); // usually the same fd number
     ASSERT_TRUE(waitFor([&](void) {(void)this->_server->listen(); return this->_server->getFds().size() == 1;}));
     int fd = this->_server->getFds().front();
-    ASSERT_EQ(::write(b, "hello\n", 6), 6);
+    ASSERT_EQ(tests::tools::raw_write(b, "hello\n", 6), 6);
     EXPECT_TRUE(this->serverReceive(fd, "hello"));
-    ::close(b);
+    tests::tools::raw_close(b);
 }
 
 TEST_F(ClientServerTest, RemovedClientNotResurrected) {
@@ -393,13 +378,11 @@ TEST_F(ClientServerTest, RemovedClientNotResurrected) {
 
 TEST_F(ClientServerTest, FlushAllWithClosedClients) {
     std::vector<int> raw;
-    for (int i = 0; i < 4; ++i) raw.push_back(rawConnect(this->_port));
+    for (int i = 0; i < 4; ++i) raw.push_back(tests::tools::raw_connect(this->_port));
     ASSERT_TRUE(waitFor([&](void) {(void)this->_server->listen(); return this->_server->getFds().size() == 4;}));
     for (int fd: this->_server->getFds()) this->_server->send<true>(fd, std::string(1000, 'x'));
     for (int fd: raw) {
-        struct linger l{1, 0}; // reset the connection
-        ::setsockopt(fd, SOL_SOCKET, SO_LINGER, &l, sizeof(l));
-        ::close(fd);
+        tests::tools::raw_reset(fd); // reset the connection
     }
     std::this_thread::sleep_for(std::chrono::milliseconds{20});
     EXPECT_NO_THROW(this->_server->flush());
@@ -437,13 +420,15 @@ TEST_F(ClientServerTest, ClientStopFromAnotherThreadDuringJoin) {
     EXPECT_EQ(this->_client->getStatus(), utils::network::Status::Down);
 }
 
-TEST_F(ClientServerTest, StopDuringJoinClosesEpoll) {
-    std::size_t before = openFds();
-    std::atomic<bool> joined = false;
-    std::thread joiner([&](void) {this->_server->join(); joined = true;});
-    std::this_thread::sleep_for(std::chrono::milliseconds{20});
-    this->_server->stop(); // the epoll is still used by the join: closed when it leaves
-    EXPECT_TRUE(waitFor([&](void) {return joined.load();}));
-    joiner.join();
-    EXPECT_EQ(openFds(), before - 2); // server socket & epoll closed, nothing leaked
-}
+#ifndef _WIN32 // /proc/self/fd (the Windows epoll emulation has no fd)
+    TEST_F(ClientServerTest, StopDuringJoinClosesEpoll) {
+        std::size_t before = openFds();
+        std::atomic<bool> joined = false;
+        std::thread joiner([&](void) {this->_server->join(); joined = true;});
+        std::this_thread::sleep_for(std::chrono::milliseconds{20});
+        this->_server->stop(); // the epoll is still used by the join: closed when it leaves
+        EXPECT_TRUE(waitFor([&](void) {return joined.load();}));
+        joiner.join();
+        EXPECT_EQ(openFds(), before - 2); // server socket & epoll closed, nothing leaked
+    }
+#endif

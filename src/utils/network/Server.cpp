@@ -26,11 +26,15 @@ File Description:
 #include "utils/network/NetworkDefine.hpp"
 #include "utils/network/Server.hpp"
 #include "utils/verbose/Verbose.hpp"
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <sys/epoll.h>
-#include <unistd.h>
+#include "utils/platform/Epoll.hpp"
+#include "utils/platform/Socket.hpp"
+#include "utils/platform/Unistd.hpp"
+#ifdef UTILS_WINDOWS
+    #include "../platform/Windows.hpp"
+#else
+    #include <netinet/in.h>
+    #include <arpa/inet.h>
+#endif
 #include <cstring>
 #include <cerrno>
 #include <iostream>
@@ -47,14 +51,14 @@ _cold void utils::network::Server::retire_(const int epfd)
 
     // a join may still be in epoll_wait on it: closing it now would let the fd number be reused under it
     if (this->_waiting > 0) this->_retired.push_back(epfd);
-    else ::close(epfd);
+    else utils::platform::close(epfd);
 }
 
 // Close every connection & the epoll
 _cold void utils::network::Server::release_(void)
 {
     for (const auto &[fd, _]: this->_payloads) {
-        ::close(fd);
+        utils::platform::close(fd);
         this->_socket->discard(fd);
     }
     this->_payloads.clear();
@@ -88,9 +92,9 @@ _cold void utils::network::Server::start(void)
 
         // Setup the epoll
         this->_fd = this->_socket->getFd();
-        int epfd = epoll_create1(0);
+        int epfd = utils::platform::epoll_create1(0);
         if (epfd < 0) _unlikely {
-            throw utils::exception::ErrorException(utils::exception::InternalCode::Poll, std::strerror(errno));
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Poll, utils::platform::strerror(errno));
         }
         this->_epfd = epfd;
 
@@ -98,8 +102,8 @@ _cold void utils::network::Server::start(void)
         struct epoll_event ev{};
         ev.events = EPOLLIN;
         ev.data.fd = this->_fd;
-        if (epoll_ctl(epfd, EPOLL_CTL_ADD, this->_fd, &ev) < 0) _unlikely {
-            throw utils::exception::ErrorException(utils::exception::InternalCode::Poll, std::strerror(errno));
+        if (utils::platform::epoll_ctl(epfd, EPOLL_CTL_ADD, this->_fd, &ev) < 0) _unlikely {
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Poll, utils::platform::strerror(errno));
         }
 
         this->_status = utils::network::Status::Up;
@@ -180,12 +184,12 @@ _hot _nodiscard const std::unordered_map<int, utils::network::Payloads>& utils::
     std::vector<struct epoll_event> events;
     while (this->_status == utils::network::Status::Up) {
         events.resize(this->_payloads.size() + 1);
-        int res = epoll_wait(this->_epfd, events.data(), static_cast<int>(events.size()), 0);
+        int res = utils::platform::epoll_wait(this->_epfd, events.data(), static_cast<int>(events.size()), 0);
 
         if (res < 0) _unlikely {
             if (errno == EINTR) break; // handle the ctrl-c before the first connection
             if (this->_status != utils::network::Status::Up) return this->_payloads; // stopped meanwhile
-            this->crash_(std::strerror(errno));
+            this->crash_(utils::platform::strerror(errno));
         }
 
         // No event
@@ -203,9 +207,9 @@ _hot _nodiscard const std::unordered_map<int, utils::network::Payloads>& utils::
                 struct epoll_event ev{};
                 ev.events = EPOLLIN;
                 ev.data.fd = this->_socket->accept();
-                if (epoll_ctl(this->_epfd, EPOLL_CTL_ADD, ev.data.fd, &ev) < 0) _unlikely {
-                    ::close(ev.data.fd);
-                    throw utils::exception::ErrorException(utils::exception::InternalCode::Poll, std::strerror(errno));
+                if (utils::platform::epoll_ctl(this->_epfd, EPOLL_CTL_ADD, ev.data.fd, &ev) < 0) _unlikely {
+                    utils::platform::close(ev.data.fd);
+                    throw utils::exception::ErrorException(utils::exception::InternalCode::Poll, utils::platform::strerror(errno));
                 }
                 this->_payloads[ev.data.fd]; // Ensure the existance of the new connection in the hashtable
                 consumed = true;
@@ -275,19 +279,19 @@ _hot void utils::network::Server::join(const int fd)
             ++this->_waiting; // the epoll stays open until the wait is done
             events.resize(this->_payloads.size() + 1);
         }
-        int res = epoll_wait(epfd, events.data(), static_cast<int>(events.size()), 10); // wake up at least evry 10ms
+        int res = utils::platform::epoll_wait(epfd, events.data(), static_cast<int>(events.size()), 10); // wake up at least evry 10ms
         int error = errno;
 
         std::lock_guard lock(this->_lock);
         if (--this->_waiting == 0) {
-            for (const int retired: this->_retired) ::close(retired);
+            for (const int retired: this->_retired) utils::platform::close(retired);
             this->_retired.clear();
         }
         errno = error;
         if (res < 0) _unlikely {
             if (errno == EINTR) return; // handle the ctrl-c before the first connection
             if (this->_status != utils::network::Status::Up) return; // stopped meanwhile
-            this->crash_(std::strerror(errno));
+            this->crash_(utils::platform::strerror(errno));
         }
 
         // No event
@@ -401,19 +405,19 @@ _hot void utils::network::Server::remove_(const int fd)
     // Verbose
     struct sockaddr_in addr{};
     socklen_t addrLen = sizeof(addr);
-    if (getpeername(fd, reinterpret_cast<struct sockaddr*>(&addr), &addrLen) < 0) _unlikely {
-        onBasicVerbose(std::format("Remove client 'fd={}' (unknown address: {})", fd, std::strerror(errno)));
+    if (utils::platform::getpeername(fd, reinterpret_cast<struct sockaddr*>(&addr), &addrLen) < 0) _unlikely {
+        onBasicVerbose(std::format("Remove client 'fd={}' (unknown address: {})", fd, utils::platform::strerror(errno)));
     } else {
         onBasicVerbose(std::format("Remove client '{}:{}'", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port)));
     }
 
     // Remove the fd from epoll (ENOENT/EBADF: already removed)
-    if (epoll_ctl(this->_epfd, EPOLL_CTL_DEL, fd, nullptr) < 0 && errno != ENOENT && errno != EBADF) _unlikely {
-        throw utils::exception::ErrorException(utils::exception::InternalCode::Poll, std::strerror(errno));
+    if (utils::platform::epoll_ctl(this->_epfd, EPOLL_CTL_DEL, fd, nullptr) < 0 && errno != ENOENT && errno != EBADF) _unlikely {
+        throw utils::exception::ErrorException(utils::exception::InternalCode::Poll, utils::platform::strerror(errno));
     }
 
     // Close it and remove related ressources (the buffers too: the fd number can be reused by the next connection)
-    ::close(fd);
+    utils::platform::close(fd);
     this->_socket->discard(fd);
     this->_payloads.erase(fd);
     if (this->_toClean == fd) _unlikely {this->_toClean = -2;}

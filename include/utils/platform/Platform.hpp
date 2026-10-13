@@ -8,31 +8,30 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 01/08/2026 by @author Tsukini
+##  @date 07/10/2026 by @author Tsukini
 
 File Name:
-##  @file fixed_string.hpp
+##  @file Platform.hpp
 
 File Description:
-##  Old name of the FixedString (kept for backward compatibility)
+##  Detection of the target platform (Unix or Windows)
+##  UTILS_UNIX / UTILS_WINDOWS, UTILS_PLATFORM
 \**************************************************************/
 
-#ifndef FIXED_STRING_H
-    #define FIXED_STRING_H
+#ifndef PLATFORM_H
+    #define PLATFORM_H
 
     //----------------------------------------------------------------//
-    /* INCLUDE */
+    /* DEFINE */
 
-    /* type */
-    #include "../../attribute/Attribute.hpp"    // _migration
-    #include "FixedString.hpp"                  // utils::smanip::FixedString
-    #include <cstddef>                          // std::size_t
+    #if defined(_WIN32) // Windows (MinGW-w64)
+        #define UTILS_WINDOWS
+        #define UTILS_PLATFORM "windows"
+    #elif defined(__unix__) || defined(__unix) || defined(__APPLE__) // Linux, BSD, macOS
+        #define UTILS_UNIX
+        #define UTILS_PLATFORM "unix"
+    #else
+        #error "libutils: unsupported platform (only Unix & Windows are supported)"
+    #endif
 
-//----------------------------------------------------------------//
-/* MIGRATION */
-namespace utils::smanip {
-    template<std::size_t N>
-    using fixed_string _migration(4, 0, 0) = utils::smanip::FixedString<N>;
-}
-
-#endif /* FIXED_STRING_H */
+#endif /* PLATFORM_H */

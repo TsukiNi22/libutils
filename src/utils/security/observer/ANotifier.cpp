@@ -23,7 +23,7 @@ File Description:
 #include "utils/exception/basic/WarningException.hpp"
 #include "utils/security/observer/Instances.hpp"
 #include "utils/security/observer/ANotifier.hpp"
-#include <dlfcn.h>
+#include "utils/platform/Dlfcn.hpp"
 #include <string_view>
 #include <iostream>
 #include <cstdint>
@@ -38,7 +38,7 @@ _hot utils::security::observer::ANotifier::ANotifier() noexcept
     Dl_info info{};
 
     // Get data on the actual module
-    if (::dladdr(reinterpret_cast<void*>(&fn), &info) == 0) _unlikely {return;}
+    if (utils::platform::dladdr(reinterpret_cast<void*>(&fn), &info) == 0) _unlikely {return;}
 
     // Check if the name was succefully getted
     if (info.dli_fname) _likely {

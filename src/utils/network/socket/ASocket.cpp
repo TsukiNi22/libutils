@@ -23,13 +23,16 @@ File Description:
 #include "utils/exception/basic/NoneException.hpp"
 #include "utils/network/socket/ASocket.hpp"
 #include "utils/verbose/Verbose.hpp"
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <sys/types.h>
-#include <unistd.h>
+#include "utils/platform/Socket.hpp"
+#include "utils/platform/Unistd.hpp"
+#ifdef UTILS_WINDOWS
+    #include "../../platform/Windows.hpp"
+#else
+    #include <netinet/in.h>
+    #include <arpa/inet.h>
+    #include <netdb.h>
+#endif
 #include <cstring>
-#include <netdb.h>
 #include <cerrno>
 #include <cstddef>
 #include <vector>
@@ -56,18 +59,18 @@ _cold _nodiscard std::string utils::network::resolve_hostname(const std::string&
 
     // Get the information
     onAdvancedVerbose("Get the correponding ipv4 from the hostname '" << hostname << "'...");
-    if ((status = ::getaddrinfo(hostname.c_str(), nullptr, &settings, &res)) != 0)
-        throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, ::gai_strerror(status));
+    if ((status = utils::platform::getaddrinfo(hostname.c_str(), nullptr, &settings, &res)) != 0)
+        throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, utils::platform::gai_strerror(status));
 
     // Convert the result in an ip
     onAdvancedVerbose("Convert the result into a valid ipv4...");
     if (!::inet_ntop(AF_INET, &reinterpret_cast<sockaddr_in*>(res->ai_addr)->sin_addr, ip, sizeof(ip))) {
-        ::freeaddrinfo(res);
-        throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, std::strerror(errno));
+        utils::platform::freeaddrinfo(res);
+        throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, utils::platform::strerror(errno));
     }
 
     // Clean the memory
-    ::freeaddrinfo(res);
+    utils::platform::freeaddrinfo(res);
 
     onAdvancedVerbose("Hostname resolved! ('" << hostname << "' -> '" << ip << "')");
     return std::string(ip);
@@ -89,7 +92,7 @@ _cold void utils::network::ASocket::close(void) noexcept
 
     // Terminate the socket
     onAdvancedVerbose("Close the socket...");
-    ::close(this->_fd);
+    utils::platform::close(this->_fd);
     this->_fd = -1;
 
     // Forget the buffers (a new connection could reuse the same fd number)
@@ -148,7 +151,7 @@ _hot _nodiscard std::size_t utils::network::ASocket::receive(int fd)
     ssize_t bytes = this->recv(fd, buffer.data(), buffer.size());
     if (bytes < 0) _unlikely {
         if (errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR) return 0;
-        throw utils::exception::ErrorException(utils::exception::InternalCode::Socket, std::strerror(errno));
+        throw utils::exception::ErrorException(utils::exception::InternalCode::Socket, utils::platform::strerror(errno));
     } else if (bytes == 0) _unlikely {
         throw utils::exception::NoneException(utils::exception::InternalCode::SocketClosed);
     }
@@ -180,7 +183,7 @@ _hot _nodiscard int utils::network::ASocket::accept(void)
     // Accept the client
     onAdvancedVerbose("Accepting the new connection...");
     if ((fd = this->accept(this->_fd, reinterpret_cast<sockaddr*>(&storage), &len)) < 0)
-        throw utils::exception::ErrorException(utils::exception::InternalCode::Accept, std::strerror(errno));
+        throw utils::exception::ErrorException(utils::exception::InternalCode::Accept, utils::platform::strerror(errno));
     const sockaddr_in& in = reinterpret_cast<const sockaddr_in&>(storage);
     onBasicVerbose("New client '" << ::inet_ntoa(in.sin_addr) << ":" << ::ntohs(in.sin_port) << "'");
 
@@ -205,7 +208,7 @@ _hot _nodiscard std::string utils::network::ASocket::recv(int fd)
         // Read the socket
         ssize_t bytes = this->recv(fd, buffer.data(), buffer.size());
         if (bytes < 0) _unlikely {
-            throw utils::exception::ErrorException(utils::exception::InternalCode::Socket, std::strerror(errno));
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Socket, utils::platform::strerror(errno));
         } else if (bytes == 0) _unlikely {
             throw utils::exception::NoneException(utils::exception::InternalCode::SocketClosed);
         }
@@ -263,7 +266,7 @@ _hot void utils::network::ASocket::flush(int fd)
     while (total < size) {
         ssize_t sent = this->send(fd, buffer.data() + total, static_cast<std::size_t>(size - total));
         if (sent < 0) _unlikely {
-            throw utils::exception::ErrorException(utils::exception::InternalCode::Socket, std::strerror(errno));
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Socket, utils::platform::strerror(errno));
         } else if (sent == 0) _unlikely {
             throw utils::exception::NoneException(utils::exception::InternalCode::SocketClosed);
         }

@@ -20,14 +20,14 @@ File Description:
 #ifndef POLL_H
     #define POLL_H
 
+
     //----------------------------------------------------------------//
     /* INCLUDE */
 
     /* type */
     #include "../security/observer/Observer.hpp"    // utils::security::observer::Observer
     #include "../attribute/Attribute.hpp"           // _hot, _cold, _nodiscard
-    #include <sys/epoll.h>                          // struct epoll_event, EPOLL_CLOEXEC
-    #include <unistd.h>                             // ::close
+    #include "../platform/Epoll.hpp"                // struct epoll_event, EPOLL_CLOEXEC (Windows: emulation, sockets only)
     #include <unordered_set>                        // std::unordered_set
     #include <cstddef>                              // std::size_t
     #include <cstdint>                              // std::uint32_t

@@ -20,6 +20,7 @@ File Description:
 #ifndef CLIENT_H
     #define CLIENT_H
 
+
     //----------------------------------------------------------------//
     /* INCLUDE */
 
@@ -33,7 +34,7 @@ File Description:
     #include <cstddef>                              // std::size_t
     #include <memory>                               // std::shared_ptr, std::make_shared
     #include <atomic>                               // std::atomic
-    #include <unistd.h>                             // ::close
+    #include "../platform/Unistd.hpp"               // utils::platform::close
     #include <vector>                               // std::vector
     #include <mutex>                                // std::recursive_mutex
 
@@ -93,7 +94,7 @@ class Client: private utils::security::observer::Observer<"Client"> {
         Client(Client&& other) = delete;
 
         // ----------- Destructor --------- //
-        ~Client() {this->kill(); for (const int epfd: this->_retired) ::close(epfd);};
+        ~Client() {this->kill(); for (const int epfd: this->_retired) utils::platform::close(epfd);};
 };
 
 } // namespace end

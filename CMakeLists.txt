@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
 set(TARGET utils)
-project(${TARGET} VERSION 3.0.0 LANGUAGES CXX)
+if(NOT CMAKE_TOOLCHAIN_FILE AND NOT DEFINED CMAKE_CXX_COMPILER)
+    set(CMAKE_CXX_COMPILER clang++)
+endif()
+project(${TARGET} VERSION 4.0.0 LANGUAGES CXX)
 
 # =========================
 # Options
@@ -16,7 +19,6 @@ option(BUILD_TESTS "Build unit tests" OFF)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_COMPILER clang++)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON) # Moderne compilation -fPIE
 add_compile_definitions(BACKWARD_COMPATIBILITY_WARNING) # To check internal usage for potential depreacted function
 
@@ -50,6 +52,13 @@ add_compile_options(
 # Sources
 # =========================
 set(SRC
+    ## Platform
+    src/utils/platform/Unistd.cpp
+    src/utils/platform/Socket.cpp
+    src/utils/platform/Epoll.cpp
+    src/utils/platform/Dlfcn.cpp
+    src/utils/platform/Termios.cpp
+
     ## Exception
     src/utils/exception/AException.cpp
 
@@ -105,12 +114,21 @@ set(SRC
     src/utils/encapsulation/Pipe.cpp
     src/utils/encapsulation/Dup.cpp
     src/utils/encapsulation/Process.cpp
-    src/utils/encapsulation/SharedMemory.cpp
     src/utils/encapsulation/Poll.cpp
+    src/utils/encapsulation/SharedMemory.cpp
 
     # System
     src/utils/system/Scheduler.cpp
 )
+
+# Windows only (internal Win32 helpers)
+set(SRC_WINDOWS
+    ## Platform
+    src/utils/platform/Windows.cpp
+)
+if(WIN32)
+    list(APPEND SRC ${SRC_WINDOWS})
+endif()
 add_library(${TARGET} STATIC ${SRC})
 #add_library(${TARGET} SHARED ${SRC})
 
@@ -184,6 +202,9 @@ add_custom_target(package_release
 # =========================
 add_dependencies(${TARGET} generated_internal_exception_header)
 target_link_libraries(${TARGET} PRIVATE OpenSSL::SSL OpenSSL::Crypto) # Network & Codec
+if(WIN32)
+    target_link_libraries(${TARGET} PUBLIC ws2_32) # Winsock (sockets)
+endif()
 
 # =========================
 # Includes
@@ -212,14 +233,22 @@ set_target_properties(${TARGET} PROPERTIES
     OUTPUT_NAME "utils$<$<CONFIG:Debug>:_debug>$<$<CONFIG:Asan>:_asan>"
 )
 
-target_compile_options(${TARGET} PRIVATE
-    $<$<CONFIG:Debug>:-g -ggdb3>
-    $<$<CONFIG:Asan>:-fsanitize=address -fno-omit-frame-pointer -g -ggdb3>
-    $<$<CONFIG:Optimized>:-O3 -ffast-math -funroll-loops -fno-plt -pipe -DNDEBUG>
-)
-target_link_options(${TARGET} PRIVATE
-    $<$<CONFIG:Asan>:-fsanitize=address>
-)
+if(WIN32)
+    # MinGW: no AddressSanitizer (Asan = Debug), no PLT (not ELF)
+    target_compile_options(${TARGET} PRIVATE
+        $<$<CONFIG:Debug,Asan>:-g -ggdb3>
+        $<$<CONFIG:Optimized>:-O3 -ffast-math -funroll-loops -pipe -DNDEBUG>
+    )
+else()
+    target_compile_options(${TARGET} PRIVATE
+        $<$<CONFIG:Debug>:-g -ggdb3>
+        $<$<CONFIG:Asan>:-fsanitize=address -fno-omit-frame-pointer -g -ggdb3>
+        $<$<CONFIG:Optimized>:-O3 -ffast-math -funroll-loops -fno-plt -pipe -DNDEBUG>
+    )
+    target_link_options(${TARGET} PRIVATE
+        $<$<CONFIG:Asan>:-fsanitize=address>
+    )
+endif()
 
 # =========================
 # Installation
@@ -334,7 +363,7 @@ endif()
 # Utils
 # =========================
 add_custom_target(get_unregistered_files
-    COMMAND bash ${CMAKE_SOURCE_DIR}/cmake/scripts/check_files.sh unregistered ${SRC}
+    COMMAND bash ${CMAKE_SOURCE_DIR}/cmake/scripts/check_files.sh unregistered ${SRC} ${SRC_WINDOWS}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
@@ -346,7 +375,11 @@ set(CPACK_PACKAGE_CONTACT "xartania.contact@gmail.com")
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
 
-set(CPACK_GENERATOR "RPM;DEB")
+if(WIN32)
+    set(CPACK_GENERATOR "ZIP") # Windows: archive of the install tree (include/, lib/, lib/cmake/)
+else()
+    set(CPACK_GENERATOR "RPM;DEB")
+endif()
 
 # Setup the channel name
 if(UTILS_STABLE_RELEASE)

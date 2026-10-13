@@ -25,7 +25,7 @@ File Description:
 
 namespace utils::network { // namespace start
 //----------------------------------------------------------------//
-/* TYPE */
+/* TYPEDEF */
 
 using Ip = std::pair<std::string, std::string>; // <ipv4 (hostname by default), hostname>
 using Payload = std::string; // Not parsed (raw from the socket)

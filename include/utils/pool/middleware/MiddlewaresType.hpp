@@ -41,7 +41,7 @@ struct MiddlewareType<void> {
 };
 
 //----------------------------------------------------------------//
-/* TYPE */
+/* TYPEDEF */
 
 template<typename T>
 using Middleware = typename utils::pool::MiddlewareType<T>::type;

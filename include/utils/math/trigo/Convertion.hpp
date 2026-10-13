@@ -18,17 +18,17 @@ File Description:
     /* type */
     #include "../../attribute/Attribute.hpp"    // _hot, _nodiscard
     #include "../MathType.hpp"                  // utils::math::* (Type)
-    #include <cmath>                            // M_PI
+    #include <numbers>                          // std::numbers::pi (M_PI is not standard: missing on MinGW in strict mode)
 
 namespace utils::math::trigo { // namespace start
 //----------------------------------------------------------------//
 /* PROTOTYPE */
 
 _hot _nodiscard inline utils::math::Type deg_to_rad(utils::math::Angle deg)
-{return deg * M_PI / 180.0;};
+{return deg * std::numbers::pi / 180.0;};
 
 _hot _nodiscard inline utils::math::Angle rad_to_deg(utils::math::Type rad)
-{return rad / M_PI * 180.0;};
+{return rad / std::numbers::pi * 180.0;};
 
 } // namespace end
 #endif /* CONVERTION_H */
