@@ -20,6 +20,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [pre-release] (empty)
 
+## v4.1.0 - 2026-10-15
+### Changed
+- The Windows package is no longer a `ZIP` archive: `package` builds RPM/DEB packages installed in the MinGW sysroot (`/usr/x86_64-w64-mingw32/sys-root/mingw` on Fedora, `/usr/x86_64-w64-mingw32` on Debian), found by `find_package(utils)` with the MinGW toolchain
+- `package_release` skips the Asan packages when built with the MinGW toolchain
+- The installed CMake configuration names the package to install for the build type (`mingw64-libutils-*` with MinGW) and stops with an explicit message for `Asan` with MinGW
+
+### Added
+- Windows packages `mingw64-libutils`, `mingw64-libutils-dev` (`-dev-op`, `-dev-db`), `mingw64-libutils-op` and `mingw64-libutils-db` (and their `-pre` versions), built by the `build-packages-windows` job (`ghcr.io/tsukini22/mingw64-ci`) and published in the same repositories as the Linux ones
+
 ## v4.0.0 - 2026-10-15
 ### Added
 - **[MAJOR]** Windows support, cross compiled from Linux with MinGW-w64 (`cmake/toolchain/mingw-w64.cmake`, `-DCMAKE_TOOLCHAIN_FILE=...`): every portable section builds for Windows, `ws2_32` is linked by `utils::utils`, the package is a `ZIP` archive
@@ -322,7 +331,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial version of the utils library with multiple tools (see [README-1.0.0](https://github.com/TsukiNi22/libutils/blob/v1.0.0/README.md) for more details)
 
-[pre-release]: https://github.com/TsukiNi22/libutils/compare/v3.0.0...HEAD
+[pre-release]: https://github.com/TsukiNi22/libutils/compare/v4.1.0...HEAD
+[v4.1.0]: https://github.com/TsukiNi22/libutils/compare/v4.0.0...v4.1.0
+[v4.0.0]: https://github.com/TsukiNi22/libutils/compare/v3.0.0...v4.0.0
 [v3.0.0]: https://github.com/TsukiNi22/libutils/compare/v2.13.6-pre...v3.0.0
 [v2.13.6-pre]: https://github.com/TsukiNi22/libutils/compare/v2.13.2...v2.13.6-pre
 [v2.13.2]: https://github.com/TsukiNi22/libutils/compare/v2.13.1-pre...v2.13.2
