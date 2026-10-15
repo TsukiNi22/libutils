@@ -16,6 +16,7 @@ concurrency:
 env:
   LIBRARIES: "libutils.a libutils_debug.a libutils_asan.a"
   PACKAGES: "libutils libutils-dev libutils-dev-op libutils-dev-db libutils-dev-as libutils-op libutils-db libutils-as"
+  WINDOWS_PACKAGES: "mingw64-libutils mingw64-libutils-dev mingw64-libutils-dev-op mingw64-libutils-dev-db mingw64-libutils-op mingw64-libutils-db"
 
 jobs:
   build-packages:
@@ -98,9 +99,76 @@ jobs:
             build/*.deb
           retention-days: 1
 
+  build-packages-windows:
+    runs-on: ${{ vars.RUNNER }}
+    defaults:
+      run:
+        shell: bash
+
+    container:
+      image: ghcr.io/tsukini22/mingw64-ci:latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - name: Cache ccache
+        uses: actions/cache@v5
+        with:
+          path: /github/home/.cache/ccache
+          key: ccache-mingw64-${{ hashFiles('**/*.cpp', '**/*.hpp', 'CMakeLists.txt') }}
+          restore-keys: |
+            ccache-mingw64-
+
+      - name: Build packages (Release, MinGW-w64)
+        run: |
+          set -e
+          cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain/mingw-w64.cmake -DUTILS_STABLE_RELEASE=${{ inputs.stable }} -DPACKAGE_RELEASE=${{ github.run_number }}
+          cmake --build build --target package_release --parallel $(nproc)
+        timeout-minutes: 8
+
+      - name: Show ccache stats
+        run: ccache -s
+
+      - name: Check packages
+        run: |
+          set -euo pipefail
+          declare -A PACKAGE_PATTERNS=(
+            ["mingw64-libutils"]="mingw64-libutils-*-win64.@ext@"
+            ["mingw64-libutils-op"]="mingw64-libutils-op-*-lib.@ext@"
+            ["mingw64-libutils-db"]="mingw64-libutils-db-*-lib.@ext@"
+            ["mingw64-libutils-dev"]="mingw64-libutils-dev-*-headers.@ext@"
+            ["mingw64-libutils-dev-op"]="mingw64-libutils-dev-*-headers-op.@ext@"
+            ["mingw64-libutils-dev-db"]="mingw64-libutils-dev-*-headers-db.@ext@"
+          )
+
+          for package in $WINDOWS_PACKAGES; do
+            for ext in rpm deb; do
+              pattern="${PACKAGE_PATTERNS[$package]//@ext@/$ext}"
+              FILE=$(find ./build -maxdepth 1 -name "$pattern" -print -quit)
+
+              if [ -z "$FILE" ]; then
+                echo "::error title=Missing package (${ext^^})::Package '$package' (.$ext) not found (pattern: $pattern)"
+                exit 1
+              fi
+              echo "✓ Package '$package' (.$ext) ok -> $(basename "$FILE")"
+            done
+          done
+
+      - name: Upload compiled packages
+        uses: actions/upload-artifact@v6
+        with:
+          name: compiled-packages-windows
+          path: |
+            build/*.rpm
+            build/*.deb
+          retention-days: 1
+
   sync-online-packages:
-    needs: build-packages
-    if: needs.build-packages.result == 'success'
+    needs: [build-packages, build-packages-windows]
+    if: needs.build-packages.result == 'success' && needs.build-packages-windows.result == 'success'
     permissions:
       contents: write
 
@@ -116,7 +184,8 @@ jobs:
       - name: Download compiled packages
         uses: actions/download-artifact@v7
         with:
-          name: compiled-packages
+          pattern: compiled-packages*
+          merge-multiple: true
           path: build
 
       - name: Checkout libutils - gh-pages

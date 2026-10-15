@@ -3,7 +3,7 @@ set(TARGET utils)
 if(NOT CMAKE_TOOLCHAIN_FILE AND NOT DEFINED CMAKE_CXX_COMPILER)
     set(CMAKE_CXX_COMPILER clang++)
 endif()
-project(${TARGET} VERSION 4.0.0 LANGUAGES CXX)
+project(${TARGET} VERSION 4.1.0 LANGUAGES CXX)
 
 # =========================
 # Options
@@ -182,18 +182,26 @@ add_custom_target(install_release
     COMMENT "installing both debug versions Debug & Asan (libutils_debug.a, libutils_asan.a) and Optimized (libutils.a) one"
     VERBATIM
 )
+# Asan packages: not with MinGW (Windows packages mingw64-libutils*, built with the MinGW toolchain)
+set(PACKAGE_ASAN_COMMANDS "")
+if(NOT WIN32)
+    list(APPEND PACKAGE_ASAN_COMMANDS
+        COMMAND ${CMAKE_COMMAND} -S ${CMAKE_SOURCE_DIR} -B ${CMAKE_BINARY_DIR} -DCMAKE_BUILD_TYPE=Asan -DUTILS_DEV_PACKAGE=OFF -DUTILS_PACKAGE=OFF
+        COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target package --parallel
+    )
+endif()
+
 add_custom_target(package_release
-    COMMAND ${CMAKE_COMMAND} -S ${CMAKE_SOURCE_DIR} -B ${CMAKE_BINARY_DIR} -DCMAKE_BUILD_TYPE=Debug
+    COMMAND ${CMAKE_COMMAND} -S ${CMAKE_SOURCE_DIR} -B ${CMAKE_BINARY_DIR} -DCMAKE_BUILD_TYPE=Debug -DUTILS_DEV_PACKAGE=OFF -DUTILS_PACKAGE=OFF
     COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target package --parallel
-    COMMAND ${CMAKE_COMMAND} -S ${CMAKE_SOURCE_DIR} -B ${CMAKE_BINARY_DIR} -DCMAKE_BUILD_TYPE=Asan
+    ${PACKAGE_ASAN_COMMANDS}
+    COMMAND ${CMAKE_COMMAND} -S ${CMAKE_SOURCE_DIR} -B ${CMAKE_BINARY_DIR} -DCMAKE_BUILD_TYPE=Optimized -DUTILS_DEV_PACKAGE=OFF -DUTILS_PACKAGE=OFF
     COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target package --parallel
-    COMMAND ${CMAKE_COMMAND} -S ${CMAKE_SOURCE_DIR} -B ${CMAKE_BINARY_DIR} -DCMAKE_BUILD_TYPE=Optimized
+    COMMAND ${CMAKE_COMMAND} -S ${CMAKE_SOURCE_DIR} -B ${CMAKE_BINARY_DIR} -DCMAKE_BUILD_TYPE=Optimized -DUTILS_DEV_PACKAGE=ON -DUTILS_PACKAGE=OFF
     COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target package --parallel
-    COMMAND ${CMAKE_COMMAND} -S ${CMAKE_SOURCE_DIR} -B ${CMAKE_BINARY_DIR} -DCMAKE_BUILD_TYPE=Optimized -DUTILS_DEV_PACKAGE=ON
+    COMMAND ${CMAKE_COMMAND} -S ${CMAKE_SOURCE_DIR} -B ${CMAKE_BINARY_DIR} -DCMAKE_BUILD_TYPE=Optimized -DUTILS_DEV_PACKAGE=OFF -DUTILS_PACKAGE=ON
     COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target package --parallel
-    COMMAND ${CMAKE_COMMAND} -S ${CMAKE_SOURCE_DIR} -B ${CMAKE_BINARY_DIR} -DCMAKE_BUILD_TYPE=Optimized -DUTILS_PACKAGE=ON
-    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target package --parallel
-    COMMENT "Building both debug versions Debug & Asan (libutils-db, libutils-as) and Optimized (libutils-op) one with the header (libutils-dev)"
+    COMMENT "Building the debug versions Debug & Asan (libutils-db, libutils-as) and the Optimized one (libutils-op) with the header (libutils-dev), mingw64-libutils* without Asan with the MinGW toolchain"
     VERBATIM
 )
 
@@ -375,10 +383,30 @@ set(CPACK_PACKAGE_CONTACT "xartania.contact@gmail.com")
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
 
+set(CPACK_GENERATOR "RPM;DEB")
+
+# Windows (cross compiled): mingw64-libutils*, installed in the MinGW sysroot (found by the MinGW toolchain)
 if(WIN32)
-    set(CPACK_GENERATOR "ZIP") # Windows: archive of the install tree (include/, lib/, lib/cmake/)
+    set(PACKAGE_BASE "mingw64-libutils")
+    set(CPACK_PROJECT_CONFIG_FILE "${CMAKE_SOURCE_DIR}/cmake/package/CPackProjectConfig.cmake") # prefix per generator
+    set(CPACK_UTILS_RPM_PREFIX "/usr/x86_64-w64-mingw32/sys-root/mingw") # Fedora (mingw64-filesystem)
+    set(CPACK_UTILS_DEB_PREFIX "/usr/x86_64-w64-mingw32") # Debian / Ubuntu (mingw-w64)
+    set(CPACK_RPM_PACKAGE_ARCHITECTURE "noarch") # Windows binaries: no host architecture
+    set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "all")
+    set(CPACK_RPM_PACKAGE_AUTOREQPROV OFF)
+    set(CPACK_RPM_SPEC_MORE_DEFINE "%define __os_install_post %{nil}\n%define debug_package %{nil}") # no host strip / debuginfo
+    set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
+        /usr/x86_64-w64-mingw32
+        /usr/x86_64-w64-mingw32/sys-root
+        /usr/x86_64-w64-mingw32/sys-root/mingw
+        /usr/x86_64-w64-mingw32/sys-root/mingw/include
+        /usr/x86_64-w64-mingw32/sys-root/mingw/lib
+        /usr/x86_64-w64-mingw32/sys-root/mingw/lib/cmake
+        /usr/x86_64-w64-mingw32/sys-root/mingw/share
+        /usr/x86_64-w64-mingw32/sys-root/mingw/share/licenses
+    )
 else()
-    set(CPACK_GENERATOR "RPM;DEB")
+    set(PACKAGE_BASE "libutils")
 endif()
 
 # Setup the channel name
@@ -392,26 +420,26 @@ endif()
 
 # Setup the package name
 if(UTILS_PACKAGE)
-    set(CPACK_PACKAGE_NAME "libutils${CHANNEL}")
-    set(MIRROR_PACKAGE_NAME "libutils${MIRROR_CHANNEL}")
+    set(CPACK_PACKAGE_NAME "${PACKAGE_BASE}${CHANNEL}")
+    set(MIRROR_PACKAGE_NAME "${PACKAGE_BASE}${MIRROR_CHANNEL}")
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (global)")
 elseif(UTILS_DEV_PACKAGE)
-    set(CPACK_PACKAGE_NAME "libutils-dev${CHANNEL}")
-    set(MIRROR_PACKAGE_NAME "libutils-dev${MIRROR_CHANNEL}")
+    set(CPACK_PACKAGE_NAME "${PACKAGE_BASE}-dev${CHANNEL}")
+    set(MIRROR_PACKAGE_NAME "${PACKAGE_BASE}-dev${MIRROR_CHANNEL}")
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (headers/cmake)")
 elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(CPACK_PACKAGE_NAME "libutils-db${CHANNEL}")
-    set(MIRROR_PACKAGE_NAME "libutils-db${MIRROR_CHANNEL}")
+    set(CPACK_PACKAGE_NAME "${PACKAGE_BASE}-db${CHANNEL}")
+    set(MIRROR_PACKAGE_NAME "${PACKAGE_BASE}-db${MIRROR_CHANNEL}")
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (debug)")
     set(PREFIX "db")
 elseif(CMAKE_BUILD_TYPE STREQUAL "Asan")
-    set(CPACK_PACKAGE_NAME "libutils-as${CHANNEL}")
-    set(MIRROR_PACKAGE_NAME "libutils-as${MIRROR_CHANNEL}")
+    set(CPACK_PACKAGE_NAME "${PACKAGE_BASE}-as${CHANNEL}")
+    set(MIRROR_PACKAGE_NAME "${PACKAGE_BASE}-as${MIRROR_CHANNEL}")
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (asan)")
     set(PREFIX "as")
 else()
-    set(CPACK_PACKAGE_NAME "libutils-op${CHANNEL}")
-    set(MIRROR_PACKAGE_NAME "libutils-op${MIRROR_CHANNEL}")
+    set(CPACK_PACKAGE_NAME "${PACKAGE_BASE}-op${CHANNEL}")
+    set(MIRROR_PACKAGE_NAME "${PACKAGE_BASE}-op${MIRROR_CHANNEL}")
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++20 utility library (optimized)")
     set(PREFIX "op")
 endif()
@@ -434,37 +462,41 @@ if(UTILS_PACKAGE)
     set(CPACK_COMPONENTS_ALL "")
     set(CPACK_COMPONENT_INCLUDE_TOPLEVEL_DIRECTORY OFF) # In case~
 elseif(UTILS_DEV_PACKAGE)
-    set(CPACK_COMPONENTS_ALL headers headers-db headers-as headers-op)
+    if(WIN32)
+        set(CPACK_COMPONENTS_ALL headers headers-db headers-op) # no Asan with MinGW
+    else()
+        set(CPACK_COMPONENTS_ALL headers headers-db headers-as headers-op)
+    endif()
 
-    set(CPACK_RPM_HEADERS-DB_PACKAGE_NAME "libutils-dev-db${CHANNEL}")
-    set(CPACK_RPM_HEADERS-AS_PACKAGE_NAME "libutils-dev-as${CHANNEL}")
-    set(CPACK_RPM_HEADERS-OP_PACKAGE_NAME "libutils-dev-op${CHANNEL}")
+    set(CPACK_RPM_HEADERS-DB_PACKAGE_NAME "${PACKAGE_BASE}-dev-db${CHANNEL}")
+    set(CPACK_RPM_HEADERS-AS_PACKAGE_NAME "${PACKAGE_BASE}-dev-as${CHANNEL}")
+    set(CPACK_RPM_HEADERS-OP_PACKAGE_NAME "${PACKAGE_BASE}-dev-op${CHANNEL}")
 
-    set(CPACK_DEBIAN_HEADERS-DB_PACKAGE_NAME "libutils-dev-db${CHANNEL}")
-    set(CPACK_DEBIAN_HEADERS-AS_PACKAGE_NAME "libutils-dev-as${CHANNEL}")
-    set(CPACK_DEBIAN_HEADERS-OP_PACKAGE_NAME "libutils-dev-op${CHANNEL}")
+    set(CPACK_DEBIAN_HEADERS-DB_PACKAGE_NAME "${PACKAGE_BASE}-dev-db${CHANNEL}")
+    set(CPACK_DEBIAN_HEADERS-AS_PACKAGE_NAME "${PACKAGE_BASE}-dev-as${CHANNEL}")
+    set(CPACK_DEBIAN_HEADERS-OP_PACKAGE_NAME "${PACKAGE_BASE}-dev-op${CHANNEL}")
 
     # Setup the conflict between stable & unstable packages
     if(UTILS_STABLE_RELEASE)
-        set(CPACK_RPM_HEADERS-DB_PACKAGE_OBSOLETES "libutils-dev-db${MIRROR_CHANNEL} <= ${PROJECT_VERSION}")
-        set(CPACK_RPM_HEADERS-AS_PACKAGE_OBSOLETES "libutils-dev-as${MIRROR_CHANNEL} <= ${PROJECT_VERSION}")
-        set(CPACK_RPM_HEADERS-OP_PACKAGE_OBSOLETES "libutils-dev-op${MIRROR_CHANNEL} <= ${PROJECT_VERSION}")
+        set(CPACK_RPM_HEADERS-DB_PACKAGE_OBSOLETES "${PACKAGE_BASE}-dev-db${MIRROR_CHANNEL} <= ${PROJECT_VERSION}")
+        set(CPACK_RPM_HEADERS-AS_PACKAGE_OBSOLETES "${PACKAGE_BASE}-dev-as${MIRROR_CHANNEL} <= ${PROJECT_VERSION}")
+        set(CPACK_RPM_HEADERS-OP_PACKAGE_OBSOLETES "${PACKAGE_BASE}-dev-op${MIRROR_CHANNEL} <= ${PROJECT_VERSION}")
 
-        set(CPACK_DEBIAN_HEADERS-DB_PACKAGE_REPLACES "libutils-dev-db${MIRROR_CHANNEL} (<= ${PROJECT_VERSION})")
-        set(CPACK_DEBIAN_HEADERS-AS_PACKAGE_REPLACES "libutils-dev-as${MIRROR_CHANNEL} (<= ${PROJECT_VERSION})")
-        set(CPACK_DEBIAN_HEADERS-OP_PACKAGE_REPLACES "libutils-dev-op${MIRROR_CHANNEL} (<= ${PROJECT_VERSION})")
+        set(CPACK_DEBIAN_HEADERS-DB_PACKAGE_REPLACES "${PACKAGE_BASE}-dev-db${MIRROR_CHANNEL} (<= ${PROJECT_VERSION})")
+        set(CPACK_DEBIAN_HEADERS-AS_PACKAGE_REPLACES "${PACKAGE_BASE}-dev-as${MIRROR_CHANNEL} (<= ${PROJECT_VERSION})")
+        set(CPACK_DEBIAN_HEADERS-OP_PACKAGE_REPLACES "${PACKAGE_BASE}-dev-op${MIRROR_CHANNEL} (<= ${PROJECT_VERSION})")
     endif()
 
-    set(CPACK_RPM_HEADERS-DB_PACKAGE_CONFLICTS "libutils-dev-db${MIRROR_CHANNEL}")
-    set(CPACK_RPM_HEADERS-AS_PACKAGE_CONFLICTS "libutils-dev-as${MIRROR_CHANNEL}")
-    set(CPACK_RPM_HEADERS-OP_PACKAGE_CONFLICTS "libutils-dev-op${MIRROR_CHANNEL}")
+    set(CPACK_RPM_HEADERS-DB_PACKAGE_CONFLICTS "${PACKAGE_BASE}-dev-db${MIRROR_CHANNEL}")
+    set(CPACK_RPM_HEADERS-AS_PACKAGE_CONFLICTS "${PACKAGE_BASE}-dev-as${MIRROR_CHANNEL}")
+    set(CPACK_RPM_HEADERS-OP_PACKAGE_CONFLICTS "${PACKAGE_BASE}-dev-op${MIRROR_CHANNEL}")
 
-    set(CPACK_DEBIAN_HEADERS-DB_PACKAGE_BREAKS "libutils-dev-db${MIRROR_CHANNEL}")
-    set(CPACK_DEBIAN_HEADERS-DB_PACKAGE_CONFLICTS "libutils-dev-db${MIRROR_CHANNEL}")
-    set(CPACK_DEBIAN_HEADERS-AS_PACKAGE_BREAKS "libutils-dev-as${MIRROR_CHANNEL}")
-    set(CPACK_DEBIAN_HEADERS-AS_PACKAGE_CONFLICTS "libutils-dev-as${MIRROR_CHANNEL}")
-    set(CPACK_DEBIAN_HEADERS-OP_PACKAGE_BREAKS "libutils-dev-op${MIRROR_CHANNEL}")
-    set(CPACK_DEBIAN_HEADERS-OP_PACKAGE_CONFLICTS "libutils-dev-op${MIRROR_CHANNEL}")
+    set(CPACK_DEBIAN_HEADERS-DB_PACKAGE_BREAKS "${PACKAGE_BASE}-dev-db${MIRROR_CHANNEL}")
+    set(CPACK_DEBIAN_HEADERS-DB_PACKAGE_CONFLICTS "${PACKAGE_BASE}-dev-db${MIRROR_CHANNEL}")
+    set(CPACK_DEBIAN_HEADERS-AS_PACKAGE_BREAKS "${PACKAGE_BASE}-dev-as${MIRROR_CHANNEL}")
+    set(CPACK_DEBIAN_HEADERS-AS_PACKAGE_CONFLICTS "${PACKAGE_BASE}-dev-as${MIRROR_CHANNEL}")
+    set(CPACK_DEBIAN_HEADERS-OP_PACKAGE_BREAKS "${PACKAGE_BASE}-dev-op${MIRROR_CHANNEL}")
+    set(CPACK_DEBIAN_HEADERS-OP_PACKAGE_CONFLICTS "${PACKAGE_BASE}-dev-op${MIRROR_CHANNEL}")
 else()
     set(CPACK_COMPONENTS_ALL lib)
 endif()
@@ -483,28 +515,39 @@ else() # 0 is impossible for github.run_number
 endif()
 
 # Dependencies
+if(WIN32)
+    set(RPM_OPENSSL "mingw64-openssl")
+    set(DEBIAN_OPENSSL "")
+else()
+    set(RPM_OPENSSL "openssl-libs")
+    set(DEBIAN_OPENSSL ", libssl3")
+endif()
 if(UTILS_PACKAGE)
     if(UTILS_STABLE_RELEASE)
-        set(CPACK_RPM_PACKAGE_REQUIRES "libutils-op${CHANNEL} >= ${PROJECT_VERSION}")
-        set(CPACK_DEBIAN_PACKAGE_DEPENDS "libutils-op${CHANNEL} (>= ${PROJECT_VERSION})")
+        set(CPACK_RPM_PACKAGE_REQUIRES "${PACKAGE_BASE}-op${CHANNEL} >= ${PROJECT_VERSION}")
+        set(CPACK_DEBIAN_PACKAGE_DEPENDS "${PACKAGE_BASE}-op${CHANNEL} (>= ${PROJECT_VERSION})")
     else()
-        set(CPACK_RPM_PACKAGE_REQUIRES "libutils-op${CHANNEL} = ${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}")
-        set(CPACK_DEBIAN_PACKAGE_DEPENDS "libutils-op${CHANNEL} (= ${PROJECT_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE})")
+        set(CPACK_RPM_PACKAGE_REQUIRES "${PACKAGE_BASE}-op${CHANNEL} = ${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}")
+        set(CPACK_DEBIAN_PACKAGE_DEPENDS "${PACKAGE_BASE}-op${CHANNEL} (= ${PROJECT_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE})")
     endif()
 elseif(UTILS_DEV_PACKAGE)
-    set(CPACK_RPM_PACKAGE_REQUIRES "openssl-devel") # public headers include <openssl/...>
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libssl-dev")
+    if(WIN32)
+        set(CPACK_RPM_PACKAGE_REQUIRES "mingw64-openssl") # public headers include <openssl/...> (no Debian package of the MinGW OpenSSL)
+    else()
+        set(CPACK_RPM_PACKAGE_REQUIRES "openssl-devel") # public headers include <openssl/...>
+        set(CPACK_DEBIAN_PACKAGE_DEPENDS "libssl-dev")
+    endif()
 else()
     if(UTILS_STABLE_RELEASE)
-        set(CPACK_RPM_PACKAGE_REQUIRES "libutils-dev${CHANNEL} >= ${PROJECT_VERSION}, libutils-dev-${PREFIX}${CHANNEL} >= ${PROJECT_VERSION}, openssl-libs")
-        set(CPACK_DEBIAN_PACKAGE_DEPENDS "libutils-dev${CHANNEL} (>= ${PROJECT_VERSION}), libutils-dev-${PREFIX}${CHANNEL} (>= ${PROJECT_VERSION}), libssl3")
+        set(CPACK_RPM_PACKAGE_REQUIRES "${PACKAGE_BASE}-dev${CHANNEL} >= ${PROJECT_VERSION}, ${PACKAGE_BASE}-dev-${PREFIX}${CHANNEL} >= ${PROJECT_VERSION}, ${RPM_OPENSSL}")
+        set(CPACK_DEBIAN_PACKAGE_DEPENDS "${PACKAGE_BASE}-dev${CHANNEL} (>= ${PROJECT_VERSION}), ${PACKAGE_BASE}-dev-${PREFIX}${CHANNEL} (>= ${PROJECT_VERSION})${DEBIAN_OPENSSL}")
     else()
-        set(CPACK_RPM_PACKAGE_REQUIRES "libutils-dev${CHANNEL} = ${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}, libutils-dev-${PREFIX}${CHANNEL} = ${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}, openssl-libs")
-        set(CPACK_DEBIAN_PACKAGE_DEPENDS "libutils-dev${CHANNEL} (= ${PROJECT_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE}), libutils-dev-${PREFIX}${CHANNEL} (= ${PROJECT_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE}), libssl3")
+        set(CPACK_RPM_PACKAGE_REQUIRES "${PACKAGE_BASE}-dev${CHANNEL} = ${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}, ${PACKAGE_BASE}-dev-${PREFIX}${CHANNEL} = ${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}, ${RPM_OPENSSL}")
+        set(CPACK_DEBIAN_PACKAGE_DEPENDS "${PACKAGE_BASE}-dev${CHANNEL} (= ${PROJECT_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE}), ${PACKAGE_BASE}-dev-${PREFIX}${CHANNEL} (= ${PROJECT_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE})${DEBIAN_OPENSSL}")
     endif()
 
     # Suggests the installation of gdb along side the debug version
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT WIN32)
         set(CPACK_RPM_PACKAGE_SUGGESTS "gdb")
         set(CPACK_DEBIAN_PACKAGE_SUGGESTS "gdb")
     endif()

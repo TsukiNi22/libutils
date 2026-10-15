@@ -6,11 +6,21 @@ find_dependency(OpenSSL REQUIRED)
 
 # Custom error message if the require file doesn't exist
 set(_utils_libdir "${CMAKE_CURRENT_LIST_DIR}/../../")
-if(CMAKE_BUILD_TYPE STREQUAL "Asan")
+if(WIN32)
+    set(_utils_package "mingw64-libutils") # Windows packages (MinGW sysroot)
+else()
+    set(_utils_package "libutils")
+endif()
+if(CMAKE_BUILD_TYPE STREQUAL "Asan" AND WIN32 AND NOT EXISTS "${_utils_libdir}/libutils_asan.a")
+    message(FATAL_ERROR
+        "No Asan version of libutils with MinGW (no AddressSanitizer).\n"
+        "Please build in Debug with the package '${_utils_package}-db'.\n"
+    )
+elseif(CMAKE_BUILD_TYPE STREQUAL "Asan")
     if(NOT EXISTS "${_utils_libdir}/libutils_asan.a")
         message(FATAL_ERROR
             "The Asan version of libutils is not installed.\n"
-            "Please install the package 'libutils-as'.\n"
+            "Please install the package '${_utils_package}-as'.\n"
         )
     endif()
 
@@ -18,7 +28,7 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
     if(NOT EXISTS "${_utils_libdir}/libutils_debug.a")
         message(FATAL_ERROR
             "The Debug version of libutils is not installed.\n"
-            "Please install the package 'libutils-db'.\n"
+            "Please install the package '${_utils_package}-db'.\n"
         )
     endif()
 
@@ -27,7 +37,7 @@ else() # Default selection for noconfig
     if(NOT EXISTS "${_utils_libdir}/libutils.a")
         message(FATAL_ERROR
             "The Optimized version of libutils is not installed.\n"
-            "Please install the package 'libutils-op'.\n"
+            "Please install the package '${_utils_package}-op'.\n"
         )
     endif()
 endif()
