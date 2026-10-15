@@ -1,11 +1,11 @@
 # Utils
 
 > [!TIP]
-> Documentation [TsukiNi22/libutils/wiki](https://github.com/TsukiNi22/libutils/wiki) (v4.0.0).
+> Documentation [TsukiNi22/libutils/wiki](https://github.com/TsukiNi22/libutils/wiki) (v4.1.0).
 > Technical documentation and project graph: [tsukini22.github.io/libutils/docs](https://tsukini22.github.io/libutils/docs/).
 
 C++20 utility library (`utils::`): exceptions, verbose, CLI, arguments, network, IPC, encryption, custom types, algorithms.
-Built as a static library and distributed as RPM/DEB packages (optimized, debug and asan variants), or installed from the sources with CMake.
+Built as a static library and distributed as RPM/DEB packages (optimized, debug and asan variants, plus the `mingw64-libutils*` packages for Windows), or installed from the sources with CMake.
 Runs on Unix (Linux, BSD, macOS) and on Windows (cross compiled with MinGW-w64), see [Windows](#windows-cross-compilation).
 
 ### Table of Contents
@@ -57,6 +57,17 @@ Runs on Unix (Linux, BSD, macOS) and on Windows (cross compiled with MinGW-w64),
 | `libutils-op` | Library compiled with the optimization options |
 | `libutils-db` | Library compiled with the debug options (intended for debugging only) |
 | `libutils-as` | Library compiled with the asan options (intended for debugging only) |
+
+**Windows** (MinGW-w64 cross compilation, installed in the MinGW sysroot: `/usr/x86_64-w64-mingw32/sys-root/mingw` on Fedora, `/usr/x86_64-w64-mingw32` on Debian/Ubuntu)
+
+| File Name | Content |
+| --------- | ------- |
+| `mingw64-libutils` | Install the default Windows packages (`mingw64-libutils-dev`, `mingw64-libutils-op`) |
+| `mingw64-libutils-dev` | All the includes and the global CMake configuration (requires `mingw64-openssl` on Fedora, OpenSSL for MinGW built by hand on Debian) |
+| `mingw64-libutils-dev-op` | CMake configuration for `mingw64-libutils-op` |
+| `mingw64-libutils-dev-db` | CMake configuration for `mingw64-libutils-db` |
+| `mingw64-libutils-op` | Windows library compiled with the optimization options |
+| `mingw64-libutils-db` | Windows library compiled with the debug options (no asan version with MinGW) |
 
 ## Quick Setup - 1 (all)
 > Setup into `/usr/local`
@@ -113,12 +124,21 @@ Then install the packages: `sudo dnf install libutils` or `sudo apt install libu
 ## Windows (cross compilation)
 > Build `libutils.a` for Windows (x86_64) from Linux with the MinGW-w64 toolchain
 
+From the packages (after the `setup.sh` of [Quick Setup - 2](#quick-setup---2-limited)), installed in the MinGW sysroot:
+
+```bash
+sudo dnf install mingw64-libutils-pre       # Fedora: + mingw64-libutils-db-pre for Debug (requires mingw64-openssl)
+sudo apt install mingw64-libutils-pre       # Debian/Ubuntu: OpenSSL for MinGW must be built by hand
+```
+
+From the sources:
+
 ```bash
 export BUILD_DIR=build-windows
 cmake -S . -B $BUILD_DIR -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain/mingw-w64.cmake -DCMAKE_BUILD_TYPE=Optimized
 cmake --build $BUILD_DIR --parallel $(nproc)
 cmake --install $BUILD_DIR --prefix <windows_prefix>          # include/, lib/libutils.a, lib/cmake/utils/
-cmake --build $BUILD_DIR --target package                       # ZIP archive of the install tree
+cmake --build $BUILD_DIR --target package                       # mingw64-libutils-* RPM/DEB (MinGW sysroot)
 ```
 
 > [!NOTE]
@@ -169,9 +189,22 @@ cmake --build $BUILD_DIR --target package                       # ZIP archive of
 ## Usage
 
 ```cmake
-find_package(utils 4.0.0 REQUIRED)                      # installed CMake configuration
+find_package(utils 4.1.0 REQUIRED)                      # installed CMake configuration
 target_link_libraries(${TARGET} PRIVATE utils::utils)   # includes, OpenSSL & library
 ```
+
+The same CMake code works for Linux and Windows: for Windows, configure the project with a MinGW toolchain whose
+`CMAKE_FIND_ROOT_PATH` is the MinGW sysroot (`-DCMAKE_TOOLCHAIN_FILE=`: the `cmake/toolchain/mingw-w64.cmake` of libutils,
+or `/usr/share/mingw/toolchain-mingw64.cmake` / `mingw64-cmake` on Fedora), `find_package` then finds the `mingw64-libutils*`
+packages and `utils::utils` also links `ws2_32`. The library follows the `CMAKE_BUILD_TYPE` of the project:
+
+| Build type | Library | Package (Linux) | Package (Windows) |
+| ---------- | ------- | --------------- | ----------------- |
+| `Debug` | `libutils_debug.a` | `libutils-db` | `mingw64-libutils-db` |
+| `Asan` | `libutils_asan.a` | `libutils-as` | none (no AddressSanitizer with MinGW, use `Debug`) |
+| anything else | `libutils.a` | `libutils-op` (in `libutils`) | `mingw64-libutils-op` (in `mingw64-libutils`) |
+
+A missing package stops the configuration with the name of the package to install.
 
 ```cpp
 #define _Utils          // every section (or only the needed ones: _Network, _Cli, ...)
@@ -211,7 +244,7 @@ ctest --test-dir $BUILD_DIR --output-on-failure --timeout 30   # or ./unit_tests
 ### Workflows
 - `Dispatch (CI/CD)`: runs on every push (branch `main` or tag `v*`, not for `*.md` / `*.txt` only changes) and decides what to trigger from the ref / commit message
 - `Unit Tests - Libraries (CI)`: builds and runs the unit tests, always first
-- `Build - Packages (CI/CD)`: builds the packages (RPM/DEB), signs them and publishes them on the `gh-pages` repository
+- `Build - Packages (CI/CD)`: builds the packages (RPM/DEB: Linux in the `ci` image, Windows `mingw64-libutils*` in the `build-packages-windows` job on `mingw64-ci`), signs them and publishes them on the `gh-pages` repository
 - `Build - Libraries (CI)`: only builds the libraries and checks the compilation, without producing or publishing packages
 
 > [!NOTE]
