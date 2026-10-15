@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [pre-release] (empty)
 
-## v4.0.0 - 2026-10-07
+## v4.0.0 - 2026-10-15
 ### Added
 - **[MAJOR]** Windows support, cross compiled from Linux with MinGW-w64 (`cmake/toolchain/mingw-w64.cmake`, `-DCMAKE_TOOLCHAIN_FILE=...`): every portable section builds for Windows, `ws2_32` is linked by `utils::utils`, the package is a `ZIP` archive
 - `utils/platform/Platform.hpp` (included by `utils.hpp`): `UTILS_UNIX` / `UTILS_WINDOWS` / `UTILS_PLATFORM`
