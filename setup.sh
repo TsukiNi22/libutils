@@ -48,6 +48,10 @@ is_deb_based() {
     [[ "$OS_ID" =~ ^(debian|ubuntu)$ ]] || [[ "$OS_ID_LIKE" =~ (debian|ubuntu) ]]
 }
 
+is_arch_based() {
+    [[ "$OS_ID" =~ ^(arch|manjaro|endeavouros|cachyos)$ ]] || [[ "$OS_ID_LIKE" =~ arch ]]
+}
+
 # =========================
 # RPM
 # =========================
@@ -85,14 +89,44 @@ install_deb_repo() {
 }
 
 # =========================
+# Arch (pacman)
+# =========================
+PACMAN_CONF="${PACMAN_CONF:-/etc/pacman.conf}"
+
+install_arch_repo() {
+    echo "Detected Arch-based system (ID=$OS_ID). Setting up libutils repo..."
+
+    local key_file key_id
+    key_file="$(mktemp)"
+    curl -fsSL -o "$key_file" "$BASE_URL/RPM-GPG-KEY-tsukini"
+
+    # Trust the signing key in the pacman keyring (packages & database are signed)
+    key_id="$(gpg --with-colons --import-options show-only --import "$key_file" | awk -F: '/^fpr:/ {print $10; exit}')"
+    $SUDO pacman-key --add "$key_file"
+    $SUDO pacman-key --lsign-key "$key_id"
+    rm -f "$key_file"
+
+    if ! grep -q '^\[libutils\]' "$PACMAN_CONF"; then
+        printf '\n[libutils]\nSigLevel = Required\nServer = %s/arch/$arch\n' "$BASE_URL" \
+            | $SUDO tee -a "$PACMAN_CONF" > /dev/null
+    fi
+
+    $SUDO pacman -Sy
+
+    echo "libutils repo installed. You can now run: $SUDO pacman -S libutils"
+}
+
+# =========================
 # Dispatch
 # =========================
 if is_rpm_based; then
     install_rpm_repo
 elif is_deb_based; then
     install_deb_repo
+elif is_arch_based; then
+    install_arch_repo
 else
     echo "Error: unsupported distribution (ID=$OS_ID, ID_LIKE=$OS_ID_LIKE)." >&2
-    echo "Supported: Fedora/RHEL-based (rpm) and Debian/Ubuntu-based (deb)." >&2
+    echo "Supported: Fedora/RHEL-based (rpm), Debian/Ubuntu-based (deb) and Arch-based (pacman)." >&2
     exit 1
 fi

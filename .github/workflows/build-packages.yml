@@ -90,6 +90,32 @@ jobs:
             done
           done
 
+      - name: Check packages (Arch)
+        run: |
+          set -euo pipefail
+          VERSION_RE='[0-9.]+-[0-9]+' # <pkgver>-<pkgrel>
+          declare -A PACKAGE_PATTERNS=(
+            ["libutils"]="libutils(-pre)?-$VERSION_RE-any"
+            ["libutils-op"]="libutils-op(-pre)?-$VERSION_RE-x86_64"
+            ["libutils-db"]="libutils-db(-pre)?-$VERSION_RE-x86_64"
+            ["libutils-as"]="libutils-as(-pre)?-$VERSION_RE-x86_64"
+            ["libutils-dev"]="libutils-dev(-pre)?-$VERSION_RE-any"
+            ["libutils-dev-op"]="libutils-dev-op(-pre)?-$VERSION_RE-any"
+            ["libutils-dev-db"]="libutils-dev-db(-pre)?-$VERSION_RE-any"
+            ["libutils-dev-as"]="libutils-dev-as(-pre)?-$VERSION_RE-any"
+          )
+
+          for package in $(echo $PACKAGES | tr ',' ' ' | xargs); do
+            pattern="${PACKAGE_PATTERNS[$package]}\.pkg\.tar\.zst"
+            FILE=$(find ./build -maxdepth 1 -regextype posix-extended -regex ".*/$pattern" -print -quit)
+
+            if [ -z "$FILE" ]; then
+              echo "::error title=Missing package (ARCH)::Package '$package' (.pkg.tar.zst) not found (pattern: $pattern)"
+              exit 1
+            fi
+            echo "✓ Package '$package' (.pkg.tar.zst) ok -> $(basename "$FILE")"
+          done
+
       - name: Upload compiled packages
         uses: actions/upload-artifact@v6
         with:
@@ -97,6 +123,7 @@ jobs:
           path: |
             build/*.rpm
             build/*.deb
+            build/*.pkg.tar.zst
           retention-days: 1
 
   build-packages-windows:
@@ -304,6 +331,42 @@ jobs:
           gpg --batch --yes --pinentry-mode loopback --passphrase "${{ secrets.GPG_PASSPHRASE }}" \
             --default-key "${{ secrets.GPG_KEY_ID }}" \
             --clearsign -o dists/stable/InRelease dists/stable/Release
+
+      - name: Sync files into gh-pages (Arch)
+        run: |
+          set -euo pipefail
+          REPO_DIR="gh-pages/arch/x86_64"
+          mkdir -p "$REPO_DIR"
+
+          # Sign the packages (detached binary signatures, read by repo-add and pacman)
+          for f in build/*.pkg.tar.zst; do
+            gpg --batch --yes --pinentry-mode loopback --passphrase "${{ secrets.GPG_PASSPHRASE }}" \
+              --default-key "${{ secrets.GPG_KEY_ID }}" --detach-sign --no-armor -o "$f.sig" "$f"
+          done
+          mv build/*.pkg.tar.zst build/*.pkg.tar.zst.sig "$REPO_DIR/"
+
+          # Keep every release, only the 5 last versions of each pre-release package (<name>-pre-<pkgver>-<pkgrel>-<arch>)
+          find "$REPO_DIR" -maxdepth 1 -name "*-pre-[0-9]*.pkg.tar.zst" -printf '%f\n' \
+              | sed -E 's/^(.+-pre)-([0-9.]+-[0-9]+)-([a-z0-9_]+)\.pkg\.tar\.zst$/\1 \2 \3/' \
+              | sort -k1,1 -k2,2V \
+              | awk -v keep=5 '{n[$1]++; f[$1, n[$1]] = $1 "-" $2 "-" $3 ".pkg.tar.zst"} END {for (k in n) for (i = 1; i <= n[k] - keep; i++) print f[k, i]}' \
+              | while read -r file; do echo "Prune old pre-release: $file"; rm -f "${REPO_DIR:?}/${file:?}" "${REPO_DIR:?}/${file:?}.sig"; done
+
+      - name: Update metadata and signature (Arch)
+        working-directory: gh-pages/arch/x86_64
+        run: |
+          set -euo pipefail
+          # Database rebuilt from every package, oldest first (the last version of a package wins)
+          rm -f libutils.db* libutils.files*
+          find . -maxdepth 1 -name "*.pkg.tar.zst" -printf '%f\n' | sort -V | xargs repo-add -q --include-sigs libutils.db.tar.gz
+
+          # GitHub Pages: real files instead of the symbolic links of repo-add, signed databases
+          for db in libutils.db libutils.files; do
+            cp --remove-destination "$db.tar.gz" "$db"
+            gpg --batch --yes --pinentry-mode loopback --passphrase "${{ secrets.GPG_PASSPHRASE }}" \
+              --default-key "${{ secrets.GPG_KEY_ID }}" --detach-sign --no-armor -o "$db.sig" "$db"
+            cp "$db.sig" "$db.tar.gz.sig"
+          done
 
       - name: Commit and push
         working-directory: gh-pages

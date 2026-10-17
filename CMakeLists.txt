@@ -3,7 +3,7 @@ set(TARGET utils)
 if(NOT CMAKE_TOOLCHAIN_FILE AND NOT DEFINED CMAKE_CXX_COMPILER)
     set(CMAKE_CXX_COMPILER clang++)
 endif()
-project(${TARGET} VERSION 4.1.0 LANGUAGES CXX)
+project(${TARGET} VERSION 4.2.0 LANGUAGES CXX)
 
 # =========================
 # Options
@@ -268,12 +268,12 @@ include(CMakePackageConfigHelpers)
 # licenses
 install(
     FILES ${CMAKE_SOURCE_DIR}/LICENSE ${CMAKE_SOURCE_DIR}/THIRD_PARTY_NOTICES.md
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/licenses/${CPACK_PACKAGE_NAME}
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/licenses/lib${TARGET} # CPACK_PACKAGE_NAME is not set yet here
     COMPONENT headers
 )
 install(
     FILES ${CMAKE_SOURCE_DIR}/include/utils/algorithms/LICENSE.md
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/licenses/${CPACK_PACKAGE_NAME}
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/licenses/lib${TARGET} # CPACK_PACKAGE_NAME is not set yet here
     RENAME LICENSE-algorithms.md
     COMPONENT headers
 )
@@ -384,11 +384,21 @@ set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
 
 set(CPACK_GENERATOR "RPM;DEB")
+set(CPACK_PROJECT_CONFIG_FILE "${CMAKE_SOURCE_DIR}/cmake/package/CPackProjectConfig.cmake") # install prefix per generator
+
+# Arch Linux (pacman): CPack External generator, one .pkg.tar.zst per component written by cmake/package/CPackArch.cmake
+find_program(BSDTAR_PROGRAM bsdtar)
+if(NOT WIN32 AND BSDTAR_PROGRAM)
+    list(APPEND CPACK_GENERATOR "External")
+    set(CPACK_EXTERNAL_ENABLE_STAGING ON)
+    set(CPACK_EXTERNAL_PACKAGE_SCRIPT "${CMAKE_SOURCE_DIR}/cmake/package/CPackArch.cmake")
+elseif(NOT WIN32)
+    message(STATUS "Arch packages skipped: bsdtar (libarchive) not found")
+endif()
 
 # Windows (cross compiled): mingw64-libutils*, installed in the MinGW sysroot (found by the MinGW toolchain)
 if(WIN32)
     set(PACKAGE_BASE "mingw64-libutils")
-    set(CPACK_PROJECT_CONFIG_FILE "${CMAKE_SOURCE_DIR}/cmake/package/CPackProjectConfig.cmake") # prefix per generator
     set(CPACK_UTILS_RPM_PREFIX "/usr/x86_64-w64-mingw32/sys-root/mingw") # Fedora (mingw64-filesystem)
     set(CPACK_UTILS_DEB_PREFIX "/usr/x86_64-w64-mingw32") # Debian / Ubuntu (mingw-w64)
     set(CPACK_RPM_PACKAGE_ARCHITECTURE "noarch") # Windows binaries: no host architecture
@@ -506,12 +516,15 @@ if(UTILS_STABLE_RELEASE)
     # A stable version should never have to be rebuild and should always be removed or marked as depreacted
     set(CPACK_RPM_PACKAGE_RELEASE "1")
     set(CPACK_DEBIAN_PACKAGE_RELEASE "1")
+    set(CPACK_ARCH_PACKAGE_RELEASE "1")
 elseif(DEFINED PACKAGE_RELEASE)
     set(CPACK_RPM_PACKAGE_RELEASE "${PACKAGE_RELEASE}")
     set(CPACK_DEBIAN_PACKAGE_RELEASE "${PACKAGE_RELEASE}")
+    set(CPACK_ARCH_PACKAGE_RELEASE "${PACKAGE_RELEASE}")
 else() # 0 is impossible for github.run_number
     set(CPACK_RPM_PACKAGE_RELEASE "0")
     set(CPACK_DEBIAN_PACKAGE_RELEASE "0")
+    set(CPACK_ARCH_PACKAGE_RELEASE "0")
 endif()
 
 # Dependencies
@@ -550,6 +563,46 @@ else()
     if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT WIN32)
         set(CPACK_RPM_PACKAGE_SUGGESTS "gdb")
         set(CPACK_DEBIAN_PACKAGE_SUGGESTS "gdb")
+    endif()
+endif()
+
+# Arch (same names, channels and dependencies as the RPM / DEB, read by cmake/package/CPackArch.cmake)
+set(CPACK_ARCH_PACKAGE_NAME ${CPACK_PACKAGE_NAME})
+set(CPACK_ARCH_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
+set(CPACK_ARCH_PACKAGE_URL "https://github.com/TsukiNi22/libutils")
+set(CPACK_ARCH_PACKAGE_PACKAGER "${CPACK_PACKAGE_VENDOR} <${CPACK_PACKAGE_CONTACT}>")
+set(CPACK_ARCH_PACKAGE_LICENSE "MIT" "CC-BY-NC-SA-4.0")
+set(CPACK_ARCH_PACKAGE_ARCHITECTURE "any") # meta & headers
+set(CPACK_ARCH_LIB_PACKAGE_ARCHITECTURE "${CMAKE_SYSTEM_PROCESSOR}")
+set(CPACK_ARCH_PACKAGE_CONFLICTS "${MIRROR_PACKAGE_NAME}")
+if(UTILS_STABLE_RELEASE)
+    set(CPACK_ARCH_PACKAGE_REPLACES "${MIRROR_PACKAGE_NAME}<=${PROJECT_VERSION}")
+endif()
+foreach(sub db as op)
+    string(TOUPPER "${sub}" SUB)
+    set(CPACK_ARCH_HEADERS-${SUB}_PACKAGE_NAME "${PACKAGE_BASE}-dev-${sub}${CHANNEL}")
+    set(CPACK_ARCH_HEADERS-${SUB}_PACKAGE_CONFLICTS "${PACKAGE_BASE}-dev-${sub}${MIRROR_CHANNEL}")
+    if(UTILS_STABLE_RELEASE)
+        set(CPACK_ARCH_HEADERS-${SUB}_PACKAGE_REPLACES "${PACKAGE_BASE}-dev-${sub}${MIRROR_CHANNEL}<=${PROJECT_VERSION}")
+    endif()
+endforeach()
+if(UTILS_STABLE_RELEASE)
+    set(ARCH_VERSION ">=${PROJECT_VERSION}")
+else()
+    set(ARCH_VERSION "=${PROJECT_VERSION}-${CPACK_ARCH_PACKAGE_RELEASE}")
+endif()
+if(UTILS_PACKAGE)
+    set(CPACK_ARCH_PACKAGE_DEPENDS "${PACKAGE_BASE}-op${CHANNEL}${ARCH_VERSION}")
+elseif(UTILS_DEV_PACKAGE)
+    set(CPACK_ARCH_PACKAGE_DEPENDS "openssl") # public headers include <openssl/...> (headers & libraries in one package on Arch)
+else()
+    set(CPACK_ARCH_PACKAGE_DEPENDS
+        "${PACKAGE_BASE}-dev${CHANNEL}${ARCH_VERSION}"
+        "${PACKAGE_BASE}-dev-${PREFIX}${CHANNEL}${ARCH_VERSION}"
+        "openssl"
+    )
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(CPACK_ARCH_PACKAGE_OPTDEPENDS "gdb: debugging")
     endif()
 endif()
 
