@@ -20,6 +20,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [pre-release] (empty)
 
+## v4.2.0 - 2026-10-17
+### Changed
+- `setup.sh` also handles the Arch based distributions: the signing key is added to the pacman keyring and the `[libutils]` repository to `/etc/pacman.conf` (`SigLevel = Required`)
+- The tests use the GoogleTest built for the target in the sysroot when cross compiling (ex: MinGW), else download it
+
+### Fixed
+- The licenses were installed in `/usr/share/licenses/` instead of `/usr/share/licenses/libutils/` (`CPACK_PACKAGE_NAME` not set yet at the `install()`)
+
+### Added
+- Arch Linux packages (`.pkg.tar.zst`, pacman) built by the `package` / `package_release` targets with the RPM/DEB (CPack External generator, `cmake/package/CPackArch.cmake`, needs `bsdtar`): same names, components, channels (`-pre`) and dependencies, the libraries in `/usr/lib`
+- Signed pacman repository `arch/x86_64` on gh-pages (packages and database signed, the 5 last versions of each `-pre` package kept)
+- Windows unit tests in the CI: job `build-unit-tests-windows` (`ghcr.io/tsukini22/mingw64-unit-tests`, run with `wine`)
+
 ## v4.1.0 - 2026-10-15
 ### Changed
 - The Windows package is no longer a `ZIP` archive: `package` builds RPM/DEB packages installed in the MinGW sysroot (`/usr/x86_64-w64-mingw32/sys-root/mingw` on Fedora, `/usr/x86_64-w64-mingw32` on Debian), found by `find_package(utils)` with the MinGW toolchain
@@ -331,7 +344,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial version of the utils library with multiple tools (see [README-1.0.0](https://github.com/TsukiNi22/libutils/blob/v1.0.0/README.md) for more details)
 
-[pre-release]: https://github.com/TsukiNi22/libutils/compare/v4.1.0...HEAD
+[pre-release]: https://github.com/TsukiNi22/libutils/compare/v4.2.0...HEAD
+[v4.2.0]: https://github.com/TsukiNi22/libutils/compare/v4.1.0...v4.2.0
 [v4.1.0]: https://github.com/TsukiNi22/libutils/compare/v4.0.0...v4.1.0
 [v4.0.0]: https://github.com/TsukiNi22/libutils/compare/v3.0.0...v4.0.0
 [v3.0.0]: https://github.com/TsukiNi22/libutils/compare/v2.13.6-pre...v3.0.0
