@@ -1,11 +1,11 @@
 # Utils
 
 > [!TIP]
-> Documentation [TsukiNi22/libutils/wiki](https://github.com/TsukiNi22/libutils/wiki) (v4.1.0).
+> Documentation [TsukiNi22/libutils/wiki](https://github.com/TsukiNi22/libutils/wiki) (v4.2.0).
 > Technical documentation and project graph: [tsukini22.github.io/libutils/docs](https://tsukini22.github.io/libutils/docs/).
 
 C++20 utility library (`utils::`): exceptions, verbose, CLI, arguments, network, IPC, encryption, custom types, algorithms.
-Built as a static library and distributed as RPM/DEB packages (optimized, debug and asan variants, plus the `mingw64-libutils*` packages for Windows), or installed from the sources with CMake.
+Built as a static library and distributed as RPM/DEB/Arch (pacman) packages (optimized, debug and asan variants, plus the `mingw64-libutils*` packages for Windows), or installed from the sources with CMake.
 Runs on Unix (Linux, BSD, macOS) and on Windows (cross compiled with MinGW-w64), see [Windows](#windows-cross-compilation).
 
 ### Table of Contents
@@ -32,20 +32,23 @@ Runs on Unix (Linux, BSD, macOS) and on Windows (cross compiled with MinGW-w64),
 | [s.o.s](https://github.com/TsukiNi22/s.o.s) | CC BY-NC-SA 4.0 | ![CD - Algorithm](https://github.com/TsukiNi22/s.o.s/actions/workflows/sync.yml/badge.svg) | ![](https://img.shields.io/github/last-commit/TsukiNi22/s.o.s) |
 | [OpenSSL](https://www.openssl.org) | Apache-2.0 | linked (system package) | — |
 
-| Name | Version | Fedora (`dnf`) | Debian/Ubuntu (`apt`) |
-| ---- | ------- | -------------- | --------------------- |
-| `clang++` | C++20 | `clang` | `clang` |
-| `cmake` | >= 3.20 | `cmake` | `cmake` |
-| OpenSSL | >= 3.0 | `openssl-devel` | `libssl-dev` |
-| GoogleTest (tests only) | — | `gtest-devel` | `libgtest-dev` |
-| MinGW-w64 (Windows only) | GCC >= 13 | `mingw64-gcc-c++ mingw64-openssl` | `g++-mingw-w64-x86-64` + OpenSSL built for MinGW (no package) |
-| Wine (Windows tests only) | — | `wine` | `wine64` |
+| Name | Version | Fedora (`dnf`) | Debian/Ubuntu (`apt`) | Arch (`pacman`) |
+| ---- | ------- | -------------- | --------------------- | --------------- |
+| `clang++` | C++20 | `clang` | `clang` | `clang` |
+| `cmake` | >= 3.20 | `cmake` | `cmake` | `cmake` |
+| OpenSSL | >= 3.0 | `openssl-devel` | `libssl-dev` | `openssl` |
+| GoogleTest (tests only) | — | `gtest-devel` | `libgtest-dev` | `gtest` |
+| `bsdtar` (Arch packages only) | — | `bsdtar` | `libarchive-tools` | `libarchive` |
+| MinGW-w64 (Windows only) | GCC >= 13 | `mingw64-gcc-c++ mingw64-openssl` | `g++-mingw-w64-x86-64` + OpenSSL built for MinGW (no package) | — |
+| Wine (Windows tests only) | — | `wine` | `wine64` | `wine` |
 
 ## Packages
 
 > [!NOTE]
 > Most packages have a pre-release/unstable version named `<package_name>-pre`.
 > The `-pre` packages are marked as obsolete by any release/stable package (without `-pre`) of the same version or higher.
+>
+> The same packages exist as RPM (Fedora), DEB (Debian/Ubuntu) and Arch Linux (pacman, `.pkg.tar.zst`): same names, content and dependencies (on Arch the libraries are in `/usr/lib`).
 
 | File Name | Content |
 | --------- | ------- |
@@ -94,15 +97,16 @@ sudo cmake --build $BUILD_DIR --target install --parallel $(nproc)
 > If the error still persists, it might be due to an error in the repository.
 
 > [!WARNING]
-> Restriction: `fedora-based (rpm)`, `debian-based (deb)`
+> Restriction: `fedora-based (rpm)`, `debian-based (deb)`, `arch-based (pacman)`
 
 > [!NOTE]
 > The usage of `sudo` in the script can be removed with the `--no-sudo` argument.
 
 Run the setup script directly, without cloning the repository. It registers the libutils package repository so the system package manager can install the packages:
-1. Detect the distribution from `/etc/os-release` (`rpm` or `deb` based).
+1. Detect the distribution from `/etc/os-release` (`rpm`, `deb` or `arch` based).
 2. `rpm`: add `/etc/yum.repos.d/libutils.repo` and import the GPG key.
 3. `deb`: add the GPG key in `/etc/apt/keyrings/libutils.gpg`, the source in `/etc/apt/sources.list.d/libutils.list`, then `apt-get update`.
+4. `arch`: add the GPG key to the pacman keyring (`pacman-key --add` + `--lsign-key`), the `[libutils]` repository in `/etc/pacman.conf` (`SigLevel = Required`), then `pacman -Sy`.
 
 ```bash
 wget -qO- https://raw.githubusercontent.com/TsukiNi22/libutils/main/setup.sh | bash -s
@@ -114,7 +118,7 @@ or with `curl`:
 curl -fsSL https://raw.githubusercontent.com/TsukiNi22/libutils/main/setup.sh | bash -s
 ```
 
-Then install the packages: `sudo dnf install libutils` or `sudo apt install libutils`.
+Then install the packages: `sudo dnf install libutils`, `sudo apt install libutils` or `sudo pacman -S libutils`.
 
 | Argument | Effect |
 | -------- | ------ |
@@ -189,7 +193,7 @@ cmake --build $BUILD_DIR --target package                       # mingw64-libuti
 ## Usage
 
 ```cmake
-find_package(utils 4.1.0 REQUIRED)                      # installed CMake configuration
+find_package(utils 4.2.0 REQUIRED)                      # installed CMake configuration
 target_link_libraries(${TARGET} PRIVATE utils::utils)   # includes, OpenSSL & library
 ```
 
@@ -244,7 +248,7 @@ ctest --test-dir $BUILD_DIR --output-on-failure --timeout 30   # or ./unit_tests
 ### Workflows
 - `Dispatch (CI/CD)`: runs on every push (branch `main` or tag `v*`, not for `*.md` / `*.txt` only changes) and decides what to trigger from the ref / commit message
 - `Unit Tests - Libraries (CI)`: builds and runs the unit tests, always first (Linux in the `unit-tests` image, Windows in the `mingw64-unit-tests` image under `wine`)
-- `Build - Packages (CI/CD)`: builds the packages (RPM/DEB: Linux in the `ci` image, Windows `mingw64-libutils*` in the `build-packages-windows` job on `mingw64-ci`), signs them and publishes them on the `gh-pages` repository
+- `Build - Packages (CI/CD)`: builds the packages (RPM/DEB/Arch: Linux in the `ci` image, Windows `mingw64-libutils*` in the `build-packages-windows` job on `mingw64-ci`), signs them and publishes them on the `gh-pages` repositories (`fedora/`, `debian/`, `arch/`)
 - `Build - Libraries (CI)`: only builds the libraries and checks the compilation, without producing or publishing packages
 
 > [!NOTE]
