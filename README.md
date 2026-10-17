@@ -122,7 +122,7 @@ Then install the packages: `sudo dnf install libutils` or `sudo apt install libu
 | `-h`, `--help` | Display the usage |
 
 ## Windows (cross compilation)
-> Build `libutils.a` for Windows (x86_64) from Linux with the MinGW-w64 toolchain
+> Build `libutils.a` for Windows (x86_64) from Linux with the MinGW-w64 toolchain (complete guide: [wiki Windows (usage)](https://github.com/TsukiNi22/libutils/wiki/Windows-(usage)))
 
 From the packages (after the `setup.sh` of [Quick Setup - 2](#quick-setup---2-limited)), installed in the MinGW sysroot:
 
@@ -243,7 +243,7 @@ ctest --test-dir $BUILD_DIR --output-on-failure --timeout 30   # or ./unit_tests
 ## Workflows/Release
 ### Workflows
 - `Dispatch (CI/CD)`: runs on every push (branch `main` or tag `v*`, not for `*.md` / `*.txt` only changes) and decides what to trigger from the ref / commit message
-- `Unit Tests - Libraries (CI)`: builds and runs the unit tests, always first
+- `Unit Tests - Libraries (CI)`: builds and runs the unit tests, always first (Linux in the `unit-tests` image, Windows in the `mingw64-unit-tests` image under `wine`)
 - `Build - Packages (CI/CD)`: builds the packages (RPM/DEB: Linux in the `ci` image, Windows `mingw64-libutils*` in the `build-packages-windows` job on `mingw64-ci`), signs them and publishes them on the `gh-pages` repository
 - `Build - Libraries (CI)`: only builds the libraries and checks the compilation, without producing or publishing packages
 
