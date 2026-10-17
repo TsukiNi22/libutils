@@ -303,7 +303,7 @@ html, body { overscroll-behavior: none; }
 <body>
 <header class="topbar">
   <button class="icon-btn menu-btn" type="button" id="menuBtn" aria-label="Open the navigation" data-i18n-aria-label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
-  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v4.1.0</span></a>
+  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v4.2.0</span></a>
   <nav class="tabs" aria-label="Pages">
     <a href="index.html" class="current" aria-current="page" data-i18n>Technical</a>
     <a href="graph.html" data-i18n>Graph</a>
@@ -390,7 +390,7 @@ html, body { overscroll-behavior: none; }
       <tr><td><span data-lang="en">Library</span><span data-lang="fr">Bibliothèque</span></td><td><span data-lang="en">static: <code>libutils.a</code> (optimized), <code>libutils_debug.a</code>, <code>libutils_asan.a</code></span><span data-lang="fr">statique : <code>libutils.a</code> (optimisée), <code>libutils_debug.a</code>, <code>libutils_asan.a</code></span></td></tr>
       <tr><td><span data-lang="en">Platforms</span><span data-lang="fr">Plateformes</span></td><td><span data-lang="en">Unix (Linux, BSD, macOS) and Windows x86_64 (cross compiled with MinGW-w64), same API (<a href="#platforms">section 7</a>)</span><span data-lang="fr">Unix (Linux, BSD, macOS) et Windows x86_64 (compilation croisée MinGW-w64), même API (<a href="#platforms">section 7</a>)</span></td></tr>
       <tr><td><span data-lang="en">Dependency</span><span data-lang="fr">Dépendance</span></td><td><span data-lang="en">OpenSSL &gt;= 3.0 (encryption, Base64)</span><span data-lang="fr">OpenSSL &gt;= 3.0 (chiffrement, Base64)</span></td></tr>
-      <tr><td><span data-lang="en">Version</span><span data-lang="fr">Version</span></td><td><code>utils::version</code> (<code>"v4.1.0"</code>), <code>__LIBUTILS_VERSION__</code></td></tr>
+      <tr><td><span data-lang="en">Version</span><span data-lang="fr">Version</span></td><td><code>utils::version</code> (<code>"v4.2.0"</code>), <code>__LIBUTILS_VERSION__</code></td></tr>
     </tbody>
   </table></div>
 </section>
@@ -402,6 +402,7 @@ html, body { overscroll-behavior: none; }
   <div class="ctabs" data-tabs="install">
     <button type="button" data-tab="rpm">Fedora / RPM</button>
     <button type="button" data-tab="deb">Debian / Ubuntu</button>
+    <button type="button" data-tab="arch">Arch Linux</button>
     <button type="button" data-tab="src"><span data-lang="en">Sources</span><span data-lang="fr">Sources</span></button>
     <button type="button" data-tab="win">Windows (MinGW-w64)</button>
   </div>
@@ -412,6 +413,10 @@ sudo dnf install libutils</code></pre>
   <div class="ctab-panel" data-tabs="install" data-tab="deb">
 <pre data-title="Repository + package"><code>curl -fsSL https://raw.githubusercontent.com/TsukiNi22/libutils/main/setup.sh | bash -s
 sudo apt install libutils</code></pre>
+  </div>
+  <div class="ctab-panel" data-tabs="install" data-tab="arch">
+<pre data-title="Repository + package"><code>curl -fsSL https://raw.githubusercontent.com/TsukiNi22/libutils/main/setup.sh | bash -s
+sudo pacman -S libutils</code></pre>
   </div>
   <div class="ctab-panel" data-tabs="install" data-tab="src">
 <pre data-title="Build & install (/usr/local)"><code>git clone https://github.com/TsukiNi22/libutils.git && cd libutils
@@ -437,12 +442,13 @@ cmake --build $BUILD_DIR --target package               # mingw64-libutils-* RPM
       <tr><td><code>libutils-op</code> / <code>-db</code> / <code>-as</code></td><td><span data-lang="en">optimized / debug / asan library (+ <code>libutils-dev-op</code>, <code>-db</code>, <code>-as</code>)</span><span data-lang="fr">bibliothèque optimisée / debug / asan (+ <code>libutils-dev-op</code>, <code>-db</code>, <code>-as</code>)</span></td></tr>
       <tr><td><code>mingw64-libutils</code></td><td><span data-lang="en">Windows: <code>mingw64-libutils-dev</code> + <code>mingw64-libutils-op</code>, installed in the MinGW sysroot</span><span data-lang="fr">Windows : <code>mingw64-libutils-dev</code> + <code>mingw64-libutils-op</code>, installés dans le sysroot MinGW</span></td></tr>
       <tr><td><code>mingw64-libutils-op</code> / <code>-db</code></td><td><span data-lang="en">Windows optimized / debug library (+ <code>mingw64-libutils-dev-op</code>, <code>-db</code>), no asan with MinGW</span><span data-lang="fr">bibliothèque Windows optimisée / debug (+ <code>mingw64-libutils-dev-op</code>, <code>-db</code>), pas d'asan avec MinGW</span></td></tr>
+      <tr><td><span data-lang="en">formats</span><span data-lang="fr">formats</span></td><td><span data-lang="en">the same packages as RPM (Fedora), DEB (Debian / Ubuntu) and Arch Linux (pacman, libraries in <code>/usr/lib</code>), signed, in the <code>fedora/</code>, <code>debian/</code> and <code>arch/</code> repositories of gh-pages</span><span data-lang="fr">les mêmes paquets en RPM (Fedora), DEB (Debian / Ubuntu) et Arch Linux (pacman, bibliothèques dans <code>/usr/lib</code>), signés, dans les dépôts <code>fedora/</code>, <code>debian/</code> et <code>arch/</code> de gh-pages</span></td></tr>
       <tr><td><code>*-pre</code></td><td><span data-lang="en">pre-release channel, replaced by any release of the same version or higher</span><span data-lang="fr">canal pre-release, remplacé par toute release de version égale ou supérieure</span></td></tr>
     </tbody>
   </table></div>
 
   <h3><span data-lang="en">2.2 Integrate</span><span data-lang="fr">2.2 Intégrer</span></h3>
-<pre data-title="CMakeLists.txt"><code>find_package(utils 4.1.0 REQUIRED)
+<pre data-title="CMakeLists.txt"><code>find_package(utils 4.2.0 REQUIRED)
 target_link_libraries(${TARGET} PRIVATE utils::utils)   # includes, static lib & OpenSSL</code></pre>
 <pre data-title="main.cpp"><code>#define _Network
 #define _Cli
@@ -625,6 +631,19 @@ target_link_libraries(${TARGET} PRIVATE utils::utils)   # includes, static lib &
   <h3><span data-lang="en">7.2 Differences</span><span data-lang="fr">7.2 Différences</span></h3>
   <div class="callout warn"><p><span data-lang="en">No <code>fork</code> on Windows: <code>Process::spawn()</code> and a <code>dup</code> on a fd other than <code>0</code>, <code>1</code>, <code>2</code> raise a <code>FatalException</code> (<code>UndefinedCall</code>). <code>spawn(path, args)</code> uses <code>CreateProcess</code>.</span><span data-lang="fr">Pas de <code>fork</code> sous Windows : <code>Process::spawn()</code> et un <code>dup</code> sur un autre fd que <code>0</code>, <code>1</code>, <code>2</code> lèvent une <code>FatalException</code> (<code>UndefinedCall</code>). <code>spawn(path, args)</code> utilise <code>CreateProcess</code>.</span></p></div>
   <div class="callout"><p><span data-lang="en">Other differences: <code>Poll</code> / <code>Client</code> / <code>Server</code> only handle sockets (at most 10 ms of latency), a <code>Process</code> has no signal, ctrl+z is a char for the <code>Cli</code>, a <code>SharedMemory</code> disappears with its last handle. Include <code>&lt;windows.h&gt;</code> before <code>&lt;utils/utils.hpp&gt;</code> (it declares a member named <code>_unused</code>, a libutils macro), or define <code>WIN32_LEAN_AND_MEAN</code>.</span><span data-lang="fr">Autres différences : <code>Poll</code> / <code>Client</code> / <code>Server</code> ne gèrent que des sockets (10 ms de latence au plus), un <code>Process</code> n'a pas de signal, ctrl+z est un caractère pour le <code>Cli</code>, une <code>SharedMemory</code> disparaît avec son dernier handle. Inclure <code>&lt;windows.h&gt;</code> avant <code>&lt;utils/utils.hpp&gt;</code> (il déclare un membre nommé <code>_unused</code>, une macro de libutils), ou définir <code>WIN32_LEAN_AND_MEAN</code>.</span></p></div>
+  <h3><span data-lang="en">7.3 Cross compilation</span><span data-lang="fr">7.3 Compilation croisée</span></h3>
+  <p><span data-lang="en">Windows binaries are built from Linux with MinGW-w64 and <code>cmake/toolchain/mingw-w64.cmake</code>, usable by any project. A project keeps the same CMake code for both platforms (<code>find_package(utils 4.2.0)</code> + <code>utils::utils</code>): only the configuration command adds the toolchain.</span><span data-lang="fr">Les binaires Windows sont compilés depuis Linux avec MinGW-w64 et <code>cmake/toolchain/mingw-w64.cmake</code>, utilisable par tout projet. Un projet garde le même code CMake pour les deux plateformes (<code>find_package(utils 4.2.0)</code> + <code>utils::utils</code>) : seule la commande de configuration ajoute le toolchain.</span></p>
+  <div class="table-wrap"><table>
+    <thead><tr><th><span data-lang="en">Toolchain setting</span><span data-lang="fr">Réglage du toolchain</span></th><th><span data-lang="en">Value</span><span data-lang="fr">Valeur</span></th></tr></thead>
+    <tbody>
+      <tr><td><span data-lang="en">compilers</span><span data-lang="fr">compilateurs</span></td><td><code>x86_64-w64-mingw32-gcc</code> / <code>-g++</code> / <code>-windres</code> (<code>-DMINGW_PREFIX=&lt;triplet&gt;</code>)</td></tr>
+      <tr><td><code>CMAKE_FIND_ROOT_PATH</code></td><td><span data-lang="en">the MinGW sysroot: <code>/usr/x86_64-w64-mingw32/sys-root/mingw</code> (Fedora), <code>/usr/x86_64-w64-mingw32</code> (Debian); libraries, headers and packages searched only there</span><span data-lang="fr">le sysroot MinGW : <code>/usr/x86_64-w64-mingw32/sys-root/mingw</code> (Fedora), <code>/usr/x86_64-w64-mingw32</code> (Debian) ; bibliothèques, en-têtes et paquets cherchés seulement là</span></td></tr>
+      <tr><td><code>CMAKE_CROSSCOMPILING_EMULATOR</code></td><td><span data-lang="en"><code>wine</code> when installed (<code>WINEPATH</code> = the sysroot <code>bin/</code>): <code>ctest</code> runs <code>unit_tests.exe</code></span><span data-lang="fr"><code>wine</code> s'il est installé (<code>WINEPATH</code> = le <code>bin/</code> du sysroot) : <code>ctest</code> lance <code>unit_tests.exe</code></span></td></tr>
+    </tbody>
+  </table></div>
+<pre data-title="Same project, two platforms"><code>cmake -S . -B build                                                              # Linux
+cmake -S . -B build-windows -DCMAKE_TOOLCHAIN_FILE=&lt;libutils&gt;/cmake/toolchain/mingw-w64.cmake  # Windows</code></pre>
+  <div class="callout"><p><span data-lang="en">Build types: <code>Debug</code> uses <code>mingw64-libutils-db</code>, anything else <code>mingw64-libutils-op</code>; no <code>Asan</code> with MinGW. For a standalone <code>.exe</code>, link with <code>-static-libgcc -static-libstdc++ -static</code>. Complete guide: <a href="https://github.com/TsukiNi22/libutils/wiki/Windows-(usage)">wiki Windows (usage)</a>.</span><span data-lang="fr">Types de build : <code>Debug</code> utilise <code>mingw64-libutils-db</code>, le reste <code>mingw64-libutils-op</code> ; pas d'<code>Asan</code> avec MinGW. Pour un <code>.exe</code> autonome, lier avec <code>-static-libgcc -static-libstdc++ -static</code>. Guide complet : <a href="https://github.com/TsukiNi22/libutils/wiki/Windows-(usage)">wiki Windows (usage)</a>.</span></p></div>
 </section>
 
 <!-- 8 -->
@@ -635,7 +654,7 @@ target_link_libraries(${TARGET} PRIVATE utils::utils)   # includes, static lib &
     <tbody>
       <tr><td><code>cmake -S . -B build -DCMAKE_BUILD_TYPE=Optimized|Debug|Asan</code></td><td><code>libutils.a</code> / <code>libutils_debug.a</code> / <code>libutils_asan.a</code></td></tr>
       <tr><td><code>cmake --build build --target release</code></td><td><span data-lang="en">the 3 libraries</span><span data-lang="fr">les 3 bibliothèques</span></td></tr>
-      <tr><td><code>cmake --build build --target package_release</code></td><td><span data-lang="en">every RPM / DEB package</span><span data-lang="fr">tous les paquets RPM / DEB</span></td></tr>
+      <tr><td><code>cmake --build build --target package_release</code></td><td><span data-lang="en">every RPM / DEB / Arch (<code>.pkg.tar.zst</code>, with <code>bsdtar</code>) package</span><span data-lang="fr">tous les paquets RPM / DEB / Arch (<code>.pkg.tar.zst</code>, avec <code>bsdtar</code>)</span></td></tr>
       <tr><td><code>-DBUILD_TESTS=ON</code> + <code>ctest --test-dir build</code></td><td><span data-lang="en">GoogleTest unit tests (<code>unit_tests</code> at the root)</span><span data-lang="fr">tests unitaires GoogleTest (<code>unit_tests</code> à la racine)</span></td></tr>
       <tr><td><code>-DCMAKE_TOOLCHAIN_FILE=cmake/toolchain/mingw-w64.cmake</code></td><td><span data-lang="en">Windows build (MinGW-w64), tests run with <code>wine</code> by <code>ctest</code>, <code>mingw64-libutils-*</code> RPM/DEB packages (MinGW sysroot)</span><span data-lang="fr">build Windows (MinGW-w64), tests lancés avec <code>wine</code> par <code>ctest</code>, paquets RPM/DEB <code>mingw64-libutils-*</code> (sysroot MinGW)</span></td></tr>
     </tbody>
@@ -666,6 +685,7 @@ target_link_libraries(${TARGET} PRIVATE utils::utils)   # includes, static lib &
     </svg>
     <figcaption><span data-lang="en">Figure 5: the CI on every push of <code>main</code> or of a <code>v*</code> tag (<code>[ignore]</code> skips it).</span><span data-lang="fr">Figure 5 : la CI à chaque push sur <code>main</code> ou d'un tag <code>v*</code> (<code>[ignore]</code> la saute).</span></figcaption>
   </figure>
+  <div class="callout"><p><span data-lang="en">Unit Tests and Build Packages each run a Linux job and a Windows job: the Windows unit tests in <code>ghcr.io/tsukini22/mingw64-unit-tests</code> (GoogleTest for MinGW, run with <code>wine</code>), the <code>mingw64-libutils*</code> packages in <code>ghcr.io/tsukini22/mingw64-ci</code>; the packages are published only when both jobs succeed.</span><span data-lang="fr">Unit Tests et Build Packages lancent chacun un job Linux et un job Windows : les tests unitaires Windows dans <code>ghcr.io/tsukini22/mingw64-unit-tests</code> (GoogleTest pour MinGW, lancés avec <code>wine</code>), les paquets <code>mingw64-libutils*</code> dans <code>ghcr.io/tsukini22/mingw64-ci</code> ; les paquets ne sont publiés que si les deux jobs réussissent.</span></p></div>
   <div class="table-wrap"><table>
     <thead><tr><th><span data-lang="en">Trigger</span><span data-lang="fr">Déclencheur</span></th><th><span data-lang="en">Result</span><span data-lang="fr">Résultat</span></th></tr></thead>
     <tbody>
@@ -695,7 +715,7 @@ target_link_libraries(${TARGET} PRIVATE utils::utils)   # includes, static lib &
 </nav>
 </main>
 </div>
-<footer class="site"><span data-lang="en"><span class="repo-name">libutils</span> documentation · generated from the <a class="repo-link" href="https://github.com/TsukiNi22/libutils">repository</a> (<span class="repo-version">v4.1.0</span>, <span class="repo-license">MIT</span>)</span><span data-lang="fr">Documentation de <span class="repo-name">libutils</span> · générée depuis le <a class="repo-link" href="https://github.com/TsukiNi22/libutils">dépôt</a> (<span class="repo-version">v4.1.0</span>, <span class="repo-license">MIT</span>)</span></footer>
+<footer class="site"><span data-lang="en"><span class="repo-name">libutils</span> documentation · generated from the <a class="repo-link" href="https://github.com/TsukiNi22/libutils">repository</a> (<span class="repo-version">v4.2.0</span>, <span class="repo-license">MIT</span>)</span><span data-lang="fr">Documentation de <span class="repo-name">libutils</span> · générée depuis le <a class="repo-link" href="https://github.com/TsukiNi22/libutils">dépôt</a> (<span class="repo-version">v4.2.0</span>, <span class="repo-license">MIT</span>)</span></footer>
 <script>
 // French texts of the page (English text -> French text), extend it with the page content
 window.DOC_FR = {
