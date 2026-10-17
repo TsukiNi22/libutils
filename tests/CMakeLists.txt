@@ -9,6 +9,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}) # TARGET destination
 # Requirement
 # =========================
 if(CMAKE_CROSSCOMPILING)
+    find_package(GTest CONFIG QUIET) # built for the target in the sysroot (ex: mingw64-unit-tests image)
+endif()
+if(CMAKE_CROSSCOMPILING AND NOT GTest_FOUND)
     # No GTest package for the target (ex: MinGW): built from the sources
     include(FetchContent)
     FetchContent_Declare(googletest
@@ -18,7 +21,7 @@ if(CMAKE_CROSSCOMPILING)
     set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
     set(BUILD_GMOCK OFF CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(googletest)
-else()
+elseif(NOT CMAKE_CROSSCOMPILING)
     find_package(GTest REQUIRED)
 endif()
 
