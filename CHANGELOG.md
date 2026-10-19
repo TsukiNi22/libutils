@@ -20,6 +20,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [pre-release] (empty)
 
+## [v4.3.1-pre] - 2026-10-19 (unofficial)
+### Fixed
+- `make_shared_gpu` / `make_unique_gpu` didn't build with clang (explicit constructor of the smart pointers in a copy-initialization)
+
+### Added
+- Unit tests of the `HybridMemory`: RAM, a custom `IGpu` handler (fake backed by the host) and the real backends (`Cuda`, `OpenCL`, `Vulkan`, skipped when not available)
+
 ## [v4.3.0-pre] - 2026-10-19
 ### Added
 - `HybridMemory<T>` (section `_System`): typed memory kept in the GPU memory when available, else in the RAM, with the mode chosen at the construction (`MemoryMode`: `Auto`, `Gpu`, `Ram`, `Cuda`, `OpenCL`, `Vulkan`, `Custom`) and the methods `allocate`, `resize`, `free`, `clear`, `store`, `fetch`, `get`, `set`, `fill`, `toVector`, `join`

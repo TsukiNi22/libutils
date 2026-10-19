@@ -40,6 +40,7 @@ Runs on Unix (Linux, BSD, macOS) and on Windows (cross compiled with MinGW-w64),
 | GoogleTest (tests only) | — | `gtest-devel` | `libgtest-dev` | `gtest` |
 | `bsdtar` (Arch packages only) | — | `bsdtar` | `libarchive-tools` | `libarchive` |
 | MinGW-w64 (Windows only) | GCC >= 13 | `mingw64-gcc-c++ mingw64-openssl` | `g++-mingw-w64-x86-64` + OpenSSL built for MinGW (no package) | — |
+| GPU driver (`HybridMemory` only) | — | `libcuda` / `ocl-icd` / `vulkan-loader` | `libcuda1` / `ocl-icd-libopencl1` / `libvulkan1` | `nvidia-utils` / `ocl-icd` / `vulkan-icd-loader` |
 | Wine (Windows tests only) | — | `wine` | `wine64` | `wine` |
 
 ## Packages
@@ -242,6 +243,7 @@ ctest --test-dir $BUILD_DIR --output-on-failure --timeout 30   # or ./unit_tests
 ```
 
 > [!NOTE]
+> The GPU libraries are loaded at runtime by `HybridMemory` (`_System`): none is needed to build, and the memory falls back to the RAM without GPU (the backend tests are skipped).
 > The tests use GoogleTest (`tests/`, one file per module) and run in the `Unit Tests - Libraries (CI)` workflow.
 
 ## Workflows/Release
