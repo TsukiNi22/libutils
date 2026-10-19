@@ -3,7 +3,7 @@ set(TARGET utils)
 if(NOT CMAKE_TOOLCHAIN_FILE AND NOT DEFINED CMAKE_CXX_COMPILER)
     set(CMAKE_CXX_COMPILER clang++)
 endif()
-project(${TARGET} VERSION 4.2.0 LANGUAGES CXX)
+project(${TARGET} VERSION 4.3.0 LANGUAGES CXX)
 
 # =========================
 # Options
@@ -119,6 +119,13 @@ set(SRC
 
     # System
     src/utils/system/Scheduler.cpp
+    src/utils/system/HybridMemory.cpp
+
+    ## System (sub-part: gpu)
+    src/utils/system/gpu/AGpu.cpp
+    src/utils/system/gpu/CudaGpu.cpp
+    src/utils/system/gpu/OpenCLGpu.cpp
+    src/utils/system/gpu/VulkanGpu.cpp
 )
 
 # Windows only (internal Win32 helpers)

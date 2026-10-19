@@ -14,6 +14,21 @@
             "code": "ShouldBeFrozen",
             "message": "Can only do this after freezing the object",
             "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "GpuUnavailable",
+            "message": "No gpu available for the requested mode",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "GpuAllocation",
+            "message": "The gpu memory allocation failed",
+            "restrictions": ["Fatal", "Error", "Warning"]
+        },
+        {
+            "code": "GpuTransfer",
+            "message": "A transfer of the gpu memory failed",
+            "restrictions": ["Fatal", "Error", "Warning"]
         }
     ]
 }

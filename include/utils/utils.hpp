@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 13/10/2026 by @author Tsukini
+##  @date 19/10/2026 by @author Tsukini
 
 File Name:
 ##  @file utils.hpp
@@ -281,6 +281,7 @@ File Description:
 /* System */
 #ifdef _System
     // -> Different basic tools/comportement for global/system use
+    #include "system/HybridMemory.hpp"  // utils::system::HybridMemory, utils::system::IGpu, utils::system::make_gpu, utils::system::make_*_gpu
     #include "system/LoadBalancer.hpp"  // utils::system::LoadBalancer
     #include "system/IdHandler.hpp"     // utils::system::IdHandler
     #include "system/Scheduler.hpp"     // utils::system::Scheduler
