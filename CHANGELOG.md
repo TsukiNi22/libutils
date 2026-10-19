@@ -20,6 +20,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [pre-release] (empty)
 
+## [v4.3.0-pre] - 2026-10-19
+### Added
+- `HybridMemory<T>` (section `_System`): typed memory kept in the GPU memory when available, else in the RAM, with the mode chosen at the construction (`MemoryMode`: `Auto`, `Gpu`, `Ram`, `Cuda`, `OpenCL`, `Vulkan`, `Custom`) and the methods `allocate`, `resize`, `free`, `clear`, `store`, `fetch`, `get`, `set`, `fill`, `toVector`, `join`
+- GPU handlers behind the `IGpu` interface (`AGpu` base): `CudaGpu`, `OpenCLGpu` and `VulkanGpu`, loaded at runtime (no build dependency, `Auto` tries CUDA, OpenCL, Vulkan, then the RAM), a custom `IGpu` can be given to `HybridMemory`
+- Exceptions `GpuUnavailable`, `GpuAllocation` and `GpuTransfer` in the section `_System`
+
 ## v4.2.0 - 2026-10-17
 ### Changed
 - `setup.sh` also handles the Arch based distributions: the signing key is added to the pacman keyring and the `[libutils]` repository to `/etc/pacman.conf` (`SigLevel = Required`)
@@ -345,6 +351,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial version of the utils library with multiple tools (see [README-1.0.0](https://github.com/TsukiNi22/libutils/blob/v1.0.0/README.md) for more details)
 
 [pre-release]: https://github.com/TsukiNi22/libutils/compare/v4.2.0...HEAD
+[v4.3.0-pre]: https://github.com/TsukiNi22/libutils/compare/v4.2.0...v4.3.0-pre
 [v4.2.0]: https://github.com/TsukiNi22/libutils/compare/v4.1.0...v4.2.0
 [v4.1.0]: https://github.com/TsukiNi22/libutils/compare/v4.0.0...v4.1.0
 [v4.0.0]: https://github.com/TsukiNi22/libutils/compare/v3.0.0...v4.0.0
