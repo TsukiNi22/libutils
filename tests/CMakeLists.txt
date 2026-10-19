@@ -70,6 +70,7 @@ set(SRC
     pool/Pool.cpp
 
     # System
+    system/HybridMemory.cpp
     system/IdHandler.cpp
     system/Scheduler.cpp
 
