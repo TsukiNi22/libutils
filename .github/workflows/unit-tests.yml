@@ -101,9 +101,6 @@ jobs:
         working-directory: build
         run: |
           set -euo pipefail
-          # Persistent wineserver started before the parallel tests (no start / stop race between the processes)
-          WINE="$(command -v wine64 || command -v wine)"
-          wineserver --persistent
-          "$WINE" wineboot --update
+          # A test can hang on exit when wine starts / stops its server for the parallel processes: retried once
           ctest --output-on-failure --timeout 60 --repeat until-pass:2 --parallel $(nproc)
         timeout-minutes: 8
