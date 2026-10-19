@@ -50,8 +50,8 @@ namespace utils::system { // namespace start
 // Auto / Gpu: Cuda -> OpenCL -> Vulkan, nullptr = no gpu (Ram, or Auto without a gpu)
 // Forced backend or Gpu without any: GpuUnavailable error, Custom: InvalidArgument (give the handler)
 _nodiscard utils::system::IGpu* make_raw_gpu(const utils::system::MemoryMode mode);
-_cold _nodiscard inline std::shared_ptr<utils::system::IGpu> make_shared_gpu(const utils::system::MemoryMode mode) {return utils::system::make_raw_gpu(mode);};
-_cold _nodiscard inline std::unique_ptr<utils::system::IGpu> make_unique_gpu(const utils::system::MemoryMode mode) {return utils::system::make_raw_gpu(mode);};
+_cold _nodiscard inline std::shared_ptr<utils::system::IGpu> make_shared_gpu(const utils::system::MemoryMode mode) {return std::shared_ptr<utils::system::IGpu>(utils::system::make_raw_gpu(mode));};
+_cold _nodiscard inline std::unique_ptr<utils::system::IGpu> make_unique_gpu(const utils::system::MemoryMode mode) {return std::unique_ptr<utils::system::IGpu>(utils::system::make_raw_gpu(mode));};
 
 // default redirection
 _cold _nodiscard inline std::unique_ptr<utils::system::IGpu> make_gpu(const utils::system::MemoryMode mode = utils::system::MemoryMode::Auto) {return utils::system::make_unique_gpu(mode);};
