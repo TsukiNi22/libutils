@@ -16,6 +16,7 @@ Runs on Unix (Linux, BSD, macOS) and on Windows (cross compiled with MinGW-w64),
  - [Windows (cross compilation)](#windows-cross-compilation)
  - [Usage](#usage)
  - [Unit tests](#unit-tests)
+ - [Pre-commit hook](#pre-commit-hook)
  - [Workflows/Release](#workflowsrelease)
 
 ## Dependencies
@@ -245,6 +246,19 @@ ctest --test-dir $BUILD_DIR --output-on-failure --timeout 30   # or ./unit_tests
 > [!NOTE]
 > The GPU libraries are loaded at runtime by `HybridMemory` (`_System`): none is needed to build, and the memory falls back to the RAM without GPU (the backend tests are skipped).
 > The tests use GoogleTest (`tests/`, one file per module) and run in the `Unit Tests - Libraries (CI)` workflow.
+
+## Pre-commit hook
+
+A shared [xstyle](https://github.com/TsukiNi22/ai-utils) hook (`.githooks/pre-commit`) checks the staged lines at each `git commit`: a `minor` (or worse) issue refuses the commit, anything else is only listed.
+
+```bash
+git config core.hooksPath .githooks   # once per clone
+git commit --no-verify                # skip the hook once (or XSTYLE_HOOK=0 git commit ...)
+xstyle --fix --staged                 # fix what can be, then git add -u
+```
+
+> [!NOTE]
+> Without `xstyle` installed the hook only warns and the commit is accepted. The thresholds are the variables at the top of `.githooks/pre-commit`.
 
 ## Workflows/Release
 ### Workflows
