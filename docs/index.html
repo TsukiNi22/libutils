@@ -812,7 +812,7 @@ window.DOC_FR = {
   var get = function (u) { return fetch(u, { headers: { Accept: 'application/vnd.github+json' } }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }); };
   get(api).then(function (r) {
     var info = { repo: repo, time: Date.now(), name: r.name, url: r.html_url, license: r.license && r.license.spdx_id && r.license.spdx_id !== 'NOASSERTION' ? r.license.spdx_id : '' };
-    return get(api + '/releases/latest').then(function (rel) { info.version = rel.tag_name; return info; })
+    return get(api + '/releases?per_page=1').then(function (rel) { if (!rel[0]) throw new Error('none'); info.version = rel[0].tag_name; return info; }) // newest release, pre-releases included
       .catch(function () { return get(api + '/tags?per_page=1').then(function (tags) { if (tags[0]) info.version = tags[0].name; return info; }); })
       .catch(function () { return info; });
   }).then(function (info) {
