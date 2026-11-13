@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 13/10/2026 by @author Tsukini
+##  @date 13/11/2026 by @author Tsukini
 
 File Name:
 ##  @file AException.cpp
@@ -63,6 +63,15 @@ _cold _nodiscard static inline std::string canonical_or_raw(const std::string& p
     }
 }
 
+_cold _nodiscard static inline std::string absolute_path(const char* file)
+{
+    try {
+        return std::filesystem::absolute(file).lexically_normal().string();
+    } catch (const std::filesystem::filesystem_error&) {
+        return ""; // Fallback
+    }
+}
+
 _cold _nodiscard static inline std::string module_name(const void* addr, const std::string& path)
 {
     // Check if it's the utils library
@@ -90,6 +99,11 @@ _cold _nodiscard static inline std::string module_name(const void* addr, const s
     return std::filesystem::path(modulePath).filename().string();
 }
 
+_cold _nodiscard std::string utils::exception::AException::module(void) const noexcept
+{
+    return module_name(this->_callerAddr, absolute_path(this->_file));
+}
+
 _cold _nodiscard std::string utils::exception::AException::formated(void) const noexcept
 {
     std::ostringstream oss;
@@ -106,17 +120,16 @@ _cold _nodiscard std::string utils::exception::AException::formated(void) const 
     oss << " " << utils::iomanip::reset();
 
     // Emplacement information
-    std::string absolutePath, moduleName;
+    std::string absolutePath = absolute_path(this->_file), moduleName;
     bool exists = false;
     try {
-        absolutePath = std::filesystem::absolute(this->_file).lexically_normal().string();
-        exists = std::filesystem::exists(absolutePath);
+        exists = !absolutePath.empty() && std::filesystem::exists(absolutePath);
     } catch (const std::filesystem::filesystem_error&) {exists = false;}
     oss << utils::iomanip::strong();
     if (exists) oss << utils::iomanip::file_hyperlink(shorten(this->_file), absolutePath);
     else oss << shorten(this->_file);
     oss << ":" << this->_line << utils::iomanip::reset();
-    if (!(moduleName = module_name(this->_callerAddr, absolutePath)).empty())
+    if (!(moduleName = this->module()).empty())
         oss << utils::iomanip::color_rgb(100, 100, 100) << " (" << moduleName << ")" << utils::iomanip::reset();
     oss << " -> " << this->_messages.at(this->_code) << std::endl;
 

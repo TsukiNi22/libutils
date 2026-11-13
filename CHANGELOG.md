@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [pre-release] (empty)
 
+## [v5.0.0] - <none>
+### Added
+- Add the first support for the C API on the exception, setup the C++ guard to decorate the different call and the C struct like errno to handle catched exception status
+
 ## [v4.3.1-pre] - 2026-10-19 (unofficial)
 ### Fixed
 - `make_shared_gpu` / `make_unique_gpu` didn't build with clang (explicit constructor of the smart pointers in a copy-initialization)

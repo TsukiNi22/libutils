@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 01/08/2026 by @author Tsukini
+##  @date 13/11/2026 by @author Tsukini
 
 File Name:
 ##  @file IException.hpp
@@ -35,6 +35,7 @@ class IException: public std::exception {
         virtual const char* what(void) const noexcept = 0;
         virtual const char* info(void) const noexcept = 0;
         virtual const std::source_location& loc(void) const noexcept = 0;
+        virtual std::string module(void) const noexcept = 0; // Module (shared library) that thrown it, empty -> the binary itself
         virtual std::string formated(void) const noexcept = 0;
 
         // ------------ Operator ---------- //

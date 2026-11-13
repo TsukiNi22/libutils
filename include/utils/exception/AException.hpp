@@ -1,6 +1,6 @@
 /**************************************************************\
 Edition:
-##  @date 28/07/2026 by @author Tsukini
+##  @date 13/11/2026 by @author Tsukini
 
 File Name:
 ##  @file AException.hpp
@@ -58,14 +58,15 @@ class AException: public utils::exception::IException {
     public:
         // ---------- Pre-Function -------- //
         std::string formated(void) const noexcept final;
+        std::string module(void) const noexcept final;
 
         // ------------ Function ---------- //
         _cold _nodiscard utils::exception::Type getType(void) const noexcept final         {return this->_type;};
         _cold _nodiscard utils::exception::InternalCode getCode(void) const noexcept final {return this->_code;};
-        _cold _nodiscard bool isNone(void) const noexcept final                            {return (this->_type & utils::exception::Type::None);};
-        _cold _nodiscard bool isFatal(void) const noexcept final                           {return (this->_type & utils::exception::Type::Fatal);};
-        _cold _nodiscard const char* what(void) const noexcept final                       {return this->_messages.at(this->_code);};
-        _cold _nodiscard const char* info(void) const noexcept final                       {return this->_info.c_str();};
+        _cold _nodiscard bool isNone(void) const noexcept final      {return (this->_type & utils::exception::Type::None);};
+        _cold _nodiscard bool isFatal(void) const noexcept final     {return (this->_type & utils::exception::Type::Fatal);};
+        _cold _nodiscard const char* what(void) const noexcept final {return this->_messages.at(this->_code);};
+        _cold _nodiscard const char* info(void) const noexcept final {return this->_info.c_str();};
         _cold _nodiscard const std::source_location& loc(void) const noexcept final        {return this->_loc;};
 
         // ------------ Operator ---------- //

@@ -3,7 +3,7 @@ set(TARGET utils)
 if(NOT CMAKE_TOOLCHAIN_FILE AND NOT DEFINED CMAKE_CXX_COMPILER)
     set(CMAKE_CXX_COMPILER clang++)
 endif()
-project(${TARGET} VERSION 4.3.1 LANGUAGES CXX)
+project(${TARGET} VERSION 5.0.0 LANGUAGES CXX)
 
 # =========================
 # Options
@@ -61,6 +61,7 @@ set(SRC
 
     ## Exception
     src/utils/exception/AException.cpp
+    src/utils/exception/CApi.cpp
 
     ## IO - Manip
     src/utils/manip/iomanip/ANSI.cpp
@@ -238,6 +239,11 @@ set(LIBUTILS_VERSION "v${PROJECT_VERSION}")
 configure_file(
     ${CMAKE_SOURCE_DIR}/include/utils/version.hpp.in
     ${CMAKE_BINARY_DIR}/generated/utils/version.hpp
+    @ONLY
+)
+configure_file(
+    ${CMAKE_SOURCE_DIR}/include/utils/version.h.in
+    ${CMAKE_BINARY_DIR}/generated/utils/version.h
     @ONLY
 )
 
