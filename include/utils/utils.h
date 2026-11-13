@@ -66,6 +66,20 @@ File Description:
 //----------------------------------------------------------------//
 /* DEFINE */
 
+/* Activate all automatic warning & _deprecated message (only the ones used in c) */
+#ifdef _Warning
+    #define DEPRECATED_WARNING // _deprecated(...)
+    #define BACKWARD_COMPATIBILITY_WARNING // Things that still here but soon will potentialy be removed (only keep for backward compatibility)
+    //#warning "All warnings from 'utils/utils.h' are disable"
+#endif
+
+/* Desactivate all automatic warning & _deprecated message (only the ones used in c) */
+#ifdef _NoWarning
+    #define NO_DEPRECATED_WARNING // _deprecated(...)
+    #define NO_BACKWARD_COMPATIBILITY_WARNING // Things that still here but soon will potentialy be removed (only keep for backward compatibility)
+    //#warning "All warnings from 'utils/utils.h' are disable"
+#endif
+
 /* default: if nothing is defined - include everything */
 #if !defined(_Handling) && !defined(_Attribute) && !defined(_Tools) && \
     /* _Handling */\
@@ -163,6 +177,12 @@ File Description:
 
 //----------------------------------------------------------------//
 /* INCLUDE */
+
+/* Macro */
+#ifdef _Attribute
+    // -> Define/Macro of attribute & keyword for optimisation & other (c11 / c23 version)
+    #include "attribute/Attribute.hpp" // different define/macro for optimisation & other
+#endif
 
 /* Exception */
 #ifdef _Exception

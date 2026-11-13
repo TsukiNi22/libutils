@@ -29,7 +29,8 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include <stdint.h> // uint8_t, uint64_t, UINT64_MAX
+    #include "../attribute/Attribute.hpp"   // _thread_local
+    #include <stdint.h>                     // uint8_t, uint64_t, UINT64_MAX
 
     //----------------------------------------------------------------//
     /* DEFINE */
@@ -38,13 +39,6 @@ File Description:
     #define C_API_MAX_CHAR_EXCEPTION_INFORMATION 512 // limits for the string in the exception status
     #define C_API_NO_EXCEPTION 0                     // default value, no error (utils::exception::InternalCode::Undefined)
     #define C_API_OTHER_EXCEPTION_CODE UINT64_MAX    // not a libutils exception (std::exception, ...)
-
-    /* thread local storage */
-    #ifdef __cplusplus
-        #define _thread_local thread_local
-    #else
-        #define _thread_local _Thread_local // C11 (still valid in C23)
-    #endif
 
 #ifdef __cplusplus
     extern "C" {

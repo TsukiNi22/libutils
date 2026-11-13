@@ -8,14 +8,16 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 15/09/2026 by @author Tsukini
+##  @date 14/11/2026 by @author Tsukini
 
 File Name:
 ##  @file Attribute.hpp
 
 File Description:
-##  Include the right file from the c++ version used or selected
+##  Redirection for the c or c++ attribute
 \**************************************************************/
+
+// xstyle: ignore-file CPP-INCLUDE-COMMENT (dispatch includes: the #if / comment above says what is included)
 
 #ifndef ATTRIBUTE_H
     #define ATTRIBUTE_H
@@ -23,59 +25,12 @@ File Description:
     //----------------------------------------------------------------//
     /* INCLUDE */
 
-    #if !defined(__cplusplus)
-        #error "C++ compiler required"
-    #elif !defined(__GNUC__)
-        #include "fallback.hpp" // _* (empty)
-
-    #elif defined(FORCED_CXX_STANDARD) // Forced version
-
-        #if FORCED_CXX_STANDARD >= 20
-            #include "c++20.hpp"  // _* (c++20)
-        #elif FORCED_CXX_STANDARD >= 17
-            #include "c++17.hpp"  // _* (c++17)
-        #elif FORCED_CXX_STANDARD >= 14
-            #include "c++14.hpp"  // _* (c++14)
-        #else
-            #include "fallback.hpp" // _* (empty)
-        #endif
-
-    #else // No forced version
-
-        #if __cplusplus >= 202002L
-            #include "c++20.hpp"  // _* (c++20)
-        #elif __cplusplus >= 201703L
-            #include "c++17.hpp"  // _* (c++17)
-        #elif __cplusplus >= 201402L
-            #include "c++14.hpp"  // _* (c++14)
-        #else
-            #include "fallback.hpp" // _* (empty)
-        #endif
-
-    #endif
-
-    // BACKWARD_COMPATIBILITY_WARNING
-    /* --- Different Messages ---
-     * legacy -> Only kept for backward compatibility; no removal in sight ._.
-     * migration -> Retained for backward compatibility; will be removed in a future version (estimated: ~vx.x.x)
-    */
-    #if defined(BACKWARD_COMPATIBILITY_WARNING) && !defined(NO_BACKWARD_COMPATIBILITY_WARNING)
-        #define _legacy [[deprecated("Only kept for backward compatibility; no removal in sight ._.")]]
-        #define _migration(major, minor, fix) [[deprecated("Retained for backward compatibility; will be removed in a future version (estimated: ~v" #major "." #minor "." #fix ")")]]
-    #else
-        #define _legacy
-        #define _migration(major, minor, fix)
-    #endif
-
-    // fallback (x86-64)
-    #include <new> // std::hardware_destructive_interference_size, std::hardware_constructive_interference_size
-    #if !defined(__cpp_lib_hardware_interference_size)
-        #warning "fallback (x86-64) - hardware interference size = 64"
-        #include <cstddef>  // std::size_t
-        namespace std { // namespace start
-            inline constexpr std::size_t hardware_destructive_interference_size = 64; // xstyle: ignore CPP-NAMESPACE-INDENT (fallback in the include region)
-            inline constexpr std::size_t hardware_constructive_interference_size = 64; // xstyle: ignore CPP-NAMESPACE-INDENT
-        } // namespace end
+    #if defined(__cplusplus)
+        #include "c++.hpp"
+    #elif defined(__STDC__) || defined(__STDC_VERSION__)
+        #include "c.h"
+    #else // neither a C nor a C++ compiler
+        #include "fallback.hpp"
     #endif
 
 #endif /* ATTRIBUTE_H */
