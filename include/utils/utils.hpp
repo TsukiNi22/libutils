@@ -18,6 +18,13 @@ File Description:
 //----------------------------------------------------------------//
 /* INCLUDE */
 
+/* Compiler check (__has_include: C++17, the library itself needs C++20) */
+#ifndef __has_include
+    #warning "libutils: __has_include is not supported (C++17 or later), the include checks and fallbacks of libutils are disabled"
+    #define __has_include(path) 1 // always true: every include is attempted, a missing one stops on the compiler error (no libutils fallback or message)
+    //#error "libutils: needs __has_include (C++17 or later, the library itself needs C++20)"
+#endif
+
 // Only if the redirection from ../utils.hpp was skipped
 #ifndef __LIBUTILS_VERSION__
     // Definition of the library version (imported or fallback)
