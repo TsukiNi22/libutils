@@ -51,10 +51,10 @@ class FakeGpu: public utils::system::IGpu {
         std::size_t joins = 0;
         std::vector<std::vector<std::byte>*> live;
 
-        bool isAvailable(void) const override {return this->available;};
+        bool isAvailable(void) const override                  {return this->available;};
         utils::system::MemoryMode getMode(void) const override {return utils::system::MemoryMode::Custom;};
-        std::string getName(void) const override {return "FakeGpu";};
-        std::size_t getMemory(void) const override {return 1 << 30;};
+        std::string getName(void) const override               {return "FakeGpu";};
+        std::size_t getMemory(void) const override             {return 1 << 30;};
 
         utils::system::GpuBuffer allocate(const std::size_t bytes) override
         {

@@ -99,6 +99,7 @@ _cold _nodiscard static inline std::string module_name(const void* addr, const s
     return std::filesystem::path(modulePath).filename().string();
 }
 
+// xstyle: ignore-next CPP-SINGLE-STATEMENT (uses the static helpers of this file, can't go in the header)
 _cold _nodiscard std::string utils::exception::AException::module(void) const noexcept
 {
     return module_name(this->_callerAddr, absolute_path(this->_file));

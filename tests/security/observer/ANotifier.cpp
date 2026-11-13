@@ -32,15 +32,15 @@ class RecordNotifier: public utils::security::observer::ANotifier {
         void link_(const std::uint64_t id, std::string_view instance, _unused const bool safe_mode) override {this->calls.push_back("link " + std::to_string(id) + " " + std::string(instance));};
         void unlink_(const std::uint64_t id, _unused const bool safe_mode) override                          {this->calls.push_back("unlink " + std::to_string(id));};
         void clear_(_unused const bool safe_mode) override                                                   {this->calls.push_back("clear");};
-        _nodiscard bool hasLinkOverload(void) const override   {return this->_overload;};
-        _nodiscard bool hasUnlinkOverload(void) const override {return this->_overload;};
-        _nodiscard bool hasClearOverload(void) const override  {return this->_overload;};
+        _nodiscard bool hasLinkOverload(void) const override                                                 {return this->_overload;};
+        _nodiscard bool hasUnlinkOverload(void) const override                                               {return this->_overload;};
+        _nodiscard bool hasClearOverload(void) const override                                                {return this->_overload;};
 
     public:
         std::vector<std::string> calls;
 
         void trigger(void) override {};
-        std::size_t size(void) {return this->_links.size();};
+        std::size_t size(void)      {return this->_links.size();};
 
         explicit RecordNotifier(const bool overload = false): _overload{overload} {};
 };

@@ -17,6 +17,11 @@ File Description:
 ##  C side of the exception status filled by the C API (C & C++ compatible)
 \**************************************************************/
 
+// xstyle: ignore-file CPP-GUARD-NAME (CAPI_H is the guard of CApi.hpp)
+// xstyle: ignore-file CPP-TYPEDEF (C header: no using in C)
+// xstyle: ignore-file CPP-CLASS-NAME (C header: C types are snake_case)
+// xstyle: ignore-file CPP-PREPRO-INDENT (extern "C" block at the level of the declarations it wraps)
+
 #ifndef CAPI_C_H
     #define CAPI_C_H
 

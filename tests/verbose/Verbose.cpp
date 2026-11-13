@@ -41,7 +41,7 @@ using VerboseTestParam = std::tuple<VerboseModeCase, std::string>;
 // Reset the global verbose mode around each test (the global state leaked between tests)
 class VerboseFixture: public ::testing::TestWithParam<VerboseTestParam> {
     protected:
-        void SetUp(void) override {utils::verbose::verbose = utils::verbose::Verbose::Basic;}; // default value of the lib
+        void SetUp(void) override    {utils::verbose::verbose = utils::verbose::Verbose::Basic;}; // default value of the lib
         void TearDown(void) override {utils::verbose::verbose = utils::verbose::Verbose::Basic;};
 };
 class VerboseTest: public VerboseFixture {};

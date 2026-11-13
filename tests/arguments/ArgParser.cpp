@@ -40,7 +40,7 @@ class ArgParserTest: public ::testing::Test {
 
         void SetUp(void) override
         {
-            ::unsetenv("UTILS_TEST_NUMBER");
+            (void)::unsetenv("UTILS_TEST_NUMBER");
             this->_parser.setFlag("number", {"n", "num", "number", "UTILS_TEST_NUMBER"}, {{"value", true, utils::arguments::defaultInt32ParsingHook}}, "A number");
             this->_parser.setFlag("verbose", {"v", "", "verbose", ""}, {}, "Verbose mode");
             this->_parser.setFlag("all", {"a", "", "all", ""}, {}, "All mode");

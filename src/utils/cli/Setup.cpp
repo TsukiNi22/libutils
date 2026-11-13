@@ -79,7 +79,7 @@ utils::cli::Cli::~Cli()
 
     // Reset the term (only if it was setup)
     if (this->_termios)
-        utils::platform::tcsetattr(STDIN_FILENO, TCSAFLUSH, &this->_orig);
+        (void)utils::platform::tcsetattr(STDIN_FILENO, TCSAFLUSH, &this->_orig);
 
     // Reset signal (previous handlers)
     if (this->_sig) {

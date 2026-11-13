@@ -328,7 +328,7 @@ TEST_F(ClientServerTest, PartialPayloadDoesNotBlock) {
     EXPECT_LT(std::chrono::steady_clock::now() - start, std::chrono::milliseconds{500});
     ASSERT_EQ(tests::tools::raw_write(fd, " end\n", 5), 5);
     EXPECT_TRUE(this->serverReceive(sfd, "partial end"));
-    tests::tools::raw_close(fd);
+    (void)tests::tools::raw_close(fd);
 }
 
 TEST_F(ClientServerTest, ListenFdWithOtherClientsPending) {
@@ -342,8 +342,8 @@ TEST_F(ClientServerTest, ListenFdWithOtherClientsPending) {
     (void)this->_server->listen(fds[0]);
     (void)this->_server->listen(fds[1]);
     EXPECT_LT(std::chrono::steady_clock::now() - start, std::chrono::milliseconds{500});
-    tests::tools::raw_close(a);
-    tests::tools::raw_close(b);
+    (void)tests::tools::raw_close(a);
+    (void)tests::tools::raw_close(b);
 }
 
 TEST_F(ClientServerTest, ClosedConnectionBufferNotReused) {
@@ -352,7 +352,7 @@ TEST_F(ClientServerTest, ClosedConnectionBufferNotReused) {
     ASSERT_EQ(tests::tools::raw_write(a, "ok\nGARBAGE", 10), 10);
     std::this_thread::sleep_for(std::chrono::milliseconds{20});
     (void)this->_server->listen();
-    tests::tools::raw_close(a);
+    (void)tests::tools::raw_close(a);
     ASSERT_TRUE(waitFor([&](void) {(void)this->_server->listen(); return this->_server->getFds().empty();}));
 
     int b = tests::tools::raw_connect(this->_port); // usually the same fd number
@@ -360,7 +360,7 @@ TEST_F(ClientServerTest, ClosedConnectionBufferNotReused) {
     int fd = this->_server->getFds().front();
     ASSERT_EQ(tests::tools::raw_write(b, "hello\n", 6), 6);
     EXPECT_TRUE(this->serverReceive(fd, "hello"));
-    tests::tools::raw_close(b);
+    (void)tests::tools::raw_close(b);
 }
 
 TEST_F(ClientServerTest, RemovedClientNotResurrected) {

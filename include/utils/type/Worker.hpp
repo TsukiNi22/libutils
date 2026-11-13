@@ -47,7 +47,7 @@ class Worker: private utils::security::observer::Observer<"Worker"> {
 
         // ------------ Operator ---------- //
         Worker& operator=(const Worker& other) {this->setWorkingStatus(other.isWorking()); return *this;};
-        Worker& operator=(Worker&& other) {this->setWorkingStatus(other.isWorking()); other.setWorkingStatus(false); return *this;};
+        Worker& operator=(Worker&& other)      {this->setWorkingStatus(other.isWorking()); other.setWorkingStatus(false); return *this;};
 
         // ---------- Constructor --------- //
         Worker() = default;

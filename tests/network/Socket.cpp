@@ -312,14 +312,14 @@ TEST(SocketTools, ResolveAddress) {
 /* TCP connection */
 class TCPSocketTest: public ::testing::Test {
     protected:
-        void SetUp(void) override {utils::verbose::verbose = utils::verbose::Verbose::None;};
+        void SetUp(void) override    {utils::verbose::verbose = utils::verbose::Verbose::None;};
         void TearDown(void) override {utils::verbose::verbose = utils::verbose::Verbose::Basic;};
 
         static std::uint16_t portOf(int fd)
         {
             sockaddr_in addr{};
             socklen_t len = sizeof(addr);
-            ::getsockname(fd, reinterpret_cast<sockaddr*>(&addr), &len);
+            (void)::getsockname(fd, reinterpret_cast<sockaddr*>(&addr), &len);
             return ntohs(addr.sin_port);
         };
 };

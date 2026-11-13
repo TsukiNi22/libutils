@@ -690,10 +690,10 @@ TEST(CliGetCHook, EndOfFile) {
         ASSERT_EQ(::pipe(fds), 0);
         ::close(fds[1]);
         int saved = ::dup(STDIN_FILENO);
-        ::dup2(fds[0], STDIN_FILENO);
+        (void)::dup2(fds[0], STDIN_FILENO);
         char c = 'x';
         bool res = utils::cli::defaultGetCHook(c);
-        ::dup2(saved, STDIN_FILENO);
+        (void)::dup2(saved, STDIN_FILENO);
         ::close(saved);
         ::close(fds[0]);
     #endif
@@ -712,10 +712,10 @@ TEST(CliGetCHook, EndOfFile) {
         if (slave == -1) return "[pty error]";
         std::cout.flush();
         int saved = ::dup(STDOUT_FILENO);
-        ::dup2(slave, STDOUT_FILENO);
+        (void)::dup2(slave, STDOUT_FILENO);
         (void)cli.start(inputs);
         std::cout.flush();
-        ::dup2(saved, STDOUT_FILENO);
+        (void)::dup2(saved, STDOUT_FILENO);
         ::close(saved);
         ::close(slave);
 

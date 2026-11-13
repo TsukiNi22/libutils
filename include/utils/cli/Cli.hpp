@@ -218,12 +218,12 @@ class Cli: private utils::security::observer::Observer<"Cli"> {
         };
 
         /* hooks */
-        _cold inline void resetPromptHook(void)                                                                                  {std::lock_guard lock(this->_hooksLock); this->_promptHook = utils::cli::defaultPromptHook;};
-        _cold inline void resetParserHook(void)                                                                                  {std::lock_guard lock(this->_hooksLock); this->_parserHook = utils::cli::defaultParserHook;};
-        _cold inline void resetGetCHook(void)                                                                                    {std::lock_guard lock(this->_hooksLock); this->_getcHook = utils::cli::defaultGetCHook;};
+        _cold inline void resetPromptHook(void)                               {std::lock_guard lock(this->_hooksLock); this->_promptHook = utils::cli::defaultPromptHook;};
+        _cold inline void resetParserHook(void)                               {std::lock_guard lock(this->_hooksLock); this->_parserHook = utils::cli::defaultParserHook;};
+        _cold inline void resetGetCHook(void)                                 {std::lock_guard lock(this->_hooksLock); this->_getcHook = utils::cli::defaultGetCHook;};
         _cold inline void setPromptHook(const std::function<void(const utils::cli::Cli&, std::uint8_t)>& hook)                   {std::lock_guard lock(this->_hooksLock); this->_promptHook = hook;}; // Called to print the prompt
         _cold inline void setParserHook(const std::function<utils::cli::ParsedData(const std::string&, bool, bool, bool)>& hook) {std::lock_guard lock(this->_hooksLock); this->_parserHook = hook;}; // Called to parse the input
-        _cold inline void setGetCHook(const std::function<bool(char&)>& hook)                                                    {std::lock_guard lock(this->_hooksLock); this->_getcHook = hook;}; // Called to get a char of the input
+        _cold inline void setGetCHook(const std::function<bool(char&)>& hook) {std::lock_guard lock(this->_hooksLock); this->_getcHook = hook;}; // Called to get a char of the input
 
         /* getter */
         _cold _nodiscard inline std::uint8_t getCode(void) const                {return this->_code;};

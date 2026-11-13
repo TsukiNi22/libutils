@@ -110,7 +110,7 @@ class StdinRedirect {
             (void)!::write(fds[1], s.data(), s.size());
             ::close(fds[1]);
             this->_saved = ::dup(STDIN_FILENO);
-            ::dup2(fds[0], STDIN_FILENO);
+            (void)::dup2(fds[0], STDIN_FILENO);
             ::close(fds[0]);
         };
         ~StdinRedirect() {::dup2(this->_saved, STDIN_FILENO); ::close(this->_saved);};

@@ -78,12 +78,12 @@ _hot _nodiscard constexpr inline std::string overlined(void)     {return utils::
 _hot _nodiscard constexpr inline std::string exposant(void)      {return utils::iomanip::csi("73m");}; // Rarely supported
 _hot _nodiscard constexpr inline std::string indice(void)        {return utils::iomanip::csi("74m");}; // Rarely supported
 /* args */
-_hot _nodiscard constexpr inline std::string set_style(utils::iomanip::Style style)                              {return utils::iomanip::csi(std::to_string(static_cast<std::uint8_t>(style)) + "m");};
-_hot _nodiscard constexpr inline std::string color(utils::iomanip::Color c)                                      {return utils::iomanip::csi(std::to_string(static_cast<std::uint8_t>(c)) + "m");};
-_hot _nodiscard constexpr inline std::string color(utils::iomanip::BackColor c)                                  {return utils::iomanip::csi(std::to_string(static_cast<std::uint8_t>(c)) + "m");};
-_hot _nodiscard constexpr inline std::string color_id(std::uint8_t id)                                           {return utils::iomanip::csi("38;5;" + std::to_string(id) + "m");};
-_hot _nodiscard constexpr inline std::string back_color_id(std::uint8_t id)                                      {return utils::iomanip::csi("48;5;" + std::to_string(id) + "m");};
-_hot _nodiscard constexpr inline std::string underline_color_id(std::uint8_t id)                                 {return utils::iomanip::csi("58;5;" + std::to_string(id) + "m");};
+_hot _nodiscard constexpr inline std::string set_style(utils::iomanip::Style style) {return utils::iomanip::csi(std::to_string(static_cast<std::uint8_t>(style)) + "m");};
+_hot _nodiscard constexpr inline std::string color(utils::iomanip::Color c)         {return utils::iomanip::csi(std::to_string(static_cast<std::uint8_t>(c)) + "m");};
+_hot _nodiscard constexpr inline std::string color(utils::iomanip::BackColor c)     {return utils::iomanip::csi(std::to_string(static_cast<std::uint8_t>(c)) + "m");};
+_hot _nodiscard constexpr inline std::string color_id(std::uint8_t id)              {return utils::iomanip::csi("38;5;" + std::to_string(id) + "m");};
+_hot _nodiscard constexpr inline std::string back_color_id(std::uint8_t id)         {return utils::iomanip::csi("48;5;" + std::to_string(id) + "m");};
+_hot _nodiscard constexpr inline std::string underline_color_id(std::uint8_t id)    {return utils::iomanip::csi("58;5;" + std::to_string(id) + "m");};
 _hot _nodiscard constexpr inline std::string color_rgb(std::uint8_t r, std::uint8_t g, std::uint8_t b)           {return utils::iomanip::csi("38;2;" + std::to_string(r) + ";" + std::to_string(g) + ";" + std::to_string(b) + "m");};
 _hot _nodiscard constexpr inline std::string back_color_rgb(std::uint8_t r, std::uint8_t g, std::uint8_t b)      {return utils::iomanip::csi("48;2;" + std::to_string(r) + ";" + std::to_string(g) + ";" + std::to_string(b) + "m");};
 _hot _nodiscard constexpr inline std::string underline_color_rgb(std::uint8_t r, std::uint8_t g, std::uint8_t b) {return utils::iomanip::csi("58;2;" + std::to_string(r) + ";" + std::to_string(g) + ";" + std::to_string(b) + "m");};

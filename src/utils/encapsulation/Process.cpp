@@ -216,7 +216,7 @@ _cold _nodiscard pid_t utils::encapsulation::Process::spawn(const std::string& p
             }
 
             // replace this process by the new
-            ::execvp(path.c_str(), argv.data());
+            (void)::execvp(path.c_str(), argv.data());
 
             // execvp has failed
             ::_exit(127);
@@ -267,7 +267,7 @@ _cold _noreturn void utils::encapsulation::Process::replace(const std::string& p
         argv.push_back(nullptr);
 
         // replace this process by the new
-        ::execvp(path.c_str(), argv.data());
+        (void)::execvp(path.c_str(), argv.data());
 
         // execvp has failed
         ::_exit(127);

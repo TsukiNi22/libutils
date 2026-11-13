@@ -219,16 +219,16 @@ class HybridMemory {
         _hot inline void join(void) {if (this->_gpu) this->_gpu->join();}; // wait for the pending gpu operations (nothing in ram)
 
         /* getter */
-        _cold _nodiscard inline std::size_t bytes(void) const                             {return this->_size * sizeof(T);}; // size in bytes
-        _cold _nodiscard inline bool empty(void) const                                    {return this->_size == 0;}; // nothing allocated
-        _cold _nodiscard inline bool isOnGpu(void) const                                  {return this->_gpu != nullptr;}; // memory stored by a gpu handler
-        _cold _nodiscard inline std::size_t size(void) const                              {return this->_size;};
-        _cold _nodiscard inline utils::system::MemoryMode getMode(void) const             {return this->_mode;};
-        _cold _nodiscard inline utils::system::MemoryMode getRequestedMode(void) const    {return this->_requested;};
-        _cold _nodiscard inline std::shared_ptr<utils::system::IGpu> getGpu(void) const   {return this->_gpu;};
-        _hot _nodiscard inline utils::system::GpuBuffer native(void) const                {return this->_buffer;}; // device buffer for the computes (0 in ram)
-        _hot _nodiscard inline T* data(void)                                              {return this->_host.get();}; // host memory (nullptr on the gpu)
-        _hot _nodiscard inline const T* data(void) const                                  {return this->_host.get();};
+        _cold _nodiscard inline std::size_t bytes(void) const {return this->_size * sizeof(T);}; // size in bytes
+        _cold _nodiscard inline bool empty(void) const        {return this->_size == 0;}; // nothing allocated
+        _cold _nodiscard inline bool isOnGpu(void) const      {return this->_gpu != nullptr;}; // memory stored by a gpu handler
+        _cold _nodiscard inline std::size_t size(void) const  {return this->_size;};
+        _cold _nodiscard inline utils::system::MemoryMode getMode(void) const           {return this->_mode;};
+        _cold _nodiscard inline utils::system::MemoryMode getRequestedMode(void) const  {return this->_requested;};
+        _cold _nodiscard inline std::shared_ptr<utils::system::IGpu> getGpu(void) const {return this->_gpu;};
+        _hot _nodiscard inline utils::system::GpuBuffer native(void) const              {return this->_buffer;}; // device buffer for the computes (0 in ram)
+        _hot _nodiscard inline T* data(void)                  {return this->_host.get();}; // host memory (nullptr on the gpu)
+        _hot _nodiscard inline const T* data(void) const      {return this->_host.get();};
 
         // ------------ Operator ---------- //
         _hot _nodiscard T operator[](const std::size_t index) const {return this->get(index);};

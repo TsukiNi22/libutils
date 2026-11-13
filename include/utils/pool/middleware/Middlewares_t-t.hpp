@@ -51,9 +51,9 @@ class Middlewares: private utils::security::observer::Observer<"Middlewares"> {
         _cold inline void clear(void) {std::unique_lock lock(this->_lock); this->before.clear(); this->after.clear();};
 
         /* adder */
-        _cold inline void addBefore(const utils::pool::Middleware<T>& toAdd)               {std::unique_lock lock(this->_lock); this->before.push_back(toAdd);};
+        _cold inline void addBefore(const utils::pool::Middleware<T>& toAdd) {std::unique_lock lock(this->_lock); this->before.push_back(toAdd);};
         _cold inline void addBefore(const std::vector<utils::pool::Middleware<T>>& toAdds) {std::unique_lock lock(this->_lock); this->before.insert(this->before.end(), toAdds.begin(), toAdds.end());};
-        _cold inline void addAfter(const utils::pool::Middleware<U>& toAdd)                {std::unique_lock lock(this->_lock); this->after.push_back(toAdd);};
+        _cold inline void addAfter(const utils::pool::Middleware<U>& toAdd)  {std::unique_lock lock(this->_lock); this->after.push_back(toAdd);};
         _cold inline void addAfter(const std::vector<utils::pool::Middleware<U>>& toAdds)  {std::unique_lock lock(this->_lock); this->after.insert(this->after.end(), toAdds.begin(), toAdds.end());};
 
         /* caller */

@@ -54,7 +54,7 @@ class Freezable: private utils::security::observer::Observer<"Freezable"> {
 
         // ------------ Operator ---------- //
         Freezable& operator=(const Freezable& other) {this->_frozen = other._frozen.load(); return *this;};
-        Freezable& operator=(Freezable&& other) {this->_frozen = other._frozen.load(); return *this;};
+        Freezable& operator=(Freezable&& other)      {this->_frozen = other._frozen.load(); return *this;};
 
         // ---------- Constructor --------- //
         Freezable(const bool frozen = false): _frozen{frozen} {};

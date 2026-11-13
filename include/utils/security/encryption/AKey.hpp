@@ -74,9 +74,9 @@ class AKey: public utils::security::encryption::IKey<T> {
         // Auto fallback on simple encrypt/decrypt methods
         _cold std::string encrypt(const std::string& s, _unused T& data) const override {return this->encrypt(s);};
         _cold std::string decrypt(const std::string& s, _unused T& data) const override {return this->decrypt(s);};
-        _cold _nodiscard bool hasGenerateOverload(void) const override                  {return false;};
-        _cold _nodiscard bool hasSetOverload(void) const override                       {return false;};
-        _cold _nodiscard bool hasGetOverload(void) const override                       {return false;};
+        _cold _nodiscard bool hasGenerateOverload(void) const override {return false;};
+        _cold _nodiscard bool hasSetOverload(void) const override      {return false;};
+        _cold _nodiscard bool hasGetOverload(void) const override      {return false;};
 
         // ------------ Operator ---------- //
         AKey& operator=(const AKey& other) = default;

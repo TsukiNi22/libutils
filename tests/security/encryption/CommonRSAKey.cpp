@@ -36,7 +36,7 @@ class CommonRSAKeyTest: public ::testing::Test {
             this->_keys = key.get();
         };
         void writePriv(const std::filesystem::path& path) {std::ofstream(path, std::ios::binary) << this->_keys.priv;};
-        void writePub(const std::filesystem::path& path) {std::ofstream(path, std::ios::binary) << this->_keys.pub;};
+        void writePub(const std::filesystem::path& path)  {std::ofstream(path, std::ios::binary) << this->_keys.pub;};
 };
 
 TEST_F(CommonRSAKeyTest, LoadBoth) {

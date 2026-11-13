@@ -377,9 +377,9 @@ static void layoutScenario(const std::string& name)
         EXPECT_EQ(toString(client.read(ids[i])->front()), "msg" + std::to_string(i));
 }
 
-TEST_F(SharedMemoryTest, LayoutCompact) {SHM_ISOLATED(layoutScenario<shm::LayoutPolicy::Compact>(this->_name));}
+TEST_F(SharedMemoryTest, LayoutCompact)            {SHM_ISOLATED(layoutScenario<shm::LayoutPolicy::Compact>(this->_name));}
 TEST_F(SharedMemoryTest, LayoutCompactSemiAligned) {SHM_ISOLATED(layoutScenario<shm::LayoutPolicy::CompactSemiAligned>(this->_name));}
-TEST_F(SharedMemoryTest, LayoutInterleaved) {SHM_ISOLATED(layoutScenario<shm::LayoutPolicy::Interleaved>(this->_name));}
+TEST_F(SharedMemoryTest, LayoutInterleaved)        {SHM_ISOLATED(layoutScenario<shm::LayoutPolicy::Interleaved>(this->_name));}
 TEST_F(SharedMemoryTest, LayoutInterleavedAligned) {SHM_ISOLATED(layoutScenario<shm::LayoutPolicy::InterleavedAligned>(this->_name));}
 
 /* -------------------------------- edge cases -------------------------------- */
