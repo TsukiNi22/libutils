@@ -285,6 +285,6 @@ The pre-release of the packages (`<package_name>-pre`) is triggered by:
 The release of the packages (channel `stable`) is only triggered by a tag matching exactly `vx.x.x` (ex: `v4.0.0`).
 
 ### Downstream notification
-`Dispatch (CI/CD)` notifies the `docker-image` repository (`repository_dispatch`) after the packages are published:
+`Dispatch (CI/CD)` notifies the `docker-image` repository (`repository_dispatch` `libutils-released`, secret `DOCKER_IMAGE_REPO_TOKEN` shared with brain and xstyle) after the packages are published, to rebuild the `ci` and `mingw64-ci` images with the new packages:
 - on every package build (release or pre-release)
 - or on a commit containing `[release]`, preferably in the description
