@@ -98,6 +98,27 @@ TEST_F(ExceptionCApiTest, NotNullGivesTheEmplacementOfTheCaller)
     EXPECT_NE(std::strstr(utils_exception.file, "exception/CApi.cpp"), nullptr);
 }
 
+TEST_F(ExceptionCApiTest, HandleBaseFindsTheBaseOfTheHandle)
+{
+    struct Frozen: public utils_handle, public utils::type::Freezable {};
+    struct Plain: public utils_handle {};
+    Frozen frozen;
+    Plain plain;
+    std::uint64_t notHandle[4] = {};
+    void* ptr = &frozen;
+
+    EXPECT_EQ(utils::exception::c_api::guard([&](void) {utils::exception::c_api::handle_base<utils::type::Freezable>(ptr, "Freezable").freeze();}), UTILS_OK);
+    EXPECT_TRUE(frozen.isFrozen());
+    ptr = &plain;
+    EXPECT_EQ(utils::exception::c_api::guard([&](void) {(void)utils::exception::c_api::handle_base<utils::type::Freezable>(ptr, "Freezable");}), UTILS_KO);
+    EXPECT_STREQ(utils_exception.info, "This handle has no Freezable");
+    ptr = notHandle;
+    EXPECT_EQ(utils::exception::c_api::guard([&](void) {(void)utils::exception::c_api::handle_base<utils::type::Freezable>(ptr, "Freezable");}), UTILS_KO);
+    EXPECT_STREQ(utils_exception.info, "The pointer is not a handle of the C API");
+    EXPECT_EQ(utils::exception::c_api::guard([&](void) {(void)utils::exception::c_api::handle_base<utils::type::Freezable>(static_cast<void*>(nullptr), "Freezable");}), UTILS_KO);
+    EXPECT_STREQ(utils_exception.info, "The handle is NULL");
+}
+
 //----------------------------------------------------------------//
 /* C SIDE */
 

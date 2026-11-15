@@ -8,7 +8,7 @@
  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
 
 Edition:
-##  @date 15/11/2026 by @author Tsukini
+##  @date 19/11/2026 by @author Tsukini
 
 File Name:
 ##  @file CApi.hpp
@@ -17,6 +17,8 @@ File Description:
 ##  Handler used for the C API on c++ exception
 \**************************************************************/
 
+// xstyle: ignore-file CPP-CLASS-NAME (C handle: C types are snake_case)
+
 #ifndef EXCEPTION_CAPI_H
     #define EXCEPTION_CAPI_H
 
@@ -24,7 +26,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"   // _cold, _hot, _nodiscard, _unlikely, _noreturn
+    #include "../attribute/Attribute.hpp"   // _cold, _hot, _nodiscard, _unused, _unlikely, _noreturn
     #include "basic/ErrorException.hpp"     // utils::exception::ErrorException
     #include "ExceptionDefine.hpp"          // utils::exception::* (define / vars)
     #include "IException.hpp"               // utils::exception::IException
@@ -35,6 +37,12 @@ File Description:
     #include <exception>                    // std::exception
     #include <cstdint>                      // std::uint8_t
     #include <string>                       // std::string
+
+    //----------------------------------------------------------------//
+    /* DEFINE */
+
+    /* marks a live handle of the C API ("handle" in ASCII) */
+    #define C_API_HANDLE_MAGIC 0x68616E646C65ull
 
 //----------------------------------------------------------------//
 /* CHECK */
@@ -48,6 +56,26 @@ static_assert(sizeof(utils_exception_type_t) == sizeof(utils::exception::Type));
 
 /* C only type, can't collide with a c++ one */
 static_assert((static_cast<std::uint8_t>(C_API_EXCEPTION_TYPE_SYSTEM) & (C_API_EXCEPTION_TYPE_NONE | C_API_EXCEPTION_TYPE_FATAL | C_API_EXCEPTION_TYPE_ERROR | C_API_EXCEPTION_TYPE_WARNING)) == 0);
+
+//----------------------------------------------------------------//
+/* STRUCT */
+
+// Base of every handle of the C API: always the first base (a void* of the C side is a utils_handle*), the magic marks a live handle
+struct utils_handle {
+    std::uint64_t magic = C_API_HANDLE_MAGIC;
+
+    // ------------ Operator ---------- //
+    utils_handle& operator=(_unused const utils_handle& other) {return *this;};
+    utils_handle& operator=(_unused utils_handle&& other)      {return *this;};
+
+    // ---------- Constructor --------- //
+    utils_handle() = default;
+    utils_handle(_unused const utils_handle& other): utils_handle() { /* Nothing */ };
+    utils_handle(_unused utils_handle&& other): utils_handle()      { /* Nothing */ };
+
+    // ----------- Destructor --------- //
+    virtual ~utils_handle() noexcept {this->magic = 0;};
+};
 
 namespace utils::exception::c_api { // namespace start
 //----------------------------------------------------------------//
@@ -78,8 +106,27 @@ _hot _nodiscard T& not_null_ref(T* ptr, const char* name, const std::source_loca
     return *utils::exception::c_api::not_null(ptr, name, loc);
 }
 
-// Only reset the error flag (before a C callback: the status then only holds its own error, utils_fail / utils_exception_set)
-_hot inline void reset_status(void) noexcept {utils_exception.exception = false;};
+// Base T (utils::type::Freezable, utils::type::Worker...) of any handle of the C side: InvalidArgument when it's not a live handle or its class has no T
+template<typename T>
+_hot _nodiscard T& handle_base(void* handle, const char* name, const std::source_location loc = std::source_location::current())
+{
+    utils_handle* base = static_cast<utils_handle*>(utils::exception::c_api::not_null(handle, "handle", loc));
+    T* object = nullptr;
+
+    if (base->magic != C_API_HANDLE_MAGIC) _unlikely {
+        throw utils::exception::ErrorException(utils::exception::InternalCode::InvalidArgument, "The pointer is not a handle of the C API", loc);
+    }
+    if (!(object = dynamic_cast<T*>(base))) _unlikely {
+        throw utils::exception::ErrorException(utils::exception::InternalCode::InvalidArgument, std::string("This handle has no ") + name, loc);
+    }
+    return *object;
+}
+
+template<typename T>
+_hot _nodiscard const T& handle_base(const void* handle, const char* name, const std::source_location loc = std::source_location::current())
+{
+    return utils::exception::c_api::handle_base<T>(const_cast<void*>(handle), name, loc);
+}
 
 // Error of a C callback (UTILS_KO or an unknown value) as a c++ exception: its info (utils_fail / utils_exception_set) in the message
 _cold _noreturn inline void throw_callback_error(void)
@@ -89,6 +136,9 @@ _cold _noreturn inline void throw_callback_error(void)
 
 // Check the return of a C callback (called after reset_status): anything else than UTILS_OK throws
 _hot inline void check_callback(const int ret) {if (ret != UTILS_OK) _unlikely {utils::exception::c_api::throw_callback_error();}};
+
+// Only reset the error flag (before a C callback: the status then only holds its own error, utils_fail / utils_exception_set)
+_hot inline void reset_status(void) noexcept {utils_exception.exception = false;};
 
 // Run f, never let an exception cross the C boundary, fill utils_exception on failure (only utils_exception.exception = false on success), returns UTILS_OK / UTILS_KO
 template<typename F>

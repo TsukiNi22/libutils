@@ -27,6 +27,7 @@ File Description:
 
     /* type */
     #include "../exception/Common.hpp"  // UTILS_OK, UTILS_KO
+    #include "../exception/CApi.hpp"    // utils_handle
     #include "Flags.hpp"                // utils::cli::Flag, utils::cli::flags::* (preset)
     #include "Cli.hpp"                  // utils::cli::Cli
     #include "CApi.h"                   // utils_cli_t, C_API_CLI_*
@@ -75,7 +76,7 @@ static_assert(C_API_CLI_NO_INPUT != UTILS_OK && C_API_CLI_NO_INPUT != UTILS_KO &
 /* STRUCT */
 
 /* handle of the C API (utils_cli_t), usable in c++ to get the cli */
-struct utils_cli {
+struct utils_cli: public utils_handle {
     utils::cli::Cli cli;
     std::optional<std::thread> thread; // returned by start with THREAD (joined by utils_cli_join / utils_cli_destroy)
 

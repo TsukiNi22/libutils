@@ -27,13 +27,14 @@ File Description:
 
     /* type */
     #include "../../attribute/Attribute.hpp"    // _cold, _hot, _nodiscard
-    #include "../../exception/CApi.hpp"         // utils::exception::c_api::not_null
+    #include "../../exception/CApi.hpp"         // utils::exception::c_api::not_null, utils_handle
     #include "parser/EETPParser.hpp"            // utils::smanip::parser::EETPParser, utils::smanip::parser::EETPContent
     #include "codec/ICodec.hpp"                 // utils::smanip::codec::ICodec
     #include "CApi.h"                           // utils_string_t, utils_codec_t, utils_eetp_content_t, utils_eetp_parser_t
     #include <algorithm>                        // std::min
     #include <cstddef>                          // std::size_t
     #include <cstring>                          // std::memcpy
+    #include <utility>                          // std::move
     #include <memory>                           // std::unique_ptr
     #include <cstdio>                           // std::snprintf
     #include <string>                           // std::string
@@ -82,19 +83,28 @@ _hot _nodiscard inline std::string bytes(const void* data, const std::size_t siz
 /* STRUCT */
 
 /* handles of the C API, usable in c++ to get the object */
-struct utils_string {
+struct utils_string: public utils_handle {
     std::string str;
+
+    // ---------- Constructor --------- //
+    utils_string(std::string s = ""): str{std::move(s)} { /* Nothing */ };
 };
 
-struct utils_codec {
+struct utils_codec: public utils_handle {
     std::unique_ptr<utils::smanip::codec::ICodec> codec;
+
+    // ---------- Constructor --------- //
+    utils_codec(std::unique_ptr<utils::smanip::codec::ICodec> c): codec{std::move(c)} { /* Nothing */ };
 };
 
-struct utils_eetp_content {
+struct utils_eetp_content: public utils_handle {
     utils::smanip::parser::EETPContent content;
+
+    // ---------- Constructor --------- //
+    utils_eetp_content(utils::smanip::parser::EETPContent c): content{std::move(c)} { /* Nothing */ };
 };
 
-struct utils_eetp_parser {
+struct utils_eetp_parser: public utils_handle {
     utils::smanip::parser::EETPParser parser;
 };
 
