@@ -28,7 +28,7 @@ File Description:
     #include "basic/ErrorException.hpp"     // utils::exception::ErrorException
     #include "ExceptionDefine.hpp"          // utils::exception::* (define / vars)
     #include "IException.hpp"               // utils::exception::IException
-    #include "CApi.h"                       // utils_exception, utils_exception_status_t, utils_exception_origin_t, C_API_*
+    #include "CApi.h"                       // UTILS_OK, UTILS_KO, utils_exception, utils_exception_status_t, utils_exception_origin_t, C_API_*
     #include <source_location>              // std::source_location
     #include <type_traits>                  // std::invoke_result_t, std::type_identity_t
     #include <algorithm>                    // std::min
@@ -112,14 +112,14 @@ _cold inline std::size_t copy_r(const std::string& str, char* buf, const std::si
 // Only reset the error flag (before a C callback: the status then only holds its own error, utils_fail / utils_exception_set)
 _hot inline void reset_status(void) noexcept {utils_exception.exception = false;};
 
-// Run f, never let an exception cross the C boundary, fill utils_exception on failure (only utils_exception.exception = false on success)
+// Run f, never let an exception cross the C boundary, fill utils_exception on failure (only utils_exception.exception = false on success), returns UTILS_OK / UTILS_KO
 template<typename F>
-_hot _nodiscard bool guard(F&& f) noexcept
+_hot _nodiscard int guard(F&& f) noexcept
 {
     try {
         f();
         utils_exception.exception = false;
-        return true;
+        return UTILS_OK;
     } catch (const utils::exception::IException& e) {
         utils::exception::c_api::set_status(e);
     } catch (const std::exception& e) {
@@ -127,7 +127,7 @@ _hot _nodiscard bool guard(F&& f) noexcept
     } catch (...) {
         utils::exception::c_api::set_status("Unknown exception", C_API_EXCEPTION_ORIGIN_UNKNOWN);
     }
-    return false;
+    return UTILS_KO;
 }
 
 // Run f and return its result, fallback when it threw (status filled like guard)
@@ -135,7 +135,7 @@ template<typename F>
 _hot _nodiscard std::invoke_result_t<F> guard_fallback(const std::type_identity_t<std::invoke_result_t<F>> fallback, F&& f) noexcept
 {
     std::invoke_result_t<F> res = fallback;
-    if (!utils::exception::c_api::guard([&](void) {res = f();})) _unlikely {return fallback;}
+    if (utils::exception::c_api::guard([&](void) {res = f();}) != UTILS_OK) _unlikely {return fallback;}
     return res;
 }
 

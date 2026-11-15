@@ -39,16 +39,16 @@ class ExceptionCApiTest: public ::testing::Test {
 
 TEST_F(ExceptionCApiTest, GuardSuccessOnlyResetsTheFlag)
 {
-    EXPECT_FALSE(utils::exception::c_api::guard([](void) {throw std::runtime_error("boom");}));
+    EXPECT_EQ(utils::exception::c_api::guard([](void) {throw std::runtime_error("boom");}), UTILS_KO);
     EXPECT_TRUE(utils_exception.exception);
-    EXPECT_TRUE(utils::exception::c_api::guard([](void) { /* Nothing */ }));
+    EXPECT_EQ(utils::exception::c_api::guard([](void) { /* Nothing */ }), UTILS_OK);
     EXPECT_FALSE(utils_exception.exception);
     EXPECT_STREQ(utils_exception.what, "boom"); // no full reset on success
 }
 
 TEST_F(ExceptionCApiTest, GuardLibutilsExceptionIsInternal)
 {
-    EXPECT_FALSE(utils::exception::c_api::guard([](void) {throw utils::exception::ErrorException(utils::exception::InternalCode::InvalidArgument, "bad");}));
+    EXPECT_EQ(utils::exception::c_api::guard([](void) {throw utils::exception::ErrorException(utils::exception::InternalCode::InvalidArgument, "bad");}), UTILS_KO);
     EXPECT_TRUE(utils_exception.exception);
     EXPECT_EQ(utils_exception.origin, C_API_EXCEPTION_ORIGIN_INTERNAL);
     EXPECT_EQ(utils_exception.type, C_API_EXCEPTION_TYPE_ERROR);
@@ -60,7 +60,7 @@ TEST_F(ExceptionCApiTest, GuardLibutilsExceptionIsInternal)
 
 TEST_F(ExceptionCApiTest, GuardStdExceptionIsSystem)
 {
-    EXPECT_FALSE(utils::exception::c_api::guard([](void) {throw std::out_of_range("range");}));
+    EXPECT_EQ(utils::exception::c_api::guard([](void) {throw std::out_of_range("range");}), UTILS_KO);
     EXPECT_EQ(utils_exception.origin, C_API_EXCEPTION_ORIGIN_STD);
     EXPECT_EQ(utils_exception.type, C_API_EXCEPTION_TYPE_SYSTEM);
     EXPECT_EQ(utils_exception.code, C_API_OTHER_EXCEPTION_CODE);
@@ -70,7 +70,7 @@ TEST_F(ExceptionCApiTest, GuardStdExceptionIsSystem)
 
 TEST_F(ExceptionCApiTest, GuardUnknownException)
 {
-    EXPECT_FALSE(utils::exception::c_api::guard([](void) {throw 42;}));
+    EXPECT_EQ(utils::exception::c_api::guard([](void) {throw 42;}), UTILS_KO);
     EXPECT_EQ(utils_exception.origin, C_API_EXCEPTION_ORIGIN_UNKNOWN);
     EXPECT_EQ(utils_exception.code, C_API_OTHER_EXCEPTION_CODE);
     EXPECT_STREQ(utils_exception.what, "Unknown exception");
@@ -91,8 +91,8 @@ TEST_F(ExceptionCApiTest, NotNullGivesTheEmplacementOfTheCaller)
     int* null = nullptr;
 
     EXPECT_EQ(utils::exception::c_api::not_null(&value, "value"), &value);
-    const bool ok = utils::exception::c_api::guard([&](void) {(void)utils::exception::c_api::not_null(null, "value");}); const std::uint64_t line = __LINE__;
-    EXPECT_FALSE(ok);
+    const int ret = utils::exception::c_api::guard([&](void) {(void)utils::exception::c_api::not_null(null, "value");}); const std::uint64_t line = __LINE__;
+    EXPECT_EQ(ret, UTILS_KO);
     EXPECT_STREQ(utils_exception.info, "The value is NULL");
     EXPECT_EQ(utils_exception.line, line);
     EXPECT_NE(std::strstr(utils_exception.file, "exception/CApi.cpp"), nullptr);

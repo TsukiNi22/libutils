@@ -38,11 +38,6 @@ File Description:
 //----------------------------------------------------------------//
 /* TOOLS */
 
-_hot _nodiscard static inline int status(const bool ok) noexcept
-{
-    return (ok ? UTILS_OK : UTILS_KO);
-}
-
 /* utils_cli_parsed_t is never defined: it's only the C name of a utils::cli::ParsedData */
 _hot _nodiscard static inline utils::cli::ParsedData& parsed_data(utils_cli_parsed_t* parsed, const std::source_location loc = std::source_location::current())
 {
@@ -138,13 +133,13 @@ _cold _nodiscard static utils::pool::Middleware<const utils::cli::ParsedData&> m
 template<typename F>
 _cold _nodiscard static int add_middleware(utils_cli_t* cli, const bool valid, F&& f)
 {
-    return status(utils::exception::c_api::guard([&](void) {
+    return utils::exception::c_api::guard([&](void) {
         utils_cli_t& self = utils::exception::c_api::not_null_ref(cli, "cli handle");
         if (!valid) _unlikely {
             throw utils::exception::ErrorException(utils::exception::InternalCode::InvalidArgument, "The middleware is NULL");
         }
         f(self);
-    }));
+    });
 }
 
 //----------------------------------------------------------------//
@@ -174,7 +169,7 @@ _cold void utils_cli_destroy(utils_cli_t* cli)
 
 _cold int utils_cli_start(utils_cli_t* cli, const char* const* inputs, size_t count, size_t call)
 {
-    return status(utils::exception::c_api::guard([&](void) {
+    return utils::exception::c_api::guard([&](void) {
         utils_cli_t& self = utils::exception::c_api::not_null_ref(cli, "cli handle");
         std::vector<std::string> list;
 
@@ -191,7 +186,7 @@ _cold int utils_cli_start(utils_cli_t* cli, const char* const* inputs, size_t co
             if (self.thread && self.thread->joinable()) self.thread->join();
             self.thread = std::move(thread);
         }
-    }));
+    });
 }
 
 _cold void utils_cli_join(utils_cli_t* cli)
@@ -275,27 +270,27 @@ _cold void utils_cli_set_flags(utils_cli_t* cli, uint32_t flags)
 
 _cold int utils_cli_set_parsed_command(utils_cli_t* cli, const char* name, utils_cli_parsed_command_t fn, int16_t min, int16_t max, void* data, bool force)
 {
-    return status(utils::exception::c_api::guard([&](void) {
+    return utils::exception::c_api::guard([&](void) {
         utils_cli_t& self = utils::exception::c_api::not_null_ref(cli, "cli handle");
         const std::string command = utils::exception::c_api::not_null(name, "command name");
         if (force) self.cli.setCommand<true>(command, std::make_tuple(parsed_command(&self, fn, data), min, max));
         else self.cli.setCommand<false>(command, std::make_tuple(parsed_command(&self, fn, data), min, max));
-    }));
+    });
 }
 
 _cold int utils_cli_set_raw_command(utils_cli_t* cli, const char* name, utils_cli_raw_command_t fn, void* data, bool force)
 {
-    return status(utils::exception::c_api::guard([&](void) {
+    return utils::exception::c_api::guard([&](void) {
         utils_cli_t& self = utils::exception::c_api::not_null_ref(cli, "cli handle");
         const std::string command = utils::exception::c_api::not_null(name, "command name");
         if (force) self.cli.setCommand<true>(command, raw_command(&self, fn, data));
         else self.cli.setCommand<false>(command, raw_command(&self, fn, data));
-    }));
+    });
 }
 
 _cold int utils_cli_set_parsed_commands(utils_cli_t* cli, const utils_cli_parsed_command_entry_t* commands, size_t count, bool force)
 {
-    return status(utils::exception::c_api::guard([&](void) {
+    return utils::exception::c_api::guard([&](void) {
         utils_cli_t& self = utils::exception::c_api::not_null_ref(cli, "cli handle");
         std::unordered_map<std::string, std::tuple<std::function<void(const utils::cli::Cli&, const std::vector<std::string>&)>, std::int16_t, std::int16_t>> map;
 
@@ -308,12 +303,12 @@ _cold int utils_cli_set_parsed_commands(utils_cli_t* cli, const utils_cli_parsed
 
         if (force) self.cli.setCommands<true>(map);
         else self.cli.setCommands<false>(map);
-    }));
+    });
 }
 
 _cold int utils_cli_set_raw_commands(utils_cli_t* cli, const utils_cli_raw_command_entry_t* commands, size_t count, bool force)
 {
-    return status(utils::exception::c_api::guard([&](void) {
+    return utils::exception::c_api::guard([&](void) {
         utils_cli_t& self = utils::exception::c_api::not_null_ref(cli, "cli handle");
         std::unordered_map<std::string, std::function<void(const utils::cli::Cli&, const std::string&)>> map;
 
@@ -326,18 +321,18 @@ _cold int utils_cli_set_raw_commands(utils_cli_t* cli, const utils_cli_raw_comma
 
         if (force) self.cli.setCommands<true>(map);
         else self.cli.setCommands<false>(map);
-    }));
+    });
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold int utils_cli_del_command(utils_cli_t* cli, const char* name)
 {
-    return status(utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.delCommand(utils::exception::c_api::not_null(name, "command name"));}));
+    return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.delCommand(utils::exception::c_api::not_null(name, "command name"));});
 }
 
 _cold int utils_cli_del_commands(utils_cli_t* cli, const char* const* names, size_t count)
 {
-    return status(utils::exception::c_api::guard([&](void) {
+    return utils::exception::c_api::guard([&](void) {
         utils_cli_t& self = utils::exception::c_api::not_null_ref(cli, "cli handle");
         std::vector<std::string> list;
 
@@ -347,19 +342,19 @@ _cold int utils_cli_del_commands(utils_cli_t* cli, const char* const* names, siz
         for (std::size_t i = 0; i < count; ++i)
             list.emplace_back(utils::exception::c_api::not_null(names[i], "command name"));
         self.cli.delCommands(list);
-    }));
+    });
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold int utils_cli_reset_commands(utils_cli_t* cli)
 {
-    return status(utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.resetCommands();}));
+    return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.resetCommands();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold int utils_cli_clear_commands(utils_cli_t* cli)
 {
-    return status(utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.clearCommands();}));
+    return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.clearCommands();});
 }
 
 //----------------------------------------------------------------//
@@ -368,30 +363,30 @@ _cold int utils_cli_clear_commands(utils_cli_t* cli)
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold int utils_cli_reset_hooks(utils_cli_t* cli)
 {
-    return status(utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.resetHooks();}));
+    return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.resetHooks();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold int utils_cli_reset_prompt_hook(utils_cli_t* cli)
 {
-    return status(utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.resetPromptHook();}));
+    return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.resetPromptHook();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold int utils_cli_reset_parser_hook(utils_cli_t* cli)
 {
-    return status(utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.resetParserHook();}));
+    return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.resetParserHook();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold int utils_cli_reset_getc_hook(utils_cli_t* cli)
 {
-    return status(utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.resetGetCHook();}));
+    return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.resetGetCHook();});
 }
 
 _cold int utils_cli_set_prompt_hook(utils_cli_t* cli, utils_cli_prompt_hook_t hook, void* data)
 {
-    return status(utils::exception::c_api::guard([&](void) {
+    return utils::exception::c_api::guard([&](void) {
         utils_cli_t& self = utils::exception::c_api::not_null_ref(cli, "cli handle");
         utils_cli_t* ptr = &self;
 
@@ -401,12 +396,12 @@ _cold int utils_cli_set_prompt_hook(utils_cli_t* cli, utils_cli_prompt_hook_t ho
             utils::exception::c_api::reset_status(); // only the error of this callback
             check(ptr, hook(ptr, code, data), false);
         });
-    }));
+    });
 }
 
 _cold int utils_cli_set_parser_hook(utils_cli_t* cli, utils_cli_parser_hook_t hook, void* data)
 {
-    return status(utils::exception::c_api::guard([&](void) {
+    return utils::exception::c_api::guard([&](void) {
         utils_cli_t& self = utils::exception::c_api::not_null_ref(cli, "cli handle");
         utils_cli_t* ptr = &self;
 
@@ -418,12 +413,12 @@ _cold int utils_cli_set_parser_hook(utils_cli_t* cli, utils_cli_parser_hook_t ho
             check(ptr, hook(input.c_str(), trim, logic, parse, parsed_c(out), data), false);
             return out;
         });
-    }));
+    });
 }
 
 _cold int utils_cli_set_getc_hook(utils_cli_t* cli, utils_cli_getc_hook_t hook, void* data)
 {
-    return status(utils::exception::c_api::guard([&](void) {
+    return utils::exception::c_api::guard([&](void) {
         utils_cli_t& self = utils::exception::c_api::not_null_ref(cli, "cli handle");
         utils_cli_t* ptr = &self;
 
@@ -436,7 +431,7 @@ _cold int utils_cli_set_getc_hook(utils_cli_t* cli, utils_cli_getc_hook_t hook, 
             check(ptr, ret, false);
             return (ret == UTILS_OK); // exit: the cli is interrupted
         });
-    }));
+    });
 }
 
 //----------------------------------------------------------------//
@@ -444,22 +439,22 @@ _cold int utils_cli_set_getc_hook(utils_cli_t* cli, utils_cli_getc_hook_t hook, 
 
 _cold int utils_cli_default_prompt_hook(const utils_cli_t* cli, uint8_t code, _unused void* data)
 {
-    return status(utils::exception::c_api::guard([&](void) {utils::cli::defaultPromptHook(utils::exception::c_api::not_null_ref(cli, "cli handle").cli, code);}));
+    return utils::exception::c_api::guard([&](void) {utils::cli::defaultPromptHook(utils::exception::c_api::not_null_ref(cli, "cli handle").cli, code);});
 }
 
 _cold int utils_cli_default_parser_hook(const char* input, bool trim, bool logic, bool parse, utils_cli_parsed_t* out, _unused void* data)
 {
-    return status(utils::exception::c_api::guard([&](void) {
+    return utils::exception::c_api::guard([&](void) {
         utils::cli::ParsedData& parsed = parsed_data(out);
         parsed = utils::cli::defaultParserHook(utils::exception::c_api::not_null(input, "input"), trim, logic, parse);
-    }));
+    });
 }
 
 _cold int utils_cli_default_getc_hook(char* c, _unused void* data)
 {
     bool read = false;
 
-    if (!utils::exception::c_api::guard([&](void) {read = utils::cli::defaultGetCHook(*utils::exception::c_api::not_null(c, "char"));})) _unlikely {return UTILS_KO;}
+    if (utils::exception::c_api::guard([&](void) {read = utils::cli::defaultGetCHook(*utils::exception::c_api::not_null(c, "char"));}) != UTILS_OK) _unlikely {return UTILS_KO;}
     return (read ? UTILS_OK : C_API_CLI_NO_INPUT);
 }
 
@@ -469,7 +464,7 @@ _cold int utils_cli_default_getc_hook(char* c, _unused void* data)
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold int utils_cli_reset_middlewares(utils_cli_t* cli)
 {
-    return status(utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.resetMiddlewares();}));
+    return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.resetMiddlewares();});
 }
 
 /* cli */
@@ -486,7 +481,7 @@ _cold int utils_cli_cli_middlewares_add_after(utils_cli_t* cli, utils_cli_middle
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold int utils_cli_cli_middlewares_clear(utils_cli_t* cli)
 {
-    return status(utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.cliMiddlewares.clear();}));
+    return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.cliMiddlewares.clear();});
 }
 
 /* error */
@@ -503,7 +498,7 @@ _cold int utils_cli_error_middlewares_add_after(utils_cli_t* cli, utils_cli_midd
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold int utils_cli_error_middlewares_clear(utils_cli_t* cli)
 {
-    return status(utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.errorMiddlewares.clear();}));
+    return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.errorMiddlewares.clear();});
 }
 
 /* prompt */
@@ -520,7 +515,7 @@ _cold int utils_cli_prompt_middlewares_add_after(utils_cli_t* cli, utils_cli_mid
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold int utils_cli_prompt_middlewares_clear(utils_cli_t* cli)
 {
-    return status(utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.promptMiddlewares.clear();}));
+    return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.promptMiddlewares.clear();});
 }
 
 /* input */
@@ -537,7 +532,7 @@ _cold int utils_cli_input_middlewares_add_after(utils_cli_t* cli, utils_cli_midd
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold int utils_cli_input_middlewares_clear(utils_cli_t* cli)
 {
-    return status(utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.inputMiddlewares.clear();}));
+    return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.inputMiddlewares.clear();});
 }
 
 /* parser */
@@ -554,7 +549,7 @@ _cold int utils_cli_parser_middlewares_add_after(utils_cli_t* cli, utils_cli_mid
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold int utils_cli_parser_middlewares_clear(utils_cli_t* cli)
 {
-    return status(utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.parserMiddlewares.clear();}));
+    return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.parserMiddlewares.clear();});
 }
 
 /* exec */
@@ -571,7 +566,7 @@ _cold int utils_cli_exec_middlewares_add_after(utils_cli_t* cli, utils_cli_middl
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold int utils_cli_exec_middlewares_clear(utils_cli_t* cli)
 {
-    return status(utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.execMiddlewares.clear();}));
+    return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.execMiddlewares.clear();});
 }
 
 /* command */
@@ -588,7 +583,7 @@ _cold int utils_cli_command_middlewares_add_after(utils_cli_t* cli, utils_cli_mi
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold int utils_cli_command_middlewares_clear(utils_cli_t* cli)
 {
-    return status(utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.commandMiddlewares.clear();}));
+    return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.commandMiddlewares.clear();});
 }
 
 //----------------------------------------------------------------//
@@ -684,24 +679,24 @@ _cold void utils_cli_parsed_destroy(utils_cli_parsed_t* parsed)
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold int utils_cli_parsed_clear(utils_cli_parsed_t* parsed)
 {
-    return status(utils::exception::c_api::guard([&](void) {parsed_data(parsed).clear();}));
+    return utils::exception::c_api::guard([&](void) {parsed_data(parsed).clear();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold int utils_cli_parsed_add_group(utils_cli_parsed_t* parsed)
 {
-    return status(utils::exception::c_api::guard([&](void) {parsed_data(parsed).emplace_back();}));
+    return utils::exception::c_api::guard([&](void) {parsed_data(parsed).emplace_back();});
 }
 
 _cold int utils_cli_parsed_add_arg(utils_cli_parsed_t* parsed, const char* arg)
 {
-    return status(utils::exception::c_api::guard([&](void) {
+    return utils::exception::c_api::guard([&](void) {
         utils::cli::ParsedData& data = parsed_data(parsed);
         if (data.empty()) _unlikely {
             throw utils::exception::ErrorException(utils::exception::InternalCode::Empty, "No group to add the argument (utils_cli_parsed_add_group first)");
         }
         data.back().emplace_back(utils::exception::c_api::not_null(arg, "argument"));
-    }));
+    });
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
