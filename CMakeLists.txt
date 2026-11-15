@@ -100,6 +100,7 @@ set(SRC
     src/utils/arguments/ArgParser.cpp
     src/utils/arguments/Hooks.cpp
     src/utils/arguments/Settings.cpp
+    src/utils/arguments/CApi.cpp
 
     ## Network
     src/utils/network/Client.cpp

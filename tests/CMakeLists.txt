@@ -55,6 +55,7 @@ set(SRC
 
     # Arguments
     arguments/Settings.cpp
+    arguments/CApi.cpp
 
     # Network
     network/ClientServer.cpp

@@ -232,6 +232,12 @@ File Description:
     #include "encapsulation/CApi.h" // utils_dup_*, utils_pipe_*, utils_poll_*, utils_process_*, utils_shared_object_*, utils_shm_*, C_API_SHM_*
 #endif
 
+/* Arguments */
+#ifdef _Arguments
+    // -> Arguments parser & typed settings (utils::arguments)
+    #include "arguments/CApi.h" // utils_argparser_*, utils_settings_*, C_API_SETTINGS_CAST_*
+#endif
+
 /* Cli */
 #ifdef _Cli
     // -> Handling of a customizable command line interface (utils::cli::Cli)

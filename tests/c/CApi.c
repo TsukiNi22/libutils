@@ -14,7 +14,7 @@ File Name:
 ##  @file CApi.c
 
 File Description:
-##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, platform, iomanip, smanip, math, type, encapsulation, cli)
+##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, platform, iomanip, smanip, math, type, encapsulation, arguments, cli)
 \**************************************************************/
 
 #define _POSIX_C_SOURCE 200809L // POSIX structures of the C API of platform (strict C11 / C23)
@@ -195,6 +195,24 @@ static void test_encapsulation(void)
     utils_process_destroy(process);
 }
 
+static void test_arguments(void)
+{
+    const char* argv[] = {"bin", "-v"};
+    utils_argparser_t* parser = utils_argparser_create("bin", NULL);
+    utils_argparser_result_t* result = NULL;
+    utils_settings_t* settings = utils_settings_create();
+    int32_t value = 0;
+
+    CHECK(utils_argparser_set_flag(parser, "verbose", "v", NULL, "verbose", NULL, NULL, 0, NULL, false, false, false) == UTILS_OK);
+    CHECK(utils_argparser_set_default_usage(parser) == UTILS_OK);
+    result = utils_argparser_parse(parser, 2, argv, false);
+    CHECK(result != NULL && utils_argparser_result_count(result) == 1);
+    CHECK(utils_settings_add_i32(settings, "n", 3) == UTILS_OK && utils_settings_get_i32(settings, "n", &value) == UTILS_OK && value == 3);
+    utils_argparser_result_destroy(result);
+    utils_argparser_destroy(parser);
+    utils_settings_destroy(settings);
+}
+
 static void test_cli(void)
 {
     int calls = 0;
@@ -239,6 +257,7 @@ int main(void)
     test_math();
     test_type();
     test_encapsulation();
+    test_arguments();
     test_cli();
     if (failed) fprintf(stderr, "%d check(s) failed\n", failed);
     return (failed ? 1 : 0);
