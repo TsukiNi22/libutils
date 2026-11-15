@@ -81,6 +81,7 @@ set(SRC
     ## Math (sub-part: geometry)
     src/utils/math/geometry/Point.cpp
     src/utils/math/geometry/Angle.cpp
+    src/utils/math/CApi.cpp
 
     # Verbose
     src/utils/verbose/Verbose.cpp

@@ -214,6 +214,12 @@ File Description:
     #include "manip/smanip/CApi.h" // utils_string_*, utils_smanip_*, utils_codec_*, utils_eetp_*
 #endif
 
+/* Math */
+#if defined(_Geometry) || defined(_Trigo)
+    // -> Math types (utils::math::Type = double), geometry & trigonometry (utils::math)
+    #include "math/CApi.h" // utils_math_*
+#endif
+
 /* Cli */
 #ifdef _Cli
     // -> Handling of a customizable command line interface (utils::cli::Cli)

@@ -67,6 +67,7 @@ set(SRC
 
     # Math
     math/Geometry.cpp
+    math/CApi.cpp
 
     # Type
     type/Vector.cpp

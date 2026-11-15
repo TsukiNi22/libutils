@@ -14,7 +14,7 @@ File Name:
 ##  @file CApi.c
 
 File Description:
-##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, platform, iomanip, smanip, cli)
+##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, platform, iomanip, smanip, math, cli)
 \**************************************************************/
 
 #define _POSIX_C_SOURCE 200809L // POSIX structures of the C API of platform (strict C11 / C23)
@@ -156,6 +156,16 @@ static void test_smanip(void)
     utils_codec_destroy(codec);
 }
 
+static void test_math(void)
+{
+    utils_math_coord2d_t origin = {0.0, 0.0};
+    utils_math_coord2d_t point = {2.0, 0.0};
+    utils_math_coord2d_t res = utils_math_rotate_point_2d(origin, point, 180.0, false);
+
+    CHECK(res.x < -1.999 && res.x > -2.001);
+    CHECK(utils_math_rad_to_deg(utils_math_deg_to_rad(90.0)) > 89.999);
+}
+
 static void test_cli(void)
 {
     int calls = 0;
@@ -197,6 +207,7 @@ int main(void)
     test_platform();
     test_iomanip();
     test_smanip();
+    test_math();
     test_cli();
     if (failed) fprintf(stderr, "%d check(s) failed\n", failed);
     return (failed ? 1 : 0);
