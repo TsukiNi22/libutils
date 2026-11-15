@@ -31,6 +31,7 @@ endif()
 set(SRC
     # Exception
     exception/Exception.cpp
+    exception/CApi.cpp
 
     # Concepts
     concepts/Concepts.cpp
@@ -45,6 +46,7 @@ set(SRC
 
     # Cli
     cli/Cli.cpp
+    cli/CApi.cpp
 
     # Arguments
     arguments/Settings.cpp
@@ -148,3 +150,23 @@ if(CMAKE_CROSSCOMPILING)
 else()
     gtest_discover_tests(${TARGET})
 endif()
+
+# =========================
+# C API (pure C program, C11 & C23)
+# =========================
+enable_language(C)
+foreach(STANDARD 11 23)
+    set(C_TARGET c_api_c${STANDARD})
+    add_executable(${C_TARGET} c/CApi.c)
+    set_target_properties(${C_TARGET} PROPERTIES
+        C_STANDARD ${STANDARD}
+        C_STANDARD_REQUIRED ON
+        C_EXTENSIONS OFF
+        LINKER_LANGUAGE CXX # libutils is c++ (libstdc++ at the link)
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/tests # not in the sources like unit_tests
+    )
+    target_include_directories(${C_TARGET} PRIVATE ${CMAKE_BINARY_DIR}/generated) # utils/version.h
+    target_compile_options(${C_TARGET} PRIVATE -W -Wall -Wextra)
+    target_link_libraries(${C_TARGET} PRIVATE utils)
+    add_test(NAME CApi.C${STANDARD} COMMAND ${C_TARGET})
+endforeach()

@@ -44,8 +44,8 @@ add_compile_options(
     -Wunused-parameter
     -Wshadow
     -Wuninitialized
-    -Wno-c++26-extensions
-    -Wno-c++23-extensions
+    $<$<COMPILE_LANGUAGE:CXX>:-Wno-c++26-extensions> # c++ only (the C tests of the C API)
+    $<$<COMPILE_LANGUAGE:CXX>:-Wno-c++23-extensions>
 )
 
 # =========================
