@@ -238,6 +238,12 @@ File Description:
     #include "arguments/CApi.h" // utils_argparser_*, utils_settings_*, C_API_SETTINGS_CAST_*
 #endif
 
+/* Network */
+#if defined(_Network) || defined(_Socket)
+    // -> Sockets (TCP or of the C side), client & server (utils::network)
+    #include "network/CApi.h" // utils_socket_*, utils_client_*, utils_server_*, utils_payloads_*, utils_network_*, C_API_NETWORK_*
+#endif
+
 /* Cli */
 #ifdef _Cli
     // -> Handling of a customizable command line interface (utils::cli::Cli)

@@ -14,7 +14,7 @@ File Name:
 ##  @file CApi.c
 
 File Description:
-##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, platform, iomanip, smanip, math, type, encapsulation, arguments, cli)
+##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, platform, iomanip, smanip, math, type, encapsulation, arguments, network, cli)
 \**************************************************************/
 
 #define _POSIX_C_SOURCE 200809L // POSIX structures of the C API of platform (strict C11 / C23)
@@ -213,6 +213,15 @@ static void test_arguments(void)
     utils_settings_destroy(settings);
 }
 
+static void test_network(void)
+{
+    utils_payloads_t* payloads = utils_payloads_create();
+
+    CHECK(utils_network_is_ip("127.0.0.1") && !utils_network_is_ip("localhost"));
+    CHECK(payloads != NULL && utils_payloads_count(payloads) == 0);
+    utils_payloads_destroy(payloads);
+}
+
 static void test_cli(void)
 {
     int calls = 0;
@@ -258,6 +267,7 @@ int main(void)
     test_type();
     test_encapsulation();
     test_arguments();
+    test_network();
     test_cli();
     if (failed) fprintf(stderr, "%d check(s) failed\n", failed);
     return (failed ? 1 : 0);

@@ -111,6 +111,7 @@ set(SRC_UNIX
 
     # Network
     network/Socket.cpp
+    network/CApi.cpp
 
     # Platform
     platform/CApi.cpp
