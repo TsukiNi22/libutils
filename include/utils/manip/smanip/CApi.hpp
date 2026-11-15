@@ -14,8 +14,10 @@ File Name:
 ##  @file CApi.hpp
 
 File Description:
-##  String tools of the C API (copy in the fixed buffers of the status & in the buffers of the user)
+##  String tools of the C API (copy in the fixed buffers of the status & in the buffers of the user) & handles of the C API of smanip
 \**************************************************************/
+
+// xstyle: ignore-file CPP-CLASS-NAME (C handle: C types are snake_case)
 
 #ifndef SMANIP_CAPI_H
     #define SMANIP_CAPI_H
@@ -24,11 +26,15 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../attribute/Attribute.hpp"    // _cold
+    #include "../../attribute/Attribute.hpp"    // _cold, _hot, _nodiscard
     #include "../../exception/CApi.hpp"         // utils::exception::c_api::not_null
+    #include "parser/EETPParser.hpp"            // utils::smanip::parser::EETPParser, utils::smanip::parser::EETPContent
+    #include "codec/ICodec.hpp"                 // utils::smanip::codec::ICodec
+    #include "CApi.h"                           // utils_string_t, utils_codec_t, utils_eetp_content_t, utils_eetp_parser_t
     #include <algorithm>                        // std::min
     #include <cstddef>                          // std::size_t
     #include <cstring>                          // std::memcpy
+    #include <memory>                           // std::unique_ptr
     #include <cstdio>                           // std::snprintf
     #include <string>                           // std::string
 
@@ -64,5 +70,32 @@ _cold inline std::size_t copy_r(const std::string& str, char* buf, const std::si
     return str.size();
 }
 
+// Bytes given by the C side (NULL only with a size of 0)
+_hot _nodiscard inline std::string bytes(const void* data, const std::size_t size, const char* name = "data")
+{
+    if (size == 0) return "";
+    return std::string(static_cast<const char*>(utils::exception::c_api::not_null(data, name)), size);
+}
+
 } // namespace end
+//----------------------------------------------------------------//
+/* STRUCT */
+
+/* handles of the C API, usable in c++ to get the object */
+struct utils_string {
+    std::string str;
+};
+
+struct utils_codec {
+    std::unique_ptr<utils::smanip::codec::ICodec> codec;
+};
+
+struct utils_eetp_content {
+    utils::smanip::parser::EETPContent content;
+};
+
+struct utils_eetp_parser {
+    utils::smanip::parser::EETPParser parser;
+};
+
 #endif /* SMANIP_CAPI_H */

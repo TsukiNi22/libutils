@@ -70,6 +70,7 @@ set(SRC
 
     ## S - Manip
     src/utils/manip/smanip/format.cpp
+    src/utils/manip/smanip/CApi.cpp
 
     ## S - Manip (sub-part: codec)
     src/utils/manip/smanip/codec/Base64Codec.cpp

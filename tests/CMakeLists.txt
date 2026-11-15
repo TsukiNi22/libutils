@@ -47,6 +47,7 @@ set(SRC
     manip/smanip/Format.cpp
     manip/smanip/Base64Codec.cpp
     manip/smanip/EETPParser.cpp
+    manip/smanip/CApi.cpp
 
     # Cli
     cli/Cli.cpp

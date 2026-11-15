@@ -208,6 +208,12 @@ File Description:
     #include "manip/iomanip/CApi.h" // utils_iomanip_*, C_API_IOMANIP_*
 #endif
 
+/* S - Manip */
+#ifdef _SManip
+    // -> Byte strings, format, codecs & EETP parser (utils::smanip)
+    #include "manip/smanip/CApi.h" // utils_string_*, utils_smanip_*, utils_codec_*, utils_eetp_*
+#endif
+
 /* Cli */
 #ifdef _Cli
     // -> Handling of a customizable command line interface (utils::cli::Cli)

@@ -14,7 +14,7 @@ File Name:
 ##  @file CApi.c
 
 File Description:
-##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, platform, iomanip, cli)
+##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, platform, iomanip, smanip, cli)
 \**************************************************************/
 
 #define _POSIX_C_SOURCE 200809L // POSIX structures of the C API of platform (strict C11 / C23)
@@ -142,6 +142,20 @@ static void test_iomanip(void)
     CHECK(utils_iomanip_pos_r(2, 3, buf, sizeof(buf)) == strlen("\x1b[2;3H") && strcmp(buf, "\x1b[2;3H") == 0);
 }
 
+static void test_smanip(void)
+{
+    utils_codec_t* codec = utils_codec_create_base64();
+    utils_string_t* out = utils_string_create(NULL, 0);
+
+    CHECK(codec != NULL && out != NULL);
+    CHECK(utils_codec_encode(codec, "hello", 5, out) == UTILS_OK);
+    CHECK(strcmp(utils_string_data(out), "aGVsbG8=") == 0);
+    CHECK(utils_string_size(out) == 8);
+    CHECK(strcmp(utils_smanip_format("<>"), utils_iomanip_reset()) == 0);
+    utils_string_destroy(out);
+    utils_codec_destroy(codec);
+}
+
 static void test_cli(void)
 {
     int calls = 0;
@@ -182,6 +196,7 @@ int main(void)
     test_verbose();
     test_platform();
     test_iomanip();
+    test_smanip();
     test_cli();
     if (failed) fprintf(stderr, "%d check(s) failed\n", failed);
     return (failed ? 1 : 0);
