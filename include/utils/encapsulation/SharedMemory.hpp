@@ -27,7 +27,7 @@ File Description:
     #include "../exception/basic/ErrorException.hpp"    // utils::exception::ErrorException
     #include "../security/observer/Observer.hpp"        // utils::security::observer::Observer
     #include "../exception/ExceptionDefine.hpp"         // utils::exception::Type, utils::exception::InternalCode
-    #include "../attribute/Attribute.hpp"               // _cold, _hot, _nodiscard, _unlikely, _deprecated, _legacy, std::hardware_destructive_interference_size
+    #include "../attribute/Attribute.hpp"               // _cold, _hot, _nodiscard, _unlikely, _deprecated, _migration, std::hardware_destructive_interference_size
     #include "../platform/Platform.hpp"                 // UTILS_WINDOWS
     #include "../system/IdHandler.hpp"                  // utils::system::IdHandler<T>
     #include "../platform/Unistd.hpp"                   // utils::platform::getpid
@@ -343,7 +343,8 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
         SharedMemory& operator=(SharedMemory&& other) = delete;
 
         // ---------- Constructor --------- //
-        _legacy SharedMemory(std::uint16_t ownership): _ownership{static_cast<pid_t>(ownership)} {};
+        // xstyle: ignore-next CPP-CLASS-BLOCK (false positive: _migration(...) is the attribute macro of a constructor)
+        _migration(6, 0, 0) SharedMemory(std::uint16_t ownership): _ownership{static_cast<pid_t>(ownership)} {};
         SharedMemory(pid_t ownership = utils::platform::getpid()): _ownership{ownership} {};
         SharedMemory(const SharedMemory& other) = delete;
         SharedMemory(SharedMemory&& other) = delete;
