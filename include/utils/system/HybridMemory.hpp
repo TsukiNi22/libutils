@@ -204,9 +204,11 @@ class HybridMemory {
                 this->_gpu->memset(this->_buffer, raw[0], this->bytes());
                 return;
             }
-            const std::vector<T> chunk(std::min<std::size_t>(this->_size, (1 << 20) / sizeof(T) + 1), value);
-            for (std::size_t index = 0; index < this->_size; index += chunk.size())
-                this->_gpu->store(this->_buffer, chunk.data(), this->bytesOf_(std::min(chunk.size(), this->_size - index)), this->bytesOf_(index));
+            const std::size_t count = std::min<std::size_t>(this->_size, (1 << 20) / sizeof(T) + 1);
+            const std::unique_ptr<T[]> chunk = this->allocateHost_(count); // not a std::vector: no data() for std::vector<bool>
+            std::fill_n(chunk.get(), count, value);
+            for (std::size_t index = 0; index < this->_size; index += count)
+                this->_gpu->store(this->_buffer, chunk.get(), this->bytesOf_(std::min(count, this->_size - index)), this->bytesOf_(index));
         };
 
         _cold _nodiscard std::vector<T> toVector(void) const // whole memory copied in the ram
