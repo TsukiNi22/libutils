@@ -104,7 +104,7 @@ _hot int utils::platform::windows::socket_error(void)
 
 _hot _nodiscard bool utils::platform::windows::is_socket(int fd)
 {
-    if (fd < 0) _unlikely return false;
+    if (fd < 0) _unlikely {return false;}
     int type = 0;
     int len = sizeof(type);
     return ::getsockopt(static_cast<SOCKET>(fd), SOL_SOCKET, SO_TYPE, reinterpret_cast<char*>(&type), &len) == 0;

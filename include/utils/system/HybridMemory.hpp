@@ -177,7 +177,7 @@ class HybridMemory {
             std::array<std::byte, sizeof(T)> raw = {};
 
             this->check_(index, 1);
-            if (!this->_gpu) _likely return this->_host[index];
+            if (!this->_gpu) _likely {return this->_host[index];}
             this->_gpu->fetch(raw.data(), this->_buffer, sizeof(T), this->bytesOf_(index));
             return std::bit_cast<T>(raw);
         };

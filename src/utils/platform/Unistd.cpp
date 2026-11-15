@@ -243,7 +243,8 @@ _cold _nodiscard const char* utils::platform::strerror(int errnum)
         // Socket errors: the CRT doesn't know them ("Unknown error"), message of the Winsock code
         const int code = wsa_code(errnum);
         if (code == 0) return ::strerror(errnum);
-        thread_local std::string message;
+        // xstyle: ignore-next CPP-THIS (false positive: _thread_local is the attribute macro, not a member)
+        _thread_local std::string message;
         message = utils::platform::windows::strerror(static_cast<DWORD>(code));
         return message.c_str();
     #else

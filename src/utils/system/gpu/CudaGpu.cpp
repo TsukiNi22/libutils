@@ -107,7 +107,9 @@ _cold void utils::system::CudaGpu::selectDevice_(void)
 
     check(this->_api->cuInit(0), "cuInit", utils::exception::InternalCode::GpuUnavailable);
     check(this->_api->cuDeviceGetCount(&count), "cuDeviceGetCount", utils::exception::InternalCode::GpuUnavailable);
-    if (count <= 0) _unlikely throw utils::exception::ErrorException(utils::exception::InternalCode::GpuUnavailable, "no CUDA device");
+    if (count <= 0) _unlikely {
+        throw utils::exception::ErrorException(utils::exception::InternalCode::GpuUnavailable, "no CUDA device");
+    }
 
     // First device, its context is made current by every call (bind_)
     check(this->_api->cuDeviceGet(&this->_device, 0), "cuDeviceGet", utils::exception::InternalCode::GpuUnavailable);
@@ -136,7 +138,7 @@ _hot utils::system::GpuBuffer utils::system::CudaGpu::allocate(const std::size_t
 _hot void utils::system::CudaGpu::free(const utils::system::GpuBuffer buffer) noexcept
 {
     if (buffer == 0 || !this->_available) return;
-    if (this->_api->cuCtxSetCurrent(this->_context) != 0) _unlikely return; // nothing to release without the context
+    if (this->_api->cuCtxSetCurrent(this->_context) != 0) _unlikely {return;} // nothing to release without the context
     (void)this->_api->cuMemFree(static_cast<unsigned long long>(buffer));
 }
 

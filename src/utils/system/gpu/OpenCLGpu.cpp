@@ -118,7 +118,9 @@ _cold void utils::system::OpenCLGpu::selectDevice_(void)
     std::int32_t result = 0;
 
     check(this->_api->clGetPlatformIDs(0, nullptr, &count), "clGetPlatformIDs", utils::exception::InternalCode::GpuUnavailable);
-    if (count == 0) _unlikely throw utils::exception::ErrorException(utils::exception::InternalCode::GpuUnavailable, "no OpenCL platform");
+    if (count == 0) _unlikely {
+        throw utils::exception::ErrorException(utils::exception::InternalCode::GpuUnavailable, "no OpenCL platform");
+    }
     platforms.resize(count);
     check(this->_api->clGetPlatformIDs(count, platforms.data(), nullptr), "clGetPlatformIDs", utils::exception::InternalCode::GpuUnavailable);
 
@@ -128,7 +130,9 @@ _cold void utils::system::OpenCLGpu::selectDevice_(void)
         this->_platform = platform;
         break;
     }
-    if (!this->_platform) _unlikely throw utils::exception::ErrorException(utils::exception::InternalCode::GpuUnavailable, "no OpenCL gpu device");
+    if (!this->_platform) _unlikely {
+        throw utils::exception::ErrorException(utils::exception::InternalCode::GpuUnavailable, "no OpenCL gpu device");
+    }
 
     // Name & memory of the device
     check(this->_api->clGetDeviceInfo(this->_device, CL_DEVICE_NAME, 0, nullptr, &length), "clGetDeviceInfo", utils::exception::InternalCode::GpuUnavailable);

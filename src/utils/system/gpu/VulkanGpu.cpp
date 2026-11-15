@@ -260,7 +260,9 @@ _hot utils::system::VulkanGpu::Api::Allocation utils::system::VulkanGpu::Api::cr
     try {
         this->vkGetBufferMemoryRequirements(device, allocation.buffer, &requirements);
         type = this->findMemoryType(requirements.memoryTypeBits, flags);
-        if (type < 0) _unlikely throw utils::exception::ErrorException(utils::exception::InternalCode::GpuAllocation, "no memory type for the buffer");
+        if (type < 0) _unlikely {
+            throw utils::exception::ErrorException(utils::exception::InternalCode::GpuAllocation, "no memory type for the buffer");
+        }
 
         // Memory of the buffer
         utils::system::VulkanGpu::Api::MemoryAllocateInfo allocate = {VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO, nullptr, requirements.size, static_cast<std::uint32_t>(type)};
@@ -317,7 +319,9 @@ _cold void utils::system::VulkanGpu::loadSymbols_(void)
     // Only vkGetInstanceProcAddr is taken from the loader, the rest is given by it
     api.vkGetInstanceProcAddr = this->_library->loadFunction<decltype(api.vkGetInstanceProcAddr)>("vkGetInstanceProcAddr");
     api.vkCreateInstance = reinterpret_cast<decltype(api.vkCreateInstance)>(api.vkGetInstanceProcAddr(nullptr, "vkCreateInstance"));
-    if (!api.vkCreateInstance) _unlikely throw utils::exception::ErrorException(utils::exception::InternalCode::Dlsym, "vkCreateInstance");
+    if (!api.vkCreateInstance) _unlikely {
+        throw utils::exception::ErrorException(utils::exception::InternalCode::Dlsym, "vkCreateInstance");
+    }
     check(api.vkCreateInstance(&info, nullptr, &this->_instance), "vkCreateInstance", utils::exception::InternalCode::GpuUnavailable);
 
     // Functions of the instance
@@ -332,7 +336,9 @@ _cold void utils::system::VulkanGpu::loadSymbols_(void)
     }};
     for (const auto &[name, function]: instance) {
         *function = api.vkGetInstanceProcAddr(this->_instance, name);
-        if (!*function) _unlikely throw utils::exception::ErrorException(utils::exception::InternalCode::Dlsym, name);
+        if (!*function) _unlikely {
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Dlsym, name);
+        }
     }
 }
 
@@ -367,13 +373,17 @@ _cold void utils::system::VulkanGpu::selectDevice_(void)
         this->_physical = device;
         this->_name = reinterpret_cast<const char*>(properties.data() + 20);
     }
-    if (!this->_physical) _unlikely throw utils::exception::ErrorException(utils::exception::InternalCode::GpuUnavailable, "no Vulkan gpu device");
+    if (!this->_physical) _unlikely {
+        throw utils::exception::ErrorException(utils::exception::InternalCode::GpuUnavailable, "no Vulkan gpu device");
+    }
 
     // Memory: device local type for the buffers, host visible & coherent one for the transfers
     api.vkGetPhysicalDeviceMemoryProperties(this->_physical, &api.memory);
     std::int64_t local = api.findMemoryType(~0u, VK_MEMORY_DEVICE_LOCAL);
     std::int64_t staging = api.findMemoryType(~0u, VK_MEMORY_HOST_VISIBLE | VK_MEMORY_HOST_COHERENT);
-    if (local < 0 || staging < 0) _unlikely throw utils::exception::ErrorException(utils::exception::InternalCode::GpuUnavailable, "no device local or host visible memory");
+    if (local < 0 || staging < 0) _unlikely {
+        throw utils::exception::ErrorException(utils::exception::InternalCode::GpuUnavailable, "no device local or host visible memory");
+    }
     this->_memoryType = static_cast<std::uint32_t>(local);
     api.staging = static_cast<std::uint32_t>(staging);
     for (std::uint32_t i = 0; i < api.memory.memoryHeapCount; ++i) {
@@ -385,7 +395,9 @@ _cold void utils::system::VulkanGpu::selectDevice_(void)
     families.resize(count);
     api.vkGetPhysicalDeviceQueueFamilyProperties(this->_physical, &count, families.data());
     for (this->_queueFamily = 0; this->_queueFamily < count && !(families[this->_queueFamily].queueFlags & VK_QUEUE_TRANSFER_CAPABLE); ++this->_queueFamily);
-    if (this->_queueFamily == count) _unlikely throw utils::exception::ErrorException(utils::exception::InternalCode::GpuUnavailable, "no Vulkan queue able to copy");
+    if (this->_queueFamily == count) _unlikely {
+        throw utils::exception::ErrorException(utils::exception::InternalCode::GpuUnavailable, "no Vulkan queue able to copy");
+    }
 
     // Device, its queue & the command pool of the transfers
     const float priority = 1.0f;
@@ -418,7 +430,9 @@ _cold void utils::system::VulkanGpu::selectDevice_(void)
     }};
     for (const auto &[name, function]: functions) {
         *function = api.vkGetDeviceProcAddr(this->_device, name);
-        if (!*function) _unlikely throw utils::exception::ErrorException(utils::exception::InternalCode::Dlsym, name);
+        if (!*function) _unlikely {
+            throw utils::exception::ErrorException(utils::exception::InternalCode::Dlsym, name);
+        }
     }
     api.vkGetDeviceQueue(this->_device, this->_queueFamily, 0, &this->_queue);
 

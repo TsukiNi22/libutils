@@ -29,8 +29,8 @@ File Description:
 
 #ifdef UTILS_WINDOWS
     // Last error of the thread (dlerror), empty = none
-    static thread_local std::string last;
-    static thread_local std::string returned;
+    static _thread_local std::string last;
+    static _thread_local std::string returned;
 
     static void set_error(const std::string& prefix)
     {
@@ -42,7 +42,7 @@ _cold _nodiscard void* utils::platform::dlopen(const char* path, _unused int fla
 {
     #ifdef UTILS_WINDOWS
         HMODULE module = ::LoadLibraryA(path);
-        if (!module) _unlikely set_error(path ? path : "[null]");
+        if (!module) _unlikely {set_error(path ? path : "[null]");}
         return reinterpret_cast<void*>(module);
     #else
         return ::dlopen(path, flags);
@@ -53,7 +53,7 @@ _hot _nodiscard void* utils::platform::dlsym(void* handle, const char* name)
 {
     #ifdef UTILS_WINDOWS
         void* fn = reinterpret_cast<void*>(::GetProcAddress(reinterpret_cast<HMODULE>(handle), name));
-        if (!fn) _unlikely set_error(name);
+        if (!fn) _unlikely {set_error(name);}
         return fn;
     #else
         return ::dlsym(handle, name);
@@ -88,14 +88,15 @@ _cold _nodiscard char* utils::platform::dlerror(void)
 _cold _nodiscard int utils::platform::dladdr(const void* addr, Dl_info* info)
 {
     #ifdef UTILS_WINDOWS
-        static thread_local char path[MAX_PATH];
+        // xstyle: ignore-next CPP-THIS (false positive: _thread_local is the attribute macro, not a member)
+        static _thread_local char path[MAX_PATH];
         HMODULE module = nullptr;
 
         // Module containing the address (without changing its reference count)
         if (!addr || !info || !::GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
-            static_cast<LPCSTR>(addr), &module)) _unlikely return 0;
+            static_cast<LPCSTR>(addr), &module)) _unlikely {return 0;}
         const DWORD len = ::GetModuleFileNameA(module, path, MAX_PATH);
-        if (len == 0 || len >= MAX_PATH) _unlikely return 0;
+        if (len == 0 || len >= MAX_PATH) _unlikely {return 0;}
         info->dli_fname = path;
         info->dli_fbase = reinterpret_cast<void*>(module);
         info->dli_sname = nullptr;
