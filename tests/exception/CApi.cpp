@@ -158,6 +158,18 @@ TEST_F(ExceptionCApiTest, ResetStatusOnlyResetsTheFlag)
     EXPECT_STREQ(utils_exception.info, "old error");
 }
 
+TEST_F(ExceptionCApiTest, CheckCallbackThrowsTheInfoOfTheCallback)
+{
+    EXPECT_EQ(utils::exception::c_api::guard([](void) {utils::exception::c_api::check_callback(UTILS_OK);}), UTILS_OK);
+    (void)utils_fail(42, "info of the callback");
+    EXPECT_EQ(utils::exception::c_api::guard([](void) {utils::exception::c_api::check_callback(UTILS_KO);}), UTILS_KO);
+    EXPECT_EQ(utils_exception.origin, C_API_EXCEPTION_ORIGIN_STD);
+    EXPECT_STREQ(utils_exception.what, "info of the callback");
+    utils::exception::c_api::reset_status();
+    EXPECT_EQ(utils::exception::c_api::guard([](void) {utils::exception::c_api::check_callback(7);}), UTILS_KO);
+    EXPECT_STREQ(utils_exception.what, "C callback failed (no info given with utils_fail)");
+}
+
 //----------------------------------------------------------------//
 /* FORMAT */
 

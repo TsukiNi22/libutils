@@ -30,7 +30,6 @@ File Description:
 #include <source_location>
 #include <unordered_map>
 #include <functional>
-#include <stdexcept>
 #include <cstddef>
 #include <cstdint>
 #include <string>
@@ -74,7 +73,7 @@ _hot static void check(utils_cli_t* self, const int ret, const bool command)
     }
 
     // Error (UTILS_KO or unknown value), info given with utils_fail / utils_exception_set in utils_exception
-    throw std::runtime_error(utils_exception.exception ? (utils_exception.info[0] != '\0' ? utils_exception.info : utils_exception.what) : "C callback failed (no info given with utils_fail)");
+    utils::exception::c_api::throw_callback_error();
 }
 
 //----------------------------------------------------------------//

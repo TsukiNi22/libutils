@@ -24,13 +24,14 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"   // _cold, _hot, _nodiscard, _unlikely
+    #include "../attribute/Attribute.hpp"   // _cold, _hot, _nodiscard, _unlikely, _noreturn
     #include "basic/ErrorException.hpp"     // utils::exception::ErrorException
     #include "ExceptionDefine.hpp"          // utils::exception::* (define / vars)
     #include "IException.hpp"               // utils::exception::IException
     #include "CApi.h"                       // UTILS_OK, UTILS_KO, utils_exception, utils_exception_status_t, utils_exception_origin_t, C_API_*
     #include <source_location>              // std::source_location
     #include <type_traits>                  // std::invoke_result_t, std::type_identity_t
+    #include <stdexcept>                    // std::runtime_error
     #include <exception>                    // std::exception
     #include <cstdint>                      // std::uint8_t
     #include <string>                       // std::string
@@ -79,6 +80,15 @@ _hot _nodiscard T& not_null_ref(T* ptr, const char* name, const std::source_loca
 
 // Only reset the error flag (before a C callback: the status then only holds its own error, utils_fail / utils_exception_set)
 _hot inline void reset_status(void) noexcept {utils_exception.exception = false;};
+
+// Error of a C callback (UTILS_KO or an unknown value) as a c++ exception: its info (utils_fail / utils_exception_set) in the message
+_cold _noreturn inline void throw_callback_error(void)
+{
+    throw std::runtime_error(utils_exception.exception ? (utils_exception.info[0] != '\0' ? utils_exception.info : utils_exception.what) : "C callback failed (no info given with utils_fail)");
+}
+
+// Check the return of a C callback (called after reset_status): anything else than UTILS_OK throws
+_hot inline void check_callback(const int ret) {if (ret != UTILS_OK) _unlikely {utils::exception::c_api::throw_callback_error();}};
 
 // Run f, never let an exception cross the C boundary, fill utils_exception on failure (only utils_exception.exception = false on success), returns UTILS_OK / UTILS_KO
 template<typename F>
