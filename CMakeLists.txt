@@ -83,6 +83,9 @@ set(SRC
     src/utils/math/geometry/Angle.cpp
     src/utils/math/CApi.cpp
 
+    ## Type
+    src/utils/type/CApi.cpp
+
     # Verbose
     src/utils/verbose/Verbose.cpp
     src/utils/verbose/CApi.cpp

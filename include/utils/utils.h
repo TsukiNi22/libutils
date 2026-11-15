@@ -220,6 +220,12 @@ File Description:
     #include "math/CApi.h" // utils_math_*
 #endif
 
+/* Custom type */
+#if defined(_BLT) || defined(_Vector) || defined(_Matrix)
+    // -> Freezable / Worker of any handle, vectors, matrices & bidirectional lookup tables (utils::type)
+    #include "type/CApi.h" // utils_freezable_*, utils_worker_*, utils_vector2_*, utils_vector3_*, utils_matrix_*, utils_blt_*, C_API_*_TYPES
+#endif
+
 /* Cli */
 #ifdef _Cli
     // -> Handling of a customizable command line interface (utils::cli::Cli)

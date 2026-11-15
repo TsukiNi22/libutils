@@ -73,6 +73,7 @@ set(SRC
     type/Vector.cpp
     type/Matrix.cpp
     type/Freezable.cpp
+    type/CApi.cpp
 
     # Pool
     pool/Pool.cpp

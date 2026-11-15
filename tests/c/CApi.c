@@ -14,7 +14,7 @@ File Name:
 ##  @file CApi.c
 
 File Description:
-##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, platform, iomanip, smanip, math, cli)
+##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, platform, iomanip, smanip, math, type, cli)
 \**************************************************************/
 
 #define _POSIX_C_SOURCE 200809L // POSIX structures of the C API of platform (strict C11 / C23)
@@ -166,6 +166,23 @@ static void test_math(void)
     CHECK(utils_math_rad_to_deg(utils_math_deg_to_rad(90.0)) > 89.999);
 }
 
+static void test_type(void)
+{
+    utils_vector2_f64_t v = {3.0, 4.0};
+    utils_matrix_i32_t* m = utils_matrix_i32_create(2, 2);
+    utils_blt_str_i32_t* blt = utils_blt_str_i32_create();
+    int32_t value = 0;
+
+    CHECK(utils_vector2_f64_length(v) == 5.0);
+    CHECK(m != NULL && utils_matrix_i32_set(m, 1, 1, 7) == UTILS_OK);
+    CHECK(utils_matrix_i32_trace(m, &value) == UTILS_OK && value == 7);
+    CHECK(utils_blt_str_i32_add(blt, "seven", 7) == UTILS_OK);
+    CHECK(utils_blt_str_i32_get_right(blt, "seven", &value) == UTILS_OK && value == 7);
+    CHECK(utils_freezable_freeze(blt) == UTILS_OK && utils_freezable_is_frozen(blt));
+    utils_blt_str_i32_destroy(blt);
+    utils_matrix_i32_destroy(m);
+}
+
 static void test_cli(void)
 {
     int calls = 0;
@@ -208,6 +225,7 @@ int main(void)
     test_iomanip();
     test_smanip();
     test_math();
+    test_type();
     test_cli();
     if (failed) fprintf(stderr, "%d check(s) failed\n", failed);
     return (failed ? 1 : 0);
