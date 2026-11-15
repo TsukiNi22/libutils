@@ -14,7 +14,7 @@ File Name:
 ##  @file CApi.c
 
 File Description:
-##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, platform, iomanip, smanip, math, type, encapsulation, arguments, network, security, system, pool, cli)
+##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, platform, iomanip, smanip, math, type, encapsulation, arguments, network, security, system, pool, algorithms, cli)
 \**************************************************************/
 
 #define _POSIX_C_SOURCE 200809L // POSIX structures of the C API of platform (strict C11 / C23)
@@ -274,6 +274,12 @@ static void test_pool(void)
     utils_middlewares_destroy(middlewares);
 }
 
+static void test_algorithms(void)
+{
+    CHECK(utils_c2dmp_default("hellp", "hello") < utils_c2dmp_default("hellp", "quit"));
+    CHECK(utils_c2dmp("a", 1, "b", 1, 9, 1, false) == -1.0f && utils_exception.exception);
+}
+
 static void test_cli(void)
 {
     int calls = 0;
@@ -323,6 +329,7 @@ int main(void)
     test_security();
     test_system();
     test_pool();
+    test_algorithms();
     test_cli();
     if (failed) fprintf(stderr, "%d check(s) failed\n", failed);
     return (failed ? 1 : 0);

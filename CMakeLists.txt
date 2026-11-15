@@ -89,6 +89,9 @@ set(SRC
     ## Pool
     src/utils/pool/CApi.cpp
 
+    ## Algorithms (C API of the synced sources)
+    src/utils/algorithms/CApi.cpp
+
     # Verbose
     src/utils/verbose/Verbose.cpp
     src/utils/verbose/CApi.cpp

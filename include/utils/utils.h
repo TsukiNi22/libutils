@@ -262,6 +262,12 @@ File Description:
     #include "pool/CApi.h" // utils_cluster_*, utils_middlewares_*, utils_middleware_*
 #endif
 
+/* Algorithms */
+#if defined(_C2DMP) || defined(_SOS)
+    // -> String similarity (c2dmp-hsm) & steganography (s.o.s)
+    #include "algorithms/CApi.h" // utils_c2dmp*, utils_sos_*, C_API_SOS_*
+#endif
+
 /* Cli */
 #ifdef _Cli
     // -> Handling of a customizable command line interface (utils::cli::Cli)

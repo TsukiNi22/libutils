@@ -89,6 +89,7 @@ set(SRC
     # Algorithms
     algorithms/C2dmp.cpp
     algorithms/Sos.cpp
+    algorithms/CApi.cpp
 
     # Security (sub-part: encryption)
     security/encryption/RSAKey.cpp
