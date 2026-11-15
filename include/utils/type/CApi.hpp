@@ -289,7 +289,7 @@ struct utils_worker: public utils_handle, public utils::type::Worker {
     void* data = nullptr;
 
     // ---------- Constructor --------- //
-    utils_worker(void* d): data{d} { /* Nothing */ };
+    utils_worker(void* d = nullptr): data{d} { /* Nothing */ }; // default: a worker of a load balancer
 };
 
 /* bidirectional lookup table of bytes */

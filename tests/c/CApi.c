@@ -14,7 +14,7 @@ File Name:
 ##  @file CApi.c
 
 File Description:
-##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, platform, iomanip, smanip, math, type, encapsulation, arguments, network, security, cli)
+##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, platform, iomanip, smanip, math, type, encapsulation, arguments, network, security, system, cli)
 \**************************************************************/
 
 #define _POSIX_C_SOURCE 200809L // POSIX structures of the C API of platform (strict C11 / C23)
@@ -240,6 +240,20 @@ static void test_security(void)
     utils_rsa_key_destroy(key);
 }
 
+static void test_system(void)
+{
+    utils_hybrid_memory_u8_t* memory = utils_hybrid_memory_u8_create(4, C_API_MEMORY_MODE_RAM);
+    utils_id_handler_i32_t* handler = utils_id_handler_i32_create();
+    uint8_t value = 0;
+
+    CHECK(memory != NULL && handler != NULL);
+    CHECK(utils_hybrid_memory_u8_fill(memory, 9) == UTILS_OK);
+    CHECK(utils_hybrid_memory_u8_get(memory, 3, &value) == UTILS_OK && value == 9);
+    CHECK(utils_id_handler_i32_allocate(handler, true) != 0); /* signed: from INT32_MIN */
+    utils_id_handler_i32_destroy(handler);
+    utils_hybrid_memory_u8_destroy(memory);
+}
+
 static void test_cli(void)
 {
     int calls = 0;
@@ -287,6 +301,7 @@ int main(void)
     test_arguments();
     test_network();
     test_security();
+    test_system();
     test_cli();
     if (failed) fprintf(stderr, "%d check(s) failed\n", failed);
     return (failed ? 1 : 0);

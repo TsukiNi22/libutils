@@ -250,6 +250,12 @@ File Description:
     #include "security/CApi.h" // utils_aes_key_*, utils_aes_data_*, utils_rsa_key_*, utils_observer_*
 #endif
 
+/* System */
+#ifdef _System
+    // -> Gpu handlers, hybrid memories, id handlers, load balancer & scheduler (utils::system)
+    #include "system/CApi.h" // utils_gpu_*, utils_hybrid_memory_*, utils_id_handler_*, utils_load_balancer_*, utils_scheduler_*, C_API_MEMORY_MODE_*
+#endif
+
 /* Cli */
 #ifdef _Cli
     // -> Handling of a customizable command line interface (utils::cli::Cli)

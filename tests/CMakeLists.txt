@@ -83,6 +83,7 @@ set(SRC
     system/HybridMemory.cpp
     system/IdHandler.cpp
     system/Scheduler.cpp
+    system/CApi.cpp
 
     # Algorithms
     algorithms/C2dmp.cpp

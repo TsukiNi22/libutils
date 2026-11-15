@@ -136,6 +136,7 @@ set(SRC
     # System
     src/utils/system/Scheduler.cpp
     src/utils/system/HybridMemory.cpp
+    src/utils/system/CApi.cpp
 
     ## System (sub-part: gpu)
     src/utils/system/gpu/AGpu.cpp
