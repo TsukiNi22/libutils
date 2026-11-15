@@ -66,6 +66,7 @@ set(SRC
 
     ## IO - Manip
     src/utils/manip/iomanip/ANSI.cpp
+    src/utils/manip/iomanip/CApi.cpp
 
     ## S - Manip
     src/utils/manip/smanip/format.cpp

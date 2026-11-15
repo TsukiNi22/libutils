@@ -202,6 +202,12 @@ File Description:
     #include "verbose/CApi.h" // utils_verbose_*, C_API_VERBOSE_*
 #endif
 
+/* IO - Manip */
+#ifdef _IOManip
+    // -> ANSI sequences as strings & reports of the terminal (utils::iomanip)
+    #include "manip/iomanip/CApi.h" // utils_iomanip_*, C_API_IOMANIP_*
+#endif
+
 /* Cli */
 #ifdef _Cli
     // -> Handling of a customizable command line interface (utils::cli::Cli)

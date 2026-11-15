@@ -40,6 +40,9 @@ set(SRC
     verbose/Verbose.cpp
     verbose/CApi.cpp
 
+    # IO - Manip
+    manip/iomanip/CApi.cpp
+
     # S - Manip
     manip/smanip/Format.cpp
     manip/smanip/Base64Codec.cpp

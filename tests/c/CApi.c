@@ -14,7 +14,7 @@ File Name:
 ##  @file CApi.c
 
 File Description:
-##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, platform, cli)
+##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, platform, iomanip, cli)
 \**************************************************************/
 
 #define _POSIX_C_SOURCE 200809L // POSIX structures of the C API of platform (strict C11 / C23)
@@ -131,6 +131,17 @@ static void test_platform(void)
     CHECK(utils_platform_strerror(2) != NULL);
 }
 
+static void test_iomanip(void)
+{
+    const utils_iomanip_style_t styles[] = {C_API_IOMANIP_STYLE_STRONG, C_API_IOMANIP_STYLE_ITALIC};
+    char buf[32];
+
+    CHECK(strcmp(utils_iomanip_reset(), "\x1b[0m") == 0);
+    CHECK(strcmp(utils_iomanip_color(C_API_IOMANIP_COLOR_RED), "\x1b[31m") == 0);
+    CHECK(strcmp(utils_iomanip_set_styles(styles, 2), "\x1b[1;3m") == 0);
+    CHECK(utils_iomanip_pos_r(2, 3, buf, sizeof(buf)) == strlen("\x1b[2;3H") && strcmp(buf, "\x1b[2;3H") == 0);
+}
+
 static void test_cli(void)
 {
     int calls = 0;
@@ -170,6 +181,7 @@ int main(void)
     test_status();
     test_verbose();
     test_platform();
+    test_iomanip();
     test_cli();
     if (failed) fprintf(stderr, "%d check(s) failed\n", failed);
     return (failed ? 1 : 0);
