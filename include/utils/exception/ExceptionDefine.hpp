@@ -43,18 +43,8 @@ File Description:
     // Keep the include even if it's doesn't exist to kill the compilation
     #include "generated_internal_exception_header.hpp"  // utils::exception::InternalCode, utils::exception::InternalMessages, utils::exception::InternalInfo, utils::exception::InternalRestriction
     #include "../attribute/Attribute.hpp"               // _hot, _nodiscard
+    #include "Common.hpp"                               // UTILS_OK, UTILS_KO, OK, KO
     #include <cstdint>                                  // std::uint8_t
-
-    //----------------------------------------------------------------//
-    /* DEFINE */
-
-    /* Definition of the different return status */
-    #ifndef OK
-        #define OK 0 // Valid
-    #endif
-    #ifndef KO
-        #define KO -1 // Error
-    #endif
 
 namespace utils::exception { // namespace start
 //----------------------------------------------------------------//

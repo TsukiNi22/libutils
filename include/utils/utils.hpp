@@ -203,7 +203,7 @@ File Description:
     #include "exception/custom/FatalException.hpp"  // utils::exception::FatalException
     #include "exception/basic/ErrorException.hpp"   // utils::exception::ErrorException
     #include "exception/basic/NoneException.hpp"    // utils::exception::NoneException
-    #include "exception/ExceptionDefine.hpp"        // OK/KO, utils::exception::InternalCode, utils::exception::Type
+    #include "exception/ExceptionDefine.hpp"        // UTILS_OK/UTILS_KO, OK/KO, utils::exception::InternalCode, utils::exception::Type
     #include "exception/IException.hpp"             // utils::exception::IException
 #endif
 

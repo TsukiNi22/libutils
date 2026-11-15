@@ -105,38 +105,47 @@ _cold _nodiscard std::string utils::exception::AException::module(void) const no
     return module_name(this->_callerAddr, absolute_path(this->_file));
 }
 
+// xstyle: ignore-next CPP-SINGLE-STATEMENT (uses the static helpers of this file, can't go in the header)
 _cold _nodiscard std::string utils::exception::AException::formated(void) const noexcept
+{
+    return utils::exception::format(this->_type, this->_file, this->_line, this->module(), this->_messages.at(this->_code), this->_func, this->_info.c_str());
+}
+
+_cold _nodiscard std::string utils::exception::format(const utils::exception::Type type, const char* file, const std::size_t line, const std::string& module, const char* message, const char* function, const char* info) noexcept
 {
     std::ostringstream oss;
 
     // Exception type
-    std::string option = (this->isFatal() ? "(fatal)" : "");
+    std::string option = ((type & utils::exception::Type::Fatal) ? "(fatal)" : "");
     oss << utils::iomanip::strong();
-    if (this->_type & utils::exception::Type::None)
+    if (type & utils::exception::Type::None)
         oss << utils::iomanip::color_rgb(175, 100, 0) << "[None" << option << "]";
-    else if (this->_type & utils::exception::Type::Error)
+    else if (type & utils::exception::Type::Error)
         oss << utils::iomanip::color_rgb(205, 0, 0) << "[Error" << option << "]";
-    else if (this->_type & utils::exception::Type::Warning)
+    else if (type & utils::exception::Type::Warning)
         oss << utils::iomanip::color_rgb(175, 0, 175) << "[Warning" << option << "]";
     oss << " " << utils::iomanip::reset();
 
-    // Emplacement information
-    std::string absolutePath = absolute_path(this->_file), moduleName;
-    bool exists = false;
-    try {
-        exists = !absolutePath.empty() && std::filesystem::exists(absolutePath);
-    } catch (const std::filesystem::filesystem_error&) {exists = false;}
-    oss << utils::iomanip::strong();
-    if (exists) oss << utils::iomanip::file_hyperlink(shorten(this->_file), absolutePath);
-    else oss << shorten(this->_file);
-    oss << ":" << this->_line << utils::iomanip::reset();
-    if (!(moduleName = this->module()).empty())
-        oss << utils::iomanip::color_rgb(100, 100, 100) << " (" << moduleName << ")" << utils::iomanip::reset();
-    oss << " -> " << this->_messages.at(this->_code) << std::endl;
+    // Emplacement information (none for an exception without emplacement: std::exception, ...)
+    if (file && file[0] != '\0') {
+        std::string absolutePath = absolute_path(file);
+        bool exists = false;
+        try {
+            exists = !absolutePath.empty() && std::filesystem::exists(absolutePath);
+        } catch (const std::filesystem::filesystem_error&) {exists = false;}
+        oss << utils::iomanip::strong();
+        if (exists) oss << utils::iomanip::file_hyperlink(shorten(file), absolutePath);
+        else oss << shorten(file);
+        oss << ":" << line << utils::iomanip::reset();
+        if (!module.empty())
+            oss << utils::iomanip::color_rgb(100, 100, 100) << " (" << module << ")" << utils::iomanip::reset();
+        oss << " ";
+    }
+    oss << "-> " << (message ? message : "") << std::endl;
 
     // Content
     oss << utils::iomanip::color_rgb(175, 100, 0) << "-------------------------------------------" << utils::iomanip::reset() << std::endl;
-    oss << utils::iomanip::color(utils::iomanip::Color::Cyan) << this->_func << utils::iomanip::color_rgb(175, 100, 0) << " = " << utils::iomanip::reset() << this->_info << std::endl;
+    oss << utils::iomanip::color(utils::iomanip::Color::Cyan) << (function ? function : "") << utils::iomanip::color_rgb(175, 100, 0) << " = " << utils::iomanip::reset() << (info ? info : "") << std::endl;
     oss << utils::iomanip::color_rgb(175, 100, 0) << "-------------------------------------------" << utils::iomanip::reset();
 
     return oss.str();

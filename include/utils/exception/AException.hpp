@@ -30,6 +30,12 @@ File Description:
 
 namespace utils::exception { // namespace start
 //----------------------------------------------------------------//
+/* PROTOTYPE */
+
+// Formated output of an exception (used by AException::formated and by the C API from its status, no emplacement if file is empty)
+_cold _nodiscard std::string format(const utils::exception::Type type, const char* file, const std::size_t line, const std::string& module, const char* message, const char* function, const char* info) noexcept;
+
+//----------------------------------------------------------------//
 /* CLASS */
 
 class AException: public utils::exception::IException {
