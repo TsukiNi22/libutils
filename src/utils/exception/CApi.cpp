@@ -20,6 +20,7 @@ File Description:
 #include "utils/exception/IException.hpp"
 #include "utils/exception/AException.hpp"
 #include "utils/attribute/Attribute.hpp"
+#include "utils/manip/smanip/CApi.hpp"
 #include "utils/exception/CApi.hpp"
 #include "utils/exception/CApi.h"
 #include <source_location>
@@ -67,14 +68,14 @@ _cold void utils::exception::c_api::set_status(const utils::exception::IExceptio
     // Exception
     utils_exception.type = static_cast<utils_exception_type_t>(e.getType());
     utils_exception.code = static_cast<std::uint64_t>(e.getCode());
-    utils::exception::c_api::copy(utils_exception.what, e.what());
-    utils::exception::c_api::copy(utils_exception.info, e.info());
+    utils::smanip::c_api::copy(utils_exception.what, e.what());
+    utils::smanip::c_api::copy(utils_exception.info, e.info());
 
     // Emplacement
     utils_exception.line = static_cast<std::uint64_t>(loc.line());
-    utils::exception::c_api::copy(utils_exception.function, loc.function_name());
-    utils::exception::c_api::copy(utils_exception.file, loc.file_name());
-    utils::exception::c_api::copy(utils_exception.module, module.c_str());
+    utils::smanip::c_api::copy(utils_exception.function, loc.function_name());
+    utils::smanip::c_api::copy(utils_exception.file, loc.file_name());
+    utils::smanip::c_api::copy(utils_exception.module, module.c_str());
 }
 
 _cold void utils::exception::c_api::set_status(const char* what, const utils_exception_origin_t origin) noexcept
@@ -84,7 +85,7 @@ _cold void utils::exception::c_api::set_status(const char* what, const utils_exc
     utils_exception.origin = origin;
     utils_exception.type = (origin == C_API_EXCEPTION_ORIGIN_C ? C_API_EXCEPTION_TYPE_ERROR : C_API_EXCEPTION_TYPE_SYSTEM); // SYSTEM: std::exception, ...
     utils_exception.code = C_API_OTHER_EXCEPTION_CODE;
-    utils::exception::c_api::copy(utils_exception.what, what);
+    utils::smanip::c_api::copy(utils_exception.what, what);
 }
 
 //----------------------------------------------------------------//
@@ -107,13 +108,13 @@ _cold int utils_exception_set_at(utils_exception_type_t type, uint64_t code, con
     // Exception
     utils_exception.type = type;
     utils_exception.code = code;
-    utils::exception::c_api::copy(utils_exception.what, what);
-    utils::exception::c_api::copy(utils_exception.info, info);
+    utils::smanip::c_api::copy(utils_exception.what, what);
+    utils::smanip::c_api::copy(utils_exception.info, info);
 
     // Emplacement (no module: the C side)
     utils_exception.line = line;
-    utils::exception::c_api::copy(utils_exception.function, function);
-    utils::exception::c_api::copy(utils_exception.file, file);
+    utils::smanip::c_api::copy(utils_exception.function, function);
+    utils::smanip::c_api::copy(utils_exception.file, file);
     return UTILS_KO;
 }
 
@@ -133,6 +134,6 @@ _cold size_t utils_exception_format_r(char* buf, size_t size)
 {
     if (!buf && size > 0) _unlikely {return 0;}
     try {
-        return utils::exception::c_api::copy_r(format_status(), buf, size);
+        return utils::smanip::c_api::copy_r(format_status(), buf, size);
     } catch (...) {return 0;}
 }

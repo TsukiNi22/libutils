@@ -22,6 +22,7 @@ File Description:
 #include "utils/exception/basic/NoneException.hpp"
 #include "utils/exception/ExceptionDefine.hpp"
 #include "utils/attribute/Attribute.hpp"
+#include "utils/manip/smanip/CApi.hpp"
 #include "utils/exception/CApi.hpp"
 #include "utils/cli/CApi.hpp"
 #include "utils/cli/Cli.hpp"
@@ -647,7 +648,7 @@ _cold size_t utils_cli_history_size(const utils_cli_t* cli)
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold size_t utils_cli_strcode_r(const utils_cli_t* cli, uint8_t code, char* buf, size_t size)
 {
-    return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::exception::c_api::copy_r(utils::exception::c_api::not_null_ref(cli, "cli handle").cli.strcode(code), buf, size);});
+    return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::exception::c_api::not_null_ref(cli, "cli handle").cli.strcode(code), buf, size);});
 }
 
 _cold size_t utils_cli_history_get_r(const utils_cli_t* cli, size_t i, char* buf, size_t size)
@@ -657,7 +658,7 @@ _cold size_t utils_cli_history_get_r(const utils_cli_t* cli, size_t i, char* buf
         if (i >= history.size()) _unlikely {
             throw utils::exception::ErrorException(utils::exception::InternalCode::OutOfBounds, "History index out of range");
         }
-        return utils::exception::c_api::copy_r(history[i], buf, size);
+        return utils::smanip::c_api::copy_r(history[i], buf, size);
     });
 }
 

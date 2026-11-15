@@ -31,12 +31,8 @@ File Description:
     #include "CApi.h"                       // UTILS_OK, UTILS_KO, utils_exception, utils_exception_status_t, utils_exception_origin_t, C_API_*
     #include <source_location>              // std::source_location
     #include <type_traits>                  // std::invoke_result_t, std::type_identity_t
-    #include <algorithm>                    // std::min
     #include <exception>                    // std::exception
-    #include <cstddef>                      // std::size_t
     #include <cstdint>                      // std::uint8_t
-    #include <cstring>                      // std::memcpy
-    #include <cstdio>                       // std::snprintf
     #include <string>                       // std::string
 
 //----------------------------------------------------------------//
@@ -79,34 +75,6 @@ template<typename T>
 _hot _nodiscard T& not_null_ref(T* ptr, const char* name, const std::source_location loc = std::source_location::current())
 {
     return *utils::exception::c_api::not_null(ptr, name, loc);
-}
-
-// Copy in a fixed size char array (strings of utils_exception, ...), truncated with '...' on the last 3 char, always '\0' terminated
-template<std::size_t N>
-_cold void copy(char (&dst)[N], const char* src) noexcept
-{
-    static_assert(N > 3, "The buffer must be able to hold at least the '...' of a truncation");
-
-    // Truncate to the buffer size
-    const int len = std::snprintf(dst, N, "%s", (src ? src : ""));
-
-    // Mark the truncation with '...' on the last 3 char
-    if (len >= static_cast<int>(N)) {
-        dst[N - 4] = '.';
-        dst[N - 3] = '.';
-        dst[N - 2] = '.';
-    }
-}
-
-// Copy in a buffer of the user (C API _r functions), like snprintf (truncated, '\0' terminated), returns the full length
-_cold inline std::size_t copy_r(const std::string& str, char* buf, const std::size_t size)
-{
-    if (size > 0) {
-        const std::size_t len = std::min(str.size(), size - 1);
-        std::memcpy(utils::exception::c_api::not_null(buf, "buffer"), str.data(), len);
-        buf[len] = '\0';
-    }
-    return str.size();
 }
 
 // Only reset the error flag (before a C callback: the status then only holds its own error, utils_fail / utils_exception_set)
