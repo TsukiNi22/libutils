@@ -28,12 +28,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `_legacy` / `_migration` use the GNU syntax (every C / C++ version)
 - `OK` / `KO` moved to `utils/exception/Common.hpp` (C & C++), with `UTILS_OK` / `UTILS_KO` always defined (used inside libutils, `OK` / `KO` only defined if not already defined: `_UTILS_OK_DEFINED` / `_UTILS_KO_DEFINED` when defined by libutils, a warning when already defined with another value)
 - The xstyle pre-commit hook skips the external sources of `sos` and `c2dmp-hsm`
+- The legacy constructor `SharedMemory(std::uint16_t ownership)` is now a migration (`_migration(6, 0, 0)`, removed around v6.0.0: use the `pid_t` one)
+- `copy` / `copy_r` of the C API moved from `utils::exception::c_api` to `utils::smanip::c_api` (`utils/manip/smanip/CApi.hpp`)
+- The Windows versions of the POSIX defines, structures & types of `utils::platform` (`Dl_info`, `epoll_event`, `termios`, `socklen_t`, `nfds_t`, `RTLD_*`, `EPOLL*`, ...) moved to the C & C++ compatible `utils/platform/Types.h`
+- The handles of the C API of the cli & smanip derive from `utils_handle`
 
 ### Fixed
 - `_noinline` was `[[noinline]]` in C++20 (not a standard attribute, ignored): now `[[gnu::noinline]]`
 - `_assume` was `[[assume]]` in C++20 (C++23 only): `__builtin_assume` with clang, `__attribute__((assume))` with gcc >= 13
 - `_read_only` / `_write_only` warned with clang (`access` attribute unknown): empty with clang
 - C++11 used the empty fallback: it now has its own version (`c++11.hpp`)
+- `HybridMemory<bool>::fill` on the gpu didn't compile (the chunk was a `std::vector<bool>`)
 
 ### Added
 - First C API for the exceptions (`utils/exception/CApi.h` / `CApi.hpp`): a C++ guard around the calls of the C API catches the exceptions, and the thread local `utils_exception` (`utils_exception_status_t`, read in C like `errno`) gives the last exception caught: type, code (`C_API_NO_EXCEPTION`, `C_API_OTHER_EXCEPTION_CODE` for a non-libutils exception), what, info and its location
@@ -44,9 +49,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - C API of the cli (`utils/cli/CApi.h` / `CApi.hpp`, `_Cli` in `utils/utils.h`): every call of `utils::cli::Cli` through the opaque handle `utils_cli_t` (`utils_cli_create` / `utils_cli_destroy`), the thread of `THREAD` kept in the handle (`utils_cli_join`), parsed / raw commands, prompt / parser / getc hooks and the default ones, every middleware, flags and presets (enums `utils_cli_flag_t` / `utils_cli_flags_t`: `C_API_CLI_FLAG_*`, `C_API_CLI_FLAGS_*`), history and `strcode` (thread local buffer or `_r` with the buffer of the user), `utils_cli_parsed_t` to read / build a `ParsedData`; the functions return `UTILS_OK` / `UTILS_KO` (details in `utils_exception`), the callbacks `UTILS_OK`, `UTILS_KO` (info with `utils_fail`) or `C_API_CLI_EXIT`
 - Status of the C API: `exception` (failure of the last call, the only field changed on success) and `origin` (`C_API_EXCEPTION_ORIGIN_*`: internal / external libutils code, `std::exception`, unknown, C side), `C_API_EXCEPTION_TYPE_SYSTEM` for the non-libutils exceptions
 - C functions of the status: `utils_exception_clear`, `utils_exception_set` / `utils_fail(code, info)` (filled from C with the emplacement of the call, return `UTILS_KO`), `utils_exception_format` / `utils_exception_format_r` (same output as `formated()`, the status is kept)
-- Tools shared by every C API (`utils/exception/CApi.hpp`): `guard` (returns `UTILS_OK` / `UTILS_KO`), `guard_fallback`, `not_null` / `not_null_ref` (emplacement of the caller), `reset_status`, `copy`, `copy_r`; every function of the C API of the cli goes through the guard (`NULL` handle reported in `utils_exception`)
+- Tools shared by every C API (`utils/exception/CApi.hpp`): `guard` (returns `UTILS_OK` / `UTILS_KO`), `guard_fallback`, `not_null` / `not_null_ref` (emplacement of the caller), `reset_status`, `check_callback` / `throw_callback_error` (error of a C callback as a c++ exception with its info), `handle_base` (a base of any handle: `Freezable`, `Worker`...); every function of the C API goes through the guard (`NULL` handle reported in `utils_exception`)
+- `utils_handle`: common base of every handle of the C API (first base, magic of a live handle, RTTI to reach the bases of the object)
+- Fixed types of the C API (`utils/type/CApiTypes.h` / `CApiTypes.hpp`): X-macros `C_API_INT_TYPES` (`i8` ... `u64`, `size`), `C_API_FLOAT_TYPES` (`f32`, `f64`, `f128`: `long double`), `C_API_NUMERIC_TYPES`, `C_API_VALUE_TYPES` (+ `bool`, `char`), `C_API_TYPES` (+ `str`: `const char*` copied in a `std::string`), unrolled by each C API for its templates (with a generic version in bytes: data + size)
+- C API of the verbose (`utils/verbose/CApi.h`, `_Verbose`): level, printf style logs on stdout or a `FILE*` (locked like the c++ macros), callbacks run with the output locked
+- C API of the platform (`utils/platform/CApi.h`, `_Platform`): every POSIX call of `utils::platform` (`utils_platform_*`, same contract: -1 & errno), `utils_platform_dl_info_t` (without `_GNU_SOURCE`)
+- C API of the iomanip (`utils/manip/iomanip/CApi.h`, `_IOManip`): every ANSI sequence as a string (static, or thread local with its `_r`), the enums of the colors / styles / chars, the reports of the terminal (cursor, mouse)
+- C API of the smanip (`utils/manip/smanip/CApi.h`, `_SManip`): byte strings `utils_string_t`, `format`, codecs (Base64 or of the C side), EETP contents & parser
+- C API of the math (`utils/math/CApi.h`, `_Geometry` / `_Trigo`): the math types as C structures, `deg_to_rad` / `rad_to_deg`, `to_look`, `rotate_point_2d` / `rotate_point_3d`
+- C API of the custom types (`utils/type/CApi.h`, `_Vector` / `_Matrix` / `_BLT`): vectors 2D / 3D by value (`OVector2` / `OVector3`), matrices (`OMatrix`, each operation as a new handle, `_r` in a given handle or `_assign` in place), bidirectional lookup tables (string <-> string / integers, same type, bytes), `Freezable` / `Worker` of any handle (`utils_freezable_*`, `utils_worker_*`)
+- C API of the encapsulation (`utils/encapsulation/CApi.h`, `_Encapsulation`): `Dup`, `Pipe`, `Poll`, `Process` (status, pipes / dups), `SharedObject`, `SharedMemory` (layout / group size / create / forced chosen at runtime, messages read)
+- C API of the arguments (`utils/arguments/CApi.h`, `_Arguments`): `ArgParser` (usages, options, flags, checks of the C side & the default ones, help hook, parsed result, introspection) and `Settings` (fixed types, every type of the casts, bytes, auto / runtime cast)
+- C API of the network (`utils/network/CApi.h`, `_Network`): TCP sockets & sockets of the C side, `Client`, `Server`, payloads & messages, `is_ip` / `resolve_hostname`
+- C API of the security (`utils/security/CApi.h`, `_Encryption` / `_Observer`): AES keys & data, RSA keys (common key), observers of the C side (memory leak report)
+- C API of the system (`utils/system/CApi.h`, `_System`): gpu handlers (backends or of the C side), hybrid memories (fixed types & bytes), id handlers (integers), load balancer of `utils_worker_t`, scheduler
+- C API of the pool (`utils/pool/CApi.h`, `_Pool`): clusters (fixed types & bytes) & middlewares (`void`, fixed types, bytes)
+- C API of the algorithms (`utils/algorithms/CApi.h`, `_C2DMP` / `_SOS`): `utils_c2dmp` (prefix depth, counter & full chosen at runtime) and `utils_sos_embed_*` / `utils_sos_extract_*` (unsigned integers, options at runtime), outside the synced sources
 - `utils::exception::format`: the output of `formated()` from its fields (used by `formated()` and the C API)
-- Unit tests of the C API (exception status, cli) and a pure C test built in C11 and C23
+- Unit tests of the C API (every domain) and a pure C test built in C11 and C23
 - New attributes: `_export` / `_import` (symbols of the shared library, `dllexport` / `dllimport` on Windows), `_cleanup`, `_always_inline`, `_flatten`, `_const`, `_pure`, `_unreachable`, `_format`, `_sentinel`, `_malloc`, `_returns_nonnull`
 
 ## [v4.3.1-pre] - 2026-10-19 (unofficial)
