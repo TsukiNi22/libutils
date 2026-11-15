@@ -86,6 +86,7 @@ set(SRC
     src/utils/cli/Cli.cpp
     src/utils/cli/Setup.cpp
     src/utils/cli/Hooks.cpp
+    src/utils/cli/CApi.cpp
 
     ## Arguments
     src/utils/arguments/ArgParser.cpp

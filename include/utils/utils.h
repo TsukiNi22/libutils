@@ -187,5 +187,11 @@ File Description:
 /* Exception */
 #ifdef _Exception
     // -> Status of the last exception caught by the C API
-    #include "exception/CApi.h" // utils_exception, utils_exception_status_t, C_API_*, C_API_EXCEPTION_TYPE_*
+    #include "exception/CApi.h" // UTILS_OK, UTILS_KO, OK, KO, utils_exception, utils_exception_*, utils_fail, C_API_*, C_API_EXCEPTION_TYPE_*, C_API_EXCEPTION_ORIGIN_*
+#endif
+
+/* Cli */
+#ifdef _Cli
+    // -> Handling of a customizable command line interface (utils::cli::Cli)
+    #include "cli/CApi.h" // utils_cli_t, utils_cli_*, C_API_CLI_*
 #endif
