@@ -116,6 +116,7 @@ set(SRC_UNIX
 
     # Encapsulation
     encapsulation/Encapsulation.cpp
+    encapsulation/CApi.cpp
 )
 
 # Windows only (ports of Pipe, Dup, SharedObject, Process, Poll, TCPSocket, Client, Server, ANSI)

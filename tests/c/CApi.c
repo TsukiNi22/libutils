@@ -14,7 +14,7 @@ File Name:
 ##  @file CApi.c
 
 File Description:
-##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, platform, iomanip, smanip, math, type, cli)
+##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, platform, iomanip, smanip, math, type, encapsulation, cli)
 \**************************************************************/
 
 #define _POSIX_C_SOURCE 200809L // POSIX structures of the C API of platform (strict C11 / C23)
@@ -183,6 +183,18 @@ static void test_type(void)
     utils_matrix_i32_destroy(m);
 }
 
+static void test_encapsulation(void)
+{
+    const char* args[] = {"-c", "exit 4"};
+    utils_process_t* process = utils_process_create();
+    utils_process_status_t status;
+
+    CHECK(process != NULL);
+    CHECK(utils_process_spawn_exec(process, "/bin/sh", args, 2) > 0);
+    CHECK(utils_process_wait(process, &status) == UTILS_OK && status.exited && status.code == 4);
+    utils_process_destroy(process);
+}
+
 static void test_cli(void)
 {
     int calls = 0;
@@ -226,6 +238,7 @@ int main(void)
     test_smanip();
     test_math();
     test_type();
+    test_encapsulation();
     test_cli();
     if (failed) fprintf(stderr, "%d check(s) failed\n", failed);
     return (failed ? 1 : 0);

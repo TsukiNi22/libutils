@@ -226,6 +226,12 @@ File Description:
     #include "type/CApi.h" // utils_freezable_*, utils_worker_*, utils_vector2_*, utils_vector3_*, utils_matrix_*, utils_blt_*, C_API_*_TYPES
 #endif
 
+/* Encapsulation */
+#ifdef _Encapsulation
+    // -> Dup, Pipe, Poll, Process, SharedObject & SharedMemory (utils::encapsulation)
+    #include "encapsulation/CApi.h" // utils_dup_*, utils_pipe_*, utils_poll_*, utils_process_*, utils_shared_object_*, utils_shm_*, C_API_SHM_*
+#endif
+
 /* Cli */
 #ifdef _Cli
     // -> Handling of a customizable command line interface (utils::cli::Cli)

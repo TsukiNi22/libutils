@@ -126,6 +126,7 @@ set(SRC
     src/utils/encapsulation/Process.cpp
     src/utils/encapsulation/Poll.cpp
     src/utils/encapsulation/SharedMemory.cpp
+    src/utils/encapsulation/CApi.cpp
 
     # System
     src/utils/system/Scheduler.cpp
