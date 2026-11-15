@@ -38,6 +38,7 @@ set(SRC
 
     # Verbose
     verbose/Verbose.cpp
+    verbose/CApi.cpp
 
     # S - Manip
     manip/smanip/Format.cpp

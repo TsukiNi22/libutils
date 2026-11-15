@@ -14,7 +14,7 @@ File Name:
 ##  @file CApi.c
 
 File Description:
-##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, cli)
+##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, cli)
 \**************************************************************/
 
 #include <string.h>
@@ -97,6 +97,26 @@ static void test_status(void)
     CHECK(utils_exception.exception);
 }
 
+static int count(void* data)
+{
+    ++*(int*)data;
+    return UTILS_OK;
+}
+
+static void test_verbose(void)
+{
+    int calls = 0;
+    utils_verbose_t old = utils_verbose_get();
+
+    utils_verbose_set(C_API_VERBOSE_BASIC);
+    CHECK(utils_verbose_get() == C_API_VERBOSE_BASIC);
+    CHECK(utils_verbose_is(C_API_VERBOSE_BASIC) && !utils_verbose_is(C_API_VERBOSE_DEBUG));
+    CHECK(utils_verbose_log(C_API_VERBOSE_DEBUG, "hidden %d", 1) == UTILS_OK);
+    CHECK(utils_verbose_locked(count, &calls) == UTILS_OK && calls == 1);
+    CHECK(utils_verbose_on(C_API_VERBOSE_DEBUG, count, &calls) == UTILS_OK && calls == 1);
+    utils_verbose_set(old);
+}
+
 static void test_cli(void)
 {
     int calls = 0;
@@ -134,6 +154,7 @@ static void test_cli(void)
 int main(void)
 {
     test_status();
+    test_verbose();
     test_cli();
     if (failed) fprintf(stderr, "%d check(s) failed\n", failed);
     return (failed ? 1 : 0);

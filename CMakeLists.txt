@@ -81,6 +81,7 @@ set(SRC
 
     # Verbose
     src/utils/verbose/Verbose.cpp
+    src/utils/verbose/CApi.cpp
 
     ## Cli
     src/utils/cli/Cli.cpp

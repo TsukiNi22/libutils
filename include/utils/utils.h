@@ -190,6 +190,12 @@ File Description:
     #include "exception/CApi.h" // UTILS_OK, UTILS_KO, OK, KO, utils_exception, utils_exception_*, utils_fail, C_API_*, C_API_EXCEPTION_TYPE_*, C_API_EXCEPTION_ORIGIN_*
 #endif
 
+/* Verbose */
+#ifdef _Verbose
+    // -> Level & printf style logs of the global verbose (utils::verbose)
+    #include "verbose/CApi.h" // utils_verbose_*, C_API_VERBOSE_*
+#endif
+
 /* Cli */
 #ifdef _Cli
     // -> Handling of a customizable command line interface (utils::cli::Cli)
