@@ -58,6 +58,7 @@ set(SRC
     src/utils/platform/Epoll.cpp
     src/utils/platform/Dlfcn.cpp
     src/utils/platform/Termios.cpp
+    src/utils/platform/CApi.cpp
 
     ## Exception
     src/utils/exception/AException.cpp

@@ -14,9 +14,10 @@ File Name:
 ##  @file CApi.c
 
 File Description:
-##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, cli)
+##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, platform, cli)
 \**************************************************************/
 
+#define _POSIX_C_SOURCE 200809L // POSIX structures of the C API of platform (strict C11 / C23)
 #include <string.h>
 #include <utils.h>
 #include <stdio.h>
@@ -117,6 +118,19 @@ static void test_verbose(void)
     utils_verbose_set(old);
 }
 
+static void test_platform(void)
+{
+    int fds[2] = {-1, -1};
+    char buf[4] = {0};
+
+    CHECK(utils_platform_pipe(fds) == 0);
+    CHECK(utils_platform_write(fds[1], "ok", 2) == 2);
+    CHECK(utils_platform_read(fds[0], buf, sizeof(buf)) == 2 && strcmp(buf, "ok") == 0);
+    CHECK(utils_platform_close(fds[0]) == 0 && utils_platform_close(fds[1]) == 0);
+    CHECK(utils_platform_getpid() > 0);
+    CHECK(utils_platform_strerror(2) != NULL);
+}
+
 static void test_cli(void)
 {
     int calls = 0;
@@ -155,6 +169,7 @@ int main(void)
 {
     test_status();
     test_verbose();
+    test_platform();
     test_cli();
     if (failed) fprintf(stderr, "%d check(s) failed\n", failed);
     return (failed ? 1 : 0);

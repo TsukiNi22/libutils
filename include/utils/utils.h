@@ -190,6 +190,12 @@ File Description:
     #include "exception/CApi.h" // UTILS_OK, UTILS_KO, OK, KO, utils_exception, utils_exception_*, utils_fail, C_API_*, C_API_EXCEPTION_TYPE_*, C_API_EXCEPTION_ORIGIN_*
 #endif
 
+/* Platform */
+#ifdef _Platform
+    // -> POSIX calls of libutils for Unix & Windows (utils::platform)
+    #include "platform/CApi.h" // utils_platform_*, utils_platform_dl_info_t, struct epoll_event, struct termios, ... (Windows: platform/Types.h)
+#endif
+
 /* Verbose */
 #ifdef _Verbose
     // -> Level & printf style logs of the global verbose (utils::verbose)

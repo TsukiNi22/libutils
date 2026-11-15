@@ -26,38 +26,13 @@ File Description:
 
     /* type */
     #include "Platform.hpp"             // UTILS_WINDOWS
+    #include "Types.h"                  // struct sockaddr, struct addrinfo, socklen_t, MSG_NOSIGNAL (Windows)
     #include <sys/types.h>              // ssize_t
     #include <cstddef>                  // std::size_t
     #ifndef UTILS_WINDOWS
         #include <sys/socket.h>         // struct sockaddr, socklen_t, MSG_NOSIGNAL
         #include <netdb.h>              // struct addrinfo
     #endif
-
-    //----------------------------------------------------------------//
-    /* DEFINE */
-
-    #ifdef UTILS_WINDOWS
-        #ifndef MSG_NOSIGNAL
-            #define MSG_NOSIGNAL 0      // no SIGPIPE on Windows
-        #endif
-    #endif
-
-//----------------------------------------------------------------//
-/* STRUCT */
-
-#ifdef UTILS_WINDOWS
-    // <winsock2.h> / <ws2tcpip.h> are not included (no windows.h macros in the public headers):
-    // include them in the code that needs the structures (sockaddr_in, addrinfo...)
-    struct sockaddr;
-    struct addrinfo;
-#endif
-
-//----------------------------------------------------------------//
-/* TYPEDEF */
-
-#ifdef UTILS_WINDOWS
-    using socklen_t = int; // <ws2tcpip.h>
-#endif
 
 namespace utils::platform { // namespace start
 //----------------------------------------------------------------//

@@ -26,58 +26,10 @@ File Description:
 
     /* type */
     #include "Platform.hpp"                 // UTILS_WINDOWS
-    #ifdef UTILS_WINDOWS
-        #include <cstdint>                  // std::uint32_t, std::uint64_t
-    #else
+    #include "Types.h"                      // struct epoll_event, EPOLL* (Windows)
+    #ifndef UTILS_WINDOWS
         #include <sys/epoll.h>              // struct epoll_event, EPOLL*
     #endif
-
-    //----------------------------------------------------------------//
-    /* DEFINE */
-
-    #ifdef UTILS_WINDOWS
-        // Same values as Linux
-        #define EPOLLIN         0x001u
-        #define EPOLLPRI        0x002u
-        #define EPOLLOUT        0x004u
-        #define EPOLLERR        0x008u
-        #define EPOLLHUP        0x010u
-        #define EPOLLRDNORM     0x040u
-        #define EPOLLWRNORM     0x100u
-        #define EPOLLRDHUP      0x2000u
-        #define EPOLLONESHOT    (1u << 30)
-        #define EPOLLET         (1u << 31)  // not available on Windows (level triggered only): EINVAL
-
-        #define EPOLL_CLOEXEC   02000000    // ignored on Windows
-        #define EPOLL_CTL_ADD   1
-        #define EPOLL_CTL_DEL   2
-        #define EPOLL_CTL_MOD   3
-    #endif
-
-//----------------------------------------------------------------//
-/* STRUCT */
-
-#ifdef UTILS_WINDOWS
-    // Same layout as Linux (<sys/epoll.h>)
-    union epoll_data { // xstyle: ignore CPP-CLASS-NAME (POSIX name)
-        void* ptr;
-        int fd;
-        std::uint32_t u32;
-        std::uint64_t u64;
-    };
-
-    struct epoll_event { // xstyle: ignore CPP-CLASS-NAME (POSIX name)
-        std::uint32_t events;
-        union epoll_data data;
-    };
-#endif
-
-//----------------------------------------------------------------//
-/* TYPEDEF */
-
-#ifdef UTILS_WINDOWS
-    using epoll_data_t = union epoll_data;
-#endif
 
 namespace utils::platform { // namespace start
 //----------------------------------------------------------------//

@@ -105,6 +105,9 @@ set(SRC_UNIX
     # Network
     network/Socket.cpp
 
+    # Platform
+    platform/CApi.cpp
+
     # Encapsulation
     encapsulation/Encapsulation.cpp
 )

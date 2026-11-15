@@ -26,37 +26,13 @@ File Description:
 
     /* type */
     #include "Platform.hpp"             // UTILS_WINDOWS
+    #include "Types.h"                  // STDIN_FILENO, struct pollfd, nfds_t (Windows)
     #include <sys/types.h>              // ssize_t, pid_t (also on MinGW)
     #include <cstddef>                  // std::size_t
     #ifndef UTILS_WINDOWS
         #include <unistd.h>             // STDIN_FILENO
         #include <poll.h>               // struct pollfd, nfds_t
     #endif
-
-    //----------------------------------------------------------------//
-    /* DEFINE */
-
-    #ifdef UTILS_WINDOWS
-        #ifndef STDIN_FILENO
-            #define STDIN_FILENO    0
-            #define STDOUT_FILENO   1
-            #define STDERR_FILENO   2
-        #endif
-    #endif
-
-//----------------------------------------------------------------//
-/* STRUCT */
-
-#ifdef UTILS_WINDOWS
-    struct pollfd; // <winsock2.h> (not included: no windows.h macros in the public headers)
-#endif
-
-//----------------------------------------------------------------//
-/* TYPEDEF */
-
-#ifdef UTILS_WINDOWS
-    using nfds_t = unsigned long;
-#endif
 
 namespace utils::platform { // namespace start
 //----------------------------------------------------------------//
