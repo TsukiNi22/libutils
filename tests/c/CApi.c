@@ -14,7 +14,7 @@ File Name:
 ##  @file CApi.c
 
 File Description:
-##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, platform, iomanip, smanip, math, type, encapsulation, arguments, network, cli)
+##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, platform, iomanip, smanip, math, type, encapsulation, arguments, network, security, cli)
 \**************************************************************/
 
 #define _POSIX_C_SOURCE 200809L // POSIX structures of the C API of platform (strict C11 / C23)
@@ -222,6 +222,24 @@ static void test_network(void)
     utils_payloads_destroy(payloads);
 }
 
+static void test_security(void)
+{
+    utils_rsa_key_t* key = utils_rsa_key_create();
+    utils_string_t* encrypted = utils_string_create(NULL, 0);
+    utils_string_t* decrypted = utils_string_create(NULL, 0);
+    utils_observer_t* observer = utils_observer_create("c_test", true);
+
+    CHECK(key != NULL && observer != NULL);
+    CHECK(utils_rsa_key_generate(key) == UTILS_OK);
+    CHECK(utils_rsa_key_encrypt(key, "abc", 3, encrypted) == UTILS_OK);
+    CHECK(utils_rsa_key_decrypt(key, utils_string_data(encrypted), utils_string_size(encrypted), decrypted) == UTILS_OK);
+    CHECK(strcmp(utils_string_data(decrypted), "abc") == 0);
+    utils_observer_destroy(observer);
+    utils_string_destroy(decrypted);
+    utils_string_destroy(encrypted);
+    utils_rsa_key_destroy(key);
+}
+
 static void test_cli(void)
 {
     int calls = 0;
@@ -268,6 +286,7 @@ int main(void)
     test_encapsulation();
     test_arguments();
     test_network();
+    test_security();
     test_cli();
     if (failed) fprintf(stderr, "%d check(s) failed\n", failed);
     return (failed ? 1 : 0);

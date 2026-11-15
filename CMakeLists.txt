@@ -121,6 +121,9 @@ set(SRC
     src/utils/security/observer/ANotifier.cpp
     src/utils/security/observer/MemoryLeakNotifier.cpp
 
+    ## Security (C API)
+    src/utils/security/CApi.cpp
+
     # Encapsulation
     src/utils/encapsulation/SharedObject.cpp
     src/utils/encapsulation/Pipe.cpp

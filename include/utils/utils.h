@@ -244,6 +244,12 @@ File Description:
     #include "network/CApi.h" // utils_socket_*, utils_client_*, utils_server_*, utils_payloads_*, utils_network_*, C_API_NETWORK_*
 #endif
 
+/* Security */
+#if defined(_Encryption) || defined(_Observer)
+    // -> AES & RSA keys, observers of the C side (utils::security)
+    #include "security/CApi.h" // utils_aes_key_*, utils_aes_data_*, utils_rsa_key_*, utils_observer_*
+#endif
+
 /* Cli */
 #ifdef _Cli
     // -> Handling of a customizable command line interface (utils::cli::Cli)

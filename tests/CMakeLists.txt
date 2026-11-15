@@ -94,6 +94,9 @@ set(SRC
     security/encryption/CommonRSAKey.cpp
     security/encryption/Key.cpp
 
+    # Security (C API)
+    security/CApi.cpp
+
     # Security (sub-part: observer)
     security/observer/MemoryLeakNotifer.cpp
     security/observer/Observer.cpp
