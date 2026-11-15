@@ -256,6 +256,12 @@ File Description:
     #include "system/CApi.h" // utils_gpu_*, utils_hybrid_memory_*, utils_id_handler_*, utils_load_balancer_*, utils_scheduler_*, C_API_MEMORY_MODE_*
 #endif
 
+/* Pool */
+#if defined(_Pool) || defined(_Middleware)
+    // -> Clusters & middlewares (utils::pool)
+    #include "pool/CApi.h" // utils_cluster_*, utils_middlewares_*, utils_middleware_*
+#endif
+
 /* Cli */
 #ifdef _Cli
     // -> Handling of a customizable command line interface (utils::cli::Cli)

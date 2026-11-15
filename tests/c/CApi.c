@@ -14,7 +14,7 @@ File Name:
 ##  @file CApi.c
 
 File Description:
-##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, platform, iomanip, smanip, math, type, encapsulation, arguments, network, security, system, cli)
+##  Test of the C API from a pure C program (built in C11 & C23: headers, status, utils_fail, verbose, platform, iomanip, smanip, math, type, encapsulation, arguments, network, security, system, pool, cli)
 \**************************************************************/
 
 #define _POSIX_C_SOURCE 200809L // POSIX structures of the C API of platform (strict C11 / C23)
@@ -254,6 +254,26 @@ static void test_system(void)
     utils_hybrid_memory_u8_destroy(memory);
 }
 
+static int count_middleware(void* data)
+{
+    ++*(int*)data;
+    return UTILS_OK;
+}
+
+static void test_pool(void)
+{
+    utils_middlewares_t* middlewares = utils_middlewares_create();
+    utils_cluster_f32_t* cluster = utils_cluster_f32_create();
+    int calls = 0;
+
+    CHECK(middlewares != NULL && cluster != NULL);
+    CHECK(utils_middlewares_add_before(middlewares, count_middleware, &calls) == UTILS_OK);
+    CHECK(utils_middlewares_call_before(middlewares) == UTILS_OK && calls == 1);
+    CHECK(utils_cluster_f32_spawn(cluster, 2, 1.5f) == UTILS_OK && utils_cluster_f32_size(cluster) == 2);
+    utils_cluster_f32_destroy(cluster);
+    utils_middlewares_destroy(middlewares);
+}
+
 static void test_cli(void)
 {
     int calls = 0;
@@ -302,6 +322,7 @@ int main(void)
     test_network();
     test_security();
     test_system();
+    test_pool();
     test_cli();
     if (failed) fprintf(stderr, "%d check(s) failed\n", failed);
     return (failed ? 1 : 0);

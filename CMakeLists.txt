@@ -86,6 +86,9 @@ set(SRC
     ## Type
     src/utils/type/CApi.cpp
 
+    ## Pool
+    src/utils/pool/CApi.cpp
+
     # Verbose
     src/utils/verbose/Verbose.cpp
     src/utils/verbose/CApi.cpp

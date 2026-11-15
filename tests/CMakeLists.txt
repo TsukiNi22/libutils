@@ -78,6 +78,7 @@ set(SRC
 
     # Pool
     pool/Pool.cpp
+    pool/CApi.cpp
 
     # System
     system/HybridMemory.cpp
