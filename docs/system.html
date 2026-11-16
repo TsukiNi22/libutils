@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="en" data-storage-key="libutils-docs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>System - libutils</title>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n>Skip to the content</a>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" id="menuBtn" aria-label="Open the navigation" data-i18n-aria-label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v5.0.0</span></a>
+  <nav class="tabs" aria-label="Pages" hidden></nav>
+  <span class="spacer"></span>
+  <div class="top-actions">
+  <div class="lang-switch" role="group" aria-label="Language" data-i18n-aria-label>
+    <button type="button" data-set-lang="en" class="on">EN</button>
+    <button type="button" data-set-lang="fr">FR</button>
+  </div>
+  <span class="divider" aria-hidden="true"></span><div class="sbox small"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" autocomplete="off" aria-label="Search" data-i18n-aria-label placeholder="Search…" data-ph-fr="Rechercher…"><kbd class="hint" aria-hidden="true">/</kbd><ul class="results" hidden></ul></div>
+<a class="icon-btn" href="https://github.com/TsukiNi22/libutils" aria-label="GitHub repository" data-i18n-aria-label title="GitHub repository" data-i18n-title><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"/></svg></a>
+  <button class="theme-switch" type="button" id="themeToggle" role="switch" aria-checked="false" aria-label="Toggle theme" data-i18n-aria-label title="Toggle theme" data-i18n-title>
+    <span class="stars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="knob" aria-hidden="true">
+      <svg class="sun" viewBox="0 0 24 24" fill="#ffffff"><circle cx="12" cy="12" r="5.2"/><g stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"><path d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6M4.8 4.8l1.8 1.8M17.4 17.4l1.8 1.8M4.8 19.2l1.8-1.8M17.4 6.6l1.8-1.8"/></g></svg>
+      <svg class="moon" viewBox="0 0 24 24"><path d="M15.6 4.2a8 8 0 1 0 4.2 11.6A7 7 0 0 1 15.6 4.2z" fill="#f6c343"/></svg>
+    </span>
+  </button>
+  </div>
+</header>
+<div class="layout" id="top">
+<aside class="sidebar" id="sidebar"><p data-i18n>On this page</p><a href="#idhandler">1. <span data-lang="en">IdHandler</span><span data-lang="fr">IdHandler</span></a><a href="#scheduler">2. <span data-lang="en">Scheduler</span><span data-lang="fr">Scheduler</span></a><a href="#loadbalancer">3. <span data-lang="en">LoadBalancer</span><span data-lang="fr">LoadBalancer</span></a><a href="#hybridmemory">4. <span data-lang="en">HybridMemory</span><span data-lang="fr">HybridMemory</span></a><a href="#example">5. <span data-lang="en">Example</span><span data-lang="fr">Exemple</span></a><a href="#errors">6. <span data-lang="en">Errors</span><span data-lang="fr">Erreurs</span></a><a href="#in-c">7. <span data-lang="en">In C</span><span data-lang="fr">En C</span></a><a href="#cpp-api">8. <span data-lang="en">C++ API</span><span data-lang="fr">API C++</span></a><a href="#c-api">9. <span data-lang="en">C API</span><span data-lang="fr">API C</span></a><hr><div class="grp"><span data-lang="en">User guide</span><span data-lang="fr">Guide utilisateur</span></div><a href="installation.html"><span data-lang="en">Installation</span><span data-lang="fr">Installation</span></a><a href="usage.html"><span data-lang="en">Link and include</span><span data-lang="fr">Lier et inclure</span></a><a href="custom-exceptions.html"><span data-lang="en">Custom exception codes</span><span data-lang="fr">Codes d&#x27;exception personnalisés</span></a><a href="warnings.html"><span data-lang="en">Warnings</span><span data-lang="fr">Avertissements</span></a><a href="c-api.html"><span data-lang="en">Use libutils from C</span><span data-lang="fr">Utiliser libutils depuis C</span></a><a href="windows.html"><span data-lang="en">Windows</span><span data-lang="fr">Windows</span></a><a href="development.html"><span data-lang="en">Build, tests and hooks</span><span data-lang="fr">Build, tests et hooks</span></a><div class="grp"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></div><a href="overview.html"><span data-lang="en">Architecture</span><span data-lang="fr">Architecture</span></a><a href="errors.html"><span data-lang="en">Errors</span><span data-lang="fr">Erreurs</span></a><a href="c-api-design.html"><span data-lang="en">The C API design</span><span data-lang="fr">Conception de l&#x27;API C</span></a><a href="network-ipc.html"><span data-lang="en">Communication</span><span data-lang="fr">Communication</span></a><a href="platforms.html"><span data-lang="en">Platforms</span><span data-lang="fr">Plateformes</span></a><div class="grp"><span data-lang="en">Reference</span><span data-lang="fr">Référence</span></div><a href="exception.html"><span data-lang="en">Exceptions</span><span data-lang="fr">Exceptions</span></a><a href="verbose.html"><span data-lang="en">Verbose</span><span data-lang="fr">Verbose</span></a><a href="pool.html"><span data-lang="en">Pool</span><span data-lang="fr">Pool</span></a><a href="cli.html"><span data-lang="en">Cli</span><span data-lang="fr">Cli</span></a><a href="arguments.html"><span data-lang="en">Arguments</span><span data-lang="fr">Arguments</span></a><a href="network.html"><span data-lang="en">Network</span><span data-lang="fr">Network</span></a><a href="math.html"><span data-lang="en">Math</span><span data-lang="fr">Math</span></a><a href="concepts.html"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></a><a href="encapsulation.html"><span data-lang="en">Encapsulation</span><span data-lang="fr">Encapsulation</span></a><a href="system.html" class="cur" aria-current="page"><span data-lang="en">System</span><span data-lang="fr">System</span></a><a href="type.html"><span data-lang="en">Type</span><span data-lang="fr">Type</span></a><a href="iomanip.html"><span data-lang="en">IOManip</span><span data-lang="fr">IOManip</span></a><a href="smanip.html"><span data-lang="en">SManip</span><span data-lang="fr">SManip</span></a><a href="algorithms.html"><span data-lang="en">Algorithms</span><span data-lang="fr">Algorithms</span></a><a href="security.html"><span data-lang="en">Security</span><span data-lang="fr">Security</span></a><a href="platform.html"><span data-lang="en">Platform</span><span data-lang="fr">Platform</span></a><a href="attribute.html"><span data-lang="en">Attribute</span><span data-lang="fr">Attribute</span></a><div class="grp"><span data-lang="en">Resources</span><span data-lang="fr">Ressources</span></div><a href="changelog.html"><span data-lang="en">Changelog</span><span data-lang="fr">Historique</span></a><a href="ci-cd.html"><span data-lang="en">CI / CD</span><span data-lang="fr">CI / CD</span></a><a href="licenses.html"><span data-lang="en">Licenses</span><span data-lang="fr">Licences</span></a><a href="project-graph.html"><span data-lang="en">Project graph</span><span data-lang="fr">Graphe du projet</span></a><a href="faq.html"><span data-lang="en">FAQ</span><span data-lang="fr">FAQ</span></a><a href="glossary.html"><span data-lang="en">Glossary</span><span data-lang="fr">Glossaire</span></a></aside><main id="main" tabindex="-1"><header><div class="page-eyebrow"><span data-lang="en">Reference</span><span data-lang="fr">Référence</span></div><h1><span data-lang="en">System</span><span data-lang="fr">System</span></h1><p class="lead"><span data-lang="en">Tools for the program itself: unique ids, delayed tasks, a pool of workers and typed memory kept on the GPU (CUDA, OpenCL, Vulkan) or in the RAM.</span><span data-lang="fr">Outils pour le programme lui-même : ids uniques, tâches différées, un pool de workers et une mémoire typée gardée sur le GPU (CUDA, OpenCL, Vulkan) ou dans la RAM.</span></p><div class="page-meta"><span><span data-i18n>Updated</span> 2026-11-26</span></div></header><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Define, Group, Namespace, Headers"><table><thead><tr><th scope="col" style="min-width:11ch">Define</th><th scope="col" style="min-width:10ch">Group</th><th scope="col" style="min-width:18ch">Namespace</th><th scope="col" style="min-width:18ch">Headers</th></tr></thead><tbody><tr><td><code>_System</code></td><td><code>_Tools</code></td><td><code>utils::system</code></td><td><code>utils/system/</code></td></tr></tbody></table></div><p>Tools for the program itself: id distribution, delayed tasks, a pool of workers and memory kept on the GPU.</p></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Define, Groupe, Espace de noms, En-têtes"><table><thead><tr><th scope="col" style="min-width:11ch">Define</th><th scope="col" style="min-width:11ch">Groupe</th><th scope="col" style="min-width:20ch">Espace de noms</th><th scope="col" style="min-width:18ch">En-têtes</th></tr></thead><tbody><tr><td><code>_System</code></td><td><code>_Tools</code></td><td><code>utils::system</code></td><td><code>utils/system/</code></td></tr></tbody></table></div><p>Outils pour le programme lui-même : distribution d'ids, tâches différées, un pool de workers et une mémoire gardée sur le GPU.</p></div><section id="idhandler"><h2>1. <span data-lang="en">IdHandler</span><span data-lang="fr">IdHandler</span></h2><div data-lang="en"><p><code>IdHandler&lt;T&gt;</code> (<code>T</code> integer) gives unique ids and reuses the freed ones first. For an unsigned <code>T</code> the ids start at <code>1</code> (<code>0</code> is reserved as "no id"); for a signed <code>T</code> they start at <code>std::numeric_limits&lt;T&gt;::min()</code>. Every method takes <code>safe_mode = true</code> (lock, thread safe).</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:21ch">Method</th><th scope="col" style="min-width:19ch">Description</th></tr></thead><tbody><tr><td><code>allocate()</code> / <code>allocate(T&amp; id)</code></td><td>Give a free id (and store it in <code>id</code>)</td></tr><tr><td><code>free(id)</code></td><td>Give back an id (<code>DoubleFree</code>, <code>UnknownId</code> for an id never given)</td></tr><tr><td><code>use(id)</code></td><td>Force an id as used (<code>DoubleUse</code> when already used)</td></tr><tr><td><code>preview()</code></td><td>Next id <code>allocate</code> would give</td></tr><tr><td><code>id()</code> / <code>actual()</code></td><td>Counter / last id given</td></tr><tr><td><code>clear()</code> / <code>free()</code></td><td>Free every id</td></tr></tbody></table></div><div class="callout warn"><p><strong>Warning.</strong> When the type limit is reached, <code>allocate</code> throws <code>FatalException(IdOverflow)</code> (ends the program), <code>preview</code> an <code>ErrorException(IdOverflow)</code>.</p></div></div><div data-lang="fr"><p><code>IdHandler&lt;T&gt;</code> (<code>T</code> entier) donne des ids uniques et réutilise d'abord ceux qui ont été libérés. Pour un <code>T</code> non signé, les ids commencent à <code>1</code> (<code>0</code> est réservé pour « pas d'id ») ; pour un <code>T</code> signé, ils commencent à <code>std::numeric_limits&lt;T&gt;::min()</code>. Chaque méthode prend <code>safe_mode = true</code> (verrou, thread safe).</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:21ch">Méthode</th><th scope="col" style="min-width:22ch">Description</th></tr></thead><tbody><tr><td><code>allocate()</code> / <code>allocate(T&amp; id)</code></td><td>Donne un id libre (et le stocke dans <code>id</code>)</td></tr><tr><td><code>free(id)</code></td><td>Rend un id (<code>DoubleFree</code>, <code>UnknownId</code> pour un id jamais donné)</td></tr><tr><td><code>use(id)</code></td><td>Force un id comme utilisé (<code>DoubleUse</code> s'il est déjà utilisé)</td></tr><tr><td><code>preview()</code></td><td>Prochain id que donnerait <code>allocate</code></td></tr><tr><td><code>id()</code> / <code>actual()</code></td><td>Compteur / dernier id donné</td></tr><tr><td><code>clear()</code> / <code>free()</code></td><td>Libère tous les ids</td></tr></tbody></table></div><div class="callout warn"><p><strong>Attention.</strong> Quand la limite du type est atteinte, <code>allocate</code> lance <code>FatalException(IdOverflow)</code> (termine le programme), <code>preview</code> une <code>ErrorException(IdOverflow)</code>.</p></div></div></section><section id="scheduler"><h2>2. <span data-lang="en">Scheduler</span><span data-lang="fr">Scheduler</span></h2><div data-lang="en"><p>Runs a function after a delay, each task on its own thread.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:24ch">Method</th><th scope="col" style="min-width:34ch">Description</th></tr></thead><tbody><tr><td><code>schedule(delay, fn)</code></td><td>Run <code>fn()</code> after <code>delay</code> (<code>std::chrono::milliseconds</code>), returns the task id</td></tr><tr><td><code>cancel(id)</code></td><td>Cancel one task (<code>UnknownId</code> when finished / unknown)</td></tr><tr><td><code>cancel()</code></td><td>Cancel every pending task (also done by the destructor)</td></tr></tbody></table></div><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">utils::system::Scheduler scheduler;
+std::size_t id = scheduler.schedule(std::chrono::milliseconds{500}, [](void) {std::cout &lt;&lt; "later" &lt;&lt; std::endl;});
+scheduler.cancel(id);</code></pre></div><div data-lang="fr"><p>Exécute une fonction après un délai, chaque tâche sur son propre thread.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:24ch">Méthode</th><th scope="col" style="min-width:34ch">Description</th></tr></thead><tbody><tr><td><code>schedule(delay, fn)</code></td><td>Exécute <code>fn()</code> après <code>delay</code> (<code>std::chrono::milliseconds</code>), renvoie l'id de la tâche</td></tr><tr><td><code>cancel(id)</code></td><td>Annule une tâche (<code>UnknownId</code> si elle est terminée / inconnue)</td></tr><tr><td><code>cancel()</code></td><td>Annule toutes les tâches en attente (aussi fait par le destructeur)</td></tr></tbody></table></div><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">utils::system::Scheduler scheduler;
+std::size_t id = scheduler.schedule(std::chrono::milliseconds{500}, [](void) {std::cout &lt;&lt; "later" &lt;&lt; std::endl;});
+scheduler.cancel(id);</code></pre></div></section><section id="loadbalancer"><h2>3. <span data-lang="en">LoadBalancer</span><span data-lang="fr">LoadBalancer</span></h2><div data-lang="en"><p><code>LoadBalancer&lt;T&gt;(limit = 1, lifespan = 0ms)</code> keeps a pool of workers (<code>T</code> is a <code>utils::type::Worker</code> or derives it, see <a href="type.html#worker">Type</a>) and gives a free one.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:21ch">Method</th><th scope="col" style="min-width:22ch">Description</th></tr></thead><tbody><tr><td><code>spawn(n = 1)</code></td><td>Add <code>n</code> workers (<code>OutOfBounds</code> over the limit, <code>0</code> = no limit)</td></tr><tr><td><code>getWorker()</code></td><td><code>std::future&lt;T&amp;&gt;</code> resolved with a free worker, marked working (waits until one is free)</td></tr><tr><td><code>kill()</code> / <code>kill(n)</code></td><td>Remove the free workers / <code>n</code> workers (the free ones first)</td></tr><tr><td><code>kill&lt;true&gt;()</code> / <code>kill&lt;true&gt;(n)</code></td><td>Same, also removing the working ones</td></tr><tr><td><code>setLimit(n)</code> / <code>getLimit()</code></td><td>Maximum number of workers</td></tr><tr><td><code>setLifespan(ms)</code> / <code>getLifespan()</code></td><td>A worker free for longer is removed (<code>0</code> = never)</td></tr><tr><td><code>size()</code></td><td>Number of workers</td></tr></tbody></table></div><p>The worker is given back with <code>worker.setWorkingStatus(false)</code>. A <code>getWorker</code> still waiting when the balancer is destroyed throws <code>PromiseCanceled</code> from <code>future.get()</code>.</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">utils::system::LoadBalancer&lt;utils::type::Worker&gt; balancer(4, std::chrono::seconds{30});
+balancer.spawn(2);
+utils::type::Worker&amp; worker = balancer.getWorker().get();
+// ... work ...
+worker.setWorkingStatus(false);</code></pre></div><div data-lang="fr"><p><code>LoadBalancer&lt;T&gt;(limit = 1, lifespan = 0ms)</code> garde un pool de workers (<code>T</code> est un <code>utils::type::Worker</code> ou en dérive, voir <a href="type.html#worker">Type</a>) et en donne un libre.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:21ch">Méthode</th><th scope="col" style="min-width:22ch">Description</th></tr></thead><tbody><tr><td><code>spawn(n = 1)</code></td><td>Ajoute <code>n</code> workers (<code>OutOfBounds</code> au-delà de la limite, <code>0</code> = sans limite)</td></tr><tr><td><code>getWorker()</code></td><td><code>std::future&lt;T&amp;&gt;</code> résolu avec un worker libre, marqué occupé (attend qu'un worker se libère)</td></tr><tr><td><code>kill()</code> / <code>kill(n)</code></td><td>Supprime les workers libres / <code>n</code> workers (les libres d'abord)</td></tr><tr><td><code>kill&lt;true&gt;()</code> / <code>kill&lt;true&gt;(n)</code></td><td>Pareil, en supprimant aussi ceux qui sont occupés</td></tr><tr><td><code>setLimit(n)</code> / <code>getLimit()</code></td><td>Nombre maximum de workers</td></tr><tr><td><code>setLifespan(ms)</code> / <code>getLifespan()</code></td><td>Un worker libre depuis plus longtemps est supprimé (<code>0</code> = jamais)</td></tr><tr><td><code>size()</code></td><td>Nombre de workers</td></tr></tbody></table></div><p>Le worker est rendu avec <code>worker.setWorkingStatus(false)</code>. Un <code>getWorker</code> encore en attente quand le balancer est détruit lance <code>PromiseCanceled</code> depuis <code>future.get()</code>.</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">utils::system::LoadBalancer&lt;utils::type::Worker&gt; balancer(4, std::chrono::seconds{30});
+balancer.spawn(2);
+utils::type::Worker&amp; worker = balancer.getWorker().get();
+// ... work ...
+worker.setWorkingStatus(false);</code></pre></div></section><section id="hybridmemory"><h2>4. <span data-lang="en">HybridMemory</span><span data-lang="fr">HybridMemory</span></h2><div data-lang="en"><p><code>HybridMemory&lt;T&gt;</code> (<code>T</code> trivially copyable, header <code>utils/system/HybridMemory.hpp</code>) keeps <code>n</code> values of <code>T</code> in the memory of a GPU when one is available, else in the RAM, for future computes on it. The backend is chosen at the construction with a <code>MemoryMode</code>; the GPU libraries are loaded at runtime (<code>dlopen</code> / <code>LoadLibrary</code>), so nothing is needed to build or link and a machine without GPU simply uses the RAM.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Mode, Backend"><table><thead><tr><th scope="col" style="min-width:16ch">Mode</th><th scope="col" style="min-width:19ch">Backend</th></tr></thead><tbody><tr><td><code>Auto</code></td><td>First GPU found (<code>Cuda</code> → <code>OpenCL</code> → <code>Vulkan</code>), else the RAM</td></tr><tr><td><code>Gpu</code></td><td>First GPU found, <code>GpuUnavailable</code> without one</td></tr><tr><td><code>Ram</code></td><td>Host memory only</td></tr><tr><td><code>Cuda</code> / <code>OpenCL</code> / <code>Vulkan</code></td><td>Forced backend (<code>libcuda</code> / <code>libOpenCL</code> / <code>libvulkan</code>), <code>GpuUnavailable</code> when missing</td></tr><tr><td><code>Custom</code></td><td>Handler given by the program (<code>IGpu</code>, see below)</td></tr></tbody></table></div><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:32ch">Method</th><th scope="col" style="min-width:21ch">Description</th></tr></thead><tbody><tr><td><code>HybridMemory(mode = Auto)</code> / <code>HybridMemory(size, mode = Auto)</code></td><td>Select the backend (and allocate <code>size</code> values)</td></tr><tr><td><code>HybridMemory(size, std::shared_ptr&lt;IGpu&gt; gpu)</code></td><td><code>Custom</code> mode with a handler (<code>InvalidArgument</code> when <code>nullptr</code> or unavailable)</td></tr><tr><td><code>allocate(size)</code> / <code>resize(size)</code> / <code>free()</code></td><td>New memory (uninitialized) / new size, the first values kept / release</td></tr><tr><td><code>store(span&lt;const T&gt;, offset = 0)</code></td><td>Copy values into the memory from the index <code>offset</code> (<code>OutOfBounds</code>)</td></tr><tr><td><code>fetch(span&lt;T&gt;, offset = 0)</code></td><td>Copy <code>out.size()</code> values from the memory (<code>OutOfBounds</code>)</td></tr><tr><td><code>get(i)</code> / <code>set(i, value)</code> / <code>operator[]</code></td><td>One value (a transfer on the GPU: prefer <code>fetch</code> / <code>store</code> for many)</td></tr><tr><td><code>fill(value)</code> / <code>clear()</code></td><td>Every value set to <code>value</code> / to <code>0</code></td></tr><tr><td><code>toVector()</code></td><td>Whole memory copied in a <code>std::vector&lt;T&gt;</code></td></tr><tr><td><code>join()</code></td><td>Wait for the pending GPU operations (nothing in RAM)</td></tr><tr><td><code>getMode()</code> / <code>getRequestedMode()</code> / <code>isOnGpu()</code></td><td>Mode really used (<code>Ram</code> after an <code>Auto</code> without GPU) / mode asked / on a GPU handler</td></tr><tr><td><code>size()</code> / <code>bytes()</code> / <code>empty()</code></td><td>Number of <code>T</code> / size in bytes / nothing allocated</td></tr><tr><td><code>native()</code></td><td>Device buffer (<code>CUdeviceptr</code>, <code>cl_mem</code>...) for the computes, <code>0</code> in RAM</td></tr><tr><td><code>data()</code></td><td>Host pointer (RAM only, <code>nullptr</code> on a GPU)</td></tr><tr><td><code>getGpu()</code></td><td>The handler (<code>IGpu</code>), <code>nullptr</code> in RAM</td></tr></tbody></table></div><p>The class is move only. <code>IGpu</code> (<code>utils/system/gpu/IGpu.hpp</code>) is the interface of a backend, implemented by <code>CudaGpu</code>, <code>OpenCLGpu</code> and <code>VulkanGpu</code>: <code>isAvailable</code>, <code>getMode</code>, <code>getName</code>, <code>getMemory</code>, <code>allocate</code>, <code>free</code>, <code>store</code>, <code>fetch</code>, <code>memset</code>, <code>memcpy</code>, <code>join</code> (offsets in bytes). <code>make_gpu(mode)</code> (and <code>make_raw_gpu</code> / <code>make_shared_gpu</code> / <code>make_unique_gpu</code>) builds one by hand, <code>nullptr</code> for <code>Ram</code>.</p><div class="callout"><p><code>HybridMemory</code> only stores and moves the data: the computes are written with the API of the backend on <code>native()</code> (kernel launch, <code>cl_mem</code> argument...). Every call of the <code>Cuda</code> handler makes its context current on the calling thread.</p></div><div class="callout warn"><p><strong>Warning.</strong> On a GPU every <code>get</code> / <code>set</code> is a transfer, and the Vulkan handler creates a staging buffer for each one: use <code>store</code> / <code>fetch</code> for blocks.</p></div></div><div data-lang="fr"><p><code>HybridMemory&lt;T&gt;</code> (<code>T</code> trivialement copiable, en-tête <code>utils/system/HybridMemory.hpp</code>) garde <code>n</code> valeurs de <code>T</code> dans la mémoire d'un GPU quand il y en a un, sinon dans la RAM, pour de futurs calculs dessus. Le backend est choisi à la construction avec un <code>MemoryMode</code> ; les bibliothèques GPU sont chargées à l'exécution (<code>dlopen</code> / <code>LoadLibrary</code>), donc rien n'est nécessaire pour le build ou l'édition de liens, et une machine sans GPU utilise simplement la RAM.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Mode, Backend"><table><thead><tr><th scope="col" style="min-width:16ch">Mode</th><th scope="col" style="min-width:19ch">Backend</th></tr></thead><tbody><tr><td><code>Auto</code></td><td>Premier GPU trouvé (<code>Cuda</code> → <code>OpenCL</code> → <code>Vulkan</code>), sinon la RAM</td></tr><tr><td><code>Gpu</code></td><td>Premier GPU trouvé, <code>GpuUnavailable</code> s'il n'y en a pas</td></tr><tr><td><code>Ram</code></td><td>Mémoire de l'hôte seulement</td></tr><tr><td><code>Cuda</code> / <code>OpenCL</code> / <code>Vulkan</code></td><td>Backend forcé (<code>libcuda</code> / <code>libOpenCL</code> / <code>libvulkan</code>), <code>GpuUnavailable</code> s'il manque</td></tr><tr><td><code>Custom</code></td><td>Handler fourni par le programme (<code>IGpu</code>, voir plus bas)</td></tr></tbody></table></div><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:32ch">Méthode</th><th scope="col" style="min-width:24ch">Description</th></tr></thead><tbody><tr><td><code>HybridMemory(mode = Auto)</code> / <code>HybridMemory(size, mode = Auto)</code></td><td>Choisit le backend (et alloue <code>size</code> valeurs)</td></tr><tr><td><code>HybridMemory(size, std::shared_ptr&lt;IGpu&gt; gpu)</code></td><td>Mode <code>Custom</code> avec un handler (<code>InvalidArgument</code> quand il vaut <code>nullptr</code> ou est indisponible)</td></tr><tr><td><code>allocate(size)</code> / <code>resize(size)</code> / <code>free()</code></td><td>Nouvelle mémoire (non initialisée) / nouvelle taille, les premières valeurs étant gardées / libération</td></tr><tr><td><code>store(span&lt;const T&gt;, offset = 0)</code></td><td>Copie des valeurs dans la mémoire à partir de l'indice <code>offset</code> (<code>OutOfBounds</code>)</td></tr><tr><td><code>fetch(span&lt;T&gt;, offset = 0)</code></td><td>Copie <code>out.size()</code> valeurs depuis la mémoire (<code>OutOfBounds</code>)</td></tr><tr><td><code>get(i)</code> / <code>set(i, value)</code> / <code>operator[]</code></td><td>Une valeur (un transfert sur le GPU : préférez <code>fetch</code> / <code>store</code> pour beaucoup de valeurs)</td></tr><tr><td><code>fill(value)</code> / <code>clear()</code></td><td>Toutes les valeurs mises à <code>value</code> / à <code>0</code></td></tr><tr><td><code>toVector()</code></td><td>Toute la mémoire copiée dans un <code>std::vector&lt;T&gt;</code></td></tr><tr><td><code>join()</code></td><td>Attend les opérations GPU en cours (rien en RAM)</td></tr><tr><td><code>getMode()</code> / <code>getRequestedMode()</code> / <code>isOnGpu()</code></td><td>Mode réellement utilisé (<code>Ram</code> après un <code>Auto</code> sans GPU) / mode demandé / sur un handler GPU</td></tr><tr><td><code>size()</code> / <code>bytes()</code> / <code>empty()</code></td><td>Nombre de <code>T</code> / taille en octets / rien d'alloué</td></tr><tr><td><code>native()</code></td><td>Buffer du device (<code>CUdeviceptr</code>, <code>cl_mem</code>...) pour les calculs, <code>0</code> en RAM</td></tr><tr><td><code>data()</code></td><td>Pointeur hôte (RAM seulement, <code>nullptr</code> sur un GPU)</td></tr><tr><td><code>getGpu()</code></td><td>Le handler (<code>IGpu</code>), <code>nullptr</code> en RAM</td></tr></tbody></table></div><p>La classe est seulement déplaçable. <code>IGpu</code> (<code>utils/system/gpu/IGpu.hpp</code>) est l'interface d'un backend, implémentée par <code>CudaGpu</code>, <code>OpenCLGpu</code> et <code>VulkanGpu</code> : <code>isAvailable</code>, <code>getMode</code>, <code>getName</code>, <code>getMemory</code>, <code>allocate</code>, <code>free</code>, <code>store</code>, <code>fetch</code>, <code>memset</code>, <code>memcpy</code>, <code>join</code> (offsets en octets). <code>make_gpu(mode)</code> (et <code>make_raw_gpu</code> / <code>make_shared_gpu</code> / <code>make_unique_gpu</code>) en construit un à la main, <code>nullptr</code> pour <code>Ram</code>.</p><div class="callout"><p><code>HybridMemory</code> ne fait que stocker et déplacer les données : les calculs s'écrivent avec l'API du backend sur <code>native()</code> (lancement de kernel, argument <code>cl_mem</code>...). Chaque appel du handler <code>Cuda</code> rend son contexte courant sur le thread appelant.</p></div><div class="callout warn"><p><strong>Attention.</strong> Sur un GPU, chaque <code>get</code> / <code>set</code> est un transfert, et le handler Vulkan crée un staging buffer pour chacun : utilisez <code>store</code> / <code>fetch</code> pour des blocs.</p></div></div></section><section id="example"><h2>5. <span data-lang="en">Example</span><span data-lang="fr">Exemple</span></h2><div data-lang="en"><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _System
+#include &lt;utils/utils.hpp&gt;
+#include &lt;vector&gt;
+
+std::vector&lt;float&gt; values = {1.0f, 2.0f, 3.0f, 4.0f};
+std::vector&lt;float&gt; out(values.size());
+
+utils::system::HybridMemory&lt;float&gt; memory(values.size());   // Auto: GPU when available, else RAM
+memory.store(values);                                       // host -&gt; memory
+memory.set(0, 10.0f);                                       // one value
+memory.join();                                              // wait for the GPU
+memory.fetch(out);                                          // memory -&gt; host: {10, 2, 3, 4}
+
+utils::system::HybridMemory&lt;float&gt; vulkan(8, utils::system::MemoryMode::Vulkan);   // GpuUnavailable without Vulkan</code></pre></div><div data-lang="fr"><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _System
+#include &lt;utils/utils.hpp&gt;
+#include &lt;vector&gt;
+
+std::vector&lt;float&gt; values = {1.0f, 2.0f, 3.0f, 4.0f};
+std::vector&lt;float&gt; out(values.size());
+
+utils::system::HybridMemory&lt;float&gt; memory(values.size());   // Auto: GPU when available, else RAM
+memory.store(values);                                       // host -&gt; memory
+memory.set(0, 10.0f);                                       // one value
+memory.join();                                              // wait for the GPU
+memory.fetch(out);                                          // memory -&gt; host: {10, 2, 3, 4}
+
+utils::system::HybridMemory&lt;float&gt; vulkan(8, utils::system::MemoryMode::Vulkan);   // GpuUnavailable without Vulkan</code></pre></div></section><section id="errors"><h2>6. <span data-lang="en">Errors</span><span data-lang="fr">Erreurs</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Code, Raised when"><table><thead><tr><th scope="col" style="min-width:20ch">Code</th><th scope="col" style="min-width:19ch">Raised when</th></tr></thead><tbody><tr><td><code>GpuUnavailable</code></td><td>A forced backend (or <code>Gpu</code>) isn't available on the machine</td></tr><tr><td><code>GpuAllocation</code></td><td>The GPU memory allocation failed</td></tr><tr><td><code>GpuTransfer</code></td><td>A transfer (<code>store</code>, <code>fetch</code>, <code>memset</code>, <code>memcpy</code>) failed</td></tr><tr><td><code>OutOfBounds</code></td><td>A range outside of the memory</td></tr><tr><td><code>OutOfMemory</code></td><td>The size overflows or the RAM allocation failed</td></tr><tr><td><code>InvalidArgument</code></td><td><code>Custom</code> without a handler (or with an unavailable one)</td></tr></tbody></table></div></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Code, Levée quand"><table><thead><tr><th scope="col" style="min-width:20ch">Code</th><th scope="col" style="min-width:19ch">Levée quand</th></tr></thead><tbody><tr><td><code>GpuUnavailable</code></td><td>Un backend forcé (ou <code>Gpu</code>) n'est pas disponible sur la machine</td></tr><tr><td><code>GpuAllocation</code></td><td>L'allocation de mémoire GPU a échoué</td></tr><tr><td><code>GpuTransfer</code></td><td>Un transfert (<code>store</code>, <code>fetch</code>, <code>memset</code>, <code>memcpy</code>) a échoué</td></tr><tr><td><code>OutOfBounds</code></td><td>Une plage en dehors de la mémoire</td></tr><tr><td><code>OutOfMemory</code></td><td>La taille déborde ou l'allocation en RAM a échoué</td></tr><tr><td><code>InvalidArgument</code></td><td><code>Custom</code> sans handler (ou avec un handler indisponible)</td></tr></tbody></table></div></div></section><section id="in-c"><h2>7. <span data-lang="en">In C</span><span data-lang="fr">En C</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: C++, C"><table><thead><tr><th scope="col" style="min-width:25ch">C++</th><th scope="col" style="min-width:46ch">C</th></tr></thead><tbody><tr><td><code>IdHandler&lt;T&gt;</code> (integer <code>T</code>)</td><td><code>utils_id_handler_&lt;name&gt;_t*</code> (<code>&lt;name&gt;</code> = <code>i8</code> ... <code>u64</code>, <code>size</code>): <code>_allocate(handler, safe_mode)</code> (<code>0</code> on error), <code>_free</code>, <code>_use</code>, <code>_preview</code></td></tr><tr><td><code>Scheduler</code></td><td><code>utils_scheduler_t*</code>: <code>utils_scheduler_schedule(scheduler, delay_ms, task, data)</code> returns the task id (<code>0</code> on error), <code>utils_scheduler_cancel</code> / <code>_cancel_all</code></td></tr><tr><td><code>LoadBalancer&lt;Worker&gt;</code></td><td><code>utils_load_balancer_t*</code> of <code>utils_worker_t</code> (a <code>Worker</code> carrying a <code>void* data</code>): <code>utils_load_balancer_get_worker</code> waits for a free one, give it back with <code>utils_worker_set_working_status(worker, false)</code></td></tr><tr><td><code>HybridMemory&lt;T&gt;</code></td><td><code>utils_hybrid_memory_&lt;name&gt;_t*</code> per fixed type (+ <code>bool</code>, <code>char</code>), or <code>utils_hybrid_memory_t*</code> in bytes</td></tr><tr><td><code>MemoryMode</code></td><td><code>utils_memory_mode_t</code> (<code>C_API_MEMORY_MODE_AUTO</code> ... <code>_CUSTOM</code>)</td></tr><tr><td><code>IGpu</code></td><td><code>utils_gpu_t*</code>: <code>utils_gpu_create(mode)</code> for a backend, <code>utils_gpu_create_custom(&amp;callbacks, data)</code> for a GPU of the C side (<code>utils_gpu_callbacks_t</code>)</td></tr></tbody></table></div><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define _System
+#include &lt;utils.h&gt;
+#include &lt;stdio.h&gt;
+
+int main(void)
+{
+    float values[] = {1.0f, 2.0f, 3.0f, 4.0f};
+    float out[4] = {0};
+    utils_hybrid_memory_f32_t* memory = utils_hybrid_memory_f32_create(4, C_API_MEMORY_MODE_AUTO); // GPU when available, else RAM
+
+    if (!memory
+        || utils_hybrid_memory_f32_store(memory, values, 4, 0) != UTILS_OK
+        || utils_hybrid_memory_f32_set(memory, 0, 10.0f) != UTILS_OK
+        || utils_hybrid_memory_f32_join(memory) != UTILS_OK
+        || utils_hybrid_memory_f32_fetch(memory, out, 4, 0) != UTILS_OK) {
+        fprintf(stderr, "%s\n", utils_exception_format());
+        utils_hybrid_memory_f32_destroy(memory);
+        return 1;
+    }
+    printf("%g %g %g %g (on the gpu: %d)\n", out[0], out[1], out[2], out[3], utils_hybrid_memory_f32_is_on_gpu(memory));
+    utils_hybrid_memory_f32_destroy(memory);
+    return 0;
+}</code></pre></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: C++, C"><table><thead><tr><th scope="col" style="min-width:25ch">C++</th><th scope="col" style="min-width:46ch">C</th></tr></thead><tbody><tr><td><code>IdHandler&lt;T&gt;</code> (<code>T</code> entier)</td><td><code>utils_id_handler_&lt;name&gt;_t*</code> (<code>&lt;name&gt;</code> = <code>i8</code> ... <code>u64</code>, <code>size</code>) : <code>_allocate(handler, safe_mode)</code> (<code>0</code> en cas d'erreur), <code>_free</code>, <code>_use</code>, <code>_preview</code></td></tr><tr><td><code>Scheduler</code></td><td><code>utils_scheduler_t*</code> : <code>utils_scheduler_schedule(scheduler, delay_ms, task, data)</code> renvoie l'id de la tâche (<code>0</code> en cas d'erreur), <code>utils_scheduler_cancel</code> / <code>_cancel_all</code></td></tr><tr><td><code>LoadBalancer&lt;Worker&gt;</code></td><td><code>utils_load_balancer_t*</code> de <code>utils_worker_t</code> (un <code>Worker</code> portant un <code>void* data</code>) : <code>utils_load_balancer_get_worker</code> attend un worker libre, rendez-le avec <code>utils_worker_set_working_status(worker, false)</code></td></tr><tr><td><code>HybridMemory&lt;T&gt;</code></td><td><code>utils_hybrid_memory_&lt;name&gt;_t*</code> par type fixe (+ <code>bool</code>, <code>char</code>), ou <code>utils_hybrid_memory_t*</code> en octets</td></tr><tr><td><code>MemoryMode</code></td><td><code>utils_memory_mode_t</code> (<code>C_API_MEMORY_MODE_AUTO</code> ... <code>_CUSTOM</code>)</td></tr><tr><td><code>IGpu</code></td><td><code>utils_gpu_t*</code> : <code>utils_gpu_create(mode)</code> pour un backend, <code>utils_gpu_create_custom(&amp;callbacks, data)</code> pour un GPU côté C (<code>utils_gpu_callbacks_t</code>)</td></tr></tbody></table></div><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define _System
+#include &lt;utils.h&gt;
+#include &lt;stdio.h&gt;
+
+int main(void)
+{
+    float values[] = {1.0f, 2.0f, 3.0f, 4.0f};
+    float out[4] = {0};
+    utils_hybrid_memory_f32_t* memory = utils_hybrid_memory_f32_create(4, C_API_MEMORY_MODE_AUTO); // GPU when available, else RAM
+
+    if (!memory
+        || utils_hybrid_memory_f32_store(memory, values, 4, 0) != UTILS_OK
+        || utils_hybrid_memory_f32_set(memory, 0, 10.0f) != UTILS_OK
+        || utils_hybrid_memory_f32_join(memory) != UTILS_OK
+        || utils_hybrid_memory_f32_fetch(memory, out, 4, 0) != UTILS_OK) {
+        fprintf(stderr, "%s\n", utils_exception_format());
+        utils_hybrid_memory_f32_destroy(memory);
+        return 1;
+    }
+    printf("%g %g %g %g (on the gpu: %d)\n", out[0], out[1], out[2], out[3], utils_hybrid_memory_f32_is_on_gpu(memory));
+    utils_hybrid_memory_f32_destroy(memory);
+    return 0;
+}</code></pre></div></section><section id="cpp-api"><h2>8. <span data-lang="en">C++ API</span><span data-lang="fr">API C++</span></h2><div data-lang="en"><p>Read from the headers of <code>include/utils/system/</code> (public part only, the trailing comments of the code kept). Include <code>&lt;utils/utils.hpp&gt;</code> with the define of the section, never these headers one by one.</p><h3 id="h-system-hybridmemory-hpp"><code>utils/system/HybridMemory.hpp</code></h3><p>Memory loaded on the gpu when available, else in the ram</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::system
+utils::system::IGpu* make_raw_gpu(const utils::system::MemoryMode mode);
+std::shared_ptr&lt;utils::system::IGpu&gt; make_shared_gpu(const utils::system::MemoryMode mode);
+std::unique_ptr&lt;utils::system::IGpu&gt; make_unique_gpu(const utils::system::MemoryMode mode);
+std::unique_ptr&lt;utils::system::IGpu&gt; make_gpu(const utils::system::MemoryMode mode = utils::system::MemoryMode::Auto);
+template&lt;typename T&gt; class HybridMemory {
+    void allocate(const std::size_t size); // free the previous memory then allocate size T (uninitialized)
+    void resize(const std::size_t size); // new size, the first min(size, old size) T kept
+    void free(void) noexcept; // release the memory (size 0, mode kept)
+    void clear(void); // every byte set to 0, allocation kept
+    void store(std::span&lt;const T&gt; values, const std::size_t offset = 0); // copy the values from the index offset (OutOfBounds)
+    void fetch(std::span&lt;T&gt; out, const std::size_t offset = 0) const; // copy out.size() T from the index offset (OutOfBounds)
+    T get(const std::size_t index) const; // one T (a transfer on the gpu: prefer fetch for many)
+    void set(const std::size_t index, const T&amp; value); // one T (a transfer on the gpu: prefer store for many)
+    void fill(const T&amp; value); // every T set to value
+    std::vector&lt;T&gt; toVector(void) const; // whole memory copied in the ram
+    void join(void); // wait for the pending gpu operations (nothing in ram)
+    std::size_t bytes(void) const; // size in bytes
+    bool empty(void) const; // nothing allocated
+    bool isOnGpu(void) const; // memory stored by a gpu handler
+    std::size_t size(void) const;
+    utils::system::MemoryMode getMode(void) const;
+    utils::system::MemoryMode getRequestedMode(void) const;
+    std::shared_ptr&lt;utils::system::IGpu&gt; getGpu(void) const;
+    utils::system::GpuBuffer native(void) const; // device buffer for the computes (0 in ram)
+    T* data(void); // host memory (nullptr on the gpu)
+    const T* data(void) const;
+    T operator[](const std::size_t index) const;
+    HybridMemory&amp; operator=(HybridMemory&amp;&amp; other) noexcept; // take the memory and the handler of other
+    HybridMemory(const utils::system::MemoryMode mode = utils::system::MemoryMode::Auto); // select the backend (make_gpu), nothing allocated
+    HybridMemory(const std::size_t size, const utils::system::MemoryMode mode = utils::system::MemoryMode::Auto); // select the backend &amp; allocate size T
+    HybridMemory(const std::size_t size, std::shared_ptr&lt;utils::system::IGpu&gt; gpu); // Custom mode with a user handler (InvalidArgument when nullptr or unavailable)
+    HybridMemory(HybridMemory&amp;&amp; other) noexcept; // take the memory and the handler of other
+    ~HybridMemory() noexcept; // release the memory
+};</code></pre><h3 id="h-system-hybridmemorydefine-hpp"><code>utils/system/HybridMemoryDefine.hpp</code></h3><p>Modes of the HybridMemory (gpu / ram)</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::system
+enum class MemoryMode {Auto, Gpu, Ram, Cuda, OpenCL, Vulkan, Custom}</code></pre><h3 id="h-system-idhandler-hpp"><code>utils/system/IdHandler.hpp</code></h3><p>Handle id allocation</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::system
+template&lt;typename T&gt; class IdHandler {
+    void use(T id, const bool safe_mode = true);
+    T id(void) const;
+    T actual(const bool safe_mode = true) const;
+    T preview(const bool safe_mode = true) const;
+    T allocate(T&amp; id, const bool safe_mode = true);
+    T allocate(const bool safe_mode = true);
+    void free(T&amp; id, const bool safe_mode = true);
+    void free(const T&amp; id, const bool safe_mode = true);
+    void free(void); // free every id
+    void clear(const bool safe_mode = true); // free every id
+    IdHandler() = default;
+    ~IdHandler() = default;
+};</code></pre><h3 id="h-system-loadbalancer-hpp"><code>utils/system/LoadBalancer.hpp</code></h3><p>LoadBalancer and sub class definition</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::system
+template&lt;typename T&gt; class LoadBalancer: private utils::security::observer::Observer&lt;"LoadBalancer"&gt; {
+    std::future&lt;T&amp;&gt; getWorker(void); // (async)
+    template&lt;bool mode_forced = false&gt; void kill(void); // kill all the not working workers
+    template&lt;bool mode_forced = false&gt; void kill(std::size_t n); // kill n workers (the not working ones first)
+    void spawn(std::size_t n = 1); // spawn n new workers
+    void setLimit(std::size_t limit);
+    void setLifespan(std::chrono::milliseconds lifespan);
+    std::size_t getLimit(void) const;
+    std::chrono::milliseconds getLifespan(void) const;
+    std::size_t size(void) const;
+    LoadBalancer(std::size_t limit = 1, std::chrono::milliseconds lifespan = std::chrono::milliseconds{0});
+    ~LoadBalancer() = default;
+};</code></pre><h3 id="h-system-scheduler-hpp"><code>utils/system/Scheduler.hpp</code></h3><p>Scheduler definition</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::system
+class Scheduler: private utils::security::observer::Observer&lt;"Scheduler"&gt; {
+    void cancel(std::size_t id); // cancel given task
+    void cancel(void);
+    template&lt;typename Fn&gt; std::size_t schedule(std::chrono::milliseconds delay, const Fn&amp; fn); // schedule a new task
+    Scheduler() = default;
+    ~Scheduler() = default;
+};</code></pre><h3 id="h-system-gpu-agpu-hpp"><code>utils/system/gpu/AGpu.hpp</code></h3><p>Shared part of the gpu handlers (driver loading, device info)</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define GPU_API_CALL __stdcall
+#define GPU_API_CALL
+
+// namespace utils::system
+class AGpu: public utils::system::IGpu {
+    bool isAvailable(void) const;
+    std::string getName(void) const;
+    std::size_t getMemory(void) const;
+    AGpu() = default;
+    ~AGpu() = default;
+};</code></pre><h3 id="h-system-gpu-cudagpu-hpp"><code>utils/system/gpu/CudaGpu.hpp</code></h3><p>Cuda gpu handler of the HybridMemory</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::system
+class CudaGpu : public utils::system::AGpu {
+    utils::system::GpuBuffer allocate(const std::size_t bytes);
+    void free(const utils::system::GpuBuffer buffer) noexcept;
+    void store(const utils::system::GpuBuffer dst, const void* src, const std::size_t bytes, const std::size_t offset = 0);
+    void fetch(void* dst, const utils::system::GpuBuffer src, const std::size_t bytes, const std::size_t offset = 0) const;
+    void memset(const utils::system::GpuBuffer buffer, const std::byte value, const std::size_t bytes, const std::size_t offset = 0);
+    void memcpy(const utils::system::GpuBuffer dst, const utils::system::GpuBuffer src, const std::size_t bytes, const std::size_t dstOffset = 0, const std::size_t srcOffset = 0);
+    void join(void);
+    utils::system::MemoryMode getMode(void) const;
+    CudaGpu(); // load libcuda.so.1 (nvcuda.dll on Windows), unavailable without the driver or a device (never throw)
+    ~CudaGpu() noexcept; // release the device objects
+};</code></pre><h3 id="h-system-gpu-igpu-hpp"><code>utils/system/gpu/IGpu.hpp</code></h3><p>Interface of a gpu handler used by the HybridMemory</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::system
+using GpuBuffer = std::uintptr_t; // opaque device buffer of a handler (CUdeviceptr, cl_mem, Vulkan allocation...), 0 = none
+class IGpu {
+    virtual bool isAvailable(void) const = 0; // backend loaded and a device ready
+    virtual utils::system::MemoryMode getMode(void) const = 0; // Cuda | OpenCL | Vulkan | Custom
+    virtual std::string getName(void) const = 0; // name of the device ("[None]" when unavailable)
+    virtual std::size_t getMemory(void) const = 0; // memory of the device in bytes (0 = unknown)
+    virtual utils::system::GpuBuffer allocate(const std::size_t bytes) = 0; // new device buffer (GpuAllocation error)
+    virtual void free(const utils::system::GpuBuffer buffer) noexcept = 0; // release a buffer (0 = nothing to do)
+    virtual void store(const utils::system::GpuBuffer dst, const void* src, const std::size_t bytes, const std::size_t offset = 0) = 0; // host -&gt; device
+    virtual void fetch(void* dst, const utils::system::GpuBuffer src, const std::size_t bytes, const std::size_t offset = 0) const = 0; // device -&gt; host
+    virtual void memset(const utils::system::GpuBuffer buffer, const std::byte value, const std::size_t bytes, const std::size_t offset = 0) = 0; // set every byte of the range
+    virtual void memcpy(const utils::system::GpuBuffer dst, const utils::system::GpuBuffer src, const std::size_t bytes, const std::size_t dstOffset = 0, const std::size_t srcOffset = 0) = 0; // device -&gt; device
+    virtual void join(void) = 0; // wait for the pending operations of the device
+    IGpu() = default;
+    virtual ~IGpu() = default;
+};</code></pre><h3 id="h-system-gpu-openclgpu-hpp"><code>utils/system/gpu/OpenCLGpu.hpp</code></h3><p>OpenCL gpu handler of the HybridMemory</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::system
+class OpenCLGpu : public utils::system::AGpu {
+    utils::system::GpuBuffer allocate(const std::size_t bytes);
+    void free(const utils::system::GpuBuffer buffer) noexcept;
+    void store(const utils::system::GpuBuffer dst, const void* src, const std::size_t bytes, const std::size_t offset = 0);
+    void fetch(void* dst, const utils::system::GpuBuffer src, const std::size_t bytes, const std::size_t offset = 0) const;
+    void memset(const utils::system::GpuBuffer buffer, const std::byte value, const std::size_t bytes, const std::size_t offset = 0);
+    void memcpy(const utils::system::GpuBuffer dst, const utils::system::GpuBuffer src, const std::size_t bytes, const std::size_t dstOffset = 0, const std::size_t srcOffset = 0);
+    void join(void);
+    utils::system::MemoryMode getMode(void) const;
+    OpenCLGpu(); // load libOpenCL.so.1 (OpenCL.dll on Windows), unavailable without the driver or a device (never throw)
+    ~OpenCLGpu() noexcept; // release the device objects
+};</code></pre><h3 id="h-system-gpu-vulkangpu-hpp"><code>utils/system/gpu/VulkanGpu.hpp</code></h3><p>Vulkan gpu handler of the HybridMemory</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::system
+class VulkanGpu : public utils::system::AGpu {
+    utils::system::GpuBuffer allocate(const std::size_t bytes);
+    void free(const utils::system::GpuBuffer buffer) noexcept;
+    void store(const utils::system::GpuBuffer dst, const void* src, const std::size_t bytes, const std::size_t offset = 0);
+    void fetch(void* dst, const utils::system::GpuBuffer src, const std::size_t bytes, const std::size_t offset = 0) const;
+    void memset(const utils::system::GpuBuffer buffer, const std::byte value, const std::size_t bytes, const std::size_t offset = 0);
+    void memcpy(const utils::system::GpuBuffer dst, const utils::system::GpuBuffer src, const std::size_t bytes, const std::size_t dstOffset = 0, const std::size_t srcOffset = 0);
+    void join(void);
+    utils::system::MemoryMode getMode(void) const;
+    VulkanGpu(); // load libvulkan.so.1 (vulkan-1.dll on Windows), unavailable without the driver or a device (never throw)
+    ~VulkanGpu() noexcept; // release the device objects
+};</code></pre></div><div data-lang="fr"><p>Lu dans les en-têtes de <code>include/utils/system/</code> (partie publique seulement, avec les commentaires du code). Inclure <code>&lt;utils/utils.hpp&gt;</code> avec le define de la section, jamais ces en-têtes un par un.</p><h3 id="h-system-hybridmemory-hpp"><code>utils/system/HybridMemory.hpp</code></h3><p>Memory loaded on the gpu when available, else in the ram</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::system
+utils::system::IGpu* make_raw_gpu(const utils::system::MemoryMode mode);
+std::shared_ptr&lt;utils::system::IGpu&gt; make_shared_gpu(const utils::system::MemoryMode mode);
+std::unique_ptr&lt;utils::system::IGpu&gt; make_unique_gpu(const utils::system::MemoryMode mode);
+std::unique_ptr&lt;utils::system::IGpu&gt; make_gpu(const utils::system::MemoryMode mode = utils::system::MemoryMode::Auto);
+template&lt;typename T&gt; class HybridMemory {
+    void allocate(const std::size_t size); // free the previous memory then allocate size T (uninitialized)
+    void resize(const std::size_t size); // new size, the first min(size, old size) T kept
+    void free(void) noexcept; // release the memory (size 0, mode kept)
+    void clear(void); // every byte set to 0, allocation kept
+    void store(std::span&lt;const T&gt; values, const std::size_t offset = 0); // copy the values from the index offset (OutOfBounds)
+    void fetch(std::span&lt;T&gt; out, const std::size_t offset = 0) const; // copy out.size() T from the index offset (OutOfBounds)
+    T get(const std::size_t index) const; // one T (a transfer on the gpu: prefer fetch for many)
+    void set(const std::size_t index, const T&amp; value); // one T (a transfer on the gpu: prefer store for many)
+    void fill(const T&amp; value); // every T set to value
+    std::vector&lt;T&gt; toVector(void) const; // whole memory copied in the ram
+    void join(void); // wait for the pending gpu operations (nothing in ram)
+    std::size_t bytes(void) const; // size in bytes
+    bool empty(void) const; // nothing allocated
+    bool isOnGpu(void) const; // memory stored by a gpu handler
+    std::size_t size(void) const;
+    utils::system::MemoryMode getMode(void) const;
+    utils::system::MemoryMode getRequestedMode(void) const;
+    std::shared_ptr&lt;utils::system::IGpu&gt; getGpu(void) const;
+    utils::system::GpuBuffer native(void) const; // device buffer for the computes (0 in ram)
+    T* data(void); // host memory (nullptr on the gpu)
+    const T* data(void) const;
+    T operator[](const std::size_t index) const;
+    HybridMemory&amp; operator=(HybridMemory&amp;&amp; other) noexcept; // take the memory and the handler of other
+    HybridMemory(const utils::system::MemoryMode mode = utils::system::MemoryMode::Auto); // select the backend (make_gpu), nothing allocated
+    HybridMemory(const std::size_t size, const utils::system::MemoryMode mode = utils::system::MemoryMode::Auto); // select the backend &amp; allocate size T
+    HybridMemory(const std::size_t size, std::shared_ptr&lt;utils::system::IGpu&gt; gpu); // Custom mode with a user handler (InvalidArgument when nullptr or unavailable)
+    HybridMemory(HybridMemory&amp;&amp; other) noexcept; // take the memory and the handler of other
+    ~HybridMemory() noexcept; // release the memory
+};</code></pre><h3 id="h-system-hybridmemorydefine-hpp"><code>utils/system/HybridMemoryDefine.hpp</code></h3><p>Modes of the HybridMemory (gpu / ram)</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::system
+enum class MemoryMode {Auto, Gpu, Ram, Cuda, OpenCL, Vulkan, Custom}</code></pre><h3 id="h-system-idhandler-hpp"><code>utils/system/IdHandler.hpp</code></h3><p>Handle id allocation</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::system
+template&lt;typename T&gt; class IdHandler {
+    void use(T id, const bool safe_mode = true);
+    T id(void) const;
+    T actual(const bool safe_mode = true) const;
+    T preview(const bool safe_mode = true) const;
+    T allocate(T&amp; id, const bool safe_mode = true);
+    T allocate(const bool safe_mode = true);
+    void free(T&amp; id, const bool safe_mode = true);
+    void free(const T&amp; id, const bool safe_mode = true);
+    void free(void); // free every id
+    void clear(const bool safe_mode = true); // free every id
+    IdHandler() = default;
+    ~IdHandler() = default;
+};</code></pre><h3 id="h-system-loadbalancer-hpp"><code>utils/system/LoadBalancer.hpp</code></h3><p>LoadBalancer and sub class definition</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::system
+template&lt;typename T&gt; class LoadBalancer: private utils::security::observer::Observer&lt;"LoadBalancer"&gt; {
+    std::future&lt;T&amp;&gt; getWorker(void); // (async)
+    template&lt;bool mode_forced = false&gt; void kill(void); // kill all the not working workers
+    template&lt;bool mode_forced = false&gt; void kill(std::size_t n); // kill n workers (the not working ones first)
+    void spawn(std::size_t n = 1); // spawn n new workers
+    void setLimit(std::size_t limit);
+    void setLifespan(std::chrono::milliseconds lifespan);
+    std::size_t getLimit(void) const;
+    std::chrono::milliseconds getLifespan(void) const;
+    std::size_t size(void) const;
+    LoadBalancer(std::size_t limit = 1, std::chrono::milliseconds lifespan = std::chrono::milliseconds{0});
+    ~LoadBalancer() = default;
+};</code></pre><h3 id="h-system-scheduler-hpp"><code>utils/system/Scheduler.hpp</code></h3><p>Scheduler definition</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::system
+class Scheduler: private utils::security::observer::Observer&lt;"Scheduler"&gt; {
+    void cancel(std::size_t id); // cancel given task
+    void cancel(void);
+    template&lt;typename Fn&gt; std::size_t schedule(std::chrono::milliseconds delay, const Fn&amp; fn); // schedule a new task
+    Scheduler() = default;
+    ~Scheduler() = default;
+};</code></pre><h3 id="h-system-gpu-agpu-hpp"><code>utils/system/gpu/AGpu.hpp</code></h3><p>Shared part of the gpu handlers (driver loading, device info)</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define GPU_API_CALL __stdcall
+#define GPU_API_CALL
+
+// namespace utils::system
+class AGpu: public utils::system::IGpu {
+    bool isAvailable(void) const;
+    std::string getName(void) const;
+    std::size_t getMemory(void) const;
+    AGpu() = default;
+    ~AGpu() = default;
+};</code></pre><h3 id="h-system-gpu-cudagpu-hpp"><code>utils/system/gpu/CudaGpu.hpp</code></h3><p>Cuda gpu handler of the HybridMemory</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::system
+class CudaGpu : public utils::system::AGpu {
+    utils::system::GpuBuffer allocate(const std::size_t bytes);
+    void free(const utils::system::GpuBuffer buffer) noexcept;
+    void store(const utils::system::GpuBuffer dst, const void* src, const std::size_t bytes, const std::size_t offset = 0);
+    void fetch(void* dst, const utils::system::GpuBuffer src, const std::size_t bytes, const std::size_t offset = 0) const;
+    void memset(const utils::system::GpuBuffer buffer, const std::byte value, const std::size_t bytes, const std::size_t offset = 0);
+    void memcpy(const utils::system::GpuBuffer dst, const utils::system::GpuBuffer src, const std::size_t bytes, const std::size_t dstOffset = 0, const std::size_t srcOffset = 0);
+    void join(void);
+    utils::system::MemoryMode getMode(void) const;
+    CudaGpu(); // load libcuda.so.1 (nvcuda.dll on Windows), unavailable without the driver or a device (never throw)
+    ~CudaGpu() noexcept; // release the device objects
+};</code></pre><h3 id="h-system-gpu-igpu-hpp"><code>utils/system/gpu/IGpu.hpp</code></h3><p>Interface of a gpu handler used by the HybridMemory</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::system
+using GpuBuffer = std::uintptr_t; // opaque device buffer of a handler (CUdeviceptr, cl_mem, Vulkan allocation...), 0 = none
+class IGpu {
+    virtual bool isAvailable(void) const = 0; // backend loaded and a device ready
+    virtual utils::system::MemoryMode getMode(void) const = 0; // Cuda | OpenCL | Vulkan | Custom
+    virtual std::string getName(void) const = 0; // name of the device ("[None]" when unavailable)
+    virtual std::size_t getMemory(void) const = 0; // memory of the device in bytes (0 = unknown)
+    virtual utils::system::GpuBuffer allocate(const std::size_t bytes) = 0; // new device buffer (GpuAllocation error)
+    virtual void free(const utils::system::GpuBuffer buffer) noexcept = 0; // release a buffer (0 = nothing to do)
+    virtual void store(const utils::system::GpuBuffer dst, const void* src, const std::size_t bytes, const std::size_t offset = 0) = 0; // host -&gt; device
+    virtual void fetch(void* dst, const utils::system::GpuBuffer src, const std::size_t bytes, const std::size_t offset = 0) const = 0; // device -&gt; host
+    virtual void memset(const utils::system::GpuBuffer buffer, const std::byte value, const std::size_t bytes, const std::size_t offset = 0) = 0; // set every byte of the range
+    virtual void memcpy(const utils::system::GpuBuffer dst, const utils::system::GpuBuffer src, const std::size_t bytes, const std::size_t dstOffset = 0, const std::size_t srcOffset = 0) = 0; // device -&gt; device
+    virtual void join(void) = 0; // wait for the pending operations of the device
+    IGpu() = default;
+    virtual ~IGpu() = default;
+};</code></pre><h3 id="h-system-gpu-openclgpu-hpp"><code>utils/system/gpu/OpenCLGpu.hpp</code></h3><p>OpenCL gpu handler of the HybridMemory</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::system
+class OpenCLGpu : public utils::system::AGpu {
+    utils::system::GpuBuffer allocate(const std::size_t bytes);
+    void free(const utils::system::GpuBuffer buffer) noexcept;
+    void store(const utils::system::GpuBuffer dst, const void* src, const std::size_t bytes, const std::size_t offset = 0);
+    void fetch(void* dst, const utils::system::GpuBuffer src, const std::size_t bytes, const std::size_t offset = 0) const;
+    void memset(const utils::system::GpuBuffer buffer, const std::byte value, const std::size_t bytes, const std::size_t offset = 0);
+    void memcpy(const utils::system::GpuBuffer dst, const utils::system::GpuBuffer src, const std::size_t bytes, const std::size_t dstOffset = 0, const std::size_t srcOffset = 0);
+    void join(void);
+    utils::system::MemoryMode getMode(void) const;
+    OpenCLGpu(); // load libOpenCL.so.1 (OpenCL.dll on Windows), unavailable without the driver or a device (never throw)
+    ~OpenCLGpu() noexcept; // release the device objects
+};</code></pre><h3 id="h-system-gpu-vulkangpu-hpp"><code>utils/system/gpu/VulkanGpu.hpp</code></h3><p>Vulkan gpu handler of the HybridMemory</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::system
+class VulkanGpu : public utils::system::AGpu {
+    utils::system::GpuBuffer allocate(const std::size_t bytes);
+    void free(const utils::system::GpuBuffer buffer) noexcept;
+    void store(const utils::system::GpuBuffer dst, const void* src, const std::size_t bytes, const std::size_t offset = 0);
+    void fetch(void* dst, const utils::system::GpuBuffer src, const std::size_t bytes, const std::size_t offset = 0) const;
+    void memset(const utils::system::GpuBuffer buffer, const std::byte value, const std::size_t bytes, const std::size_t offset = 0);
+    void memcpy(const utils::system::GpuBuffer dst, const utils::system::GpuBuffer src, const std::size_t bytes, const std::size_t dstOffset = 0, const std::size_t srcOffset = 0);
+    void join(void);
+    utils::system::MemoryMode getMode(void) const;
+    VulkanGpu(); // load libvulkan.so.1 (vulkan-1.dll on Windows), unavailable without the driver or a device (never throw)
+    ~VulkanGpu() noexcept; // release the device objects
+};</code></pre></div></section><section id="c-api"><h2>9. <span data-lang="en">C API</span><span data-lang="fr">API C</span></h2><div data-lang="en"><p>Read from <code>include/utils/system/CApi.h</code>, included by <code>&lt;utils.h&gt;</code> with the define of the section. Every function that can fail returns <code>UTILS_OK</code> / <code>UTILS_KO</code> (or <code>NULL</code> / <code>0</code>) and fills <code>utils_exception</code> (see <a href="c-api.html#errors">the C API guide</a>).</p><h3 id="c-1">Macros · Hybrid memory of a fixed type</h3><p><em>hybrid memory of a fixed type (utils::system::HybridMemory&lt;type&gt;, size: number of type)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_HYBRID_MEMORY_DECL(name, ctype) \
+    typedef struct utils_hybrid_memory_##name utils_hybrid_memory_##name##_t; \
+    utils_hybrid_memory_##name##_t* utils_hybrid_memory_##name##_create(size_t size, utils_memory_mode_t mode); /* size 0: nothing allocated, NULL on error */ \
+    utils_hybrid_memory_##name##_t* utils_hybrid_memory_##name##_create_gpu(size_t size, const utils_gpu_t* gpu); /* custom mode with a gpu handler, NULL on error */ \
+    void utils_hybrid_memory_##name##_destroy(utils_hybrid_memory_##name##_t* memory); /* NULL: nothing */ \
+    int utils_hybrid_memory_##name##_allocate(utils_hybrid_memory_##name##_t* memory, size_t size); /* the previous memory is freed (uninitialized) */ \
+    int utils_hybrid_memory_##name##_resize(utils_hybrid_memory_##name##_t* memory, size_t size); /* the first values are kept */ \
+    int utils_hybrid_memory_##name##_free(utils_hybrid_memory_##name##_t* memory); /* size 0, mode kept */ \
+    int utils_hybrid_memory_##name##_clear(utils_hybrid_memory_##name##_t* memory); /* every byte at 0 */ \
+    int utils_hybrid_memory_##name##_store(utils_hybrid_memory_##name##_t* memory, const ctype* values, size_t count, size_t offset); \
+    int utils_hybrid_memory_##name##_fetch(const utils_hybrid_memory_##name##_t* memory, ctype* out, size_t count, size_t offset); \
+    int utils_hybrid_memory_##name##_get(const utils_hybrid_memory_##name##_t* memory, size_t index, ctype* value); \
+    int utils_hybrid_memory_##name##_set(utils_hybrid_memory_##name##_t* memory, size_t index, ctype value); \
+    int utils_hybrid_memory_##name##_fill(utils_hybrid_memory_##name##_t* memory, ctype value); \
+    int utils_hybrid_memory_##name##_join(utils_hybrid_memory_##name##_t* memory); /* wait for the pending gpu operations */ \
+    size_t utils_hybrid_memory_##name##_size(const utils_hybrid_memory_##name##_t* memory); \
+    size_t utils_hybrid_memory_##name##_bytes(const utils_hybrid_memory_##name##_t* memory); \
+    bool utils_hybrid_memory_##name##_empty(const utils_hybrid_memory_##name##_t* memory); \
+    bool utils_hybrid_memory_##name##_is_on_gpu(const utils_hybrid_memory_##name##_t* memory); \
+    utils_memory_mode_t utils_hybrid_memory_##name##_get_mode(const utils_hybrid_memory_##name##_t* memory); \
+    utils_memory_mode_t utils_hybrid_memory_##name##_get_requested_mode(const utils_hybrid_memory_##name##_t* memory); \
+    utils_gpu_t* utils_hybrid_memory_##name##_get_gpu(const utils_hybrid_memory_##name##_t* memory); /* a new handle sharing the gpu (destroy it), NULL in ram or on error */ \
+    uintptr_t utils_hybrid_memory_##name##_native(const utils_hybrid_memory_##name##_t* memory); /* device buffer (0 in ram) */ \
+    ctype* utils_hybrid_memory_##name##_data(utils_hybrid_memory_##name##_t* memory); /* host memory (NULL on the gpu) */</code></pre><h3 id="c-2">Macros · Id handler of an integer</h3><p><em>id handler of an integer (utils::system::IdHandler&lt;type&gt;, 0 is never given)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_ID_HANDLER_DECL(name, ctype) \
+    typedef struct utils_id_handler_##name utils_id_handler_##name##_t; \
+    utils_id_handler_##name##_t* utils_id_handler_##name##_create(void); /* NULL on error */ \
+    void utils_id_handler_##name##_destroy(utils_id_handler_##name##_t* handler); /* NULL: nothing */ \
+    ctype utils_id_handler_##name##_allocate(utils_id_handler_##name##_t* handler, bool safe_mode); /* 0 on error */ \
+    int utils_id_handler_##name##_use(utils_id_handler_##name##_t* handler, ctype id, bool safe_mode); /* force an id (refused when it's used) */ \
+    int utils_id_handler_##name##_free(utils_id_handler_##name##_t* handler, ctype id, bool safe_mode); \
+    int utils_id_handler_##name##_clear(utils_id_handler_##name##_t* handler, bool safe_mode); /* free every id */ \
+    ctype utils_id_handler_##name##_id(const utils_id_handler_##name##_t* handler); /* counter */ \
+    ctype utils_id_handler_##name##_actual(const utils_id_handler_##name##_t* handler, bool safe_mode); \
+    ctype utils_id_handler_##name##_preview(const utils_id_handler_##name##_t* handler, bool safe_mode); /* the next one given by allocate (nothing changed) */</code></pre><h3 id="c-3">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_gpu utils_gpu_t; // std::shared_ptr&lt;utils::system::IGpu&gt; (a backend or a gpu of the C side)
+typedef struct utils_hybrid_memory utils_hybrid_memory_t; // utils::system::HybridMemory&lt;std::byte&gt; (bytes)
+typedef struct utils_load_balancer utils_load_balancer_t; // utils::system::LoadBalancer of utils_worker_t
+typedef struct utils_scheduler utils_scheduler_t; // utils::system::Scheduler</code></pre><h3 id="c-4">Types · Callbacks</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef void (*utils_scheduler_task_t)(void* data); // task run in its own thread after the delay</code></pre><h3 id="c-5">Enums · Where the memory is loaded</h3><p><em>where the memory is loaded (utils::system::MemoryMode)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_memory_mode {
+    C_API_MEMORY_MODE_AUTO = 0, // first gpu found (Cuda -&gt; OpenCL -&gt; Vulkan), else the ram
+    C_API_MEMORY_MODE_GPU, // first gpu found, error without one
+    C_API_MEMORY_MODE_RAM, // host memory only
+    C_API_MEMORY_MODE_CUDA, // forced: NVIDIA CUDA driver
+    C_API_MEMORY_MODE_OPENCL, // forced: OpenCL ICD loader
+    C_API_MEMORY_MODE_VULKAN, // forced: Vulkan loader
+    C_API_MEMORY_MODE_CUSTOM // gpu handler given by the user
+} utils_memory_mode_t;</code></pre><h3 id="c-6">Structures · Gpu of the C side</h3><p><em>gpu of the C side (NULL: default, every other callback returns UTILS_OK / UTILS_KO with utils_fail, offsets in bytes)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_gpu_callbacks {
+    bool (*is_available)(void* data); // NULL: true
+    const char* (*get_name)(void* data); // NULL: "[None]"
+    size_t (*get_memory)(void* data); // NULL: 0 (unknown)
+    uintptr_t (*allocate)(size_t bytes, void* data); // new device buffer, 0 on error (mandatory)
+    void (*free)(uintptr_t buffer, void* data); // release a buffer (mandatory)
+    int (*store)(uintptr_t dst, const void* src, size_t bytes, size_t offset, void* data); // host -&gt; device (mandatory)
+    int (*fetch)(void* dst, uintptr_t src, size_t bytes, size_t offset, void* data); // device -&gt; host (mandatory)
+    int (*memset)(uintptr_t buffer, uint8_t value, size_t bytes, size_t offset, void* data); // (mandatory)
+    int (*memcpy)(uintptr_t dst, uintptr_t src, size_t bytes, size_t dst_offset, size_t src_offset, void* data); // device -&gt; device (mandatory)
+    int (*join)(void* data); // NULL: nothing to wait
+} utils_gpu_callbacks_t;</code></pre><h3 id="c-7">Functions · Gpu</h3><p><em>gpu (a backend: NULL &amp; utils_exception.exception false when there is no gpu for AUTO / RAM)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_gpu_t* utils_gpu_create(utils_memory_mode_t mode); // NULL on error
+utils_gpu_t* utils_gpu_create_custom(const utils_gpu_callbacks_t* callbacks, void* data); // gpu of the C side, NULL on error
+void utils_gpu_destroy(utils_gpu_t* gpu); // NULL: nothing (released when the last memory using it is destroyed)
+bool utils_gpu_is_available(const utils_gpu_t* gpu);
+utils_memory_mode_t utils_gpu_get_mode(const utils_gpu_t* gpu); // C_API_MEMORY_MODE_RAM on error
+const char* utils_gpu_get_name(const utils_gpu_t* gpu); // valid until the next call in the thread (NULL on error)
+size_t utils_gpu_get_name_r(const utils_gpu_t* gpu, char* buf, size_t size); // copied in buf (truncated, always '\0' terminated), returns the full length like snprintf (0 on error)
+size_t utils_gpu_get_memory(const utils_gpu_t* gpu); // in bytes (0: unknown or error)
+uintptr_t utils_gpu_allocate(utils_gpu_t* gpu, size_t bytes); // 0 on error
+int utils_gpu_free(utils_gpu_t* gpu, uintptr_t buffer);
+int utils_gpu_store(utils_gpu_t* gpu, uintptr_t dst, const void* src, size_t bytes, size_t offset);
+int utils_gpu_fetch(const utils_gpu_t* gpu, void* dst, uintptr_t src, size_t bytes, size_t offset);
+int utils_gpu_memset(utils_gpu_t* gpu, uintptr_t buffer, uint8_t value, size_t bytes, size_t offset);
+int utils_gpu_memcpy(utils_gpu_t* gpu, uintptr_t dst, uintptr_t src, size_t bytes, size_t dst_offset, size_t src_offset);
+int utils_gpu_join(utils_gpu_t* gpu);</code></pre><h3 id="c-8">Functions · Hybrid memory of bytes</h3><p><em>hybrid memory of bytes (generic: sizes &amp; offsets in bytes)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_hybrid_memory_t* utils_hybrid_memory_create(size_t bytes, utils_memory_mode_t mode); // NULL on error
+utils_hybrid_memory_t* utils_hybrid_memory_create_gpu(size_t bytes, const utils_gpu_t* gpu); // NULL on error
+void utils_hybrid_memory_destroy(utils_hybrid_memory_t* memory); // NULL: nothing
+int utils_hybrid_memory_allocate(utils_hybrid_memory_t* memory, size_t bytes);
+int utils_hybrid_memory_resize(utils_hybrid_memory_t* memory, size_t bytes);
+int utils_hybrid_memory_free(utils_hybrid_memory_t* memory);
+int utils_hybrid_memory_clear(utils_hybrid_memory_t* memory);
+int utils_hybrid_memory_store(utils_hybrid_memory_t* memory, const void* data, size_t bytes, size_t offset);
+int utils_hybrid_memory_fetch(const utils_hybrid_memory_t* memory, void* out, size_t bytes, size_t offset);
+int utils_hybrid_memory_fill(utils_hybrid_memory_t* memory, uint8_t value);
+int utils_hybrid_memory_join(utils_hybrid_memory_t* memory);
+size_t utils_hybrid_memory_bytes(const utils_hybrid_memory_t* memory);
+bool utils_hybrid_memory_empty(const utils_hybrid_memory_t* memory);
+bool utils_hybrid_memory_is_on_gpu(const utils_hybrid_memory_t* memory);
+utils_memory_mode_t utils_hybrid_memory_get_mode(const utils_hybrid_memory_t* memory);
+utils_memory_mode_t utils_hybrid_memory_get_requested_mode(const utils_hybrid_memory_t* memory);
+utils_gpu_t* utils_hybrid_memory_get_gpu(const utils_hybrid_memory_t* memory); // a new handle sharing the gpu (destroy it), NULL in ram or on error
+uintptr_t utils_hybrid_memory_native(const utils_hybrid_memory_t* memory); // device buffer (0 in ram)
+void* utils_hybrid_memory_data(utils_hybrid_memory_t* memory); // host memory (NULL on the gpu)</code></pre><h3 id="c-9">Functions · Hybrid memories of the fixed types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_VALUE_TYPES(C_API_HYBRID_MEMORY_DECL)</code></pre><h3 id="c-10">Functions · Id handlers of the integers</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_INT_TYPES(C_API_ID_HANDLER_DECL)</code></pre><h3 id="c-11">Functions · Load balancer</h3><p><em>load balancer (workers: utils_worker_t owned by the balancer, set them as not working with utils_worker_set_working_status when the work is done)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_load_balancer_t* utils_load_balancer_create(size_t limit, uint64_t lifespan_ms); // limit 0: unlimited, lifespan 0: never killed, NULL on error
+void utils_load_balancer_destroy(utils_load_balancer_t* balancer); // NULL: nothing (every worker destroyed)
+utils_worker_t* utils_load_balancer_get_worker(utils_load_balancer_t* balancer); // wait for a free worker (set as working), NULL on error
+int utils_load_balancer_spawn(utils_load_balancer_t* balancer, size_t n); // n new workers
+int utils_load_balancer_kill(utils_load_balancer_t* balancer, bool forced); // every not working worker (forced: the working ones too, their pointer become invalid)
+int utils_load_balancer_kill_n(utils_load_balancer_t* balancer, size_t n, bool forced); // n workers (the not working ones first)
+int utils_load_balancer_set_limit(utils_load_balancer_t* balancer, size_t limit);
+int utils_load_balancer_set_lifespan(utils_load_balancer_t* balancer, uint64_t lifespan_ms);
+size_t utils_load_balancer_get_limit(const utils_load_balancer_t* balancer);
+uint64_t utils_load_balancer_get_lifespan(const utils_load_balancer_t* balancer); // in ms
+size_t utils_load_balancer_size(const utils_load_balancer_t* balancer); // number of workers</code></pre><h3 id="c-12">Functions · Scheduler</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_scheduler_t* utils_scheduler_create(void); // NULL on error
+void utils_scheduler_destroy(utils_scheduler_t* scheduler); // NULL: nothing (the waiting tasks are canceled)
+size_t utils_scheduler_schedule(utils_scheduler_t* scheduler, uint64_t delay_ms, utils_scheduler_task_t task, void* data); // id of the task (0 on error)
+int utils_scheduler_cancel(utils_scheduler_t* scheduler, size_t id);
+int utils_scheduler_cancel_all(utils_scheduler_t* scheduler);</code></pre></div><div data-lang="fr"><p>Lu dans <code>include/utils/system/CApi.h</code>, inclus par <code>&lt;utils.h&gt;</code> avec le define de la section. Chaque fonction qui peut échouer renvoie <code>UTILS_OK</code> / <code>UTILS_KO</code> (ou <code>NULL</code> / <code>0</code>) et remplit <code>utils_exception</code> (voir <a href="c-api.html#errors">le guide de l'API C</a>).</p><h3 id="c-1">Macros · Hybrid memory of a fixed type</h3><p><em>hybrid memory of a fixed type (utils::system::HybridMemory&lt;type&gt;, size: number of type)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_HYBRID_MEMORY_DECL(name, ctype) \
+    typedef struct utils_hybrid_memory_##name utils_hybrid_memory_##name##_t; \
+    utils_hybrid_memory_##name##_t* utils_hybrid_memory_##name##_create(size_t size, utils_memory_mode_t mode); /* size 0: nothing allocated, NULL on error */ \
+    utils_hybrid_memory_##name##_t* utils_hybrid_memory_##name##_create_gpu(size_t size, const utils_gpu_t* gpu); /* custom mode with a gpu handler, NULL on error */ \
+    void utils_hybrid_memory_##name##_destroy(utils_hybrid_memory_##name##_t* memory); /* NULL: nothing */ \
+    int utils_hybrid_memory_##name##_allocate(utils_hybrid_memory_##name##_t* memory, size_t size); /* the previous memory is freed (uninitialized) */ \
+    int utils_hybrid_memory_##name##_resize(utils_hybrid_memory_##name##_t* memory, size_t size); /* the first values are kept */ \
+    int utils_hybrid_memory_##name##_free(utils_hybrid_memory_##name##_t* memory); /* size 0, mode kept */ \
+    int utils_hybrid_memory_##name##_clear(utils_hybrid_memory_##name##_t* memory); /* every byte at 0 */ \
+    int utils_hybrid_memory_##name##_store(utils_hybrid_memory_##name##_t* memory, const ctype* values, size_t count, size_t offset); \
+    int utils_hybrid_memory_##name##_fetch(const utils_hybrid_memory_##name##_t* memory, ctype* out, size_t count, size_t offset); \
+    int utils_hybrid_memory_##name##_get(const utils_hybrid_memory_##name##_t* memory, size_t index, ctype* value); \
+    int utils_hybrid_memory_##name##_set(utils_hybrid_memory_##name##_t* memory, size_t index, ctype value); \
+    int utils_hybrid_memory_##name##_fill(utils_hybrid_memory_##name##_t* memory, ctype value); \
+    int utils_hybrid_memory_##name##_join(utils_hybrid_memory_##name##_t* memory); /* wait for the pending gpu operations */ \
+    size_t utils_hybrid_memory_##name##_size(const utils_hybrid_memory_##name##_t* memory); \
+    size_t utils_hybrid_memory_##name##_bytes(const utils_hybrid_memory_##name##_t* memory); \
+    bool utils_hybrid_memory_##name##_empty(const utils_hybrid_memory_##name##_t* memory); \
+    bool utils_hybrid_memory_##name##_is_on_gpu(const utils_hybrid_memory_##name##_t* memory); \
+    utils_memory_mode_t utils_hybrid_memory_##name##_get_mode(const utils_hybrid_memory_##name##_t* memory); \
+    utils_memory_mode_t utils_hybrid_memory_##name##_get_requested_mode(const utils_hybrid_memory_##name##_t* memory); \
+    utils_gpu_t* utils_hybrid_memory_##name##_get_gpu(const utils_hybrid_memory_##name##_t* memory); /* a new handle sharing the gpu (destroy it), NULL in ram or on error */ \
+    uintptr_t utils_hybrid_memory_##name##_native(const utils_hybrid_memory_##name##_t* memory); /* device buffer (0 in ram) */ \
+    ctype* utils_hybrid_memory_##name##_data(utils_hybrid_memory_##name##_t* memory); /* host memory (NULL on the gpu) */</code></pre><h3 id="c-2">Macros · Id handler of an integer</h3><p><em>id handler of an integer (utils::system::IdHandler&lt;type&gt;, 0 is never given)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_ID_HANDLER_DECL(name, ctype) \
+    typedef struct utils_id_handler_##name utils_id_handler_##name##_t; \
+    utils_id_handler_##name##_t* utils_id_handler_##name##_create(void); /* NULL on error */ \
+    void utils_id_handler_##name##_destroy(utils_id_handler_##name##_t* handler); /* NULL: nothing */ \
+    ctype utils_id_handler_##name##_allocate(utils_id_handler_##name##_t* handler, bool safe_mode); /* 0 on error */ \
+    int utils_id_handler_##name##_use(utils_id_handler_##name##_t* handler, ctype id, bool safe_mode); /* force an id (refused when it's used) */ \
+    int utils_id_handler_##name##_free(utils_id_handler_##name##_t* handler, ctype id, bool safe_mode); \
+    int utils_id_handler_##name##_clear(utils_id_handler_##name##_t* handler, bool safe_mode); /* free every id */ \
+    ctype utils_id_handler_##name##_id(const utils_id_handler_##name##_t* handler); /* counter */ \
+    ctype utils_id_handler_##name##_actual(const utils_id_handler_##name##_t* handler, bool safe_mode); \
+    ctype utils_id_handler_##name##_preview(const utils_id_handler_##name##_t* handler, bool safe_mode); /* the next one given by allocate (nothing changed) */</code></pre><h3 id="c-3">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_gpu utils_gpu_t; // std::shared_ptr&lt;utils::system::IGpu&gt; (a backend or a gpu of the C side)
+typedef struct utils_hybrid_memory utils_hybrid_memory_t; // utils::system::HybridMemory&lt;std::byte&gt; (bytes)
+typedef struct utils_load_balancer utils_load_balancer_t; // utils::system::LoadBalancer of utils_worker_t
+typedef struct utils_scheduler utils_scheduler_t; // utils::system::Scheduler</code></pre><h3 id="c-4">Types · Callbacks</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef void (*utils_scheduler_task_t)(void* data); // task run in its own thread after the delay</code></pre><h3 id="c-5">Énumérations · Where the memory is loaded</h3><p><em>where the memory is loaded (utils::system::MemoryMode)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_memory_mode {
+    C_API_MEMORY_MODE_AUTO = 0, // first gpu found (Cuda -&gt; OpenCL -&gt; Vulkan), else the ram
+    C_API_MEMORY_MODE_GPU, // first gpu found, error without one
+    C_API_MEMORY_MODE_RAM, // host memory only
+    C_API_MEMORY_MODE_CUDA, // forced: NVIDIA CUDA driver
+    C_API_MEMORY_MODE_OPENCL, // forced: OpenCL ICD loader
+    C_API_MEMORY_MODE_VULKAN, // forced: Vulkan loader
+    C_API_MEMORY_MODE_CUSTOM // gpu handler given by the user
+} utils_memory_mode_t;</code></pre><h3 id="c-6">Structures · Gpu of the C side</h3><p><em>gpu of the C side (NULL: default, every other callback returns UTILS_OK / UTILS_KO with utils_fail, offsets in bytes)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_gpu_callbacks {
+    bool (*is_available)(void* data); // NULL: true
+    const char* (*get_name)(void* data); // NULL: "[None]"
+    size_t (*get_memory)(void* data); // NULL: 0 (unknown)
+    uintptr_t (*allocate)(size_t bytes, void* data); // new device buffer, 0 on error (mandatory)
+    void (*free)(uintptr_t buffer, void* data); // release a buffer (mandatory)
+    int (*store)(uintptr_t dst, const void* src, size_t bytes, size_t offset, void* data); // host -&gt; device (mandatory)
+    int (*fetch)(void* dst, uintptr_t src, size_t bytes, size_t offset, void* data); // device -&gt; host (mandatory)
+    int (*memset)(uintptr_t buffer, uint8_t value, size_t bytes, size_t offset, void* data); // (mandatory)
+    int (*memcpy)(uintptr_t dst, uintptr_t src, size_t bytes, size_t dst_offset, size_t src_offset, void* data); // device -&gt; device (mandatory)
+    int (*join)(void* data); // NULL: nothing to wait
+} utils_gpu_callbacks_t;</code></pre><h3 id="c-7">Fonctions · Gpu</h3><p><em>gpu (a backend: NULL &amp; utils_exception.exception false when there is no gpu for AUTO / RAM)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_gpu_t* utils_gpu_create(utils_memory_mode_t mode); // NULL on error
+utils_gpu_t* utils_gpu_create_custom(const utils_gpu_callbacks_t* callbacks, void* data); // gpu of the C side, NULL on error
+void utils_gpu_destroy(utils_gpu_t* gpu); // NULL: nothing (released when the last memory using it is destroyed)
+bool utils_gpu_is_available(const utils_gpu_t* gpu);
+utils_memory_mode_t utils_gpu_get_mode(const utils_gpu_t* gpu); // C_API_MEMORY_MODE_RAM on error
+const char* utils_gpu_get_name(const utils_gpu_t* gpu); // valid until the next call in the thread (NULL on error)
+size_t utils_gpu_get_name_r(const utils_gpu_t* gpu, char* buf, size_t size); // copied in buf (truncated, always '\0' terminated), returns the full length like snprintf (0 on error)
+size_t utils_gpu_get_memory(const utils_gpu_t* gpu); // in bytes (0: unknown or error)
+uintptr_t utils_gpu_allocate(utils_gpu_t* gpu, size_t bytes); // 0 on error
+int utils_gpu_free(utils_gpu_t* gpu, uintptr_t buffer);
+int utils_gpu_store(utils_gpu_t* gpu, uintptr_t dst, const void* src, size_t bytes, size_t offset);
+int utils_gpu_fetch(const utils_gpu_t* gpu, void* dst, uintptr_t src, size_t bytes, size_t offset);
+int utils_gpu_memset(utils_gpu_t* gpu, uintptr_t buffer, uint8_t value, size_t bytes, size_t offset);
+int utils_gpu_memcpy(utils_gpu_t* gpu, uintptr_t dst, uintptr_t src, size_t bytes, size_t dst_offset, size_t src_offset);
+int utils_gpu_join(utils_gpu_t* gpu);</code></pre><h3 id="c-8">Fonctions · Hybrid memory of bytes</h3><p><em>hybrid memory of bytes (generic: sizes &amp; offsets in bytes)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_hybrid_memory_t* utils_hybrid_memory_create(size_t bytes, utils_memory_mode_t mode); // NULL on error
+utils_hybrid_memory_t* utils_hybrid_memory_create_gpu(size_t bytes, const utils_gpu_t* gpu); // NULL on error
+void utils_hybrid_memory_destroy(utils_hybrid_memory_t* memory); // NULL: nothing
+int utils_hybrid_memory_allocate(utils_hybrid_memory_t* memory, size_t bytes);
+int utils_hybrid_memory_resize(utils_hybrid_memory_t* memory, size_t bytes);
+int utils_hybrid_memory_free(utils_hybrid_memory_t* memory);
+int utils_hybrid_memory_clear(utils_hybrid_memory_t* memory);
+int utils_hybrid_memory_store(utils_hybrid_memory_t* memory, const void* data, size_t bytes, size_t offset);
+int utils_hybrid_memory_fetch(const utils_hybrid_memory_t* memory, void* out, size_t bytes, size_t offset);
+int utils_hybrid_memory_fill(utils_hybrid_memory_t* memory, uint8_t value);
+int utils_hybrid_memory_join(utils_hybrid_memory_t* memory);
+size_t utils_hybrid_memory_bytes(const utils_hybrid_memory_t* memory);
+bool utils_hybrid_memory_empty(const utils_hybrid_memory_t* memory);
+bool utils_hybrid_memory_is_on_gpu(const utils_hybrid_memory_t* memory);
+utils_memory_mode_t utils_hybrid_memory_get_mode(const utils_hybrid_memory_t* memory);
+utils_memory_mode_t utils_hybrid_memory_get_requested_mode(const utils_hybrid_memory_t* memory);
+utils_gpu_t* utils_hybrid_memory_get_gpu(const utils_hybrid_memory_t* memory); // a new handle sharing the gpu (destroy it), NULL in ram or on error
+uintptr_t utils_hybrid_memory_native(const utils_hybrid_memory_t* memory); // device buffer (0 in ram)
+void* utils_hybrid_memory_data(utils_hybrid_memory_t* memory); // host memory (NULL on the gpu)</code></pre><h3 id="c-9">Fonctions · Hybrid memories of the fixed types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_VALUE_TYPES(C_API_HYBRID_MEMORY_DECL)</code></pre><h3 id="c-10">Fonctions · Id handlers of the integers</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_INT_TYPES(C_API_ID_HANDLER_DECL)</code></pre><h3 id="c-11">Fonctions · Load balancer</h3><p><em>load balancer (workers: utils_worker_t owned by the balancer, set them as not working with utils_worker_set_working_status when the work is done)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_load_balancer_t* utils_load_balancer_create(size_t limit, uint64_t lifespan_ms); // limit 0: unlimited, lifespan 0: never killed, NULL on error
+void utils_load_balancer_destroy(utils_load_balancer_t* balancer); // NULL: nothing (every worker destroyed)
+utils_worker_t* utils_load_balancer_get_worker(utils_load_balancer_t* balancer); // wait for a free worker (set as working), NULL on error
+int utils_load_balancer_spawn(utils_load_balancer_t* balancer, size_t n); // n new workers
+int utils_load_balancer_kill(utils_load_balancer_t* balancer, bool forced); // every not working worker (forced: the working ones too, their pointer become invalid)
+int utils_load_balancer_kill_n(utils_load_balancer_t* balancer, size_t n, bool forced); // n workers (the not working ones first)
+int utils_load_balancer_set_limit(utils_load_balancer_t* balancer, size_t limit);
+int utils_load_balancer_set_lifespan(utils_load_balancer_t* balancer, uint64_t lifespan_ms);
+size_t utils_load_balancer_get_limit(const utils_load_balancer_t* balancer);
+uint64_t utils_load_balancer_get_lifespan(const utils_load_balancer_t* balancer); // in ms
+size_t utils_load_balancer_size(const utils_load_balancer_t* balancer); // number of workers</code></pre><h3 id="c-12">Fonctions · Scheduler</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_scheduler_t* utils_scheduler_create(void); // NULL on error
+void utils_scheduler_destroy(utils_scheduler_t* scheduler); // NULL: nothing (the waiting tasks are canceled)
+size_t utils_scheduler_schedule(utils_scheduler_t* scheduler, uint64_t delay_ms, utils_scheduler_task_t task, void* data); // id of the task (0 on error)
+int utils_scheduler_cancel(utils_scheduler_t* scheduler, size_t id);
+int utils_scheduler_cancel_all(utils_scheduler_t* scheduler);</code></pre></div></section><nav class="pager"><a href="encapsulation.html"><span data-i18n>Previous</span><span data-lang="en">Encapsulation</span><span data-lang="fr">Encapsulation</span></a><a class="next" href="type.html"><span data-i18n>Next</span><span data-lang="en">Type</span><span data-lang="fr">Type</span></a></nav></main>
+</div>
+<footer class="site">libutils v5.0.0 · 23d2be3 · docs</footer>
+<script src="site.js"></script>
+<script src="search-index.js" defer></script>
+</body>
+</html>

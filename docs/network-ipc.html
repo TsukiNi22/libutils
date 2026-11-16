@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en" data-storage-key="libutils-docs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Communication - libutils</title>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n>Skip to the content</a>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" id="menuBtn" aria-label="Open the navigation" data-i18n-aria-label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v5.0.0</span></a>
+  <nav class="tabs" aria-label="Pages" hidden></nav>
+  <span class="spacer"></span>
+  <div class="top-actions">
+  <div class="lang-switch" role="group" aria-label="Language" data-i18n-aria-label>
+    <button type="button" data-set-lang="en" class="on">EN</button>
+    <button type="button" data-set-lang="fr">FR</button>
+  </div>
+  <span class="divider" aria-hidden="true"></span><div class="sbox small"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" autocomplete="off" aria-label="Search" data-i18n-aria-label placeholder="Search…" data-ph-fr="Rechercher…"><kbd class="hint" aria-hidden="true">/</kbd><ul class="results" hidden></ul></div>
+<a class="icon-btn" href="https://github.com/TsukiNi22/libutils" aria-label="GitHub repository" data-i18n-aria-label title="GitHub repository" data-i18n-title><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"/></svg></a>
+  <button class="theme-switch" type="button" id="themeToggle" role="switch" aria-checked="false" aria-label="Toggle theme" data-i18n-aria-label title="Toggle theme" data-i18n-title>
+    <span class="stars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="knob" aria-hidden="true">
+      <svg class="sun" viewBox="0 0 24 24" fill="#ffffff"><circle cx="12" cy="12" r="5.2"/><g stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"><path d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6M4.8 4.8l1.8 1.8M17.4 17.4l1.8 1.8M4.8 19.2l1.8-1.8M17.4 6.6l1.8-1.8"/></g></svg>
+      <svg class="moon" viewBox="0 0 24 24"><path d="M15.6 4.2a8 8 0 1 0 4.2 11.6A7 7 0 0 1 15.6 4.2z" fill="#f6c343"/></svg>
+    </span>
+  </button>
+  </div>
+</header>
+<div class="layout" id="top">
+<aside class="sidebar" id="sidebar"><p data-i18n>On this page</p><a href="#payloads">1. <span data-lang="en">Payloads over TCP</span><span data-lang="fr">Payloads sur TCP</span></a><a href="#eetp">2. <span data-lang="en">EETP</span><span data-lang="fr">EETP</span></a><a href="#processes">3. <span data-lang="en">Processes</span><span data-lang="fr">Processus</span></a><a href="#shared-memory">4. <span data-lang="en">Shared memory</span><span data-lang="fr">Mémoire partagée</span></a><hr><div class="grp"><span data-lang="en">User guide</span><span data-lang="fr">Guide utilisateur</span></div><a href="installation.html"><span data-lang="en">Installation</span><span data-lang="fr">Installation</span></a><a href="usage.html"><span data-lang="en">Link and include</span><span data-lang="fr">Lier et inclure</span></a><a href="custom-exceptions.html"><span data-lang="en">Custom exception codes</span><span data-lang="fr">Codes d&#x27;exception personnalisés</span></a><a href="warnings.html"><span data-lang="en">Warnings</span><span data-lang="fr">Avertissements</span></a><a href="c-api.html"><span data-lang="en">Use libutils from C</span><span data-lang="fr">Utiliser libutils depuis C</span></a><a href="windows.html"><span data-lang="en">Windows</span><span data-lang="fr">Windows</span></a><a href="development.html"><span data-lang="en">Build, tests and hooks</span><span data-lang="fr">Build, tests et hooks</span></a><div class="grp"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></div><a href="overview.html"><span data-lang="en">Architecture</span><span data-lang="fr">Architecture</span></a><a href="errors.html"><span data-lang="en">Errors</span><span data-lang="fr">Erreurs</span></a><a href="c-api-design.html"><span data-lang="en">The C API design</span><span data-lang="fr">Conception de l&#x27;API C</span></a><a href="network-ipc.html" class="cur" aria-current="page"><span data-lang="en">Communication</span><span data-lang="fr">Communication</span></a><a href="platforms.html"><span data-lang="en">Platforms</span><span data-lang="fr">Plateformes</span></a><div class="grp"><span data-lang="en">Reference</span><span data-lang="fr">Référence</span></div><a href="exception.html"><span data-lang="en">Exceptions</span><span data-lang="fr">Exceptions</span></a><a href="verbose.html"><span data-lang="en">Verbose</span><span data-lang="fr">Verbose</span></a><a href="pool.html"><span data-lang="en">Pool</span><span data-lang="fr">Pool</span></a><a href="cli.html"><span data-lang="en">Cli</span><span data-lang="fr">Cli</span></a><a href="arguments.html"><span data-lang="en">Arguments</span><span data-lang="fr">Arguments</span></a><a href="network.html"><span data-lang="en">Network</span><span data-lang="fr">Network</span></a><a href="math.html"><span data-lang="en">Math</span><span data-lang="fr">Math</span></a><a href="concepts.html"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></a><a href="encapsulation.html"><span data-lang="en">Encapsulation</span><span data-lang="fr">Encapsulation</span></a><a href="system.html"><span data-lang="en">System</span><span data-lang="fr">System</span></a><a href="type.html"><span data-lang="en">Type</span><span data-lang="fr">Type</span></a><a href="iomanip.html"><span data-lang="en">IOManip</span><span data-lang="fr">IOManip</span></a><a href="smanip.html"><span data-lang="en">SManip</span><span data-lang="fr">SManip</span></a><a href="algorithms.html"><span data-lang="en">Algorithms</span><span data-lang="fr">Algorithms</span></a><a href="security.html"><span data-lang="en">Security</span><span data-lang="fr">Security</span></a><a href="platform.html"><span data-lang="en">Platform</span><span data-lang="fr">Platform</span></a><a href="attribute.html"><span data-lang="en">Attribute</span><span data-lang="fr">Attribute</span></a><div class="grp"><span data-lang="en">Resources</span><span data-lang="fr">Ressources</span></div><a href="changelog.html"><span data-lang="en">Changelog</span><span data-lang="fr">Historique</span></a><a href="ci-cd.html"><span data-lang="en">CI / CD</span><span data-lang="fr">CI / CD</span></a><a href="licenses.html"><span data-lang="en">Licenses</span><span data-lang="fr">Licences</span></a><a href="project-graph.html"><span data-lang="en">Project graph</span><span data-lang="fr">Graphe du projet</span></a><a href="faq.html"><span data-lang="en">FAQ</span><span data-lang="fr">FAQ</span></a><a href="glossary.html"><span data-lang="en">Glossary</span><span data-lang="fr">Glossaire</span></a></aside><main id="main" tabindex="-1"><header><div class="page-eyebrow"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></div><h1><span data-lang="en">Communication</span><span data-lang="fr">Communication</span></h1><p class="lead"><span data-lang="en">How the TCP server and client exchange payloads, how the EETP protocol encrypts them, and how processes talk through pipes and the slotted shared memory.</span><span data-lang="fr">Comment le serveur et le client TCP échangent des payloads, comment le protocole EETP les chiffre, et comment les processus communiquent par pipes et par la mémoire partagée à slots.</span></p><div class="page-meta"><span><span data-i18n>Updated</span> 2026-11-26</span></div></header><div data-lang="en"><p>Two ways for programs to talk: the <strong>network</strong> (a TCP <code>Server</code> and <code>Client</code>, optionally encrypted by EETP) and the <strong>processes</strong> of one machine (pipes, a child process, a shared memory). The classes are on <a href="network.html">Network</a>, <a href="smanip.html#eetp">SManip</a> and <a href="encapsulation.html">Encapsulation</a>.</p></div><div data-lang="fr"><p>Deux façons pour des programmes de communiquer : le <strong>réseau</strong> (un <code>Server</code> et un <code>Client</code> TCP, chiffrés en option par EETP) et les <strong>processus</strong> d'une même machine (pipes, un processus enfant, une mémoire partagée). Les classes sont sur <a href="network.html">Network</a>, <a href="smanip.html#eetp">SManip</a> et <a href="encapsulation.html">Encapsulation</a>.</p></div><section id="payloads"><h2>1. <span data-lang="en">Payloads over TCP</span><span data-lang="fr">Payloads sur TCP</span></h2><div data-lang="en"><p>A <code>Server</code> and a <code>Client</code> exchange <strong>payloads</strong> (strings ended by a separator, <code>'\n'</code> by default) through a socket object. <code>listen()</code> reads what is available without blocking, <code>join()</code> waits for the next epoll event; <code>stop()</code> / <code>kill()</code> can be called from another thread. On Windows the sockets use Winsock 2 and the epoll is emulated over <code>WSAPoll</code>.</p><figure>
+<svg viewBox="0 0 760 210" role="img" aria-label="Server and Client use an ISocket, the EETPParser frames the payloads">
+<defs>
+<marker id="arr2-fig4-en" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path class="arrow" d="M0 0L10 5L0 10z"/>
+</marker>
+<marker id="arr2a-fig4-en" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path class="arrow-accent" d="M0 0L10 5L0 10z"/>
+</marker>
+</defs>
+<rect class="box" x="30" y="30" width="180" height="50" rx="8"/>
+<text class="lbl" x="120" y="60" text-anchor="middle">Client</text>
+<rect class="box" x="550" y="30" width="180" height="50" rx="8"/>
+<text class="lbl" x="640" y="60" text-anchor="middle">Server</text>
+<rect class="box-alt" x="30" y="130" width="180" height="50" rx="8"/>
+<text class="lbl" x="120" y="160" text-anchor="middle">TCPSocket</text>
+<rect class="box-alt" x="550" y="130" width="180" height="50" rx="8"/>
+<text class="lbl" x="640" y="160" text-anchor="middle">TCPSocket + epoll</text>
+<path class="edge" d="M120 80V126" marker-end="url(#arr2-fig4-en)"/>
+<path class="edge" d="M640 80V126" marker-end="url(#arr2-fig4-en)"/>
+<path class="edge-accent" d="M210 155H546" marker-start="url(#arr2a-fig4-en)" marker-end="url(#arr2a-fig4-en)"/>
+<text class="small" x="378" y="146" text-anchor="middle">payload '\n' payload '\n' ...</text>
+<text class="small" x="378" y="176" text-anchor="middle">TCP</text>
+<path class="edge dash" d="M210 55H546" marker-end="url(#arr2-fig4-en)"/>
+<text class="small" x="378" y="47" text-anchor="middle">EETPParser::format / parse</text>
+</svg>
+<figcaption>The network layers; the EETP parser is optional, on top of the payloads.</figcaption>
+</figure><p>The socket splits the stream into payloads and keeps what is not complete yet: a payload longer than the overflow limit (<code>4048</code> characters without a separator) is an error, a peer that closes the connection is the <code>None</code> exception <code>SocketClosed</code> and the status <code>Down</code>.</p></div><div data-lang="fr"><p>Un <code>Server</code> et un <code>Client</code> échangent des <strong>payloads</strong> (des chaînes terminées par un séparateur, <code>'\n'</code> par défaut) à travers un objet socket. <code>listen()</code> lit ce qui est disponible sans bloquer, <code>join()</code> attend le prochain événement epoll ; <code>stop()</code> / <code>kill()</code> peuvent être appelés depuis un autre thread. Sous Windows, les sockets utilisent Winsock 2 et l'epoll est émulé sur <code>WSAPoll</code>.</p><figure>
+<svg viewBox="0 0 760 210" role="img" aria-label="Server and Client use an ISocket, the EETPParser frames the payloads">
+<defs>
+<marker id="arr2-fig4-fr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path class="arrow" d="M0 0L10 5L0 10z"/>
+</marker>
+<marker id="arr2a-fig4-fr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path class="arrow-accent" d="M0 0L10 5L0 10z"/>
+</marker>
+</defs>
+<rect class="box" x="30" y="30" width="180" height="50" rx="8"/>
+<text class="lbl" x="120" y="60" text-anchor="middle">Client</text>
+<rect class="box" x="550" y="30" width="180" height="50" rx="8"/>
+<text class="lbl" x="640" y="60" text-anchor="middle">Server</text>
+<rect class="box-alt" x="30" y="130" width="180" height="50" rx="8"/>
+<text class="lbl" x="120" y="160" text-anchor="middle">TCPSocket</text>
+<rect class="box-alt" x="550" y="130" width="180" height="50" rx="8"/>
+<text class="lbl" x="640" y="160" text-anchor="middle">TCPSocket + epoll</text>
+<path class="edge" d="M120 80V126" marker-end="url(#arr2-fig4-fr)"/>
+<path class="edge" d="M640 80V126" marker-end="url(#arr2-fig4-fr)"/>
+<path class="edge-accent" d="M210 155H546" marker-start="url(#arr2a-fig4-fr)" marker-end="url(#arr2a-fig4-fr)"/>
+<text class="small" x="378" y="146" text-anchor="middle">payload '\n' payload '\n' ...</text>
+<text class="small" x="378" y="176" text-anchor="middle">TCP</text>
+<path class="edge dash" d="M210 55H546" marker-end="url(#arr2-fig4-fr)"/>
+<text class="small" x="378" y="47" text-anchor="middle">EETPParser::format / parse</text>
+</svg>
+<figcaption>Les couches réseau ; le parser EETP est optionnel, au-dessus des payloads.</figcaption>
+</figure><p>Le socket découpe le flux en payloads et garde ce qui n'est pas encore complet : un payload plus long que la limite de débordement (<code>4048</code> caractères sans séparateur) est une erreur, un pair qui ferme la connexion donne l'exception <code>None</code> <code>SocketClosed</code> et le statut <code>Down</code>.</p></div></section><section id="eetp"><h2>2. <span data-lang="en">EETP</span><span data-lang="fr">EETP</span></h2><div data-lang="en"><p><code>EETPParser</code> keeps the keys of each peer: the client sends <code>SYN</code> (its RSA public key, encrypted with the common RSA key of <code>~/.ssh/common</code>), the server answers <code>SO</code> (a new AES-256 key, encrypted with the client key), then every message is AES-256-GCM encrypted with a new random iv.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Type, Direction, Content"><table><thead><tr><th scope="col" style="min-width:8ch">Type</th><th scope="col" style="min-width:18ch">Direction</th><th scope="col" style="min-width:19ch">Content</th></tr></thead><tbody><tr><td><code>SYN</code></td><td>client → server</td><td>client RSA public key (common RSA)</td></tr><tr><td><code>SO</code></td><td>server → client</td><td>AES-256 key (client RSA)</td></tr><tr><td>other</td><td>↔</td><td>AES-256-GCM, frame <code>&lt;iv&gt;&lt;tag&gt; ETB &lt;content&gt;</code>, Base64 encoded</td></tr><tr><td><code>EM</code></td><td>↔</td><td>disconnection, never encrypted</td></tr></tbody></table></div><div class="callout warn"><p><strong>Warning.</strong> The framing changed in <code>v3.0.0</code>: both sides must use <code>v3.0.0</code> or later.</p></div></div><div data-lang="fr"><p><code>EETPParser</code> garde les clés de chaque pair : le client envoie <code>SYN</code> (sa clé publique RSA, chiffrée avec la clé RSA commune de <code>~/.ssh/common</code>), le serveur répond <code>SO</code> (une nouvelle clé AES-256, chiffrée avec la clé du client), puis chaque message est chiffré en AES-256-GCM avec un nouvel iv aléatoire.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Type, Sens, Contenu"><table><thead><tr><th scope="col" style="min-width:8ch">Type</th><th scope="col" style="min-width:19ch">Sens</th><th scope="col" style="min-width:19ch">Contenu</th></tr></thead><tbody><tr><td><code>SYN</code></td><td>client → serveur</td><td>clé publique RSA du client (RSA commune)</td></tr><tr><td><code>SO</code></td><td>serveur → client</td><td>clé AES-256 (RSA du client)</td></tr><tr><td>autre</td><td>↔</td><td>AES-256-GCM, trame <code>&lt;iv&gt;&lt;tag&gt; ETB &lt;content&gt;</code>, encodée en Base64</td></tr><tr><td><code>EM</code></td><td>↔</td><td>déconnexion, jamais chiffrée</td></tr></tbody></table></div><div class="callout warn"><p><strong>Attention.</strong> Le tramage a changé en <code>v3.0.0</code> : les deux côtés doivent utiliser <code>v3.0.0</code> ou plus récent.</p></div></div></section><section id="processes"><h2>3. <span data-lang="en">Processes</span><span data-lang="fr">Processus</span></h2><div data-lang="en"><p><code>Process</code> wraps <code>fork</code> / <code>execvp</code> / <code>waitpid</code> with pipes and fd duplications applied in the child; <code>Poll</code> wraps epoll; <code>SharedObject</code> loads a <code>.so</code>. On Windows: <code>CreateProcess</code>, <code>WSAPoll</code>, <code>LoadLibrary</code> (<code>.dll</code>); there is no <code>fork</code>, so <code>spawn()</code> alone is a <code>FatalException</code> (<code>UndefinedCall</code>) and only the standard fds can be redirected.</p></div><div data-lang="fr"><p><code>Process</code> enveloppe <code>fork</code> / <code>execvp</code> / <code>waitpid</code> avec des pipes et des duplications de fd appliquées dans l'enfant ; <code>Poll</code> enveloppe epoll ; <code>SharedObject</code> charge un <code>.so</code>. Sous Windows : <code>CreateProcess</code>, <code>WSAPoll</code>, <code>LoadLibrary</code> (<code>.dll</code>) ; il n'y a pas de <code>fork</code>, donc <code>spawn()</code> seul est une <code>FatalException</code> (<code>UndefinedCall</code>) et seuls les fds standard peuvent être redirigés.</p></div></section><section id="shared-memory"><h2>4. <span data-lang="en">Shared memory</span><span data-lang="fr">Mémoire partagée</span></h2><div data-lang="en"><p><code>SharedMemory</code> passes messages between processes through a POSIX shared memory split in <strong>slots</strong>. On Windows it is a file mapping with a named event.</p><figure>
+<svg viewBox="0 0 760 200" role="img" aria-label="Shared memory with a metadata header and slots read by reader threads">
+<defs>
+<marker id="arr3-fig5-en" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path class="arrow" d="M0 0L10 5L0 10z"/>
+</marker>
+</defs>
+<rect class="group" x="170" y="20" width="420" height="160" rx="10"/>
+<text class="title" x="186" y="44">/name (shm)</text>
+<rect class="box-alt" x="186" y="56" width="388" height="30" rx="6"/>
+<text class="small" x="380" y="76" text-anchor="middle">ShmMetadata: size, queue, connected, readable (futex), sequence</text>
+<rect class="box" x="186" y="100" width="90" height="60" rx="6"/>
+<text class="small" x="231" y="126" text-anchor="middle">slot 0</text>
+<text class="small" x="231" y="146" text-anchor="middle">flag · target</text>
+<rect class="box" x="285" y="100" width="90" height="60" rx="6"/>
+<text class="small" x="330" y="134" text-anchor="middle">slot 1</text>
+<rect class="box" x="384" y="100" width="90" height="60" rx="6"/>
+<text class="small" x="429" y="134" text-anchor="middle">slot ...</text>
+<rect class="box" x="483" y="100" width="90" height="60" rx="6"/>
+<text class="small" x="528" y="134" text-anchor="middle">slot n-1</text>
+<rect class="box" x="20" y="100" width="120" height="60" rx="8"/>
+<text class="lbl" x="80" y="126" text-anchor="middle">process A</text>
+<text class="small" x="80" y="146" text-anchor="middle">send(bytes, target)</text>
+<rect class="box" x="620" y="100" width="120" height="60" rx="8"/>
+<text class="lbl" x="680" y="126" text-anchor="middle">process B</text>
+<text class="small" x="680" y="146" text-anchor="middle">reader thread</text>
+<path class="edge" d="M140 130H182" marker-end="url(#arr3-fig5-en)"/>
+<path class="edge" d="M574 130H616" marker-end="url(#arr3-fig5-en)"/>
+</svg>
+<figcaption>A writer claims a free slot (flag 0 → 1), writes, publishes it (flag 2) and wakes the readers; the reader thread of each instance copies the messages addressed to it into a local storage read with <code>read()</code>.</figcaption>
+</figure><p>A message is addressed to one reader (<code>Target(limit, ownership)</code>) or to every reader (<code>Target(limit)</code>, <code>0</code> = all the connected ones). An <code>Id{id, ownership}</code> links the answers of a conversation, <code>join()</code> waits for a message and returns when the memory is closed. The <strong>layout</strong> of the slots depends on the writers: <code>Compact</code> for one writer, <code>Interleaved*</code> for many writers at the same time (one cache line per slot for <code>InterleavedAligned</code>).</p></div><div data-lang="fr"><p><code>SharedMemory</code> transmet des messages entre processus à travers une mémoire partagée POSIX découpée en <strong>slots</strong>. Sous Windows, c'est un file mapping avec un événement nommé.</p><figure>
+<svg viewBox="0 0 760 200" role="img" aria-label="Shared memory with a metadata header and slots read by reader threads">
+<defs>
+<marker id="arr3-fig5-fr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path class="arrow" d="M0 0L10 5L0 10z"/>
+</marker>
+</defs>
+<rect class="group" x="170" y="20" width="420" height="160" rx="10"/>
+<text class="title" x="186" y="44">/name (shm)</text>
+<rect class="box-alt" x="186" y="56" width="388" height="30" rx="6"/>
+<text class="small" x="380" y="76" text-anchor="middle">ShmMetadata: size, queue, connected, readable (futex), sequence</text>
+<rect class="box" x="186" y="100" width="90" height="60" rx="6"/>
+<text class="small" x="231" y="126" text-anchor="middle">slot 0</text>
+<text class="small" x="231" y="146" text-anchor="middle">flag · target</text>
+<rect class="box" x="285" y="100" width="90" height="60" rx="6"/>
+<text class="small" x="330" y="134" text-anchor="middle">slot 1</text>
+<rect class="box" x="384" y="100" width="90" height="60" rx="6"/>
+<text class="small" x="429" y="134" text-anchor="middle">slot ...</text>
+<rect class="box" x="483" y="100" width="90" height="60" rx="6"/>
+<text class="small" x="528" y="134" text-anchor="middle">slot n-1</text>
+<rect class="box" x="20" y="100" width="120" height="60" rx="8"/>
+<text class="lbl" x="80" y="126" text-anchor="middle">process A</text>
+<text class="small" x="80" y="146" text-anchor="middle">send(bytes, target)</text>
+<rect class="box" x="620" y="100" width="120" height="60" rx="8"/>
+<text class="lbl" x="680" y="126" text-anchor="middle">process B</text>
+<text class="small" x="680" y="146" text-anchor="middle">reader thread</text>
+<path class="edge" d="M140 130H182" marker-end="url(#arr3-fig5-fr)"/>
+<path class="edge" d="M574 130H616" marker-end="url(#arr3-fig5-fr)"/>
+</svg>
+<figcaption>Un écrivain réserve un slot libre (flag 0 → 1), écrit, le publie (flag 2) et réveille les lecteurs ; le thread lecteur de chaque instance copie les messages qui lui sont adressés dans un stockage local lu avec <code>read()</code>.</figcaption>
+</figure><p>Un message est adressé à un lecteur (<code>Target(limit, ownership)</code>) ou à tous les lecteurs (<code>Target(limit)</code>, <code>0</code> = tous ceux qui sont connectés). Un <code>Id{id, ownership}</code> relie les réponses d'une conversation, <code>join()</code> attend un message et rend la main quand la mémoire est fermée. La <strong>disposition</strong> des slots dépend des écrivains : <code>Compact</code> pour un seul écrivain, <code>Interleaved*</code> pour plusieurs écrivains en même temps (une ligne de cache par slot pour <code>InterleavedAligned</code>).</p></div></section><nav class="pager"><a href="c-api-design.html"><span data-i18n>Previous</span><span data-lang="en">The C API design</span><span data-lang="fr">Conception de l&#x27;API C</span></a><a class="next" href="platforms.html"><span data-i18n>Next</span><span data-lang="en">Platforms</span><span data-lang="fr">Plateformes</span></a></nav></main>
+</div>
+<footer class="site">libutils v5.0.0 · 23d2be3 · docs</footer>
+<script src="site.js"></script>
+<script src="search-index.js" defer></script>
+</body>
+</html>

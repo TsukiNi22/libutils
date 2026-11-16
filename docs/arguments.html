@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="en" data-storage-key="libutils-docs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Arguments - libutils</title>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n>Skip to the content</a>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" id="menuBtn" aria-label="Open the navigation" data-i18n-aria-label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v5.0.0</span></a>
+  <nav class="tabs" aria-label="Pages" hidden></nav>
+  <span class="spacer"></span>
+  <div class="top-actions">
+  <div class="lang-switch" role="group" aria-label="Language" data-i18n-aria-label>
+    <button type="button" data-set-lang="en" class="on">EN</button>
+    <button type="button" data-set-lang="fr">FR</button>
+  </div>
+  <span class="divider" aria-hidden="true"></span><div class="sbox small"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" autocomplete="off" aria-label="Search" data-i18n-aria-label placeholder="Search…" data-ph-fr="Rechercher…"><kbd class="hint" aria-hidden="true">/</kbd><ul class="results" hidden></ul></div>
+<a class="icon-btn" href="https://github.com/TsukiNi22/libutils" aria-label="GitHub repository" data-i18n-aria-label title="GitHub repository" data-i18n-title><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"/></svg></a>
+  <button class="theme-switch" type="button" id="themeToggle" role="switch" aria-checked="false" aria-label="Toggle theme" data-i18n-aria-label title="Toggle theme" data-i18n-title>
+    <span class="stars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="knob" aria-hidden="true">
+      <svg class="sun" viewBox="0 0 24 24" fill="#ffffff"><circle cx="12" cy="12" r="5.2"/><g stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"><path d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6M4.8 4.8l1.8 1.8M17.4 17.4l1.8 1.8M4.8 19.2l1.8-1.8M17.4 6.6l1.8-1.8"/></g></svg>
+      <svg class="moon" viewBox="0 0 24 24"><path d="M15.6 4.2a8 8 0 1 0 4.2 11.6A7 7 0 0 1 15.6 4.2z" fill="#f6c343"/></svg>
+    </span>
+  </button>
+  </div>
+</header>
+<div class="layout" id="top">
+<aside class="sidebar" id="sidebar"><p data-i18n>On this page</p><a href="#argparser">1. <span data-lang="en">ArgParser</span><span data-lang="fr">ArgParser</span></a><a href="#settings">2. <span data-lang="en">Settings</span><span data-lang="fr">Settings</span></a><a href="#errors">3. <span data-lang="en">Errors</span><span data-lang="fr">Erreurs</span></a><a href="#in-c">4. <span data-lang="en">In C</span><span data-lang="fr">En C</span></a><a href="#cpp-api">5. <span data-lang="en">C++ API</span><span data-lang="fr">API C++</span></a><a href="#c-api">6. <span data-lang="en">C API</span><span data-lang="fr">API C</span></a><hr><div class="grp"><span data-lang="en">User guide</span><span data-lang="fr">Guide utilisateur</span></div><a href="installation.html"><span data-lang="en">Installation</span><span data-lang="fr">Installation</span></a><a href="usage.html"><span data-lang="en">Link and include</span><span data-lang="fr">Lier et inclure</span></a><a href="custom-exceptions.html"><span data-lang="en">Custom exception codes</span><span data-lang="fr">Codes d&#x27;exception personnalisés</span></a><a href="warnings.html"><span data-lang="en">Warnings</span><span data-lang="fr">Avertissements</span></a><a href="c-api.html"><span data-lang="en">Use libutils from C</span><span data-lang="fr">Utiliser libutils depuis C</span></a><a href="windows.html"><span data-lang="en">Windows</span><span data-lang="fr">Windows</span></a><a href="development.html"><span data-lang="en">Build, tests and hooks</span><span data-lang="fr">Build, tests et hooks</span></a><div class="grp"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></div><a href="overview.html"><span data-lang="en">Architecture</span><span data-lang="fr">Architecture</span></a><a href="errors.html"><span data-lang="en">Errors</span><span data-lang="fr">Erreurs</span></a><a href="c-api-design.html"><span data-lang="en">The C API design</span><span data-lang="fr">Conception de l&#x27;API C</span></a><a href="network-ipc.html"><span data-lang="en">Communication</span><span data-lang="fr">Communication</span></a><a href="platforms.html"><span data-lang="en">Platforms</span><span data-lang="fr">Plateformes</span></a><div class="grp"><span data-lang="en">Reference</span><span data-lang="fr">Référence</span></div><a href="exception.html"><span data-lang="en">Exceptions</span><span data-lang="fr">Exceptions</span></a><a href="verbose.html"><span data-lang="en">Verbose</span><span data-lang="fr">Verbose</span></a><a href="pool.html"><span data-lang="en">Pool</span><span data-lang="fr">Pool</span></a><a href="cli.html"><span data-lang="en">Cli</span><span data-lang="fr">Cli</span></a><a href="arguments.html" class="cur" aria-current="page"><span data-lang="en">Arguments</span><span data-lang="fr">Arguments</span></a><a href="network.html"><span data-lang="en">Network</span><span data-lang="fr">Network</span></a><a href="math.html"><span data-lang="en">Math</span><span data-lang="fr">Math</span></a><a href="concepts.html"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></a><a href="encapsulation.html"><span data-lang="en">Encapsulation</span><span data-lang="fr">Encapsulation</span></a><a href="system.html"><span data-lang="en">System</span><span data-lang="fr">System</span></a><a href="type.html"><span data-lang="en">Type</span><span data-lang="fr">Type</span></a><a href="iomanip.html"><span data-lang="en">IOManip</span><span data-lang="fr">IOManip</span></a><a href="smanip.html"><span data-lang="en">SManip</span><span data-lang="fr">SManip</span></a><a href="algorithms.html"><span data-lang="en">Algorithms</span><span data-lang="fr">Algorithms</span></a><a href="security.html"><span data-lang="en">Security</span><span data-lang="fr">Security</span></a><a href="platform.html"><span data-lang="en">Platform</span><span data-lang="fr">Platform</span></a><a href="attribute.html"><span data-lang="en">Attribute</span><span data-lang="fr">Attribute</span></a><div class="grp"><span data-lang="en">Resources</span><span data-lang="fr">Ressources</span></div><a href="changelog.html"><span data-lang="en">Changelog</span><span data-lang="fr">Historique</span></a><a href="ci-cd.html"><span data-lang="en">CI / CD</span><span data-lang="fr">CI / CD</span></a><a href="licenses.html"><span data-lang="en">Licenses</span><span data-lang="fr">Licences</span></a><a href="project-graph.html"><span data-lang="en">Project graph</span><span data-lang="fr">Graphe du projet</span></a><a href="faq.html"><span data-lang="en">FAQ</span><span data-lang="fr">FAQ</span></a><a href="glossary.html"><span data-lang="en">Glossary</span><span data-lang="fr">Glossaire</span></a></aside><main id="main" tabindex="-1"><header><div class="page-eyebrow"><span data-lang="en">Reference</span><span data-lang="fr">Référence</span></div><h1><span data-lang="en">Arguments</span><span data-lang="fr">Arguments</span></h1><p class="lead"><span data-lang="en">ArgParser checks and parses argc / argv against the usages of the program; Settings stores typed settings and converts strings to the right type.</span><span data-lang="fr">ArgParser vérifie et analyse argc / argv selon les usages du programme ; Settings stocke des réglages typés et convertit les chaînes dans le bon type.</span></p><div class="page-meta"><span><span data-i18n>Updated</span> 2026-11-26</span></div></header><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Define, Group, Namespace, Headers"><table><thead><tr><th scope="col" style="min-width:14ch">Define</th><th scope="col" style="min-width:13ch">Group</th><th scope="col" style="min-width:21ch">Namespace</th><th scope="col" style="min-width:21ch">Headers</th></tr></thead><tbody><tr><td><code>_Arguments</code></td><td><code>_Handling</code></td><td><code>utils::arguments</code></td><td><code>utils/arguments/</code></td></tr></tbody></table></div><p>Two tools: <code>ArgParser</code> checks and parses <code>argc / argv</code> against the usages of the program, <code>Settings</code> stores typed settings (any type) and converts strings to the right type.</p></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Define, Groupe, Espace de noms, En-têtes"><table><thead><tr><th scope="col" style="min-width:14ch">Define</th><th scope="col" style="min-width:13ch">Groupe</th><th scope="col" style="min-width:21ch">Espace de noms</th><th scope="col" style="min-width:21ch">En-têtes</th></tr></thead><tbody><tr><td><code>_Arguments</code></td><td><code>_Handling</code></td><td><code>utils::arguments</code></td><td><code>utils/arguments/</code></td></tr></tbody></table></div><p>Deux outils : <code>ArgParser</code> vérifie et analyse <code>argc / argv</code> selon les usages du programme, <code>Settings</code> stocke des réglages typés (de n'importe quel type) et convertit les chaînes dans le bon type.</p></div><section id="argparser"><h2>1. <span data-lang="en">ArgParser</span><span data-lang="fr">ArgParser</span></h2><div data-lang="en"><p><code>ArgParser(binary = "[None]", description = "...")</code>: the <code>binary</code> and the <code>description</code> are used by the help.</p><h3 id="flags">Flags</h3><p><code>setFlag&lt;force&gt;(id, {short, flag, long, env}, options, description, unlimited = false, ignore_case = false)</code></p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Part, Matched as, Example"><table><thead><tr><th scope="col" style="min-width:9ch">Part</th><th scope="col" style="min-width:22ch">Matched as</th><th scope="col" style="min-width:24ch">Example</th></tr></thead><tbody><tr><td><code>short</code></td><td><code>-&lt;short&gt;</code> (combinable: <code>-va</code>)</td><td><code>"n"</code> → <code>-n</code></td></tr><tr><td><code>flag</code></td><td><code>-&lt;flag&gt;</code></td><td><code>"num"</code> → <code>-num</code></td></tr><tr><td><code>long</code></td><td><code>--&lt;long&gt;</code> (also <code>--long=value</code>)</td><td><code>"number"</code> → <code>--number</code></td></tr><tr><td><code>env</code></td><td>environment variable read when the flag is missing</td><td><code>"APP_NUMBER"</code></td></tr></tbody></table></div><p>An empty string disables a part. <code>options</code> is the ordered list of the values of the flag, <code>{name, mandatory, check}</code>; <code>unlimited = true</code> reads values until one fails its check (the flag needs at least one option).</p><h3 id="options">Options</h3><p>Positional arguments:</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:25ch">Method</th><th scope="col" style="min-width:19ch">Description</th></tr></thead><tbody><tr><td><code>setOption&lt;force&gt;(id, name, description)</code></td><td><strong>exact</strong> option: the argument must be <code>name</code> (ex: a sub command <code>run</code>)</td></tr><tr><td><code>setOption&lt;force&gt;(id, name, check, description)</code></td><td>free option validated by <code>check</code></td></tr></tbody></table></div><h3 id="usages">Usages</h3><p><code>setUsage&lt;force&gt;(id, name, ordered, {{id, mandatory}, ...}, description)</code>: a usage lists the flags / options it allows and the mandatory ones. With <code>ordered = true</code> the order of the arguments matters. <code>setDefaultUsage()</code> adds the special usage <code>default</code> that allows every flag.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:36ch">Method</th><th scope="col" style="min-width:19ch">Description</th></tr></thead><tbody><tr><td><code>removeUsage(s)</code>, <code>removeOption(s)</code>, <code>removeFlag(s)</code></td><td>Remove by id (unknown id: warning on <code>std::cerr</code>)</td></tr><tr><td><code>resetUsages()</code>, <code>resetOptions()</code>, <code>resetFlags()</code></td><td>Remove everything of a kind</td></tr><tr><td><code>getUsages()</code>, <code>getOptions()</code>, <code>getFlags()</code>, <code>getBinary()</code>, <code>getDescription()</code></td><td>Getters</td></tr></tbody></table></div><div class="callout"><p>The <code>set*</code> methods refuse to override an existing id (<code>Override</code>), <code>set*&lt;true&gt;</code> overrides it.</p></div><h3 id="parsing">Parsing</h3><p><code>parse(argc, argv, failsafe = false)</code> or <code>parse(std::vector&lt;std::string&gt;, failsafe)</code> returns the <strong>usages compliant</strong> with the arguments (<code>ParsedUsages</code> = <code>std::vector&lt;ParsedUsage&gt;</code>):</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">struct ParsedUsage {
+    std::string id; // usage id
+    std::vector&lt;std::tuple&lt;std::string, bool, std::vector&lt;std::string&gt;&gt;&gt; arguments; // &lt;id, option(true) | flag(false), values&gt;
+};</code></pre><p><code>-h</code>, <code>-help</code>, <code>--help</code> call the help hook then throw <code>NoneException(Exit)</code> (disabled by <code>disableHelp()</code>).</p><h3 id="hooks">Hooks</h3><p>Check hooks have the signature <code>std::optional&lt;std::string&gt;(const std::string&amp;)</code>: <code>std::nullopt</code> = valid, a string = the error message.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Hook, Accepts"><table><thead><tr><th scope="col" style="min-width:33ch">Hook</th><th scope="col" style="min-width:23ch">Accepts</th></tr></thead><tbody><tr><td><code>defaultBoolParsingHook</code></td><td><code>0</code>, <code>1</code>, <code>false</code>, <code>true</code></td></tr><tr><td><code>defaultInt32ParsingHook</code></td><td>a <code>std::int32_t</code></td></tr><tr><td><code>defaultSizetParsingHook</code></td><td>a <code>std::size_t</code></td></tr><tr><td><code>defaultDoubleParsingHook</code></td><td>a <code>double</code></td></tr><tr><td><code>defaultFileParsingHook</code></td><td>a readable file</td></tr><tr><td><code>defaultDirectoryParsingHook</code></td><td>a readable directory</td></tr><tr><td><code>defaultWritableParsingHook</code></td><td>a readable and writable path</td></tr><tr><td><code>defaultTrueParsingHook</code></td><td>anything</td></tr></tbody></table></div><p>The help display is <code>defaultHelpHook(parser)</code>, replaced with <code>setHelpHook(hook)</code>, back with <code>resetHelpHook()</code>, displayed with <code>help()</code>.</p><h3 id="argparser-example">Example</h3><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Arguments
+#include &lt;utils/utils.hpp&gt;
+
+int main(int argc, char* argv[])
+{
+    utils::arguments::ArgParser parser("app", "Process some numbers");
+    parser.setFlag("number", {"n", "num", "number", "APP_NUMBER"}, {{"value", true, utils::arguments::defaultInt32ParsingHook}}, "A number");
+    parser.setFlag("verbose", {"v", "", "verbose", ""}, {}, "Verbose mode");
+    parser.setUsage("main", "main", false, {{"number", true}, {"verbose", false}}, "Main usage");
+
+    try {
+        for (const auto&amp; [id, arguments]: parser.parse(argc, argv))
+            for (const auto&amp; [arg, isOption, values]: arguments)
+                std::cout &lt;&lt; id &lt;&lt; ": " &lt;&lt; arg &lt;&lt; " " &lt;&lt; values.size() &lt;&lt; " value(s)" &lt;&lt; std::endl;
+    } catch (const utils::exception::IException&amp; e) {
+        if (e.isNone()) return 0; // -h
+        std::cerr &lt;&lt; e.formated() &lt;&lt; std::endl;
+        return 1;
+    }
+    return 0;
+}</code></pre></div><div data-lang="fr"><p><code>ArgParser(binary = "[None]", description = "...")</code> : le <code>binary</code> et la <code>description</code> sont utilisés par l'aide.</p><h3 id="flags">Flags</h3><p><code>setFlag&lt;force&gt;(id, {short, flag, long, env}, options, description, unlimited = false, ignore_case = false)</code></p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Partie, Reconnue comme, Exemple"><table><thead><tr><th scope="col" style="min-width:11ch">Partie</th><th scope="col" style="min-width:20ch">Reconnue comme</th><th scope="col" style="min-width:24ch">Exemple</th></tr></thead><tbody><tr><td><code>short</code></td><td><code>-&lt;short&gt;</code> (combinables : <code>-va</code>)</td><td><code>"n"</code> → <code>-n</code></td></tr><tr><td><code>flag</code></td><td><code>-&lt;flag&gt;</code></td><td><code>"num"</code> → <code>-num</code></td></tr><tr><td><code>long</code></td><td><code>--&lt;long&gt;</code> (aussi <code>--long=value</code>)</td><td><code>"number"</code> → <code>--number</code></td></tr><tr><td><code>env</code></td><td>variable d'environnement lue quand le flag est absent</td><td><code>"APP_NUMBER"</code></td></tr></tbody></table></div><p>Une chaîne vide désactive une partie. <code>options</code> est la liste ordonnée des valeurs du flag, <code>{name, mandatory, check}</code> ; <code>unlimited = true</code> lit des valeurs jusqu'à ce que l'une d'elles échoue à son check (le flag doit alors avoir au moins une option).</p><h3 id="options">Options</h3><p>Arguments positionnels :</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:25ch">Méthode</th><th scope="col" style="min-width:20ch">Description</th></tr></thead><tbody><tr><td><code>setOption&lt;force&gt;(id, name, description)</code></td><td>option <strong>exacte</strong> : l'argument doit être <code>name</code> (ex : une sous-commande <code>run</code>)</td></tr><tr><td><code>setOption&lt;force&gt;(id, name, check, description)</code></td><td>option libre validée par <code>check</code></td></tr></tbody></table></div><h3 id="usages">Usages</h3><p><code>setUsage&lt;force&gt;(id, name, ordered, {{id, mandatory}, ...}, description)</code> : un usage liste les flags / options qu'il autorise et ceux qui sont obligatoires. Avec <code>ordered = true</code>, l'ordre des arguments compte. <code>setDefaultUsage()</code> ajoute l'usage spécial <code>default</code>, qui autorise tous les flags.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:36ch">Méthode</th><th scope="col" style="min-width:19ch">Description</th></tr></thead><tbody><tr><td><code>removeUsage(s)</code>, <code>removeOption(s)</code>, <code>removeFlag(s)</code></td><td>Supprime par id (id inconnu : avertissement sur <code>std::cerr</code>)</td></tr><tr><td><code>resetUsages()</code>, <code>resetOptions()</code>, <code>resetFlags()</code></td><td>Supprime tous les éléments d'un genre</td></tr><tr><td><code>getUsages()</code>, <code>getOptions()</code>, <code>getFlags()</code>, <code>getBinary()</code>, <code>getDescription()</code></td><td>Accesseurs</td></tr></tbody></table></div><div class="callout"><p>Les méthodes <code>set*</code> refusent d'écraser un id existant (<code>Override</code>), <code>set*&lt;true&gt;</code> l'écrase.</p></div><h3 id="parsing">Analyse</h3><p><code>parse(argc, argv, failsafe = false)</code> ou <code>parse(std::vector&lt;std::string&gt;, failsafe)</code> renvoie les <strong>usages conformes</strong> aux arguments (<code>ParsedUsages</code> = <code>std::vector&lt;ParsedUsage&gt;</code>) :</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">struct ParsedUsage {
+    std::string id; // usage id
+    std::vector&lt;std::tuple&lt;std::string, bool, std::vector&lt;std::string&gt;&gt;&gt; arguments; // &lt;id, option(true) | flag(false), values&gt;
+};</code></pre><p><code>-h</code>, <code>-help</code>, <code>--help</code> appellent le hook d'aide puis lancent <code>NoneException(Exit)</code> (désactivé par <code>disableHelp()</code>).</p><h3 id="hooks">Hooks</h3><p>Les hooks de vérification ont la signature <code>std::optional&lt;std::string&gt;(const std::string&amp;)</code> : <code>std::nullopt</code> = valide, une chaîne = le message d'erreur.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Hook, Accepte"><table><thead><tr><th scope="col" style="min-width:33ch">Hook</th><th scope="col" style="min-width:22ch">Accepte</th></tr></thead><tbody><tr><td><code>defaultBoolParsingHook</code></td><td><code>0</code>, <code>1</code>, <code>false</code>, <code>true</code></td></tr><tr><td><code>defaultInt32ParsingHook</code></td><td>un <code>std::int32_t</code></td></tr><tr><td><code>defaultSizetParsingHook</code></td><td>un <code>std::size_t</code></td></tr><tr><td><code>defaultDoubleParsingHook</code></td><td>un <code>double</code></td></tr><tr><td><code>defaultFileParsingHook</code></td><td>un fichier lisible</td></tr><tr><td><code>defaultDirectoryParsingHook</code></td><td>un dossier lisible</td></tr><tr><td><code>defaultWritableParsingHook</code></td><td>un chemin lisible et accessible en écriture</td></tr><tr><td><code>defaultTrueParsingHook</code></td><td>n'importe quoi</td></tr></tbody></table></div><p>L'affichage de l'aide est <code>defaultHelpHook(parser)</code>, remplacé avec <code>setHelpHook(hook)</code>, rétabli avec <code>resetHelpHook()</code>, affiché avec <code>help()</code>.</p><h3 id="argparser-example">Exemple</h3><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Arguments
+#include &lt;utils/utils.hpp&gt;
+
+int main(int argc, char* argv[])
+{
+    utils::arguments::ArgParser parser("app", "Process some numbers");
+    parser.setFlag("number", {"n", "num", "number", "APP_NUMBER"}, {{"value", true, utils::arguments::defaultInt32ParsingHook}}, "A number");
+    parser.setFlag("verbose", {"v", "", "verbose", ""}, {}, "Verbose mode");
+    parser.setUsage("main", "main", false, {{"number", true}, {"verbose", false}}, "Main usage");
+
+    try {
+        for (const auto&amp; [id, arguments]: parser.parse(argc, argv))
+            for (const auto&amp; [arg, isOption, values]: arguments)
+                std::cout &lt;&lt; id &lt;&lt; ": " &lt;&lt; arg &lt;&lt; " " &lt;&lt; values.size() &lt;&lt; " value(s)" &lt;&lt; std::endl;
+    } catch (const utils::exception::IException&amp; e) {
+        if (e.isNone()) return 0; // -h
+        std::cerr &lt;&lt; e.formated() &lt;&lt; std::endl;
+        return 1;
+    }
+    return 0;
+}</code></pre></div></section><section id="settings"><h2>2. <span data-lang="en">Settings</span><span data-lang="fr">Settings</span></h2><div data-lang="en"><p>A map <code>id → Setting</code> (lookup with a <code>std::string_view</code>, without copy).</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:21ch">Method</th><th scope="col" style="min-width:21ch">Description</th></tr></thead><tbody><tr><td><code>add(id, value)</code></td><td>Add a setting, <code>Override</code> if the id exists</td></tr><tr><td><code>set&lt;force = true&gt;(id, value)</code></td><td>Add or replace (edit in place)</td></tr><tr><td><code>get&lt;T&gt;(id)</code></td><td>Reference on the value (<code>BadCast</code> when the type differs)</td></tr><tr><td><code>get(id)</code>, <code>at(id)</code>, <code>operator[](id)</code></td><td>The <code>Setting</code> itself (<code>UnknownId</code> when missing)</td></tr><tr><td><code>contains(id)</code></td><td>Is the id set</td></tr><tr><td><code>remove&lt;failsafe = false&gt;(id)</code></td><td>Remove (<code>UnknownId</code> when missing, nothing with <code>failsafe</code>)</td></tr><tr><td><code>clear()</code></td><td>Remove everything</td></tr><tr><td><code>autoCast&lt;force = false&gt;(id, string)</code></td><td>Detect the type of the string, store the converted value, return the <code>CastType</code></td></tr><tr><td><code>cast&lt;CastType, force = false&gt;(id, string)</code></td><td>Convert the string to the given type and store it</td></tr></tbody></table></div><h3 id="setting">Setting</h3><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:18ch">Method</th><th scope="col" style="min-width:20ch">Description</th></tr></thead><tbody><tr><td><code>get&lt;T&gt;()</code></td><td>Value as <code>T</code> (<code>BadCast</code> when it isn't a <code>T</code>)</td></tr><tr><td><code>is&lt;T&gt;()</code></td><td>Is the stored value a <code>T</code></td></tr><tr><td><code>assign(value)</code></td><td>Replace the value (any type)</td></tr><tr><td><code>operator T()</code></td><td>Implicit conversion (<code>int n = settings["n"];</code>)</td></tr></tbody></table></div><h3 id="casts">Casts</h3><div class="table-wrap" tabindex="0" role="region" aria-label="Table: CastType, C++ type, Detected by autoCast"><table><thead><tr><th scope="col" style="min-width:23ch"><code>CastType</code></th><th scope="col" style="min-width:34ch">C++ type</th><th scope="col" style="min-width:27ch">Detected by <code>autoCast</code></th></tr></thead><tbody><tr><td><code>None</code></td><td><code>std::string</code></td><td>anything else</td></tr><tr><td><code>Bool</code></td><td><code>bool</code></td><td><code>true</code>, <code>false</code>, <code>t</code>, <code>f</code> (any case)</td></tr><tr><td><code>Int32</code> / <code>Int64</code></td><td><code>std::int32_t</code> / <code>std::int64_t</code></td><td>negative integers</td></tr><tr><td><code>UInt32</code> / <code>UInt64</code></td><td><code>std::uint32_t</code> / <code>std::uint64_t</code></td><td>positive integers</td></tr><tr><td><code>Float64</code> / <code>Float128</code></td><td><code>float64_t</code> / <code>float128_t</code></td><td>decimals (<code>Float128</code> when out of the <code>double</code> range)</td></tr><tr><td><code>Path</code></td><td><code>std::filesystem::path</code></td><td>strings with a <code>/</code></td></tr><tr><td><code>Byte</code>, <code>Int8</code>, <code>Int16</code>, <code>UInt8</code>, <code>UInt16</code>, <code>Float16</code>, <code>Float32</code></td><td><code>std::byte</code>, fixed size integers, floats</td><td>only with <code>cast</code></td></tr><tr><td><code>Char8</code>, <code>Char16</code>, <code>Char32</code>, <code>WChar</code></td><td><code>char8_t</code>, <code>char16_t</code>, <code>char32_t</code>, <code>wchar_t</code></td><td>only with <code>cast</code> (a character or a code point)</td></tr><tr><td><code>U8String</code>, <code>U16String</code>, <code>U32String</code>, <code>WString</code></td><td><code>std::u8string</code>, <code>std::u16string</code>, <code>std::u32string</code>, <code>std::wstring</code></td><td>only with <code>cast</code> (from UTF-8)</td></tr></tbody></table></div><div class="callout warn"><p><strong>Warning.</strong> The conversions check the range: <code>"300"</code> cast to <code>UInt8</code> throws <code>BadCast</code>, a value out of the <code>float16</code> range throws <code>OutOfBounds</code>.</p></div><h3 id="settings-example">Example</h3><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">utils::arguments::Settings settings;
+settings.add("name", std::string("server"));
+settings.autoCast("port", "4242");                                  // UInt32
+settings.cast&lt;utils::arguments::CastType::Path&gt;("root", "/srv/www");
+settings.get&lt;std::uint32_t&gt;("port") += 1;                            // edit in place
+std::filesystem::path root = settings["root"];</code></pre></div><div data-lang="fr"><p>Une map <code>id → Setting</code> (recherche avec un <code>std::string_view</code>, sans copie).</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:21ch">Méthode</th><th scope="col" style="min-width:21ch">Description</th></tr></thead><tbody><tr><td><code>add(id, value)</code></td><td>Ajoute un réglage, <code>Override</code> si l'id existe</td></tr><tr><td><code>set&lt;force = true&gt;(id, value)</code></td><td>Ajoute ou remplace (modification sur place)</td></tr><tr><td><code>get&lt;T&gt;(id)</code></td><td>Référence sur la valeur (<code>BadCast</code> quand le type diffère)</td></tr><tr><td><code>get(id)</code>, <code>at(id)</code>, <code>operator[](id)</code></td><td>Le <code>Setting</code> lui-même (<code>UnknownId</code> s'il est absent)</td></tr><tr><td><code>contains(id)</code></td><td>L'id est-il défini</td></tr><tr><td><code>remove&lt;failsafe = false&gt;(id)</code></td><td>Supprime (<code>UnknownId</code> s'il est absent, rien avec <code>failsafe</code>)</td></tr><tr><td><code>clear()</code></td><td>Supprime tout</td></tr><tr><td><code>autoCast&lt;force = false&gt;(id, string)</code></td><td>Détecte le type de la chaîne, stocke la valeur convertie, renvoie le <code>CastType</code></td></tr><tr><td><code>cast&lt;CastType, force = false&gt;(id, string)</code></td><td>Convertit la chaîne dans le type donné et la stocke</td></tr></tbody></table></div><h3 id="setting">Setting</h3><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:18ch">Méthode</th><th scope="col" style="min-width:20ch">Description</th></tr></thead><tbody><tr><td><code>get&lt;T&gt;()</code></td><td>Valeur en <code>T</code> (<code>BadCast</code> quand ce n'est pas un <code>T</code>)</td></tr><tr><td><code>is&lt;T&gt;()</code></td><td>La valeur stockée est-elle un <code>T</code></td></tr><tr><td><code>assign(value)</code></td><td>Remplace la valeur (n'importe quel type)</td></tr><tr><td><code>operator T()</code></td><td>Conversion implicite (<code>int n = settings["n"];</code>)</td></tr></tbody></table></div><h3 id="casts">Conversions</h3><div class="table-wrap" tabindex="0" role="region" aria-label="Table: CastType, Type C++, Détecté par autoCast"><table><thead><tr><th scope="col" style="min-width:23ch"><code>CastType</code></th><th scope="col" style="min-width:34ch">Type C++</th><th scope="col" style="min-width:27ch">Détecté par <code>autoCast</code></th></tr></thead><tbody><tr><td><code>None</code></td><td><code>std::string</code></td><td>tout le reste</td></tr><tr><td><code>Bool</code></td><td><code>bool</code></td><td><code>true</code>, <code>false</code>, <code>t</code>, <code>f</code> (toute casse)</td></tr><tr><td><code>Int32</code> / <code>Int64</code></td><td><code>std::int32_t</code> / <code>std::int64_t</code></td><td>entiers négatifs</td></tr><tr><td><code>UInt32</code> / <code>UInt64</code></td><td><code>std::uint32_t</code> / <code>std::uint64_t</code></td><td>entiers positifs</td></tr><tr><td><code>Float64</code> / <code>Float128</code></td><td><code>float64_t</code> / <code>float128_t</code></td><td>décimaux (<code>Float128</code> hors de la plage de <code>double</code>)</td></tr><tr><td><code>Path</code></td><td><code>std::filesystem::path</code></td><td>chaînes contenant un <code>/</code></td></tr><tr><td><code>Byte</code>, <code>Int8</code>, <code>Int16</code>, <code>UInt8</code>, <code>UInt16</code>, <code>Float16</code>, <code>Float32</code></td><td><code>std::byte</code>, entiers de taille fixe, flottants</td><td>seulement avec <code>cast</code></td></tr><tr><td><code>Char8</code>, <code>Char16</code>, <code>Char32</code>, <code>WChar</code></td><td><code>char8_t</code>, <code>char16_t</code>, <code>char32_t</code>, <code>wchar_t</code></td><td>seulement avec <code>cast</code> (un caractère ou un point de code)</td></tr><tr><td><code>U8String</code>, <code>U16String</code>, <code>U32String</code>, <code>WString</code></td><td><code>std::u8string</code>, <code>std::u16string</code>, <code>std::u32string</code>, <code>std::wstring</code></td><td>seulement avec <code>cast</code> (depuis de l'UTF-8)</td></tr></tbody></table></div><div class="callout warn"><p><strong>Attention.</strong> Les conversions vérifient la plage : <code>"300"</code> converti en <code>UInt8</code> lance <code>BadCast</code>, une valeur hors de la plage de <code>float16</code> lance <code>OutOfBounds</code>.</p></div><h3 id="settings-example">Exemple</h3><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">utils::arguments::Settings settings;
+settings.add("name", std::string("server"));
+settings.autoCast("port", "4242");                                  // UInt32
+settings.cast&lt;utils::arguments::CastType::Path&gt;("root", "/srv/www");
+settings.get&lt;std::uint32_t&gt;("port") += 1;                            // edit in place
+std::filesystem::path root = settings["root"];</code></pre></div></section><section id="errors"><h2>3. <span data-lang="en">Errors</span><span data-lang="fr">Erreurs</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Code, When"><table><thead><tr><th scope="col" style="min-width:27ch">Code</th><th scope="col" style="min-width:18ch">When</th></tr></thead><tbody><tr><td><code>ArgumentsNumber</code></td><td><code>argv</code> is empty</td></tr><tr><td><code>NoCompliantUsage</code></td><td>No usage matches the arguments</td></tr><tr><td><code>UnknownFlag</code></td><td>Unknown flag</td></tr><tr><td><code>FlagOptionsNumber</code>, <code>FlagOption</code></td><td>Missing / invalid value of a flag</td></tr><tr><td><code>OptionsNumber</code>, <code>Option</code>, <code>OptionIngored</code></td><td>Missing / invalid / unexpected option</td></tr><tr><td><code>DuplicatedFlag</code>, <code>FlagCombinaison</code></td><td>Flag given twice, invalid combination</td></tr><tr><td><code>ArgParserHook</code></td><td>A hook threw</td></tr><tr><td><code>Exit</code> (<code>NoneException</code>)</td><td>The help was displayed</td></tr><tr><td><code>Override</code>, <code>UnknownId</code>, <code>BadCast</code>, <code>OutOfBounds</code>, <code>InvalidArgument</code></td><td><code>Settings</code></td></tr></tbody></table></div></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Code, Quand"><table><thead><tr><th scope="col" style="min-width:27ch">Code</th><th scope="col" style="min-width:18ch">Quand</th></tr></thead><tbody><tr><td><code>ArgumentsNumber</code></td><td><code>argv</code> est vide</td></tr><tr><td><code>NoCompliantUsage</code></td><td>Aucun usage ne correspond aux arguments</td></tr><tr><td><code>UnknownFlag</code></td><td>Flag inconnu</td></tr><tr><td><code>FlagOptionsNumber</code>, <code>FlagOption</code></td><td>Valeur d'un flag manquante / invalide</td></tr><tr><td><code>OptionsNumber</code>, <code>Option</code>, <code>OptionIngored</code></td><td>Option manquante / invalide / inattendue</td></tr><tr><td><code>DuplicatedFlag</code>, <code>FlagCombinaison</code></td><td>Flag donné deux fois, combinaison invalide</td></tr><tr><td><code>ArgParserHook</code></td><td>Un hook a lancé une exception</td></tr><tr><td><code>Exit</code> (<code>NoneException</code>)</td><td>L'aide a été affichée</td></tr><tr><td><code>Override</code>, <code>UnknownId</code>, <code>BadCast</code>, <code>OutOfBounds</code>, <code>InvalidArgument</code></td><td><code>Settings</code></td></tr></tbody></table></div></div></section><section id="in-c"><h2>4. <span data-lang="en">In C</span><span data-lang="fr">En C</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: C++, C"><table><thead><tr><th scope="col" style="min-width:25ch">C++</th><th scope="col" style="min-width:40ch">C</th></tr></thead><tbody><tr><td><code>ArgParser(binary, description)</code></td><td><code>utils_argparser_t*</code>: <code>utils_argparser_create(binary, description)</code> / <code>utils_argparser_destroy</code></td></tr><tr><td><code>setFlag(id, {short, flag, long, env}, options, ...)</code></td><td><code>utils_argparser_set_flag(parser, id, short, flag, long, env, options, count, description, unlimited, ignore_case, force)</code>, options as <code>utils_argparser_flag_option_t {name, mandatory, check, data}</code></td></tr><tr><td><code>setOption</code>, <code>setUsage</code>, <code>setDefaultUsage</code></td><td><code>utils_argparser_set_option</code>, <code>utils_argparser_set_usage(parser, id, name, ordered, ids, mandatory, count, description, force)</code>, <code>utils_argparser_set_default_usage</code></td></tr><tr><td>a check hook</td><td><code>int check(const char* option, void* data)</code>: <code>UTILS_OK</code> = valid, <code>utils_fail(code, message)</code> = invalid; the default ones are <code>utils_argparser_check_*</code></td></tr><tr><td><code>parse(argc, argv, failsafe)</code></td><td><code>utils_argparser_parse(parser, argc, argv, failsafe)</code> → <code>utils_argparser_result_t*</code> (<code>utils_argparser_result_*</code>, destroy it)</td></tr><tr><td><code>Settings</code></td><td><code>utils_settings_t*</code>: <code>utils_settings_add_&lt;name&gt;</code>, <code>_set_&lt;name&gt;</code>, <code>_get_&lt;name&gt;</code>, <code>_is_&lt;name&gt;</code> per fixed type (<code>str</code> for a string), bytes, <code>utils_settings_auto_cast</code> / <code>utils_settings_cast</code> (<code>C_API_SETTINGS_CAST_*</code>)</td></tr></tbody></table></div><p>The help is displayed by the help hook, then the parsing fails with the code <code>Exit</code> (type <code>None</code>): test <code>utils_exception.type == C_API_EXCEPTION_TYPE_NONE</code>.</p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define _Arguments
+#include &lt;utils.h&gt;
+#include &lt;stdio.h&gt;
+
+int main(int argc, char* argv[])
+{
+    utils_argparser_t* parser = utils_argparser_create("app", "Process some numbers");
+    utils_argparser_flag_option_t value = {"value", true, utils_argparser_check_int32, NULL};
+    const char* ids[] = {"number", "verbose"};
+    const bool mandatory[] = {true, false};
+    utils_argparser_result_t* result = NULL;
+
+    if (!parser)
+        return 1;
+    utils_argparser_set_flag(parser, "number", "n", "num", "number", "APP_NUMBER", &amp;value, 1, "A number", false, false, false);
+    utils_argparser_set_flag(parser, "verbose", "v", NULL, "verbose", NULL, NULL, 0, "Verbose mode", false, false, false);
+    utils_argparser_set_usage(parser, "main", "main", false, ids, mandatory, 2, "Main usage", false);
+    result = utils_argparser_parse(parser, argc, (const char* const*)argv, false);
+    if (!result) {
+        utils_argparser_destroy(parser);
+        return utils_exception.type == C_API_EXCEPTION_TYPE_NONE ? 0 : 1; // -h: not an error
+    }
+    for (size_t i = 0; i &lt; utils_argparser_result_count(result); ++i)
+        for (size_t j = 0; j &lt; utils_argparser_result_arguments_count(result, i); ++j)
+            printf("%s: %s %zu value(s)\n", utils_argparser_result_usage(result, i),
+                utils_argparser_result_argument_id(result, i, j), utils_argparser_result_values_count(result, i, j));
+    utils_argparser_result_destroy(result);
+    utils_argparser_destroy(parser);
+    return 0;
+}</code></pre></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: C++, C"><table><thead><tr><th scope="col" style="min-width:25ch">C++</th><th scope="col" style="min-width:40ch">C</th></tr></thead><tbody><tr><td><code>ArgParser(binary, description)</code></td><td><code>utils_argparser_t*</code> : <code>utils_argparser_create(binary, description)</code> / <code>utils_argparser_destroy</code></td></tr><tr><td><code>setFlag(id, {short, flag, long, env}, options, ...)</code></td><td><code>utils_argparser_set_flag(parser, id, short, flag, long, env, options, count, description, unlimited, ignore_case, force)</code>, options en <code>utils_argparser_flag_option_t {name, mandatory, check, data}</code></td></tr><tr><td><code>setOption</code>, <code>setUsage</code>, <code>setDefaultUsage</code></td><td><code>utils_argparser_set_option</code>, <code>utils_argparser_set_usage(parser, id, name, ordered, ids, mandatory, count, description, force)</code>, <code>utils_argparser_set_default_usage</code></td></tr><tr><td>un hook de vérification</td><td><code>int check(const char* option, void* data)</code> : <code>UTILS_OK</code> = valide, <code>utils_fail(code, message)</code> = invalide ; ceux par défaut sont <code>utils_argparser_check_*</code></td></tr><tr><td><code>parse(argc, argv, failsafe)</code></td><td><code>utils_argparser_parse(parser, argc, argv, failsafe)</code> → <code>utils_argparser_result_t*</code> (<code>utils_argparser_result_*</code>, à détruire)</td></tr><tr><td><code>Settings</code></td><td><code>utils_settings_t*</code> : <code>utils_settings_add_&lt;name&gt;</code>, <code>_set_&lt;name&gt;</code>, <code>_get_&lt;name&gt;</code>, <code>_is_&lt;name&gt;</code> par type fixe (<code>str</code> pour une chaîne), octets, <code>utils_settings_auto_cast</code> / <code>utils_settings_cast</code> (<code>C_API_SETTINGS_CAST_*</code>)</td></tr></tbody></table></div><p>L'aide est affichée par le hook d'aide, puis l'analyse échoue avec le code <code>Exit</code> (type <code>None</code>) : testez <code>utils_exception.type == C_API_EXCEPTION_TYPE_NONE</code>.</p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define _Arguments
+#include &lt;utils.h&gt;
+#include &lt;stdio.h&gt;
+
+int main(int argc, char* argv[])
+{
+    utils_argparser_t* parser = utils_argparser_create("app", "Process some numbers");
+    utils_argparser_flag_option_t value = {"value", true, utils_argparser_check_int32, NULL};
+    const char* ids[] = {"number", "verbose"};
+    const bool mandatory[] = {true, false};
+    utils_argparser_result_t* result = NULL;
+
+    if (!parser)
+        return 1;
+    utils_argparser_set_flag(parser, "number", "n", "num", "number", "APP_NUMBER", &amp;value, 1, "A number", false, false, false);
+    utils_argparser_set_flag(parser, "verbose", "v", NULL, "verbose", NULL, NULL, 0, "Verbose mode", false, false, false);
+    utils_argparser_set_usage(parser, "main", "main", false, ids, mandatory, 2, "Main usage", false);
+    result = utils_argparser_parse(parser, argc, (const char* const*)argv, false);
+    if (!result) {
+        utils_argparser_destroy(parser);
+        return utils_exception.type == C_API_EXCEPTION_TYPE_NONE ? 0 : 1; // -h: not an error
+    }
+    for (size_t i = 0; i &lt; utils_argparser_result_count(result); ++i)
+        for (size_t j = 0; j &lt; utils_argparser_result_arguments_count(result, i); ++j)
+            printf("%s: %s %zu value(s)\n", utils_argparser_result_usage(result, i),
+                utils_argparser_result_argument_id(result, i, j), utils_argparser_result_values_count(result, i, j));
+    utils_argparser_result_destroy(result);
+    utils_argparser_destroy(parser);
+    return 0;
+}</code></pre></div></section><section id="cpp-api"><h2>5. <span data-lang="en">C++ API</span><span data-lang="fr">API C++</span></h2><div data-lang="en"><p>Read from the headers of <code>include/utils/arguments/</code> (public part only, the trailing comments of the code kept). Include <code>&lt;utils/utils.hpp&gt;</code> with the define of the section, never these headers one by one.</p><h3 id="h-arguments-argparser-hpp"><code>utils/arguments/ArgParser.hpp</code></h3><p>Declaration of the ArgParser class for arguments handling</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::arguments
+void defaultHelpHook(const utils::arguments::ArgParser&amp; parser);
+std::optional&lt;std::string&gt; defaultBoolParsingHook(const std::string&amp; option); // Parse boolean (0, 1, fase, true)
+std::optional&lt;std::string&gt; defaultInt32ParsingHook(const std::string&amp; option); // Parse std::int32_t
+std::optional&lt;std::string&gt; defaultSizetParsingHook(const std::string&amp; option); // Parse std::size_t
+std::optional&lt;std::string&gt; defaultDoubleParsingHook(const std::string&amp; option); // Parse double
+std::optional&lt;std::string&gt; defaultFileParsingHook(const std::string&amp; option); // Check for file reading (only!)
+std::optional&lt;std::string&gt; defaultDirectoryParsingHook(const std::string&amp; option); // Check for directory reading (only!)
+std::optional&lt;std::string&gt; defaultWritableParsingHook(const std::string&amp; option); // Check if the path/file is readable &amp; writable (only!)
+std::optional&lt;std::string&gt; defaultTrueParsingHook(const std::string&amp;);
+class ArgParser: private utils::security::observer::Observer&lt;"ArgParser"&gt; {
+    void help(void) const; // Help display (using hook)
+    utils::arguments::ParsedUsages parse(const int argc, const char* const argv[], const bool failsafe = false) const;
+    utils::arguments::ParsedUsages parse(const std::vector&lt;std::string&gt;&amp; argv, const bool failsafe = false) const;
+    void removeUsage(const std::string&amp; id);
+    void removeUsages(const std::vector&lt;std::string&gt;&amp; ids);
+    void removeOption(const std::string&amp; id);
+    void removeOptions(const std::vector&lt;std::string&gt;&amp; ids);
+    void removeFlag(const std::string&amp; id);
+    void removeFlags(const std::vector&lt;std::string&gt;&amp; ids);
+    void setDefaultUsage(void);
+    template&lt;bool force = false&gt; void setUsage(const std::string&amp; id, const std::string&amp; name, const bool ordered, const std::vector&lt;std::pair&lt;std::string, bool&gt;&gt;&amp; ids, const std::string&amp; description = "[None]");
+    void resetUsages(void);
+    template&lt;bool force = false&gt; void setOption(const std::string&amp; id, const std::string&amp; name, std::function&lt;std::optional&lt;std::string&gt;(const std::string&amp;)&gt; check, const std::string&amp; description = "[None]");
+    template&lt;bool force = false&gt; void setOption(const std::string&amp; id, const std::string&amp; name, const std::string&amp; description = "[None]");
+    void resetOptions(void);
+    template&lt;bool force = false&gt; void setFlag(const std::string&amp; id, const std::tuple&lt;std::string, std::string, std::string, std::string&gt;&amp; flag, const std::vector&lt;std::tuple&lt;std::string, bool, std::function&lt;std::optional&lt;std::string&gt;(const std::string&amp;)&gt;&gt;&gt;&amp; options, const std::string&amp; description = "[None]", const bool unlimited = false, const bool ignore_case = false);
+    void resetFlags(void);
+    void setHelpHook(std::function&lt;void(const utils::arguments::ArgParser&amp; parser)&gt; hook);
+    void resetHelpHook(void);
+    void disableHelp(void);
+    void setBinary(const std::string&amp; binary);
+    void setDescription(const std::string&amp; description);
+    const std::string&amp; getBinary(void) const;
+    const std::string&amp; getDescription(void) const;
+    const std::unordered_map&lt;std::string, utils::arguments::Usage&gt;&amp; getUsages(void) const;
+    const std::unordered_map&lt;std::string, utils::arguments::Option&gt;&amp; getOptions(void) const;
+    const std::unordered_map&lt;std::string, utils::arguments::Flag&gt;&amp; getFlags(void) const;
+    ArgParser(const std::string&amp; binary = "[None]", const std::string&amp; description = "...");
+    ~ArgParser() = default;
+};</code></pre><h3 id="h-arguments-argparsertype-hpp"><code>utils/arguments/ArgParserType.hpp</code></h3><p>Declaration of the ArgParser type for void &amp; non void function</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::arguments
+struct ParsedUsageFull {
+    std::string id; // empty -&gt; nothing
+    bool valid = true; // keep the usage for the final return
+    bool ordered = false; // is the usage ordered
+    std::deque&lt;std::pair&lt;std::string, bool&gt;&gt; ids; // ids that are still not used in the arguments
+    std::vector&lt;std::tuple&lt;std::string, bool, std::vector&lt;std::string&gt;&gt;&gt; arguments; // &lt;id, option(true)|flag(false), {option}&gt;
+};
+struct ParsedUsage {
+    std::string id; // empty -&gt; nothing
+    std::vector&lt;std::tuple&lt;std::string, bool, std::vector&lt;std::string&gt;&gt;&gt; arguments; // &lt;id, option(true)|flag(false), {option}&gt;
+};
+struct Usage {
+    std::string name; // special name: default -&gt; allow all flag (like no usage defined)
+    bool ordered = false; // The order of the option will always matter, Raw option will be forced in mandatory
+    std::vector&lt;std::pair&lt;std::string, bool&gt;&gt; ids; // List of ids allowed by this usage &lt;id, mandatory&gt;
+    std::string description = "[None]";
+};
+struct Option {
+    std::string name;
+    bool exact = false;
+    std::function&lt;std::optional&lt;std::string&gt;(const std::string&amp;)&gt; check;
+    std::string description = "[None]";
+};
+struct Flag {
+    std::tuple&lt;std::string, std::string, std::string, std::string&gt; flag; // &lt;short, flag, long, env&gt;
+    std::pair&lt;bool, bool&gt; unlimited = {false, false}; // &lt;ulimited, ignore flag&gt;
+    std::vector&lt;std::tuple&lt;std::string, bool, std::function&lt;std::optional&lt;std::string&gt;(const std::string&amp;)&gt;&gt;&gt; options; // &lt;name, mandatory, check&gt;, the order matter
+    std::string description = "[None]";
+};
+using ParsedUsages = std::vector&lt;utils::arguments::ParsedUsage&gt;;</code></pre><h3 id="h-arguments-setting-hpp"><code>utils/arguments/Setting.hpp</code></h3><p>Declaration of the Setting class used in Settings</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::arguments
+std::string demangle(const char* mangledName);
+class Setting: private utils::security::observer::Observer&lt;"Setting"&gt; {
+    template&lt;typename T&gt; const T&amp; get(void) const;
+    template&lt;typename T&gt; T&amp; get(void); // edit in place
+    template&lt;typename T&gt; bool is(void) const;
+    template&lt;typename T&gt; void assign(T&amp;&amp; setting); // reuse the node (no Observer relink)
+    Setting&amp; operator=(Setting&amp;&amp; other) = default;
+    template&lt;typename T&gt; operator T(void) const;
+    template&lt;typename T&gt; requires (!std::same_as&lt;std::remove_cvref_t&lt;T&gt;, utils::arguments::Setting&gt;) Setting(T&amp;&amp; setting);
+    Setting(Setting&amp;&amp; other) = default;
+    ~Setting() = default;
+};</code></pre><h3 id="h-arguments-settings-hpp"><code>utils/arguments/Settings.hpp</code></h3><p>Declaration of the Settings class used for settings handling</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::arguments
+struct SettingsHash {
+    using is_transparent = void;
+    std::size_t operator()(std::string_view key) const noexcept;
+};
+class Settings: private utils::security::observer::Observer&lt;"Settings"&gt; {
+    const utils::arguments::Setting&amp; at(std::string_view id) const;
+    utils::arguments::Setting&amp; at(std::string_view id);
+    template&lt;bool force = false&gt; utils::arguments::CastType autoCast(const std::string&amp; id, const std::string&amp; setting);
+    template&lt;utils::arguments::CastType type, bool force = false&gt; void cast(const std::string&amp; id, const std::string&amp; setting);
+    template&lt;typename T&gt; void add(const std::string&amp; id, T&amp;&amp; setting);
+    template&lt;typename T&gt; void add(std::string&amp;&amp; id, T&amp;&amp; setting);
+    template&lt;bool force = true, typename T&gt; void set(const std::string&amp; id, T&amp;&amp; setting);
+    template&lt;bool force = true, typename T&gt; void set(std::string&amp;&amp; id, T&amp;&amp; setting);
+    template&lt;bool failsafe = false&gt; void remove(std::string_view id);
+    void clear(void);
+    template&lt;typename T&gt; const T&amp; get(std::string_view id) const;
+    template&lt;typename T&gt; T&amp; get(std::string_view id);
+    const utils::arguments::Setting&amp; get(std::string_view id) const;
+    bool contains(std::string_view id) const;
+    Settings&amp; operator=(Settings&amp;&amp; other) = default;
+    utils::arguments::Setting&amp; operator[](std::string_view id);
+    const utils::arguments::Setting&amp; operator[](std::string_view id) const;
+    Settings() = default;
+    Settings(Settings&amp;&amp; other) = default;
+    ~Settings() = default;
+};</code></pre><h3 id="h-arguments-settingsdefine-hpp"><code>utils/arguments/SettingsDefine.hpp</code></h3><p>Enum &amp; Include handling used in settings handling</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::arguments
+using float16_t = std::float16_t;
+using float32_t = std::float32_t;
+using float64_t = std::float64_t;
+using float128_t = std::float128_t;
+using float16_t = float;
+using float32_t = float;
+using float64_t = double;
+using float128_t = long double;
+enum class CastType: std::size_t {None, Byte, Bool, Int8, Int16, Int32, Int64, UInt8, UInt16, UInt32, UInt64, Float16, Float32, Float64, Float128, Char8, Char16, Char32, U8String, U16String, U32String, WChar, WString, Path}</code></pre></div><div data-lang="fr"><p>Lu dans les en-têtes de <code>include/utils/arguments/</code> (partie publique seulement, avec les commentaires du code). Inclure <code>&lt;utils/utils.hpp&gt;</code> avec le define de la section, jamais ces en-têtes un par un.</p><h3 id="h-arguments-argparser-hpp"><code>utils/arguments/ArgParser.hpp</code></h3><p>Declaration of the ArgParser class for arguments handling</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::arguments
+void defaultHelpHook(const utils::arguments::ArgParser&amp; parser);
+std::optional&lt;std::string&gt; defaultBoolParsingHook(const std::string&amp; option); // Parse boolean (0, 1, fase, true)
+std::optional&lt;std::string&gt; defaultInt32ParsingHook(const std::string&amp; option); // Parse std::int32_t
+std::optional&lt;std::string&gt; defaultSizetParsingHook(const std::string&amp; option); // Parse std::size_t
+std::optional&lt;std::string&gt; defaultDoubleParsingHook(const std::string&amp; option); // Parse double
+std::optional&lt;std::string&gt; defaultFileParsingHook(const std::string&amp; option); // Check for file reading (only!)
+std::optional&lt;std::string&gt; defaultDirectoryParsingHook(const std::string&amp; option); // Check for directory reading (only!)
+std::optional&lt;std::string&gt; defaultWritableParsingHook(const std::string&amp; option); // Check if the path/file is readable &amp; writable (only!)
+std::optional&lt;std::string&gt; defaultTrueParsingHook(const std::string&amp;);
+class ArgParser: private utils::security::observer::Observer&lt;"ArgParser"&gt; {
+    void help(void) const; // Help display (using hook)
+    utils::arguments::ParsedUsages parse(const int argc, const char* const argv[], const bool failsafe = false) const;
+    utils::arguments::ParsedUsages parse(const std::vector&lt;std::string&gt;&amp; argv, const bool failsafe = false) const;
+    void removeUsage(const std::string&amp; id);
+    void removeUsages(const std::vector&lt;std::string&gt;&amp; ids);
+    void removeOption(const std::string&amp; id);
+    void removeOptions(const std::vector&lt;std::string&gt;&amp; ids);
+    void removeFlag(const std::string&amp; id);
+    void removeFlags(const std::vector&lt;std::string&gt;&amp; ids);
+    void setDefaultUsage(void);
+    template&lt;bool force = false&gt; void setUsage(const std::string&amp; id, const std::string&amp; name, const bool ordered, const std::vector&lt;std::pair&lt;std::string, bool&gt;&gt;&amp; ids, const std::string&amp; description = "[None]");
+    void resetUsages(void);
+    template&lt;bool force = false&gt; void setOption(const std::string&amp; id, const std::string&amp; name, std::function&lt;std::optional&lt;std::string&gt;(const std::string&amp;)&gt; check, const std::string&amp; description = "[None]");
+    template&lt;bool force = false&gt; void setOption(const std::string&amp; id, const std::string&amp; name, const std::string&amp; description = "[None]");
+    void resetOptions(void);
+    template&lt;bool force = false&gt; void setFlag(const std::string&amp; id, const std::tuple&lt;std::string, std::string, std::string, std::string&gt;&amp; flag, const std::vector&lt;std::tuple&lt;std::string, bool, std::function&lt;std::optional&lt;std::string&gt;(const std::string&amp;)&gt;&gt;&gt;&amp; options, const std::string&amp; description = "[None]", const bool unlimited = false, const bool ignore_case = false);
+    void resetFlags(void);
+    void setHelpHook(std::function&lt;void(const utils::arguments::ArgParser&amp; parser)&gt; hook);
+    void resetHelpHook(void);
+    void disableHelp(void);
+    void setBinary(const std::string&amp; binary);
+    void setDescription(const std::string&amp; description);
+    const std::string&amp; getBinary(void) const;
+    const std::string&amp; getDescription(void) const;
+    const std::unordered_map&lt;std::string, utils::arguments::Usage&gt;&amp; getUsages(void) const;
+    const std::unordered_map&lt;std::string, utils::arguments::Option&gt;&amp; getOptions(void) const;
+    const std::unordered_map&lt;std::string, utils::arguments::Flag&gt;&amp; getFlags(void) const;
+    ArgParser(const std::string&amp; binary = "[None]", const std::string&amp; description = "...");
+    ~ArgParser() = default;
+};</code></pre><h3 id="h-arguments-argparsertype-hpp"><code>utils/arguments/ArgParserType.hpp</code></h3><p>Declaration of the ArgParser type for void &amp; non void function</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::arguments
+struct ParsedUsageFull {
+    std::string id; // empty -&gt; nothing
+    bool valid = true; // keep the usage for the final return
+    bool ordered = false; // is the usage ordered
+    std::deque&lt;std::pair&lt;std::string, bool&gt;&gt; ids; // ids that are still not used in the arguments
+    std::vector&lt;std::tuple&lt;std::string, bool, std::vector&lt;std::string&gt;&gt;&gt; arguments; // &lt;id, option(true)|flag(false), {option}&gt;
+};
+struct ParsedUsage {
+    std::string id; // empty -&gt; nothing
+    std::vector&lt;std::tuple&lt;std::string, bool, std::vector&lt;std::string&gt;&gt;&gt; arguments; // &lt;id, option(true)|flag(false), {option}&gt;
+};
+struct Usage {
+    std::string name; // special name: default -&gt; allow all flag (like no usage defined)
+    bool ordered = false; // The order of the option will always matter, Raw option will be forced in mandatory
+    std::vector&lt;std::pair&lt;std::string, bool&gt;&gt; ids; // List of ids allowed by this usage &lt;id, mandatory&gt;
+    std::string description = "[None]";
+};
+struct Option {
+    std::string name;
+    bool exact = false;
+    std::function&lt;std::optional&lt;std::string&gt;(const std::string&amp;)&gt; check;
+    std::string description = "[None]";
+};
+struct Flag {
+    std::tuple&lt;std::string, std::string, std::string, std::string&gt; flag; // &lt;short, flag, long, env&gt;
+    std::pair&lt;bool, bool&gt; unlimited = {false, false}; // &lt;ulimited, ignore flag&gt;
+    std::vector&lt;std::tuple&lt;std::string, bool, std::function&lt;std::optional&lt;std::string&gt;(const std::string&amp;)&gt;&gt;&gt; options; // &lt;name, mandatory, check&gt;, the order matter
+    std::string description = "[None]";
+};
+using ParsedUsages = std::vector&lt;utils::arguments::ParsedUsage&gt;;</code></pre><h3 id="h-arguments-setting-hpp"><code>utils/arguments/Setting.hpp</code></h3><p>Declaration of the Setting class used in Settings</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::arguments
+std::string demangle(const char* mangledName);
+class Setting: private utils::security::observer::Observer&lt;"Setting"&gt; {
+    template&lt;typename T&gt; const T&amp; get(void) const;
+    template&lt;typename T&gt; T&amp; get(void); // edit in place
+    template&lt;typename T&gt; bool is(void) const;
+    template&lt;typename T&gt; void assign(T&amp;&amp; setting); // reuse the node (no Observer relink)
+    Setting&amp; operator=(Setting&amp;&amp; other) = default;
+    template&lt;typename T&gt; operator T(void) const;
+    template&lt;typename T&gt; requires (!std::same_as&lt;std::remove_cvref_t&lt;T&gt;, utils::arguments::Setting&gt;) Setting(T&amp;&amp; setting);
+    Setting(Setting&amp;&amp; other) = default;
+    ~Setting() = default;
+};</code></pre><h3 id="h-arguments-settings-hpp"><code>utils/arguments/Settings.hpp</code></h3><p>Declaration of the Settings class used for settings handling</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::arguments
+struct SettingsHash {
+    using is_transparent = void;
+    std::size_t operator()(std::string_view key) const noexcept;
+};
+class Settings: private utils::security::observer::Observer&lt;"Settings"&gt; {
+    const utils::arguments::Setting&amp; at(std::string_view id) const;
+    utils::arguments::Setting&amp; at(std::string_view id);
+    template&lt;bool force = false&gt; utils::arguments::CastType autoCast(const std::string&amp; id, const std::string&amp; setting);
+    template&lt;utils::arguments::CastType type, bool force = false&gt; void cast(const std::string&amp; id, const std::string&amp; setting);
+    template&lt;typename T&gt; void add(const std::string&amp; id, T&amp;&amp; setting);
+    template&lt;typename T&gt; void add(std::string&amp;&amp; id, T&amp;&amp; setting);
+    template&lt;bool force = true, typename T&gt; void set(const std::string&amp; id, T&amp;&amp; setting);
+    template&lt;bool force = true, typename T&gt; void set(std::string&amp;&amp; id, T&amp;&amp; setting);
+    template&lt;bool failsafe = false&gt; void remove(std::string_view id);
+    void clear(void);
+    template&lt;typename T&gt; const T&amp; get(std::string_view id) const;
+    template&lt;typename T&gt; T&amp; get(std::string_view id);
+    const utils::arguments::Setting&amp; get(std::string_view id) const;
+    bool contains(std::string_view id) const;
+    Settings&amp; operator=(Settings&amp;&amp; other) = default;
+    utils::arguments::Setting&amp; operator[](std::string_view id);
+    const utils::arguments::Setting&amp; operator[](std::string_view id) const;
+    Settings() = default;
+    Settings(Settings&amp;&amp; other) = default;
+    ~Settings() = default;
+};</code></pre><h3 id="h-arguments-settingsdefine-hpp"><code>utils/arguments/SettingsDefine.hpp</code></h3><p>Enum &amp; Include handling used in settings handling</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::arguments
+using float16_t = std::float16_t;
+using float32_t = std::float32_t;
+using float64_t = std::float64_t;
+using float128_t = std::float128_t;
+using float16_t = float;
+using float32_t = float;
+using float64_t = double;
+using float128_t = long double;
+enum class CastType: std::size_t {None, Byte, Bool, Int8, Int16, Int32, Int64, UInt8, UInt16, UInt32, UInt64, Float16, Float32, Float64, Float128, Char8, Char16, Char32, U8String, U16String, U32String, WChar, WString, Path}</code></pre></div></section><section id="c-api"><h2>6. <span data-lang="en">C API</span><span data-lang="fr">API C</span></h2><div data-lang="en"><p>Read from <code>include/utils/arguments/CApi.h</code>, included by <code>&lt;utils.h&gt;</code> with the define of the section. Every function that can fail returns <code>UTILS_OK</code> / <code>UTILS_KO</code> (or <code>NULL</code> / <code>0</code>) and fills <code>utils_exception</code> (see <a href="c-api.html#errors">the C API guide</a>).</p><h3 id="c-1">Macros · Settings of the fixed types</h3><p><em>settings of the fixed types (str: const char* copied in a std::string, given back valid until the setting is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_SETTINGS_DECL(name, ctype) \
+    int utils_settings_add_##name(utils_settings_t* settings, const char* id, ctype value); /* an existing one is refused */ \
+    int utils_settings_set_##name(utils_settings_t* settings, const char* id, ctype value, bool force); /* force: override an existing one */ \
+    int utils_settings_get_##name(const utils_settings_t* settings, const char* id, ctype* value); /* UTILS_KO: unknown id or another type */ \
+    bool utils_settings_is_##name(const utils_settings_t* settings, const char* id);</code></pre><h3 id="c-2">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_argparser utils_argparser_t; // utils::arguments::ArgParser
+typedef struct utils_argparser_result utils_argparser_result_t; // utils::arguments::ParsedUsages (return of the parsing)
+typedef struct utils_settings utils_settings_t; // utils::arguments::Settings</code></pre><h3 id="c-3">Types · Callbacks</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef int (*utils_argparser_check_t)(const char* option, void* data); // UTILS_OK: valid, UTILS_KO: the message is the info of utils_fail
+typedef int (*utils_argparser_help_hook_t)(const utils_argparser_t* parser, void* data); // display the help</code></pre><h3 id="c-4">Enums · Type of a setting</h3><p><em>type of a setting (utils::arguments::CastType)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_settings_cast {
+    C_API_SETTINGS_CAST_NONE = 0, // string (const char*)</code></pre><h3 id="c-5">Enums · Basic</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_SETTINGS_CAST_BYTE,
+C_API_SETTINGS_CAST_BOOL,</code></pre><h3 id="c-6">Enums · Integer</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_SETTINGS_CAST_INT8,
+C_API_SETTINGS_CAST_INT16,
+C_API_SETTINGS_CAST_INT32,
+C_API_SETTINGS_CAST_INT64,</code></pre><h3 id="c-7">Enums · Unsigned integer</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_SETTINGS_CAST_UINT8,
+C_API_SETTINGS_CAST_UINT16,
+C_API_SETTINGS_CAST_UINT32,
+C_API_SETTINGS_CAST_UINT64,</code></pre><h3 id="c-8">Enums · Floating</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_SETTINGS_CAST_FLOAT16,
+C_API_SETTINGS_CAST_FLOAT32,
+C_API_SETTINGS_CAST_FLOAT64,
+C_API_SETTINGS_CAST_FLOAT128,</code></pre><h3 id="c-9">Enums · Char</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_SETTINGS_CAST_CHAR8,
+C_API_SETTINGS_CAST_CHAR16,
+C_API_SETTINGS_CAST_CHAR32,
+C_API_SETTINGS_CAST_U8STRING,
+C_API_SETTINGS_CAST_U16STRING,
+C_API_SETTINGS_CAST_U32STRING,</code></pre><h3 id="c-10">Enums · Huge char</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_SETTINGS_CAST_WCHAR,
+C_API_SETTINGS_CAST_WSTRING,</code></pre><h3 id="c-11">Enums · Special</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_SETTINGS_CAST_PATH,</code></pre><h3 id="c-12">Enums · C API only</h3><p><em>C API only (utils_settings_get_type)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">    C_API_SETTINGS_CAST_OTHER = 1000 // a type without cast (char, bytes, size_t when it's not a uint64_t, ...)
+} utils_settings_cast_t;</code></pre><h3 id="c-13">Structures · Option of a flag</h3><p><em>option of a flag (utils_argparser_set_flag)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_argparser_flag_option {
+    const char* name;
+    bool mandatory;
+    utils_argparser_check_t check; // NULL: no check
+    void* data; // given to check
+} utils_argparser_flag_option_t;</code></pre><h3 id="c-14">Functions · Argparser</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_argparser_t* utils_argparser_create(const char* binary, const char* description); // NULL: "[None]" / "...", NULL on error
+void utils_argparser_destroy(utils_argparser_t* parser); // NULL: nothing
+int utils_argparser_help(const utils_argparser_t* parser); // display the help (help hook)</code></pre><h3 id="c-15">Functions · Parsing</h3><p><em>parsing (the first argument is ignored), the result: NULL on error (failsafe: no throw on invalid arguments, only the valid usages)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_argparser_result_t* utils_argparser_parse(const utils_argparser_t* parser, int argc, const char* const* argv, bool failsafe);</code></pre><h3 id="c-16">Functions · Setup</h3><p><em>setup (force: override an existing one, else refused)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_argparser_set_default_usage(utils_argparser_t* parser); // "default": every flag &amp; option
+int utils_argparser_set_usage(utils_argparser_t* parser, const char* id, const char* name, bool ordered, const char* const* ids, const bool* mandatory, size_t count, const char* description, bool force); // description: NULL = "[None]"
+int utils_argparser_set_option(utils_argparser_t* parser, const char* id, const char* name, utils_argparser_check_t check, void* data, const char* description, bool force); // check: NULL = no check
+int utils_argparser_set_flag(utils_argparser_t* parser, const char* id, const char* short_flag, const char* flag, const char* long_flag, const char* env, const utils_argparser_flag_option_t* options, size_t count, const char* description, bool unlimited, bool ignore_case, bool force); // NULL flag name: "" (not used)
+int utils_argparser_remove_usage(utils_argparser_t* parser, const char* id);
+int utils_argparser_remove_usages(utils_argparser_t* parser, const char* const* ids, size_t count);
+int utils_argparser_remove_option(utils_argparser_t* parser, const char* id);
+int utils_argparser_remove_options(utils_argparser_t* parser, const char* const* ids, size_t count);
+int utils_argparser_remove_flag(utils_argparser_t* parser, const char* id);
+int utils_argparser_remove_flags(utils_argparser_t* parser, const char* const* ids, size_t count);
+int utils_argparser_reset_usages(utils_argparser_t* parser);
+int utils_argparser_reset_options(utils_argparser_t* parser);
+int utils_argparser_reset_flags(utils_argparser_t* parser);</code></pre><h3 id="c-17">Functions · Hooks</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_argparser_set_help_hook(utils_argparser_t* parser, utils_argparser_help_hook_t hook, void* data);
+int utils_argparser_reset_help_hook(utils_argparser_t* parser);
+int utils_argparser_default_help_hook(const utils_argparser_t* parser);</code></pre><h3 id="c-18">Functions · Default checks</h3><p><em>default checks (usable as a check callback, data ignored)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_argparser_check_true(const char* option, void* data); // always valid
+int utils_argparser_check_bool(const char* option, void* data); // 0, 1, false, true
+int utils_argparser_check_int32(const char* option, void* data);
+int utils_argparser_check_sizet(const char* option, void* data);
+int utils_argparser_check_double(const char* option, void* data);
+int utils_argparser_check_file(const char* option, void* data); // readable file
+int utils_argparser_check_directory(const char* option, void* data); // readable directory
+int utils_argparser_check_writable(const char* option, void* data); // readable &amp; writable path</code></pre><h3 id="c-19">Functions · Setter / getter</h3><p><em>setter / getter (strings: valid until the parser is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_argparser_disable_help(utils_argparser_t* parser); // no default -h
+int utils_argparser_set_binary(utils_argparser_t* parser, const char* binary);
+int utils_argparser_set_description(utils_argparser_t* parser, const char* description);
+const char* utils_argparser_get_binary(const utils_argparser_t* parser);
+const char* utils_argparser_get_description(const utils_argparser_t* parser);</code></pre><h3 id="c-20">Functions · Usages / options / flags of the parser</h3><p><em>usages / options / flags of the parser (index: any order, valid until the parser is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">size_t utils_argparser_usages_count(const utils_argparser_t* parser);
+const char* utils_argparser_usage_id(const utils_argparser_t* parser, size_t i);
+int utils_argparser_get_usage(const utils_argparser_t* parser, const char* id, const char** name, bool* ordered, const char** description); // each output: optional
+size_t utils_argparser_usage_ids_count(const utils_argparser_t* parser, const char* id);
+int utils_argparser_usage_get_id(const utils_argparser_t* parser, const char* id, size_t i, const char** option_id, bool* mandatory);
+size_t utils_argparser_options_count(const utils_argparser_t* parser);
+const char* utils_argparser_option_id(const utils_argparser_t* parser, size_t i);
+int utils_argparser_get_option(const utils_argparser_t* parser, const char* id, const char** name, bool* exact, const char** description); // each output: optional
+size_t utils_argparser_flags_count(const utils_argparser_t* parser);
+const char* utils_argparser_flag_id(const utils_argparser_t* parser, size_t i);
+int utils_argparser_get_flag(const utils_argparser_t* parser, const char* id, const char** short_flag, const char** flag, const char** long_flag, const char** env, const char** description, bool* unlimited); // each output: optional
+size_t utils_argparser_flag_options_count(const utils_argparser_t* parser, const char* id);
+int utils_argparser_flag_get_option(const utils_argparser_t* parser, const char* id, size_t i, const char** name, bool* mandatory);</code></pre><h3 id="c-21">Functions · Result of the parsing</h3><p><em>result of the parsing (one usage = an id &amp; its arguments: an option or a flag with its values)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">void utils_argparser_result_destroy(utils_argparser_result_t* result); // NULL: nothing
+size_t utils_argparser_result_count(const utils_argparser_result_t* result); // number of usages
+const char* utils_argparser_result_usage(const utils_argparser_result_t* result, size_t i); // id of the usage i ("": nothing), NULL on error
+size_t utils_argparser_result_arguments_count(const utils_argparser_result_t* result, size_t i);
+const char* utils_argparser_result_argument_id(const utils_argparser_result_t* result, size_t i, size_t j); // NULL on error
+bool utils_argparser_result_argument_is_option(const utils_argparser_result_t* result, size_t i, size_t j); // option (true) or flag (false)
+size_t utils_argparser_result_values_count(const utils_argparser_result_t* result, size_t i, size_t j);
+const char* utils_argparser_result_value(const utils_argparser_result_t* result, size_t i, size_t j, size_t k); // NULL on error</code></pre><h3 id="c-22">Functions · Settings</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_settings_t* utils_settings_create(void); // NULL on error
+void utils_settings_destroy(utils_settings_t* settings); // NULL: nothing
+int utils_settings_auto_cast(utils_settings_t* settings, const char* id, const char* setting, bool force, utils_settings_cast_t* type); // type found &amp; stored (type: optional)
+int utils_settings_cast(utils_settings_t* settings, const char* id, const char* setting, utils_settings_cast_t type, bool force);
+int utils_settings_remove(utils_settings_t* settings, const char* id, bool failsafe); // failsafe: an unknown id is not an error
+int utils_settings_clear(utils_settings_t* settings);
+bool utils_settings_contains(const utils_settings_t* settings, const char* id);
+utils_settings_cast_t utils_settings_get_type(const utils_settings_t* settings, const char* id); // C_API_SETTINGS_CAST_OTHER: unknown id (error) or a type without cast</code></pre><h3 id="c-23">Functions · Settings of the fixed types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_TYPES(C_API_SETTINGS_DECL)</code></pre><h3 id="c-24">Functions · Settings of the types of the casts</h3><p><em>settings of the types of the casts (strings: valid until the setting is changed, size: optional)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_SETTINGS_DECL(byte, uint8_t) // std::byte
+C_API_SETTINGS_DECL(char8, uint8_t) // char8_t
+C_API_SETTINGS_DECL(char16, uint_least16_t) // char16_t
+C_API_SETTINGS_DECL(char32, uint_least32_t) // char32_t
+C_API_SETTINGS_DECL(wchar, wchar_t)
+C_API_SETTINGS_DECL(u8string, const char*) // std::u8string (utf-8)
+C_API_SETTINGS_DECL(path, const char*) // std::filesystem::path (the path given back: valid until the next utils_settings_get_path of the thread)
+int utils_settings_set_u16string(utils_settings_t* settings, const char* id, const uint_least16_t* str, size_t size, bool force); // std::u16string
+int utils_settings_get_u16string(const utils_settings_t* settings, const char* id, const uint_least16_t** str, size_t* size);
+bool utils_settings_is_u16string(const utils_settings_t* settings, const char* id);
+int utils_settings_set_u32string(utils_settings_t* settings, const char* id, const uint_least32_t* str, size_t size, bool force); // std::u32string
+int utils_settings_get_u32string(const utils_settings_t* settings, const char* id, const uint_least32_t** str, size_t* size);
+bool utils_settings_is_u32string(const utils_settings_t* settings, const char* id);
+int utils_settings_set_wstring(utils_settings_t* settings, const char* id, const wchar_t* str, size_t size, bool force); // std::wstring
+int utils_settings_get_wstring(const utils_settings_t* settings, const char* id, const wchar_t** str, size_t* size);
+bool utils_settings_is_wstring(const utils_settings_t* settings, const char* id);</code></pre><h3 id="c-25">Functions · Settings of bytes</h3><p><em>settings of bytes (generic: data + size, copied)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_settings_set_bytes(utils_settings_t* settings, const char* id, const void* data, size_t size, bool force);
+int utils_settings_get_bytes(const utils_settings_t* settings, const char* id, const void** data, size_t* size);
+bool utils_settings_is_bytes(const utils_settings_t* settings, const char* id);</code></pre></div><div data-lang="fr"><p>Lu dans <code>include/utils/arguments/CApi.h</code>, inclus par <code>&lt;utils.h&gt;</code> avec le define de la section. Chaque fonction qui peut échouer renvoie <code>UTILS_OK</code> / <code>UTILS_KO</code> (ou <code>NULL</code> / <code>0</code>) et remplit <code>utils_exception</code> (voir <a href="c-api.html#errors">le guide de l'API C</a>).</p><h3 id="c-1">Macros · Settings of the fixed types</h3><p><em>settings of the fixed types (str: const char* copied in a std::string, given back valid until the setting is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_SETTINGS_DECL(name, ctype) \
+    int utils_settings_add_##name(utils_settings_t* settings, const char* id, ctype value); /* an existing one is refused */ \
+    int utils_settings_set_##name(utils_settings_t* settings, const char* id, ctype value, bool force); /* force: override an existing one */ \
+    int utils_settings_get_##name(const utils_settings_t* settings, const char* id, ctype* value); /* UTILS_KO: unknown id or another type */ \
+    bool utils_settings_is_##name(const utils_settings_t* settings, const char* id);</code></pre><h3 id="c-2">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_argparser utils_argparser_t; // utils::arguments::ArgParser
+typedef struct utils_argparser_result utils_argparser_result_t; // utils::arguments::ParsedUsages (return of the parsing)
+typedef struct utils_settings utils_settings_t; // utils::arguments::Settings</code></pre><h3 id="c-3">Types · Callbacks</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef int (*utils_argparser_check_t)(const char* option, void* data); // UTILS_OK: valid, UTILS_KO: the message is the info of utils_fail
+typedef int (*utils_argparser_help_hook_t)(const utils_argparser_t* parser, void* data); // display the help</code></pre><h3 id="c-4">Énumérations · Type of a setting</h3><p><em>type of a setting (utils::arguments::CastType)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_settings_cast {
+    C_API_SETTINGS_CAST_NONE = 0, // string (const char*)</code></pre><h3 id="c-5">Énumérations · Basic</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_SETTINGS_CAST_BYTE,
+C_API_SETTINGS_CAST_BOOL,</code></pre><h3 id="c-6">Énumérations · Integer</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_SETTINGS_CAST_INT8,
+C_API_SETTINGS_CAST_INT16,
+C_API_SETTINGS_CAST_INT32,
+C_API_SETTINGS_CAST_INT64,</code></pre><h3 id="c-7">Énumérations · Unsigned integer</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_SETTINGS_CAST_UINT8,
+C_API_SETTINGS_CAST_UINT16,
+C_API_SETTINGS_CAST_UINT32,
+C_API_SETTINGS_CAST_UINT64,</code></pre><h3 id="c-8">Énumérations · Floating</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_SETTINGS_CAST_FLOAT16,
+C_API_SETTINGS_CAST_FLOAT32,
+C_API_SETTINGS_CAST_FLOAT64,
+C_API_SETTINGS_CAST_FLOAT128,</code></pre><h3 id="c-9">Énumérations · Char</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_SETTINGS_CAST_CHAR8,
+C_API_SETTINGS_CAST_CHAR16,
+C_API_SETTINGS_CAST_CHAR32,
+C_API_SETTINGS_CAST_U8STRING,
+C_API_SETTINGS_CAST_U16STRING,
+C_API_SETTINGS_CAST_U32STRING,</code></pre><h3 id="c-10">Énumérations · Huge char</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_SETTINGS_CAST_WCHAR,
+C_API_SETTINGS_CAST_WSTRING,</code></pre><h3 id="c-11">Énumérations · Special</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_SETTINGS_CAST_PATH,</code></pre><h3 id="c-12">Énumérations · C API only</h3><p><em>C API only (utils_settings_get_type)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">    C_API_SETTINGS_CAST_OTHER = 1000 // a type without cast (char, bytes, size_t when it's not a uint64_t, ...)
+} utils_settings_cast_t;</code></pre><h3 id="c-13">Structures · Option of a flag</h3><p><em>option of a flag (utils_argparser_set_flag)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_argparser_flag_option {
+    const char* name;
+    bool mandatory;
+    utils_argparser_check_t check; // NULL: no check
+    void* data; // given to check
+} utils_argparser_flag_option_t;</code></pre><h3 id="c-14">Fonctions · Argparser</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_argparser_t* utils_argparser_create(const char* binary, const char* description); // NULL: "[None]" / "...", NULL on error
+void utils_argparser_destroy(utils_argparser_t* parser); // NULL: nothing
+int utils_argparser_help(const utils_argparser_t* parser); // display the help (help hook)</code></pre><h3 id="c-15">Fonctions · Parsing</h3><p><em>parsing (the first argument is ignored), the result: NULL on error (failsafe: no throw on invalid arguments, only the valid usages)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_argparser_result_t* utils_argparser_parse(const utils_argparser_t* parser, int argc, const char* const* argv, bool failsafe);</code></pre><h3 id="c-16">Fonctions · Setup</h3><p><em>setup (force: override an existing one, else refused)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_argparser_set_default_usage(utils_argparser_t* parser); // "default": every flag &amp; option
+int utils_argparser_set_usage(utils_argparser_t* parser, const char* id, const char* name, bool ordered, const char* const* ids, const bool* mandatory, size_t count, const char* description, bool force); // description: NULL = "[None]"
+int utils_argparser_set_option(utils_argparser_t* parser, const char* id, const char* name, utils_argparser_check_t check, void* data, const char* description, bool force); // check: NULL = no check
+int utils_argparser_set_flag(utils_argparser_t* parser, const char* id, const char* short_flag, const char* flag, const char* long_flag, const char* env, const utils_argparser_flag_option_t* options, size_t count, const char* description, bool unlimited, bool ignore_case, bool force); // NULL flag name: "" (not used)
+int utils_argparser_remove_usage(utils_argparser_t* parser, const char* id);
+int utils_argparser_remove_usages(utils_argparser_t* parser, const char* const* ids, size_t count);
+int utils_argparser_remove_option(utils_argparser_t* parser, const char* id);
+int utils_argparser_remove_options(utils_argparser_t* parser, const char* const* ids, size_t count);
+int utils_argparser_remove_flag(utils_argparser_t* parser, const char* id);
+int utils_argparser_remove_flags(utils_argparser_t* parser, const char* const* ids, size_t count);
+int utils_argparser_reset_usages(utils_argparser_t* parser);
+int utils_argparser_reset_options(utils_argparser_t* parser);
+int utils_argparser_reset_flags(utils_argparser_t* parser);</code></pre><h3 id="c-17">Fonctions · Hooks</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_argparser_set_help_hook(utils_argparser_t* parser, utils_argparser_help_hook_t hook, void* data);
+int utils_argparser_reset_help_hook(utils_argparser_t* parser);
+int utils_argparser_default_help_hook(const utils_argparser_t* parser);</code></pre><h3 id="c-18">Fonctions · Default checks</h3><p><em>default checks (usable as a check callback, data ignored)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_argparser_check_true(const char* option, void* data); // always valid
+int utils_argparser_check_bool(const char* option, void* data); // 0, 1, false, true
+int utils_argparser_check_int32(const char* option, void* data);
+int utils_argparser_check_sizet(const char* option, void* data);
+int utils_argparser_check_double(const char* option, void* data);
+int utils_argparser_check_file(const char* option, void* data); // readable file
+int utils_argparser_check_directory(const char* option, void* data); // readable directory
+int utils_argparser_check_writable(const char* option, void* data); // readable &amp; writable path</code></pre><h3 id="c-19">Fonctions · Setter / getter</h3><p><em>setter / getter (strings: valid until the parser is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_argparser_disable_help(utils_argparser_t* parser); // no default -h
+int utils_argparser_set_binary(utils_argparser_t* parser, const char* binary);
+int utils_argparser_set_description(utils_argparser_t* parser, const char* description);
+const char* utils_argparser_get_binary(const utils_argparser_t* parser);
+const char* utils_argparser_get_description(const utils_argparser_t* parser);</code></pre><h3 id="c-20">Fonctions · Usages / options / flags of the parser</h3><p><em>usages / options / flags of the parser (index: any order, valid until the parser is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">size_t utils_argparser_usages_count(const utils_argparser_t* parser);
+const char* utils_argparser_usage_id(const utils_argparser_t* parser, size_t i);
+int utils_argparser_get_usage(const utils_argparser_t* parser, const char* id, const char** name, bool* ordered, const char** description); // each output: optional
+size_t utils_argparser_usage_ids_count(const utils_argparser_t* parser, const char* id);
+int utils_argparser_usage_get_id(const utils_argparser_t* parser, const char* id, size_t i, const char** option_id, bool* mandatory);
+size_t utils_argparser_options_count(const utils_argparser_t* parser);
+const char* utils_argparser_option_id(const utils_argparser_t* parser, size_t i);
+int utils_argparser_get_option(const utils_argparser_t* parser, const char* id, const char** name, bool* exact, const char** description); // each output: optional
+size_t utils_argparser_flags_count(const utils_argparser_t* parser);
+const char* utils_argparser_flag_id(const utils_argparser_t* parser, size_t i);
+int utils_argparser_get_flag(const utils_argparser_t* parser, const char* id, const char** short_flag, const char** flag, const char** long_flag, const char** env, const char** description, bool* unlimited); // each output: optional
+size_t utils_argparser_flag_options_count(const utils_argparser_t* parser, const char* id);
+int utils_argparser_flag_get_option(const utils_argparser_t* parser, const char* id, size_t i, const char** name, bool* mandatory);</code></pre><h3 id="c-21">Fonctions · Result of the parsing</h3><p><em>result of the parsing (one usage = an id &amp; its arguments: an option or a flag with its values)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">void utils_argparser_result_destroy(utils_argparser_result_t* result); // NULL: nothing
+size_t utils_argparser_result_count(const utils_argparser_result_t* result); // number of usages
+const char* utils_argparser_result_usage(const utils_argparser_result_t* result, size_t i); // id of the usage i ("": nothing), NULL on error
+size_t utils_argparser_result_arguments_count(const utils_argparser_result_t* result, size_t i);
+const char* utils_argparser_result_argument_id(const utils_argparser_result_t* result, size_t i, size_t j); // NULL on error
+bool utils_argparser_result_argument_is_option(const utils_argparser_result_t* result, size_t i, size_t j); // option (true) or flag (false)
+size_t utils_argparser_result_values_count(const utils_argparser_result_t* result, size_t i, size_t j);
+const char* utils_argparser_result_value(const utils_argparser_result_t* result, size_t i, size_t j, size_t k); // NULL on error</code></pre><h3 id="c-22">Fonctions · Settings</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_settings_t* utils_settings_create(void); // NULL on error
+void utils_settings_destroy(utils_settings_t* settings); // NULL: nothing
+int utils_settings_auto_cast(utils_settings_t* settings, const char* id, const char* setting, bool force, utils_settings_cast_t* type); // type found &amp; stored (type: optional)
+int utils_settings_cast(utils_settings_t* settings, const char* id, const char* setting, utils_settings_cast_t type, bool force);
+int utils_settings_remove(utils_settings_t* settings, const char* id, bool failsafe); // failsafe: an unknown id is not an error
+int utils_settings_clear(utils_settings_t* settings);
+bool utils_settings_contains(const utils_settings_t* settings, const char* id);
+utils_settings_cast_t utils_settings_get_type(const utils_settings_t* settings, const char* id); // C_API_SETTINGS_CAST_OTHER: unknown id (error) or a type without cast</code></pre><h3 id="c-23">Fonctions · Settings of the fixed types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_TYPES(C_API_SETTINGS_DECL)</code></pre><h3 id="c-24">Fonctions · Settings of the types of the casts</h3><p><em>settings of the types of the casts (strings: valid until the setting is changed, size: optional)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_SETTINGS_DECL(byte, uint8_t) // std::byte
+C_API_SETTINGS_DECL(char8, uint8_t) // char8_t
+C_API_SETTINGS_DECL(char16, uint_least16_t) // char16_t
+C_API_SETTINGS_DECL(char32, uint_least32_t) // char32_t
+C_API_SETTINGS_DECL(wchar, wchar_t)
+C_API_SETTINGS_DECL(u8string, const char*) // std::u8string (utf-8)
+C_API_SETTINGS_DECL(path, const char*) // std::filesystem::path (the path given back: valid until the next utils_settings_get_path of the thread)
+int utils_settings_set_u16string(utils_settings_t* settings, const char* id, const uint_least16_t* str, size_t size, bool force); // std::u16string
+int utils_settings_get_u16string(const utils_settings_t* settings, const char* id, const uint_least16_t** str, size_t* size);
+bool utils_settings_is_u16string(const utils_settings_t* settings, const char* id);
+int utils_settings_set_u32string(utils_settings_t* settings, const char* id, const uint_least32_t* str, size_t size, bool force); // std::u32string
+int utils_settings_get_u32string(const utils_settings_t* settings, const char* id, const uint_least32_t** str, size_t* size);
+bool utils_settings_is_u32string(const utils_settings_t* settings, const char* id);
+int utils_settings_set_wstring(utils_settings_t* settings, const char* id, const wchar_t* str, size_t size, bool force); // std::wstring
+int utils_settings_get_wstring(const utils_settings_t* settings, const char* id, const wchar_t** str, size_t* size);
+bool utils_settings_is_wstring(const utils_settings_t* settings, const char* id);</code></pre><h3 id="c-25">Fonctions · Settings of bytes</h3><p><em>settings of bytes (generic: data + size, copied)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_settings_set_bytes(utils_settings_t* settings, const char* id, const void* data, size_t size, bool force);
+int utils_settings_get_bytes(const utils_settings_t* settings, const char* id, const void** data, size_t* size);
+bool utils_settings_is_bytes(const utils_settings_t* settings, const char* id);</code></pre></div></section><nav class="pager"><a href="cli.html"><span data-i18n>Previous</span><span data-lang="en">Cli</span><span data-lang="fr">Cli</span></a><a class="next" href="network.html"><span data-i18n>Next</span><span data-lang="en">Network</span><span data-lang="fr">Network</span></a></nav></main>
+</div>
+<footer class="site">libutils v5.0.0 · 23d2be3 · docs</footer>
+<script src="site.js"></script>
+<script src="search-index.js" defer></script>
+</body>
+</html>

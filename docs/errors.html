@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en" data-storage-key="libutils-docs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Errors - libutils</title>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n>Skip to the content</a>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" id="menuBtn" aria-label="Open the navigation" data-i18n-aria-label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v5.0.0</span></a>
+  <nav class="tabs" aria-label="Pages" hidden></nav>
+  <span class="spacer"></span>
+  <div class="top-actions">
+  <div class="lang-switch" role="group" aria-label="Language" data-i18n-aria-label>
+    <button type="button" data-set-lang="en" class="on">EN</button>
+    <button type="button" data-set-lang="fr">FR</button>
+  </div>
+  <span class="divider" aria-hidden="true"></span><div class="sbox small"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" autocomplete="off" aria-label="Search" data-i18n-aria-label placeholder="Search…" data-ph-fr="Rechercher…"><kbd class="hint" aria-hidden="true">/</kbd><ul class="results" hidden></ul></div>
+<a class="icon-btn" href="https://github.com/TsukiNi22/libutils" aria-label="GitHub repository" data-i18n-aria-label title="GitHub repository" data-i18n-title><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"/></svg></a>
+  <button class="theme-switch" type="button" id="themeToggle" role="switch" aria-checked="false" aria-label="Toggle theme" data-i18n-aria-label title="Toggle theme" data-i18n-title>
+    <span class="stars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="knob" aria-hidden="true">
+      <svg class="sun" viewBox="0 0 24 24" fill="#ffffff"><circle cx="12" cy="12" r="5.2"/><g stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"><path d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6M4.8 4.8l1.8 1.8M17.4 17.4l1.8 1.8M4.8 19.2l1.8-1.8M17.4 6.6l1.8-1.8"/></g></svg>
+      <svg class="moon" viewBox="0 0 24 24"><path d="M15.6 4.2a8 8 0 1 0 4.2 11.6A7 7 0 0 1 15.6 4.2z" fill="#f6c343"/></svg>
+    </span>
+  </button>
+  </div>
+</header>
+<div class="layout" id="top">
+<aside class="sidebar" id="sidebar"><p data-i18n>On this page</p><a href="#type-code">1. <span data-lang="en">Type and code</span><span data-lang="fr">Type et code</span></a><a href="#codes">2. <span data-lang="en">Where the codes come from</span><span data-lang="fr">D&#x27;où viennent les codes</span></a><a href="#c-boundary">3. <span data-lang="en">Across the C boundary</span><span data-lang="fr">À travers la frontière C</span></a><a href="#output">4. <span data-lang="en">Formatted output</span><span data-lang="fr">Sortie formatée</span></a><hr><div class="grp"><span data-lang="en">User guide</span><span data-lang="fr">Guide utilisateur</span></div><a href="installation.html"><span data-lang="en">Installation</span><span data-lang="fr">Installation</span></a><a href="usage.html"><span data-lang="en">Link and include</span><span data-lang="fr">Lier et inclure</span></a><a href="custom-exceptions.html"><span data-lang="en">Custom exception codes</span><span data-lang="fr">Codes d&#x27;exception personnalisés</span></a><a href="warnings.html"><span data-lang="en">Warnings</span><span data-lang="fr">Avertissements</span></a><a href="c-api.html"><span data-lang="en">Use libutils from C</span><span data-lang="fr">Utiliser libutils depuis C</span></a><a href="windows.html"><span data-lang="en">Windows</span><span data-lang="fr">Windows</span></a><a href="development.html"><span data-lang="en">Build, tests and hooks</span><span data-lang="fr">Build, tests et hooks</span></a><div class="grp"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></div><a href="overview.html"><span data-lang="en">Architecture</span><span data-lang="fr">Architecture</span></a><a href="errors.html" class="cur" aria-current="page"><span data-lang="en">Errors</span><span data-lang="fr">Erreurs</span></a><a href="c-api-design.html"><span data-lang="en">The C API design</span><span data-lang="fr">Conception de l&#x27;API C</span></a><a href="network-ipc.html"><span data-lang="en">Communication</span><span data-lang="fr">Communication</span></a><a href="platforms.html"><span data-lang="en">Platforms</span><span data-lang="fr">Plateformes</span></a><div class="grp"><span data-lang="en">Reference</span><span data-lang="fr">Référence</span></div><a href="exception.html"><span data-lang="en">Exceptions</span><span data-lang="fr">Exceptions</span></a><a href="verbose.html"><span data-lang="en">Verbose</span><span data-lang="fr">Verbose</span></a><a href="pool.html"><span data-lang="en">Pool</span><span data-lang="fr">Pool</span></a><a href="cli.html"><span data-lang="en">Cli</span><span data-lang="fr">Cli</span></a><a href="arguments.html"><span data-lang="en">Arguments</span><span data-lang="fr">Arguments</span></a><a href="network.html"><span data-lang="en">Network</span><span data-lang="fr">Network</span></a><a href="math.html"><span data-lang="en">Math</span><span data-lang="fr">Math</span></a><a href="concepts.html"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></a><a href="encapsulation.html"><span data-lang="en">Encapsulation</span><span data-lang="fr">Encapsulation</span></a><a href="system.html"><span data-lang="en">System</span><span data-lang="fr">System</span></a><a href="type.html"><span data-lang="en">Type</span><span data-lang="fr">Type</span></a><a href="iomanip.html"><span data-lang="en">IOManip</span><span data-lang="fr">IOManip</span></a><a href="smanip.html"><span data-lang="en">SManip</span><span data-lang="fr">SManip</span></a><a href="algorithms.html"><span data-lang="en">Algorithms</span><span data-lang="fr">Algorithms</span></a><a href="security.html"><span data-lang="en">Security</span><span data-lang="fr">Security</span></a><a href="platform.html"><span data-lang="en">Platform</span><span data-lang="fr">Platform</span></a><a href="attribute.html"><span data-lang="en">Attribute</span><span data-lang="fr">Attribute</span></a><div class="grp"><span data-lang="en">Resources</span><span data-lang="fr">Ressources</span></div><a href="changelog.html"><span data-lang="en">Changelog</span><span data-lang="fr">Historique</span></a><a href="ci-cd.html"><span data-lang="en">CI / CD</span><span data-lang="fr">CI / CD</span></a><a href="licenses.html"><span data-lang="en">Licenses</span><span data-lang="fr">Licences</span></a><a href="project-graph.html"><span data-lang="en">Project graph</span><span data-lang="fr">Graphe du projet</span></a><a href="faq.html"><span data-lang="en">FAQ</span><span data-lang="fr">FAQ</span></a><a href="glossary.html"><span data-lang="en">Glossary</span><span data-lang="fr">Glossaire</span></a></aside><main id="main" tabindex="-1"><header><div class="page-eyebrow"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></div><h1><span data-lang="en">Errors</span><span data-lang="fr">Erreurs</span></h1><p class="lead"><span data-lang="en">How libutils reports errors: an exception with a type and a code in C++, a return value and a thread local status in C, and the codes generated from JSON.</span><span data-lang="fr">Comment libutils signale les erreurs : une exception avec un type et un code en C++, une valeur de retour et un statut thread local en C, et les codes générés depuis du JSON.</span></p><div class="page-meta"><span><span data-i18n>Updated</span> 2026-11-26</span></div></header><div data-lang="en"><p>Every error of libutils is an exception carrying a <strong>type</strong> and a <strong>code</strong>, never a return code. The C API turns the same exception into a return value and a status. The classes and the full list of codes are on <a href="exception.html">Exceptions</a>.</p></div><div data-lang="fr"><p>Chaque erreur de libutils est une exception qui porte un <strong>type</strong> et un <strong>code</strong>, jamais un code de retour. L'API C transforme la même exception en valeur de retour et en statut. Les classes et la liste complète des codes sont sur <a href="exception.html">Exceptions</a>.</p></div><section id="type-code"><h2>1. <span data-lang="en">Type and code</span><span data-lang="fr">Type et code</span></h2><div data-lang="en"><p>The <strong>type</strong> says how serious it is, the <strong>code</strong> what happened:</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Class, Type, Meaning"><table><thead><tr><th scope="col" style="min-width:21ch">Class</th><th scope="col" style="min-width:11ch">Type</th><th scope="col" style="min-width:20ch">Meaning</th></tr></thead><tbody><tr><td><code>NoneException</code></td><td><code>None</code></td><td>not an error (ex: help displayed, <code>Exit</code>)</td></tr><tr><td><code>WarningException</code></td><td><code>Warning</code></td><td>the program can continue</td></tr><tr><td><code>ErrorException</code></td><td><code>Error</code></td><td>error of the call</td></tr><tr><td><code>CustomException</code></td><td>given</td><td>a combination of types</td></tr><tr><td><code>FatalException</code></td><td><code>Fatal</code></td><td>prints and calls <code>std::abort()</code> from its constructor</td></tr></tbody></table></div><p>A code can restrict the types it accepts: a forbidden combination ends with <code>FatalException(ExceptionCodeRestriction)</code>. Many methods take <code>failsafe</code> (warn instead of throwing) or <code>safe_mode</code> (lock).</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">try {
+    server.start();
+} catch (const utils::exception::IException&amp; e) {
+    if (e.getCode() == utils::exception::InternalCode::AlreadyRunning) return;
+    std::cerr &lt;&lt; e.formated() &lt;&lt; std::endl; // [Error] file:line (origin) -&gt; message / function = info
+}</code></pre></div><div data-lang="fr"><p>Le <strong>type</strong> dit la gravité, le <strong>code</strong> ce qui s'est passé :</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Classe, Type, Signification"><table><thead><tr><th scope="col" style="min-width:21ch">Classe</th><th scope="col" style="min-width:11ch">Type</th><th scope="col" style="min-width:20ch">Signification</th></tr></thead><tbody><tr><td><code>NoneException</code></td><td><code>None</code></td><td>pas une erreur (ex : aide affichée, <code>Exit</code>)</td></tr><tr><td><code>WarningException</code></td><td><code>Warning</code></td><td>le programme peut continuer</td></tr><tr><td><code>ErrorException</code></td><td><code>Error</code></td><td>erreur de l'appel</td></tr><tr><td><code>CustomException</code></td><td>donné</td><td>une combinaison de types</td></tr><tr><td><code>FatalException</code></td><td><code>Fatal</code></td><td>affiche et appelle <code>std::abort()</code> depuis son constructeur</td></tr></tbody></table></div><p>Un code peut restreindre les types qu'il accepte : une combinaison interdite finit en <code>FatalException(ExceptionCodeRestriction)</code>. Beaucoup de méthodes prennent <code>failsafe</code> (avertir au lieu de lever une exception) ou <code>safe_mode</code> (verrou).</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">try {
+    server.start();
+} catch (const utils::exception::IException&amp; e) {
+    if (e.getCode() == utils::exception::InternalCode::AlreadyRunning) return;
+    std::cerr &lt;&lt; e.formated() &lt;&lt; std::endl; // [Error] file:line (origin) -&gt; message / function = info
+}</code></pre></div></section><section id="codes"><h2>2. <span data-lang="en">Where the codes come from</span><span data-lang="fr">D'où viennent les codes</span></h2><div data-lang="en"><p>The codes are generated at the build from <code>cmake/config/exceptions/**/*.json</code> (<code>generated_internal_exception_header.hpp</code>): <code>InternalCode</code> for the library. A project adds its own codes, <code>ExternalCode</code>, with the same JSON format and the same generator (<a href="custom-exceptions.html">Custom exception codes</a>). The generator refuses a code that isn't a C++ identifier, <code>Undefined</code> or a duplicate.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Origin, C++, C (utils_exception.origin)"><table><thead><tr><th scope="col" style="min-width:23ch">Origin</th><th scope="col" style="min-width:19ch">C++</th><th scope="col" style="min-width:39ch">C (<code>utils_exception.origin</code>)</th></tr></thead><tbody><tr><td>a code of libutils</td><td><code>InternalCode</code></td><td><code>C_API_EXCEPTION_ORIGIN_INTERNAL</code></td></tr><tr><td>a code of your project</td><td><code>ExternalCode</code></td><td><code>C_API_EXCEPTION_ORIGIN_EXTERNAL</code></td></tr><tr><td>a standard exception</td><td><code>std::exception</code></td><td><code>C_API_EXCEPTION_ORIGIN_STD</code> (code <code>C_API_OTHER_EXCEPTION_CODE</code>)</td></tr><tr><td>anything else thrown</td><td>-</td><td><code>C_API_EXCEPTION_ORIGIN_UNKNOWN</code></td></tr><tr><td>a C function (<code>utils_fail</code>)</td><td>-</td><td><code>C_API_EXCEPTION_ORIGIN_C</code></td></tr></tbody></table></div></div><div data-lang="fr"><p>Les codes sont générés au build depuis <code>cmake/config/exceptions/**/*.json</code> (<code>generated_internal_exception_header.hpp</code>) : <code>InternalCode</code> pour la bibliothèque. Un projet ajoute ses propres codes, <code>ExternalCode</code>, avec le même format JSON et le même générateur (<a href="custom-exceptions.html">Codes d'exception personnalisés</a>). Le générateur refuse un code qui n'est pas un identifiant C++, <code>Undefined</code> ou un doublon.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Origine, C++, C (utils_exception.origin)"><table><thead><tr><th scope="col" style="min-width:22ch">Origine</th><th scope="col" style="min-width:19ch">C++</th><th scope="col" style="min-width:39ch">C (<code>utils_exception.origin</code>)</th></tr></thead><tbody><tr><td>un code de libutils</td><td><code>InternalCode</code></td><td><code>C_API_EXCEPTION_ORIGIN_INTERNAL</code></td></tr><tr><td>un code de votre projet</td><td><code>ExternalCode</code></td><td><code>C_API_EXCEPTION_ORIGIN_EXTERNAL</code></td></tr><tr><td>une exception standard</td><td><code>std::exception</code></td><td><code>C_API_EXCEPTION_ORIGIN_STD</code> (code <code>C_API_OTHER_EXCEPTION_CODE</code>)</td></tr><tr><td>tout autre objet levé</td><td>-</td><td><code>C_API_EXCEPTION_ORIGIN_UNKNOWN</code></td></tr><tr><td>une fonction C (<code>utils_fail</code>)</td><td>-</td><td><code>C_API_EXCEPTION_ORIGIN_C</code></td></tr></tbody></table></div></div></section><section id="c-boundary"><h2>3. <span data-lang="en">Across the C boundary</span><span data-lang="fr">À travers la frontière C</span></h2><div data-lang="en"><p>An exception must never cross into C code (undefined behavior). Each function of the C API runs its C++ code in a <strong>guard</strong>:</p><ol><li>the call runs in a <code>try</code>;</li><li>on success, only <code>utils_exception.exception</code> is set to <code>false</code> (no copy of strings on the fast path);</li><li>on an exception, the guard fills the thread local <code>utils_exception</code> (type, code, what, info, file, line, function, module, origin) and the function returns <code>UTILS_KO</code>, <code>NULL</code> or <code>0</code>.</li></ol><p>The other way, a C callback that fails returns <code>UTILS_KO</code> (or <code>utils_fail(code, info)</code>): the C++ side throws an exception with that info, which goes up like any other and ends in the status of the call that ran the callback. Details: <a href="c-api-design.html#guard">The C API design</a>.</p><figure>
+<svg viewBox="0 0 760 270" role="img" aria-label="A C program calls the C functions, each one runs the C++ classes in a guard; a failure fills the thread local status utils_exception; a C callback called by the C++ code returns UTILS_OK or utils_fail">
+<defs>
+<marker id="arrc-fig2-en" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path class="arrow" d="M0 0L10 5L0 10z"/>
+</marker>
+<marker id="arrca-fig2-en" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path class="arrow-accent" d="M0 0L10 5L0 10z"/>
+</marker>
+</defs>
+<rect class="box" x="20" y="40" width="150" height="50" rx="8"/>
+<text class="lbl" x="95" y="70" text-anchor="middle">C program</text>
+<rect class="box-alt" x="210" y="40" width="160" height="50" rx="8"/>
+<text class="lbl" x="290" y="62" text-anchor="middle">utils.h · CApi.h</text>
+<text class="small" x="290" y="80" text-anchor="middle">extern "C" functions</text>
+<rect class="box-alt" x="410" y="40" width="150" height="50" rx="8"/>
+<text class="lbl" x="485" y="62" text-anchor="middle">guard</text>
+<text class="small" x="485" y="80" text-anchor="middle">try / catch</text>
+<rect class="box" x="600" y="40" width="140" height="50" rx="8"/>
+<text class="lbl" x="670" y="62" text-anchor="middle">C++ classes</text>
+<text class="small" x="670" y="80" text-anchor="middle">in the handles</text>
+<path class="edge" d="M170 65H206" marker-end="url(#arrc-fig2-en)"/>
+<path class="edge" d="M370 65H406" marker-end="url(#arrc-fig2-en)"/>
+<path class="edge" d="M560 65H596" marker-end="url(#arrc-fig2-en)"/>
+<rect class="group" x="330" y="140" width="230" height="44" rx="8"/>
+<text class="lbl" x="445" y="167" text-anchor="middle">utils_exception (thread local)</text>
+<path class="edge dash" d="M485 90V136" marker-end="url(#arrc-fig2-en)"/>
+<text class="small" x="492" y="118">exception</text>
+<path class="edge dash" d="M330 162H95V94" marker-end="url(#arrc-fig2-en)"/>
+<text class="small" x="105" y="154">UTILS_KO / NULL, read like errno</text>
+<rect class="box" x="20" y="210" width="150" height="44" rx="8"/>
+<text class="lbl" x="95" y="237" text-anchor="middle">C callback</text>
+<path class="edge-accent" d="M690 90V232H174" marker-end="url(#arrca-fig2-en)"/>
+<text class="small" x="430" y="224" text-anchor="middle">fn(..., data) → UTILS_OK / utils_fail(code, info)</text>
+</svg>
+
+<figcaption>An exception of the C++ code stops at the guard of the C function: it fills <code>utils_exception</code> and the function returns its error value; a failing C callback goes the other way.</figcaption>
+</figure></div><div data-lang="fr"><p>Une exception ne doit jamais passer dans du code C (comportement indéfini). Chaque fonction de l'API C exécute son code C++ dans une <strong>garde</strong> :</p><ol><li>l'appel tourne dans un <code>try</code> ;</li><li>en cas de succès, seul <code>utils_exception.exception</code> est mis à <code>false</code> (aucune copie de chaîne sur le chemin rapide) ;</li><li>sur une exception, la garde remplit le <code>utils_exception</code> thread local (type, code, what, info, file, line, function, module, origin) et la fonction renvoie <code>UTILS_KO</code>, <code>NULL</code> ou <code>0</code>.</li></ol><p>Dans l'autre sens, un callback C qui échoue renvoie <code>UTILS_KO</code> (ou <code>utils_fail(code, info)</code>) : le côté C++ lève une exception avec cette info, qui remonte comme n'importe quelle autre et finit dans le statut de l'appel qui a lancé le callback. Détails : <a href="c-api-design.html#guard">Conception de l'API C</a>.</p><figure>
+<svg viewBox="0 0 760 270" role="img" aria-label="A C program calls the C functions, each one runs the C++ classes in a guard; a failure fills the thread local status utils_exception; a C callback called by the C++ code returns UTILS_OK or utils_fail">
+<defs>
+<marker id="arrc-fig2-fr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path class="arrow" d="M0 0L10 5L0 10z"/>
+</marker>
+<marker id="arrca-fig2-fr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path class="arrow-accent" d="M0 0L10 5L0 10z"/>
+</marker>
+</defs>
+<rect class="box" x="20" y="40" width="150" height="50" rx="8"/>
+<text class="lbl" x="95" y="70" text-anchor="middle">C program</text>
+<rect class="box-alt" x="210" y="40" width="160" height="50" rx="8"/>
+<text class="lbl" x="290" y="62" text-anchor="middle">utils.h · CApi.h</text>
+<text class="small" x="290" y="80" text-anchor="middle">extern "C" functions</text>
+<rect class="box-alt" x="410" y="40" width="150" height="50" rx="8"/>
+<text class="lbl" x="485" y="62" text-anchor="middle">guard</text>
+<text class="small" x="485" y="80" text-anchor="middle">try / catch</text>
+<rect class="box" x="600" y="40" width="140" height="50" rx="8"/>
+<text class="lbl" x="670" y="62" text-anchor="middle">C++ classes</text>
+<text class="small" x="670" y="80" text-anchor="middle">in the handles</text>
+<path class="edge" d="M170 65H206" marker-end="url(#arrc-fig2-fr)"/>
+<path class="edge" d="M370 65H406" marker-end="url(#arrc-fig2-fr)"/>
+<path class="edge" d="M560 65H596" marker-end="url(#arrc-fig2-fr)"/>
+<rect class="group" x="330" y="140" width="230" height="44" rx="8"/>
+<text class="lbl" x="445" y="167" text-anchor="middle">utils_exception (thread local)</text>
+<path class="edge dash" d="M485 90V136" marker-end="url(#arrc-fig2-fr)"/>
+<text class="small" x="492" y="118">exception</text>
+<path class="edge dash" d="M330 162H95V94" marker-end="url(#arrc-fig2-fr)"/>
+<text class="small" x="105" y="154">UTILS_KO / NULL, read like errno</text>
+<rect class="box" x="20" y="210" width="150" height="44" rx="8"/>
+<text class="lbl" x="95" y="237" text-anchor="middle">C callback</text>
+<path class="edge-accent" d="M690 90V232H174" marker-end="url(#arrca-fig2-fr)"/>
+<text class="small" x="430" y="224" text-anchor="middle">fn(..., data) → UTILS_OK / utils_fail(code, info)</text>
+</svg>
+
+<figcaption>Une exception du code C++ s'arrête au guard de la fonction C : elle remplit <code>utils_exception</code> et la fonction renvoie sa valeur d'erreur ; un callback C qui échoue fait le chemin inverse.</figcaption>
+</figure></div></section><section id="output"><h2>4. <span data-lang="en">Formatted output</span><span data-lang="fr">Sortie formatée</span></h2><div data-lang="en"><p><code>formated()</code> in C++, <code>utils_exception_format()</code> in C, give the same text, built by <code>utils::exception::format</code>:</p><pre tabindex="0" role="region" aria-label="Code (text)"><code class="language-text">[&lt;type&gt;] ...&lt;file_path:hyperlink&gt;:&lt;line&gt; (&lt;origin&gt;) -&gt; &lt;message&gt;
+-------------------------------------------
+&lt;function_demangled&gt; = &lt;info&gt;
+-------------------------------------------</code></pre></div><div data-lang="fr"><p><code>formated()</code> en C++, <code>utils_exception_format()</code> en C, donnent le même texte, construit par <code>utils::exception::format</code> :</p><pre tabindex="0" role="region" aria-label="Code (text)"><code class="language-text">[&lt;type&gt;] ...&lt;file_path:hyperlink&gt;:&lt;line&gt; (&lt;origin&gt;) -&gt; &lt;message&gt;
+-------------------------------------------
+&lt;function_demangled&gt; = &lt;info&gt;
+-------------------------------------------</code></pre></div></section><nav class="pager"><a href="overview.html"><span data-i18n>Previous</span><span data-lang="en">Architecture</span><span data-lang="fr">Architecture</span></a><a class="next" href="c-api-design.html"><span data-i18n>Next</span><span data-lang="en">The C API design</span><span data-lang="fr">Conception de l&#x27;API C</span></a></nav></main>
+</div>
+<footer class="site">libutils v5.0.0 · 23d2be3 · docs</footer>
+<script src="site.js"></script>
+<script src="search-index.js" defer></script>
+</body>
+</html>

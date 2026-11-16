@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en" data-storage-key="libutils-docs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Security - libutils</title>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n>Skip to the content</a>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" id="menuBtn" aria-label="Open the navigation" data-i18n-aria-label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v5.0.0</span></a>
+  <nav class="tabs" aria-label="Pages" hidden></nav>
+  <span class="spacer"></span>
+  <div class="top-actions">
+  <div class="lang-switch" role="group" aria-label="Language" data-i18n-aria-label>
+    <button type="button" data-set-lang="en" class="on">EN</button>
+    <button type="button" data-set-lang="fr">FR</button>
+  </div>
+  <span class="divider" aria-hidden="true"></span><div class="sbox small"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" autocomplete="off" aria-label="Search" data-i18n-aria-label placeholder="Search…" data-ph-fr="Rechercher…"><kbd class="hint" aria-hidden="true">/</kbd><ul class="results" hidden></ul></div>
+<a class="icon-btn" href="https://github.com/TsukiNi22/libutils" aria-label="GitHub repository" data-i18n-aria-label title="GitHub repository" data-i18n-title><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"/></svg></a>
+  <button class="theme-switch" type="button" id="themeToggle" role="switch" aria-checked="false" aria-label="Toggle theme" data-i18n-aria-label title="Toggle theme" data-i18n-title>
+    <span class="stars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="knob" aria-hidden="true">
+      <svg class="sun" viewBox="0 0 24 24" fill="#ffffff"><circle cx="12" cy="12" r="5.2"/><g stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"><path d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6M4.8 4.8l1.8 1.8M17.4 17.4l1.8 1.8M4.8 19.2l1.8-1.8M17.4 6.6l1.8-1.8"/></g></svg>
+      <svg class="moon" viewBox="0 0 24 24"><path d="M15.6 4.2a8 8 0 1 0 4.2 11.6A7 7 0 0 1 15.6 4.2z" fill="#f6c343"/></svg>
+    </span>
+  </button>
+  </div>
+</header>
+<div class="layout" id="top">
+<aside class="sidebar" id="sidebar"><p data-i18n>On this page</p><a href="#keys">1. <span data-lang="en">Keys</span><span data-lang="fr">Clés</span></a><a href="#aeskey">2. <span data-lang="en">AESKey</span><span data-lang="fr">AESKey</span></a><a href="#rsakey">3. <span data-lang="en">RSAKey</span><span data-lang="fr">RSAKey</span></a><a href="#commonrsakey">4. <span data-lang="en">CommonRSAKey</span><span data-lang="fr">CommonRSAKey</span></a><a href="#observer">5. <span data-lang="en">Observer</span><span data-lang="fr">Observer</span></a><a href="#in-c">6. <span data-lang="en">In C</span><span data-lang="fr">En C</span></a><a href="#cpp-api">7. <span data-lang="en">C++ API</span><span data-lang="fr">API C++</span></a><a href="#c-api">8. <span data-lang="en">C API</span><span data-lang="fr">API C</span></a><hr><div class="grp"><span data-lang="en">User guide</span><span data-lang="fr">Guide utilisateur</span></div><a href="installation.html"><span data-lang="en">Installation</span><span data-lang="fr">Installation</span></a><a href="usage.html"><span data-lang="en">Link and include</span><span data-lang="fr">Lier et inclure</span></a><a href="custom-exceptions.html"><span data-lang="en">Custom exception codes</span><span data-lang="fr">Codes d&#x27;exception personnalisés</span></a><a href="warnings.html"><span data-lang="en">Warnings</span><span data-lang="fr">Avertissements</span></a><a href="c-api.html"><span data-lang="en">Use libutils from C</span><span data-lang="fr">Utiliser libutils depuis C</span></a><a href="windows.html"><span data-lang="en">Windows</span><span data-lang="fr">Windows</span></a><a href="development.html"><span data-lang="en">Build, tests and hooks</span><span data-lang="fr">Build, tests et hooks</span></a><div class="grp"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></div><a href="overview.html"><span data-lang="en">Architecture</span><span data-lang="fr">Architecture</span></a><a href="errors.html"><span data-lang="en">Errors</span><span data-lang="fr">Erreurs</span></a><a href="c-api-design.html"><span data-lang="en">The C API design</span><span data-lang="fr">Conception de l&#x27;API C</span></a><a href="network-ipc.html"><span data-lang="en">Communication</span><span data-lang="fr">Communication</span></a><a href="platforms.html"><span data-lang="en">Platforms</span><span data-lang="fr">Plateformes</span></a><div class="grp"><span data-lang="en">Reference</span><span data-lang="fr">Référence</span></div><a href="exception.html"><span data-lang="en">Exceptions</span><span data-lang="fr">Exceptions</span></a><a href="verbose.html"><span data-lang="en">Verbose</span><span data-lang="fr">Verbose</span></a><a href="pool.html"><span data-lang="en">Pool</span><span data-lang="fr">Pool</span></a><a href="cli.html"><span data-lang="en">Cli</span><span data-lang="fr">Cli</span></a><a href="arguments.html"><span data-lang="en">Arguments</span><span data-lang="fr">Arguments</span></a><a href="network.html"><span data-lang="en">Network</span><span data-lang="fr">Network</span></a><a href="math.html"><span data-lang="en">Math</span><span data-lang="fr">Math</span></a><a href="concepts.html"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></a><a href="encapsulation.html"><span data-lang="en">Encapsulation</span><span data-lang="fr">Encapsulation</span></a><a href="system.html"><span data-lang="en">System</span><span data-lang="fr">System</span></a><a href="type.html"><span data-lang="en">Type</span><span data-lang="fr">Type</span></a><a href="iomanip.html"><span data-lang="en">IOManip</span><span data-lang="fr">IOManip</span></a><a href="smanip.html"><span data-lang="en">SManip</span><span data-lang="fr">SManip</span></a><a href="algorithms.html"><span data-lang="en">Algorithms</span><span data-lang="fr">Algorithms</span></a><a href="security.html" class="cur" aria-current="page"><span data-lang="en">Security</span><span data-lang="fr">Security</span></a><a href="platform.html"><span data-lang="en">Platform</span><span data-lang="fr">Platform</span></a><a href="attribute.html"><span data-lang="en">Attribute</span><span data-lang="fr">Attribute</span></a><div class="grp"><span data-lang="en">Resources</span><span data-lang="fr">Ressources</span></div><a href="changelog.html"><span data-lang="en">Changelog</span><span data-lang="fr">Historique</span></a><a href="ci-cd.html"><span data-lang="en">CI / CD</span><span data-lang="fr">CI / CD</span></a><a href="licenses.html"><span data-lang="en">Licenses</span><span data-lang="fr">Licences</span></a><a href="project-graph.html"><span data-lang="en">Project graph</span><span data-lang="fr">Graphe du projet</span></a><a href="faq.html"><span data-lang="en">FAQ</span><span data-lang="fr">FAQ</span></a><a href="glossary.html"><span data-lang="en">Glossary</span><span data-lang="fr">Glossaire</span></a></aside><main id="main" tabindex="-1"><header><div class="page-eyebrow"><span data-lang="en">Reference</span><span data-lang="fr">Référence</span></div><h1><span data-lang="en">Security</span><span data-lang="fr">Security</span></h1><p class="lead"><span data-lang="en">Encryption (AES-256-GCM, RSA OAEP, the common RSA key) and the observers that track the instances and report the memory leaks at exit.</span><span data-lang="fr">Chiffrement (AES-256-GCM, RSA OAEP, la clé RSA commune) et observers qui suivent les instances et signalent les fuites mémoire à la sortie.</span></p><div class="page-meta"><span><span data-i18n>Updated</span> 2026-11-26</span></div></header><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Define, Group, Namespace, Headers"><table><thead><tr><th scope="col" style="min-width:21ch">Define</th><th scope="col" style="min-width:13ch">Group</th><th scope="col" style="min-width:33ch">Namespace</th><th scope="col" style="min-width:19ch">Headers</th></tr></thead><tbody><tr><td><code>_Security</code></td><td><code>_Tools</code></td><td><code>utils::security</code></td><td><code>utils/security/</code></td></tr><tr><td><code>_Encryption</code> (from <code>_Security</code>)</td><td><code>_Security</code></td><td><code>utils::security::encryption</code></td><td><code>utils/security/encryption/</code></td></tr><tr><td><code>_Observer</code> (from <code>_Security</code>, only a marker)</td><td><code>_Security</code></td><td><code>utils::security::observer</code></td><td><code>utils/security/observer/</code> (include them directly)</td></tr></tbody></table></div><div class="callout"><p><strong>Important.</strong> The encryption needs OpenSSL at the link (<code>-lssl -lcrypto</code>, given by <code>utils::utils</code> in CMake).</p></div></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Define, Groupe, Namespace, Headers"><table><thead><tr><th scope="col" style="min-width:23ch">Define</th><th scope="col" style="min-width:13ch">Groupe</th><th scope="col" style="min-width:33ch">Namespace</th><th scope="col" style="min-width:19ch">Headers</th></tr></thead><tbody><tr><td><code>_Security</code></td><td><code>_Tools</code></td><td><code>utils::security</code></td><td><code>utils/security/</code></td></tr><tr><td><code>_Encryption</code> (depuis <code>_Security</code>)</td><td><code>_Security</code></td><td><code>utils::security::encryption</code></td><td><code>utils/security/encryption/</code></td></tr><tr><td><code>_Observer</code> (depuis <code>_Security</code>, simple marqueur)</td><td><code>_Security</code></td><td><code>utils::security::observer</code></td><td><code>utils/security/observer/</code> (à inclure directement)</td></tr></tbody></table></div><div class="callout"><p><strong>Important.</strong> Le chiffrement a besoin d'OpenSSL à l'édition de liens (<code>-lssl -lcrypto</code>, fournis par <code>utils::utils</code> en CMake).</p></div></div><section id="keys"><h2>1. <span data-lang="en">Keys</span><span data-lang="fr">Clés</span></h2><div data-lang="en"><p>Every key derives <code>IKey&lt;T&gt;</code> / <code>AKey&lt;T&gt;</code> (<code>T</code> = the key data):</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:41ch">Method</th><th scope="col" style="min-width:22ch">Description</th></tr></thead><tbody><tr><td><code>generate()</code></td><td>Generate a new key</td></tr><tr><td><code>set(data)</code> / <code>get()</code></td><td>Set / get the key data</td></tr><tr><td><code>encrypt(s)</code> / <code>decrypt(s)</code></td><td>With the stored key</td></tr><tr><td><code>encrypt(s, data)</code> / <code>decrypt(s, data)</code></td><td>With a key given at the call (<code>data</code> can be updated, ex: the AES tag)</td></tr><tr><td><code>generateRandomBytes(size = 32)</code></td><td>Random bytes (OpenSSL <code>RAND_bytes</code>)</td></tr><tr><td><code>hasGenerateOverload()</code>, <code>hasSetOverload()</code>, <code>hasGetOverload()</code></td><td>What the key implements</td></tr></tbody></table></div><div class="callout warn"><p><strong>Warning.</strong> A method a key doesn't implement ends with <code>FatalException(UndefinedCall)</code> (ex: <code>AESKey::generate()</code>).</p></div></div><div data-lang="fr"><p>Chaque clé dérive de <code>IKey&lt;T&gt;</code> / <code>AKey&lt;T&gt;</code> (<code>T</code> = les données de la clé) :</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:41ch">Méthode</th><th scope="col" style="min-width:22ch">Description</th></tr></thead><tbody><tr><td><code>generate()</code></td><td>Génère une nouvelle clé</td></tr><tr><td><code>set(data)</code> / <code>get()</code></td><td>Définit / récupère les données de la clé</td></tr><tr><td><code>encrypt(s)</code> / <code>decrypt(s)</code></td><td>Avec la clé stockée</td></tr><tr><td><code>encrypt(s, data)</code> / <code>decrypt(s, data)</code></td><td>Avec une clé donnée à l'appel (<code>data</code> peut être mis à jour, ex : le tag AES)</td></tr><tr><td><code>generateRandomBytes(size = 32)</code></td><td>Octets aléatoires (<code>RAND_bytes</code> d'OpenSSL)</td></tr><tr><td><code>hasGenerateOverload()</code>, <code>hasSetOverload()</code>, <code>hasGetOverload()</code></td><td>Ce que la clé implémente</td></tr></tbody></table></div><div class="callout warn"><p><strong>Attention.</strong> Une méthode qu'une clé n'implémente pas se termine par <code>FatalException(UndefinedCall)</code> (ex : <code>AESKey::generate()</code>).</p></div></div></section><section id="aeskey"><h2>2. <span data-lang="en">AESKey</span><span data-lang="fr">AESKey</span></h2><div data-lang="en"><p>AES-256-GCM, the key is given at each call: <code>KeyAES{AES, iv, tag}</code>.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Field, Size"><table><thead><tr><th scope="col" style="min-width:9ch">Field</th><th scope="col" style="min-width:23ch">Size</th></tr></thead><tbody><tr><td><code>AES</code></td><td>32 bytes (<code>AES_KEY_SIZE</code>)</td></tr><tr><td><code>iv</code></td><td>at least 12 bytes (<code>AES_MIN_IV_SIZE</code>), <strong>a new one for every message</strong></td></tr><tr><td><code>tag</code></td><td>16 bytes (<code>AES_TAG_SIZE</code>), written by <code>encrypt</code>, checked by <code>decrypt</code></td></tr></tbody></table></div><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Encryption
+#include &lt;utils/utils.hpp&gt;
+
+utils::security::encryption::AESKey aes;
+utils::security::encryption::KeyAES key{aes.generateRandomBytes(32), aes.generateRandomBytes(12), ""};
+std::string cipher = aes.encrypt("secret", key);   // key.tag is set
+std::string plain = aes.decrypt(cipher, key);      // "secret", Decryption error if modified</code></pre><p>Wrong sizes throw <code>Encryption</code> / <code>Decryption</code>, data over 2 GiB <code>OutOfBounds</code>.</p></div><div data-lang="fr"><p>AES-256-GCM, la clé est donnée à chaque appel : <code>KeyAES{AES, iv, tag}</code>.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Champ, Taille"><table><thead><tr><th scope="col" style="min-width:9ch">Champ</th><th scope="col" style="min-width:23ch">Taille</th></tr></thead><tbody><tr><td><code>AES</code></td><td>32 octets (<code>AES_KEY_SIZE</code>)</td></tr><tr><td><code>iv</code></td><td>au moins 12 octets (<code>AES_MIN_IV_SIZE</code>), <strong>un nouveau pour chaque message</strong></td></tr><tr><td><code>tag</code></td><td>16 octets (<code>AES_TAG_SIZE</code>), écrit par <code>encrypt</code>, vérifié par <code>decrypt</code></td></tr></tbody></table></div><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Encryption
+#include &lt;utils/utils.hpp&gt;
+
+utils::security::encryption::AESKey aes;
+utils::security::encryption::KeyAES key{aes.generateRandomBytes(32), aes.generateRandomBytes(12), ""};
+std::string cipher = aes.encrypt("secret", key);   // key.tag is set
+std::string plain = aes.decrypt(cipher, key);      // "secret", Decryption error if modified</code></pre><p>Des tailles incorrectes lèvent <code>Encryption</code> / <code>Decryption</code>, des données de plus de 2 Gio <code>OutOfBounds</code>.</p></div></section><section id="rsakey"><h2>3. <span data-lang="en">RSAKey</span><span data-lang="fr">RSAKey</span></h2><div data-lang="en"><p>RSA with OAEP padding, <code>KeyPair{priv, pub}</code> in PEM. Data of any size (encrypted block by block).</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">utils::security::encryption::RSAKey rsa;
+rsa.generate();
+std::string cipher = rsa.encrypt("hello");          // with get().pub
+std::string plain = rsa.decrypt(cipher);            // with get().priv</code></pre></div><div data-lang="fr"><p>RSA avec padding OAEP, <code>KeyPair{priv, pub}</code> en PEM. Données de toute taille (chiffrées bloc par bloc).</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">utils::security::encryption::RSAKey rsa;
+rsa.generate();
+std::string cipher = rsa.encrypt("hello");          // with get().pub
+std::string plain = rsa.decrypt(cipher);            // with get().priv</code></pre></div></section><section id="commonrsakey"><h2>4. <span data-lang="en">CommonRSAKey</span><span data-lang="fr">CommonRSAKey</span></h2><div data-lang="en"><p>An <code>RSAKey</code> loaded from files shared by both sides (used by the EETP handshake, <a href="smanip.html#eetp">SManip</a>): <code>loadCommon(path = "~/.ssh/common")</code> reads <code>&lt;path&gt;</code> (private) and <code>&lt;path&gt;.pub</code> (public).</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Function, Description"><table><thead><tr><th scope="col" style="min-width:47ch">Function</th><th scope="col" style="min-width:25ch">Description</th></tr></thead><tbody><tr><td><code>key_to_string(std::vector&lt;std::uint8_t&gt;)</code></td><td>Bytes to <code>std::string</code> (the <code>\0</code> are kept)</td></tr><tr><td><code>string_to_key(std::string)</code></td><td><code>std::string</code> to bytes</td></tr></tbody></table></div><div class="callout"><p><code>keyToString</code> / <code>stringToKey</code> (renamed <code>key_to_string</code> / <code>string_to_key</code> in <code>v3.0.0</code>) were removed in <code>v4.0.0</code>.</p></div></div><div data-lang="fr"><p>Une <code>RSAKey</code> chargée depuis des fichiers partagés par les deux côtés (utilisée par le handshake EETP, <a href="smanip.html#eetp">SManip</a>) : <code>loadCommon(path = "~/.ssh/common")</code> lit <code>&lt;path&gt;</code> (privée) et <code>&lt;path&gt;.pub</code> (publique).</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Fonction, Description"><table><thead><tr><th scope="col" style="min-width:47ch">Fonction</th><th scope="col" style="min-width:19ch">Description</th></tr></thead><tbody><tr><td><code>key_to_string(std::vector&lt;std::uint8_t&gt;)</code></td><td>Octets vers <code>std::string</code> (les <code>\0</code> sont conservés)</td></tr><tr><td><code>string_to_key(std::string)</code></td><td><code>std::string</code> vers octets</td></tr></tbody></table></div><div class="callout"><p><code>keyToString</code> / <code>stringToKey</code> (renommées <code>key_to_string</code> / <code>string_to_key</code> en <code>v3.0.0</code>) ont été supprimées en <code>v4.0.0</code>.</p></div></div></section><section id="observer"><h2>5. <span data-lang="en">Observer</span><span data-lang="fr">Observer</span></h2><div data-lang="en"><p>Most classes of the library inherit <code>Observer&lt;"Name"&gt;</code>: each instance registers an id in a global handler, and the <strong>memory leak notifier</strong> reports the instances still alive when the program ends.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Class, Description"><table><thead><tr><th scope="col" style="min-width:29ch">Class</th><th scope="col" style="min-width:30ch">Description</th></tr></thead><tbody><tr><td><code>Observer&lt;"Name"&gt;</code></td><td>Tracks the instances of a class (thread safe)</td></tr><tr><td><code>UnsafeObserver&lt;"Name"&gt;</code></td><td>Same without lock</td></tr><tr><td><code>AObserver&lt;"Name", safe_mode&gt;</code> / <code>IObserver</code></td><td>Base classes</td></tr><tr><td><code>INotifier</code> / <code>ANotifier</code></td><td><code>link(id, instance)</code>, <code>unlink(id)</code>, <code>clear()</code>, <code>trigger()</code></td></tr><tr><td><code>MemoryLeakNotifier</code></td><td>At exit (or on <code>trigger()</code>), prints the classes still alive and their count</td></tr><tr><td><code>instances::id_handler()</code></td><td>Global <code>IdHandler&lt;std::uint64_t&gt;</code> of the observers</td></tr><tr><td><code>instances::notifiers()</code></td><td>Array of the notifiers (<code>[0]</code> = <code>MemoryLeakNotifier</code>)</td></tr></tbody></table></div><p>Inherit it <strong>privately</strong>: <code>class Server: private utils::security::observer::Observer&lt;"Server"&gt;</code>. Output of a leak:</p><pre tabindex="0" role="region" aria-label="Code (text)"><code class="language-text">[WARNING] Memory leak detected (origin: &lt;module&gt;)
+-- At least one instance wasn't properly closed --
+  2 - ISocket
+  1 - Client</code></pre><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#include &lt;utils/utils.hpp&gt;
+#include &lt;utils/security/observer/Observer.hpp&gt;
+
+class Session: private utils::security::observer::Observer&lt;"Session"&gt; {};
+
+int main(void)
+{
+    new Session(); // never deleted: reported at exit
+    return 0;
+}</code></pre></div><div data-lang="fr"><p>La plupart des classes de la bibliothèque héritent de <code>Observer&lt;"Name"&gt;</code> : chaque instance enregistre un id dans un handler global, et le <strong>notifier de fuites mémoire</strong> signale les instances encore en vie à la fin du programme.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Classe, Description"><table><thead><tr><th scope="col" style="min-width:29ch">Classe</th><th scope="col" style="min-width:30ch">Description</th></tr></thead><tbody><tr><td><code>Observer&lt;"Name"&gt;</code></td><td>Suit les instances d'une classe (thread safe)</td></tr><tr><td><code>UnsafeObserver&lt;"Name"&gt;</code></td><td>Pareil sans verrou</td></tr><tr><td><code>AObserver&lt;"Name", safe_mode&gt;</code> / <code>IObserver</code></td><td>Classes de base</td></tr><tr><td><code>INotifier</code> / <code>ANotifier</code></td><td><code>link(id, instance)</code>, <code>unlink(id)</code>, <code>clear()</code>, <code>trigger()</code></td></tr><tr><td><code>MemoryLeakNotifier</code></td><td>À la sortie (ou sur <code>trigger()</code>), affiche les classes encore en vie et leur nombre</td></tr><tr><td><code>instances::id_handler()</code></td><td><code>IdHandler&lt;std::uint64_t&gt;</code> global des observers</td></tr><tr><td><code>instances::notifiers()</code></td><td>Tableau des notifiers (<code>[0]</code> = <code>MemoryLeakNotifier</code>)</td></tr></tbody></table></div><p>Héritez-en en <strong>privé</strong> : <code>class Server: private utils::security::observer::Observer&lt;"Server"&gt;</code>. Sortie d'une fuite :</p><pre tabindex="0" role="region" aria-label="Code (text)"><code class="language-text">[WARNING] Memory leak detected (origin: &lt;module&gt;)
+-- At least one instance wasn't properly closed --
+  2 - ISocket
+  1 - Client</code></pre><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#include &lt;utils/utils.hpp&gt;
+#include &lt;utils/security/observer/Observer.hpp&gt;
+
+class Session: private utils::security::observer::Observer&lt;"Session"&gt; {};
+
+int main(void)
+{
+    new Session(); // never deleted: reported at exit
+    return 0;
+}</code></pre></div></section><section id="in-c"><h2>6. <span data-lang="en">In C</span><span data-lang="fr">En C</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: C++, C"><table><thead><tr><th scope="col" style="min-width:22ch">C++</th><th scope="col" style="min-width:40ch">C</th></tr></thead><tbody><tr><td><code>AESKey</code> + <code>KeyAES</code></td><td><code>utils_aes_key_t*</code> + <code>utils_aes_data_t*</code> (<code>utils_aes_data_set_key</code> / <code>_set_iv</code>, the tag set by <code>utils_aes_key_encrypt</code>)</td></tr><tr><td><code>RSAKey</code> / <code>CommonRSAKey</code></td><td><code>utils_rsa_key_t*</code>: <code>utils_rsa_key_create()</code> then <code>utils_rsa_key_generate</code>, or <code>utils_rsa_key_create_common(path)</code> (<code>NULL</code> = <code>~/.ssh/common</code>)</td></tr><tr><td><code>encrypt</code> / <code>decrypt</code></td><td><code>utils_aes_key_encrypt(key, in, size, data, out)</code>, <code>utils_rsa_key_encrypt(key, in, size, out)</code>... into a <code>utils_string_t*</code> (<a href="smanip.html#in-c">SManip</a>)</td></tr><tr><td><code>Observer&lt;"Name"&gt;</code></td><td><code>utils_observer_t*</code>: <code>utils_observer_create(instance, safe_mode)</code>; an observer never destroyed is reported as a leak; <code>utils_observer_trigger()</code> reports now</td></tr></tbody></table></div><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define _Encryption
+#define _SManip
+#include &lt;utils.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+int main(void)
+{
+    utils_aes_key_t* aes = utils_aes_key_create();
+    utils_aes_data_t* data = utils_aes_data_create();
+    utils_string_t* bytes = utils_string_create(NULL, 0);
+    utils_string_t* cipher = utils_string_create(NULL, 0);
+    utils_string_t* plain = utils_string_create(NULL, 0);
+    int ret = 1;
+
+    if (aes &amp;&amp; data &amp;&amp; bytes &amp;&amp; cipher &amp;&amp; plain
+        &amp;&amp; utils_aes_key_random_bytes(aes, 32, bytes) == UTILS_OK
+        &amp;&amp; utils_aes_data_set_key(data, utils_string_data(bytes), utils_string_size(bytes)) == UTILS_OK
+        &amp;&amp; utils_aes_key_random_bytes(aes, 12, bytes) == UTILS_OK
+        &amp;&amp; utils_aes_data_set_iv(data, utils_string_data(bytes), utils_string_size(bytes)) == UTILS_OK
+        &amp;&amp; utils_aes_key_encrypt(aes, "secret", strlen("secret"), data, cipher) == UTILS_OK  // the tag of data is set
+        &amp;&amp; utils_aes_key_decrypt(aes, utils_string_data(cipher), utils_string_size(cipher), data, plain) == UTILS_OK) {
+        printf("%s\n", utils_string_data(plain)); // secret
+        ret = 0;
+    }
+    utils_string_destroy(plain);
+    utils_string_destroy(cipher);
+    utils_string_destroy(bytes);
+    utils_aes_data_destroy(data);
+    utils_aes_key_destroy(aes);
+    return ret;
+}</code></pre></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: C++, C"><table><thead><tr><th scope="col" style="min-width:22ch">C++</th><th scope="col" style="min-width:40ch">C</th></tr></thead><tbody><tr><td><code>AESKey</code> + <code>KeyAES</code></td><td><code>utils_aes_key_t*</code> + <code>utils_aes_data_t*</code> (<code>utils_aes_data_set_key</code> / <code>_set_iv</code>, le tag défini par <code>utils_aes_key_encrypt</code>)</td></tr><tr><td><code>RSAKey</code> / <code>CommonRSAKey</code></td><td><code>utils_rsa_key_t*</code> : <code>utils_rsa_key_create()</code> puis <code>utils_rsa_key_generate</code>, ou <code>utils_rsa_key_create_common(path)</code> (<code>NULL</code> = <code>~/.ssh/common</code>)</td></tr><tr><td><code>encrypt</code> / <code>decrypt</code></td><td><code>utils_aes_key_encrypt(key, in, size, data, out)</code>, <code>utils_rsa_key_encrypt(key, in, size, out)</code>... dans un <code>utils_string_t*</code> (<a href="smanip.html#in-c">SManip</a>)</td></tr><tr><td><code>Observer&lt;"Name"&gt;</code></td><td><code>utils_observer_t*</code> : <code>utils_observer_create(instance, safe_mode)</code> ; un observer jamais détruit est signalé comme une fuite ; <code>utils_observer_trigger()</code> fait le rapport tout de suite</td></tr></tbody></table></div><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define _Encryption
+#define _SManip
+#include &lt;utils.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+int main(void)
+{
+    utils_aes_key_t* aes = utils_aes_key_create();
+    utils_aes_data_t* data = utils_aes_data_create();
+    utils_string_t* bytes = utils_string_create(NULL, 0);
+    utils_string_t* cipher = utils_string_create(NULL, 0);
+    utils_string_t* plain = utils_string_create(NULL, 0);
+    int ret = 1;
+
+    if (aes &amp;&amp; data &amp;&amp; bytes &amp;&amp; cipher &amp;&amp; plain
+        &amp;&amp; utils_aes_key_random_bytes(aes, 32, bytes) == UTILS_OK
+        &amp;&amp; utils_aes_data_set_key(data, utils_string_data(bytes), utils_string_size(bytes)) == UTILS_OK
+        &amp;&amp; utils_aes_key_random_bytes(aes, 12, bytes) == UTILS_OK
+        &amp;&amp; utils_aes_data_set_iv(data, utils_string_data(bytes), utils_string_size(bytes)) == UTILS_OK
+        &amp;&amp; utils_aes_key_encrypt(aes, "secret", strlen("secret"), data, cipher) == UTILS_OK  // the tag of data is set
+        &amp;&amp; utils_aes_key_decrypt(aes, utils_string_data(cipher), utils_string_size(cipher), data, plain) == UTILS_OK) {
+        printf("%s\n", utils_string_data(plain)); // secret
+        ret = 0;
+    }
+    utils_string_destroy(plain);
+    utils_string_destroy(cipher);
+    utils_string_destroy(bytes);
+    utils_aes_data_destroy(data);
+    utils_aes_key_destroy(aes);
+    return ret;
+}</code></pre></div></section><section id="cpp-api"><h2>7. <span data-lang="en">C++ API</span><span data-lang="fr">API C++</span></h2><div data-lang="en"><p>Read from the headers of <code>include/utils/security/</code> (public part only, the trailing comments of the code kept). Include <code>&lt;utils/utils.hpp&gt;</code> with the define of the section, never these headers one by one.</p><h3 id="h-security-encryption-aeskey-hpp"><code>utils/security/encryption/AESKey.hpp</code></h3><p>Declaration of the key used for the AES</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define AES_KEY_SIZE 32 // 256 bits
+#define AES_MIN_IV_SIZE 12 // 96 bits (GCM nonce)
+#define AES_TAG_SIZE 16 // 128 bits
+
+// namespace utils::security::encryption
+struct KeyAES {
+    std::string AES;
+    std::string iv;
+    std::string tag;
+};
+class AESKey: public utils::security::encryption::AKey&lt;utils::security::encryption::KeyAES&gt; {
+    std::string encrypt(const std::string&amp; s, utils::security::encryption::KeyAES&amp; key) const;
+    std::string decrypt(const std::string&amp; s, utils::security::encryption::KeyAES&amp; key) const;
+    AESKey&amp; operator=(AESKey&amp;&amp; other) = default;
+    AESKey() = default;
+    AESKey(AESKey&amp;&amp; other) = default;
+    virtual ~AESKey() = default;
+};</code></pre><h3 id="h-security-encryption-akey-hpp"><code>utils/security/encryption/AKey.hpp</code></h3><p>Declaration of the abstract used for different key (RSA, AES, ...)</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::security::encryption
+std::string key_to_string(const std::vector&lt;std::uint8_t&gt;&amp; data);
+std::vector&lt;std::uint8_t&gt; string_to_key(const std::string&amp; s);
+template&lt;typename T&gt; class AKey: public utils::security::encryption::IKey&lt;T&gt; {
+    std::string generateRandomBytes(std::uint16_t size) const;
+    void generate(void);
+    void set(const T&amp; data);
+    const T&amp; get(void) const;
+    std::string encrypt(const std::string&amp; s) const;
+    std::string decrypt(const std::string&amp; s) const;
+    std::string encrypt(const std::string&amp; s, T&amp; data) const;
+    std::string decrypt(const std::string&amp; s, T&amp; data) const;
+    bool hasGenerateOverload(void) const;
+    bool hasSetOverload(void) const;
+    bool hasGetOverload(void) const;
+    AKey&amp; operator=(const AKey&amp; other) = default;
+    AKey&amp; operator=(AKey&amp;&amp; other) = default;
+    AKey() = default;
+    AKey(const AKey&amp; other) = default;
+    AKey(AKey&amp;&amp; other) = default;
+    virtual ~AKey() = default;
+};</code></pre><h3 id="h-security-encryption-commonrsakey-hpp"><code>utils/security/encryption/CommonRSAKey.hpp</code></h3><p>Declaration of the key used for the common RSA</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define DEFAULT_COMMON_RSA_PATH "~/.ssh/common" // common (priv) | common.pub (pub)
+
+// namespace utils::security::encryption
+class CommonRSAKey: public utils::security::encryption::RSAKey {
+    void loadCommon(std::string path = DEFAULT_COMMON_RSA_PATH);
+    CommonRSAKey&amp; operator=(const CommonRSAKey&amp; other) = default;
+    CommonRSAKey&amp; operator=(CommonRSAKey&amp;&amp; other) = default;
+    CommonRSAKey() = default;
+    CommonRSAKey(std::string path);
+    CommonRSAKey(const CommonRSAKey&amp; other) = default;
+    CommonRSAKey(CommonRSAKey&amp;&amp; other) = default;
+    virtual ~CommonRSAKey() = default;
+};</code></pre><h3 id="h-security-encryption-ikey-hpp"><code>utils/security/encryption/IKey.hpp</code></h3><p>Declaration of the interface used for different key (RSA, AES, ...)</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::security::encryption
+template&lt;typename T&gt; class IKey: private utils::security::observer::Observer&lt;"IKey"&gt; {
+    virtual std::string generateRandomBytes(std::uint16_t size = 32) const = 0;
+    virtual void generate(void) = 0;
+    virtual void set(const T&amp; data) = 0;
+    virtual const T&amp; get(void) const = 0;
+    virtual std::string encrypt(const std::string&amp; s) const = 0;
+    virtual std::string decrypt(const std::string&amp; s) const = 0;
+    virtual std::string encrypt(const std::string&amp; s, T&amp; data) const = 0;
+    virtual std::string decrypt(const std::string&amp; s, T&amp; data) const = 0;
+    virtual bool hasGenerateOverload(void) const = 0;
+    virtual bool hasSetOverload(void) const = 0;
+    virtual bool hasGetOverload(void) const = 0;
+    IKey&amp; operator=(const IKey&amp; other) = default;
+    IKey&amp; operator=(IKey&amp;&amp; other) = default;
+    IKey() = default;
+    IKey(const IKey&amp; other) = default;
+    IKey(IKey&amp;&amp; other) = default;
+    virtual ~IKey() = default;
+};</code></pre><h3 id="h-security-encryption-rsakey-hpp"><code>utils/security/encryption/RSAKey.hpp</code></h3><p>Declaration of the key used for the RSA</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define RSA_OAEP_PADDING_SIZE 42 // 2 * hash size + 2
+
+// namespace utils::security::encryption
+struct KeyPair {
+    std::string priv;
+    std::string pub;
+};
+class RSAKey: public utils::security::encryption::AKey&lt;utils::security::encryption::KeyPair&gt; {
+    void generate(void);
+    std::string encrypt(const std::string&amp; s) const;
+    std::string decrypt(const std::string&amp; s) const;
+    void set(const utils::security::encryption::KeyPair&amp; keys);
+    const utils::security::encryption::KeyPair&amp; get(void) const;
+    bool hasGenerateOverload(void) const;
+    bool hasSetOverload(void) const;
+    bool hasGetOverload(void) const;
+    RSAKey&amp; operator=(const RSAKey&amp; other) = default;
+    RSAKey&amp; operator=(RSAKey&amp;&amp; other) = default;
+    RSAKey() = default;
+    RSAKey(const RSAKey&amp; other) = default;
+    RSAKey(RSAKey&amp;&amp; other) = default;
+    virtual ~RSAKey() = default;
+};</code></pre><h3 id="h-security-observer-anotifier-hpp"><code>utils/security/observer/ANotifier.hpp</code></h3><p>Abstract of the different notifiers</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::security::observer
+class ANotifier: public utils::security::observer::INotifier {
+    void link(const std::uint64_t id, std::string_view instance, const bool safe_mode);
+    void unlink(const std::uint64_t id, const bool safe_mode);
+    void clear(const bool safe_mode);
+    ANotifier() noexcept;
+    ~ANotifier() = default;
+};</code></pre><h3 id="h-security-observer-aobserver-hpp"><code>utils/security/observer/AObserver.hpp</code></h3><p>Abstract version of the different observers</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::security::observer
+template&lt;utils::smanip::FixedString instance = "[unknown]", bool safe_mode = true&gt; class AObserver: public utils::security::observer::IObserver {
+    AObserver&amp; operator=(const AObserver&amp; other);
+    AObserver&amp; operator=(AObserver&amp;&amp; other);
+    AObserver();
+    AObserver(const AObserver&amp; other);
+    AObserver(AObserver&amp;&amp; other);
+    ~AObserver();
+};</code></pre><h3 id="h-security-observer-inotifier-hpp"><code>utils/security/observer/INotifier.hpp</code></h3><p>Interface of the different notifiers</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::security::observer
+class INotifier {
+    virtual void link(const std::uint64_t id, std::string_view instance, const bool safe_mode) = 0;
+    virtual void unlink(const std::uint64_t id, const bool safe_mode) = 0;
+    virtual void clear(const bool safe_mode) = 0; // Free the stored if from the handler
+    virtual void trigger(void) = 0; // Force notifiers to check there internal status and trigger there 'notification'
+    INotifier() = default;
+    virtual ~INotifier() = default;
+};</code></pre><h3 id="h-security-observer-iobserver-hpp"><code>utils/security/observer/IObserver.hpp</code></h3><p>Interface of the different observers</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::security::observer
+class IObserver {
+    IObserver&amp; operator=(const IObserver&amp; other) = default;
+    IObserver&amp; operator=(IObserver&amp;&amp; other) = default;
+    IObserver() = default;
+    IObserver(const IObserver&amp; other) = default;
+    IObserver(IObserver&amp;&amp; other) = default;
+    virtual ~IObserver() = default;
+};</code></pre><h3 id="h-security-observer-instances-hpp"><code>utils/security/observer/Instances.hpp</code></h3><p>Different static instance used by the observer</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::security::observer::instances
+utils::system::IdHandler&lt;std::uint64_t&gt;&amp; id_handler(void);
+std::array&lt;std::unique_ptr&lt;utils::security::observer::INotifier&gt;, 1&gt;&amp; notifiers(void);</code></pre><h3 id="h-security-observer-memoryleaknotifier-hpp"><code>utils/security/observer/MemoryLeakNotifier.hpp</code></h3><p>Notifier for meamory leak</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::security::observer
+class MemoryLeakNotifier: public utils::security::observer::ANotifier {
+    void trigger(void);
+    MemoryLeakNotifier() = default;
+    ~MemoryLeakNotifier() noexcept;
+};</code></pre><h3 id="h-security-observer-observer-hpp"><code>utils/security/observer/Observer.hpp</code></h3><p>Observer used for the different warning</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::security::observer
+template&lt;utils::smanip::FixedString instance&gt; class Observer: public utils::security::observer::AObserver&lt;instance, true&gt; {
+    Observer&amp; operator=(const Observer&amp; other) = default;
+    Observer&amp; operator=(Observer&amp;&amp; other) = default;
+    Observer() = default;
+    Observer(const Observer&amp; other) = default;
+    Observer(Observer&amp;&amp; other) = default;
+    ~Observer() = default;
+};</code></pre><h3 id="h-security-observer-unsafeobserver-hpp"><code>utils/security/observer/UnsafeObserver.hpp</code></h3><p>UnsafeObserver used for the different warning</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::security::observer
+template&lt;utils::smanip::FixedString instance&gt; class UnsafeObserver: public utils::security::observer::AObserver&lt;instance, false&gt; {
+    UnsafeObserver&amp; operator=(const UnsafeObserver&amp; other) = default;
+    UnsafeObserver&amp; operator=(UnsafeObserver&amp;&amp; other) = default;
+    UnsafeObserver() = default;
+    UnsafeObserver(const UnsafeObserver&amp; other) = default;
+    UnsafeObserver(UnsafeObserver&amp;&amp; other) = default;
+    ~UnsafeObserver() = default;
+};</code></pre></div><div data-lang="fr"><p>Lu dans les en-têtes de <code>include/utils/security/</code> (partie publique seulement, avec les commentaires du code). Inclure <code>&lt;utils/utils.hpp&gt;</code> avec le define de la section, jamais ces en-têtes un par un.</p><h3 id="h-security-encryption-aeskey-hpp"><code>utils/security/encryption/AESKey.hpp</code></h3><p>Declaration of the key used for the AES</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define AES_KEY_SIZE 32 // 256 bits
+#define AES_MIN_IV_SIZE 12 // 96 bits (GCM nonce)
+#define AES_TAG_SIZE 16 // 128 bits
+
+// namespace utils::security::encryption
+struct KeyAES {
+    std::string AES;
+    std::string iv;
+    std::string tag;
+};
+class AESKey: public utils::security::encryption::AKey&lt;utils::security::encryption::KeyAES&gt; {
+    std::string encrypt(const std::string&amp; s, utils::security::encryption::KeyAES&amp; key) const;
+    std::string decrypt(const std::string&amp; s, utils::security::encryption::KeyAES&amp; key) const;
+    AESKey&amp; operator=(AESKey&amp;&amp; other) = default;
+    AESKey() = default;
+    AESKey(AESKey&amp;&amp; other) = default;
+    virtual ~AESKey() = default;
+};</code></pre><h3 id="h-security-encryption-akey-hpp"><code>utils/security/encryption/AKey.hpp</code></h3><p>Declaration of the abstract used for different key (RSA, AES, ...)</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::security::encryption
+std::string key_to_string(const std::vector&lt;std::uint8_t&gt;&amp; data);
+std::vector&lt;std::uint8_t&gt; string_to_key(const std::string&amp; s);
+template&lt;typename T&gt; class AKey: public utils::security::encryption::IKey&lt;T&gt; {
+    std::string generateRandomBytes(std::uint16_t size) const;
+    void generate(void);
+    void set(const T&amp; data);
+    const T&amp; get(void) const;
+    std::string encrypt(const std::string&amp; s) const;
+    std::string decrypt(const std::string&amp; s) const;
+    std::string encrypt(const std::string&amp; s, T&amp; data) const;
+    std::string decrypt(const std::string&amp; s, T&amp; data) const;
+    bool hasGenerateOverload(void) const;
+    bool hasSetOverload(void) const;
+    bool hasGetOverload(void) const;
+    AKey&amp; operator=(const AKey&amp; other) = default;
+    AKey&amp; operator=(AKey&amp;&amp; other) = default;
+    AKey() = default;
+    AKey(const AKey&amp; other) = default;
+    AKey(AKey&amp;&amp; other) = default;
+    virtual ~AKey() = default;
+};</code></pre><h3 id="h-security-encryption-commonrsakey-hpp"><code>utils/security/encryption/CommonRSAKey.hpp</code></h3><p>Declaration of the key used for the common RSA</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define DEFAULT_COMMON_RSA_PATH "~/.ssh/common" // common (priv) | common.pub (pub)
+
+// namespace utils::security::encryption
+class CommonRSAKey: public utils::security::encryption::RSAKey {
+    void loadCommon(std::string path = DEFAULT_COMMON_RSA_PATH);
+    CommonRSAKey&amp; operator=(const CommonRSAKey&amp; other) = default;
+    CommonRSAKey&amp; operator=(CommonRSAKey&amp;&amp; other) = default;
+    CommonRSAKey() = default;
+    CommonRSAKey(std::string path);
+    CommonRSAKey(const CommonRSAKey&amp; other) = default;
+    CommonRSAKey(CommonRSAKey&amp;&amp; other) = default;
+    virtual ~CommonRSAKey() = default;
+};</code></pre><h3 id="h-security-encryption-ikey-hpp"><code>utils/security/encryption/IKey.hpp</code></h3><p>Declaration of the interface used for different key (RSA, AES, ...)</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::security::encryption
+template&lt;typename T&gt; class IKey: private utils::security::observer::Observer&lt;"IKey"&gt; {
+    virtual std::string generateRandomBytes(std::uint16_t size = 32) const = 0;
+    virtual void generate(void) = 0;
+    virtual void set(const T&amp; data) = 0;
+    virtual const T&amp; get(void) const = 0;
+    virtual std::string encrypt(const std::string&amp; s) const = 0;
+    virtual std::string decrypt(const std::string&amp; s) const = 0;
+    virtual std::string encrypt(const std::string&amp; s, T&amp; data) const = 0;
+    virtual std::string decrypt(const std::string&amp; s, T&amp; data) const = 0;
+    virtual bool hasGenerateOverload(void) const = 0;
+    virtual bool hasSetOverload(void) const = 0;
+    virtual bool hasGetOverload(void) const = 0;
+    IKey&amp; operator=(const IKey&amp; other) = default;
+    IKey&amp; operator=(IKey&amp;&amp; other) = default;
+    IKey() = default;
+    IKey(const IKey&amp; other) = default;
+    IKey(IKey&amp;&amp; other) = default;
+    virtual ~IKey() = default;
+};</code></pre><h3 id="h-security-encryption-rsakey-hpp"><code>utils/security/encryption/RSAKey.hpp</code></h3><p>Declaration of the key used for the RSA</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define RSA_OAEP_PADDING_SIZE 42 // 2 * hash size + 2
+
+// namespace utils::security::encryption
+struct KeyPair {
+    std::string priv;
+    std::string pub;
+};
+class RSAKey: public utils::security::encryption::AKey&lt;utils::security::encryption::KeyPair&gt; {
+    void generate(void);
+    std::string encrypt(const std::string&amp; s) const;
+    std::string decrypt(const std::string&amp; s) const;
+    void set(const utils::security::encryption::KeyPair&amp; keys);
+    const utils::security::encryption::KeyPair&amp; get(void) const;
+    bool hasGenerateOverload(void) const;
+    bool hasSetOverload(void) const;
+    bool hasGetOverload(void) const;
+    RSAKey&amp; operator=(const RSAKey&amp; other) = default;
+    RSAKey&amp; operator=(RSAKey&amp;&amp; other) = default;
+    RSAKey() = default;
+    RSAKey(const RSAKey&amp; other) = default;
+    RSAKey(RSAKey&amp;&amp; other) = default;
+    virtual ~RSAKey() = default;
+};</code></pre><h3 id="h-security-observer-anotifier-hpp"><code>utils/security/observer/ANotifier.hpp</code></h3><p>Abstract of the different notifiers</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::security::observer
+class ANotifier: public utils::security::observer::INotifier {
+    void link(const std::uint64_t id, std::string_view instance, const bool safe_mode);
+    void unlink(const std::uint64_t id, const bool safe_mode);
+    void clear(const bool safe_mode);
+    ANotifier() noexcept;
+    ~ANotifier() = default;
+};</code></pre><h3 id="h-security-observer-aobserver-hpp"><code>utils/security/observer/AObserver.hpp</code></h3><p>Abstract version of the different observers</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::security::observer
+template&lt;utils::smanip::FixedString instance = "[unknown]", bool safe_mode = true&gt; class AObserver: public utils::security::observer::IObserver {
+    AObserver&amp; operator=(const AObserver&amp; other);
+    AObserver&amp; operator=(AObserver&amp;&amp; other);
+    AObserver();
+    AObserver(const AObserver&amp; other);
+    AObserver(AObserver&amp;&amp; other);
+    ~AObserver();
+};</code></pre><h3 id="h-security-observer-inotifier-hpp"><code>utils/security/observer/INotifier.hpp</code></h3><p>Interface of the different notifiers</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::security::observer
+class INotifier {
+    virtual void link(const std::uint64_t id, std::string_view instance, const bool safe_mode) = 0;
+    virtual void unlink(const std::uint64_t id, const bool safe_mode) = 0;
+    virtual void clear(const bool safe_mode) = 0; // Free the stored if from the handler
+    virtual void trigger(void) = 0; // Force notifiers to check there internal status and trigger there 'notification'
+    INotifier() = default;
+    virtual ~INotifier() = default;
+};</code></pre><h3 id="h-security-observer-iobserver-hpp"><code>utils/security/observer/IObserver.hpp</code></h3><p>Interface of the different observers</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::security::observer
+class IObserver {
+    IObserver&amp; operator=(const IObserver&amp; other) = default;
+    IObserver&amp; operator=(IObserver&amp;&amp; other) = default;
+    IObserver() = default;
+    IObserver(const IObserver&amp; other) = default;
+    IObserver(IObserver&amp;&amp; other) = default;
+    virtual ~IObserver() = default;
+};</code></pre><h3 id="h-security-observer-instances-hpp"><code>utils/security/observer/Instances.hpp</code></h3><p>Different static instance used by the observer</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::security::observer::instances
+utils::system::IdHandler&lt;std::uint64_t&gt;&amp; id_handler(void);
+std::array&lt;std::unique_ptr&lt;utils::security::observer::INotifier&gt;, 1&gt;&amp; notifiers(void);</code></pre><h3 id="h-security-observer-memoryleaknotifier-hpp"><code>utils/security/observer/MemoryLeakNotifier.hpp</code></h3><p>Notifier for meamory leak</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::security::observer
+class MemoryLeakNotifier: public utils::security::observer::ANotifier {
+    void trigger(void);
+    MemoryLeakNotifier() = default;
+    ~MemoryLeakNotifier() noexcept;
+};</code></pre><h3 id="h-security-observer-observer-hpp"><code>utils/security/observer/Observer.hpp</code></h3><p>Observer used for the different warning</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::security::observer
+template&lt;utils::smanip::FixedString instance&gt; class Observer: public utils::security::observer::AObserver&lt;instance, true&gt; {
+    Observer&amp; operator=(const Observer&amp; other) = default;
+    Observer&amp; operator=(Observer&amp;&amp; other) = default;
+    Observer() = default;
+    Observer(const Observer&amp; other) = default;
+    Observer(Observer&amp;&amp; other) = default;
+    ~Observer() = default;
+};</code></pre><h3 id="h-security-observer-unsafeobserver-hpp"><code>utils/security/observer/UnsafeObserver.hpp</code></h3><p>UnsafeObserver used for the different warning</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::security::observer
+template&lt;utils::smanip::FixedString instance&gt; class UnsafeObserver: public utils::security::observer::AObserver&lt;instance, false&gt; {
+    UnsafeObserver&amp; operator=(const UnsafeObserver&amp; other) = default;
+    UnsafeObserver&amp; operator=(UnsafeObserver&amp;&amp; other) = default;
+    UnsafeObserver() = default;
+    UnsafeObserver(const UnsafeObserver&amp; other) = default;
+    UnsafeObserver(UnsafeObserver&amp;&amp; other) = default;
+    ~UnsafeObserver() = default;
+};</code></pre></div></section><section id="c-api"><h2>8. <span data-lang="en">C API</span><span data-lang="fr">API C</span></h2><div data-lang="en"><p>Read from <code>include/utils/security/CApi.h</code>, included by <code>&lt;utils.h&gt;</code> with the define of the section. Every function that can fail returns <code>UTILS_OK</code> / <code>UTILS_KO</code> (or <code>NULL</code> / <code>0</code>) and fills <code>utils_exception</code> (see <a href="c-api.html#errors">the C API guide</a>).</p><h3 id="c-1">Defines · Path of the common RSA key</h3><p><em>path of the common RSA key (utils/security/encryption/CommonRSAKey.hpp): common (private) | common.pub (public)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_SECURITY_DEFAULT_COMMON_RSA_PATH "~/.ssh/common"</code></pre><h3 id="c-2">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_aes_key utils_aes_key_t; // utils::security::encryption::AESKey
+typedef struct utils_aes_data utils_aes_data_t; // utils::security::encryption::KeyAES (key, iv, tag)
+typedef struct utils_rsa_key utils_rsa_key_t; // utils::security::encryption::CommonRSAKey (an RSAKey that can load the common key)
+typedef struct utils_observer utils_observer_t; // instance of the C side linked to the notifiers (memory leak report)</code></pre><h3 id="c-3">Functions · AES key</h3><p><em>AES key (encrypt: the key &amp; iv of data are used, its tag is set, decrypt: key, iv &amp; tag are used)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_aes_key_t* utils_aes_key_create(void); // NULL on error
+void utils_aes_key_destroy(utils_aes_key_t* key); // NULL: nothing
+int utils_aes_key_random_bytes(const utils_aes_key_t* key, uint16_t size, utils_string_t* out); // out replaced
+int utils_aes_key_encrypt(const utils_aes_key_t* key, const char* in, size_t size, utils_aes_data_t* data, utils_string_t* out); // out replaced
+int utils_aes_key_decrypt(const utils_aes_key_t* key, const char* in, size_t size, utils_aes_data_t* data, utils_string_t* out); // out replaced
+bool utils_aes_key_has_generate_overload(const utils_aes_key_t* key);
+bool utils_aes_key_has_set_overload(const utils_aes_key_t* key);
+bool utils_aes_key_has_get_overload(const utils_aes_key_t* key);</code></pre><h3 id="c-4">Functions · AES data</h3><p><em>AES data (bytes: given back valid until data is changed, size: optional)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_aes_data_t* utils_aes_data_create(void); // NULL on error
+void utils_aes_data_destroy(utils_aes_data_t* data); // NULL: nothing
+int utils_aes_data_set_key(utils_aes_data_t* data, const char* bytes, size_t size); // 32 bytes (AES-256)
+int utils_aes_data_set_iv(utils_aes_data_t* data, const char* bytes, size_t size);
+int utils_aes_data_set_tag(utils_aes_data_t* data, const char* bytes, size_t size);
+const char* utils_aes_data_get_key(const utils_aes_data_t* data, size_t* size); // NULL on error
+const char* utils_aes_data_get_iv(const utils_aes_data_t* data, size_t* size); // NULL on error
+const char* utils_aes_data_get_tag(const utils_aes_data_t* data, size_t* size); // NULL on error</code></pre><h3 id="c-5">Functions · RSA key</h3><p><em>RSA key (keys in PEM, strings given back valid until the key is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_rsa_key_t* utils_rsa_key_create(void); // NULL on error
+utils_rsa_key_t* utils_rsa_key_create_common(const char* path); // the common key loaded (path: NULL = C_API_SECURITY_DEFAULT_COMMON_RSA_PATH), NULL on error
+void utils_rsa_key_destroy(utils_rsa_key_t* key); // NULL: nothing
+int utils_rsa_key_load_common(utils_rsa_key_t* key, const char* path); // path: NULL = C_API_SECURITY_DEFAULT_COMMON_RSA_PATH
+int utils_rsa_key_generate(utils_rsa_key_t* key);
+int utils_rsa_key_set(utils_rsa_key_t* key, const char* private_key, const char* public_key); // NULL: ""
+const char* utils_rsa_key_get_private(const utils_rsa_key_t* key); // NULL on error
+const char* utils_rsa_key_get_public(const utils_rsa_key_t* key); // NULL on error
+int utils_rsa_key_random_bytes(const utils_rsa_key_t* key, uint16_t size, utils_string_t* out); // out replaced
+int utils_rsa_key_encrypt(const utils_rsa_key_t* key, const char* in, size_t size, utils_string_t* out); // with the public key, out replaced
+int utils_rsa_key_decrypt(const utils_rsa_key_t* key, const char* in, size_t size, utils_string_t* out); // with the private key, out replaced
+bool utils_rsa_key_has_generate_overload(const utils_rsa_key_t* key);
+bool utils_rsa_key_has_set_overload(const utils_rsa_key_t* key);
+bool utils_rsa_key_has_get_overload(const utils_rsa_key_t* key);</code></pre><h3 id="c-6">Functions · Observers</h3><p><em>observers (an observer not destroyed is reported as a leak by the memory leak notifier, safe_mode: thread safe)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_observer_t* utils_observer_create(const char* instance, bool safe_mode); // linked to the notifiers, NULL on error
+void utils_observer_destroy(utils_observer_t* observer); // NULL: nothing (unlinked)
+int utils_observer_trigger(void); // force every notifier to check its status now (memory leak: report the instances still linked)</code></pre></div><div data-lang="fr"><p>Lu dans <code>include/utils/security/CApi.h</code>, inclus par <code>&lt;utils.h&gt;</code> avec le define de la section. Chaque fonction qui peut échouer renvoie <code>UTILS_OK</code> / <code>UTILS_KO</code> (ou <code>NULL</code> / <code>0</code>) et remplit <code>utils_exception</code> (voir <a href="c-api.html#errors">le guide de l'API C</a>).</p><h3 id="c-1">Defines · Path of the common RSA key</h3><p><em>path of the common RSA key (utils/security/encryption/CommonRSAKey.hpp): common (private) | common.pub (public)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_SECURITY_DEFAULT_COMMON_RSA_PATH "~/.ssh/common"</code></pre><h3 id="c-2">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_aes_key utils_aes_key_t; // utils::security::encryption::AESKey
+typedef struct utils_aes_data utils_aes_data_t; // utils::security::encryption::KeyAES (key, iv, tag)
+typedef struct utils_rsa_key utils_rsa_key_t; // utils::security::encryption::CommonRSAKey (an RSAKey that can load the common key)
+typedef struct utils_observer utils_observer_t; // instance of the C side linked to the notifiers (memory leak report)</code></pre><h3 id="c-3">Fonctions · AES key</h3><p><em>AES key (encrypt: the key &amp; iv of data are used, its tag is set, decrypt: key, iv &amp; tag are used)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_aes_key_t* utils_aes_key_create(void); // NULL on error
+void utils_aes_key_destroy(utils_aes_key_t* key); // NULL: nothing
+int utils_aes_key_random_bytes(const utils_aes_key_t* key, uint16_t size, utils_string_t* out); // out replaced
+int utils_aes_key_encrypt(const utils_aes_key_t* key, const char* in, size_t size, utils_aes_data_t* data, utils_string_t* out); // out replaced
+int utils_aes_key_decrypt(const utils_aes_key_t* key, const char* in, size_t size, utils_aes_data_t* data, utils_string_t* out); // out replaced
+bool utils_aes_key_has_generate_overload(const utils_aes_key_t* key);
+bool utils_aes_key_has_set_overload(const utils_aes_key_t* key);
+bool utils_aes_key_has_get_overload(const utils_aes_key_t* key);</code></pre><h3 id="c-4">Fonctions · AES data</h3><p><em>AES data (bytes: given back valid until data is changed, size: optional)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_aes_data_t* utils_aes_data_create(void); // NULL on error
+void utils_aes_data_destroy(utils_aes_data_t* data); // NULL: nothing
+int utils_aes_data_set_key(utils_aes_data_t* data, const char* bytes, size_t size); // 32 bytes (AES-256)
+int utils_aes_data_set_iv(utils_aes_data_t* data, const char* bytes, size_t size);
+int utils_aes_data_set_tag(utils_aes_data_t* data, const char* bytes, size_t size);
+const char* utils_aes_data_get_key(const utils_aes_data_t* data, size_t* size); // NULL on error
+const char* utils_aes_data_get_iv(const utils_aes_data_t* data, size_t* size); // NULL on error
+const char* utils_aes_data_get_tag(const utils_aes_data_t* data, size_t* size); // NULL on error</code></pre><h3 id="c-5">Fonctions · RSA key</h3><p><em>RSA key (keys in PEM, strings given back valid until the key is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_rsa_key_t* utils_rsa_key_create(void); // NULL on error
+utils_rsa_key_t* utils_rsa_key_create_common(const char* path); // the common key loaded (path: NULL = C_API_SECURITY_DEFAULT_COMMON_RSA_PATH), NULL on error
+void utils_rsa_key_destroy(utils_rsa_key_t* key); // NULL: nothing
+int utils_rsa_key_load_common(utils_rsa_key_t* key, const char* path); // path: NULL = C_API_SECURITY_DEFAULT_COMMON_RSA_PATH
+int utils_rsa_key_generate(utils_rsa_key_t* key);
+int utils_rsa_key_set(utils_rsa_key_t* key, const char* private_key, const char* public_key); // NULL: ""
+const char* utils_rsa_key_get_private(const utils_rsa_key_t* key); // NULL on error
+const char* utils_rsa_key_get_public(const utils_rsa_key_t* key); // NULL on error
+int utils_rsa_key_random_bytes(const utils_rsa_key_t* key, uint16_t size, utils_string_t* out); // out replaced
+int utils_rsa_key_encrypt(const utils_rsa_key_t* key, const char* in, size_t size, utils_string_t* out); // with the public key, out replaced
+int utils_rsa_key_decrypt(const utils_rsa_key_t* key, const char* in, size_t size, utils_string_t* out); // with the private key, out replaced
+bool utils_rsa_key_has_generate_overload(const utils_rsa_key_t* key);
+bool utils_rsa_key_has_set_overload(const utils_rsa_key_t* key);
+bool utils_rsa_key_has_get_overload(const utils_rsa_key_t* key);</code></pre><h3 id="c-6">Fonctions · Observers</h3><p><em>observers (an observer not destroyed is reported as a leak by the memory leak notifier, safe_mode: thread safe)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_observer_t* utils_observer_create(const char* instance, bool safe_mode); // linked to the notifiers, NULL on error
+void utils_observer_destroy(utils_observer_t* observer); // NULL: nothing (unlinked)
+int utils_observer_trigger(void); // force every notifier to check its status now (memory leak: report the instances still linked)</code></pre></div></section><nav class="pager"><a href="algorithms.html"><span data-i18n>Previous</span><span data-lang="en">Algorithms</span><span data-lang="fr">Algorithms</span></a><a class="next" href="platform.html"><span data-i18n>Next</span><span data-lang="en">Platform</span><span data-lang="fr">Platform</span></a></nav></main>
+</div>
+<footer class="site">libutils v5.0.0 · 23d2be3 · docs</footer>
+<script src="site.js"></script>
+<script src="search-index.js" defer></script>
+</body>
+</html>

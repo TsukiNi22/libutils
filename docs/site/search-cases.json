@@ -1,0 +1,17 @@
+[
+    ["en", "utils_cli_create", "utils_cli_create"],
+    ["en", "utils_exception_format", "utils_exception_format"],
+    ["en", "utils_hybrid_memory_create", "utils_hybrid_memory_create"],
+    ["en", "utils_shm_init", "utils_shm_init"],
+    ["en", "c api", "c-api"],
+    ["fr", "api c", "c-api"],
+    ["en", "windows", "windows"],
+    ["en", "mingw", "windows"],
+    ["en", "HybridMemory", "system"],
+    ["en", "SharedMemory", "encapsulation"],
+    ["en", "argparser", "arguments"],
+    ["en", "exeption codes", "exception"],
+    ["fr", "installer", "installation"],
+    ["en", "pre-commit", "development"],
+    ["en", "eetp", "eetp"]
+]

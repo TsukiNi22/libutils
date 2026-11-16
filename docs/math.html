@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en" data-storage-key="libutils-docs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Math - libutils</title>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n>Skip to the content</a>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" id="menuBtn" aria-label="Open the navigation" data-i18n-aria-label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v5.0.0</span></a>
+  <nav class="tabs" aria-label="Pages" hidden></nav>
+  <span class="spacer"></span>
+  <div class="top-actions">
+  <div class="lang-switch" role="group" aria-label="Language" data-i18n-aria-label>
+    <button type="button" data-set-lang="en" class="on">EN</button>
+    <button type="button" data-set-lang="fr">FR</button>
+  </div>
+  <span class="divider" aria-hidden="true"></span><div class="sbox small"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" autocomplete="off" aria-label="Search" data-i18n-aria-label placeholder="Search…" data-ph-fr="Rechercher…"><kbd class="hint" aria-hidden="true">/</kbd><ul class="results" hidden></ul></div>
+<a class="icon-btn" href="https://github.com/TsukiNi22/libutils" aria-label="GitHub repository" data-i18n-aria-label title="GitHub repository" data-i18n-title><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"/></svg></a>
+  <button class="theme-switch" type="button" id="themeToggle" role="switch" aria-checked="false" aria-label="Toggle theme" data-i18n-aria-label title="Toggle theme" data-i18n-title>
+    <span class="stars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="knob" aria-hidden="true">
+      <svg class="sun" viewBox="0 0 24 24" fill="#ffffff"><circle cx="12" cy="12" r="5.2"/><g stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"><path d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6M4.8 4.8l1.8 1.8M17.4 17.4l1.8 1.8M4.8 19.2l1.8-1.8M17.4 6.6l1.8-1.8"/></g></svg>
+      <svg class="moon" viewBox="0 0 24 24"><path d="M15.6 4.2a8 8 0 1 0 4.2 11.6A7 7 0 0 1 15.6 4.2z" fill="#f6c343"/></svg>
+    </span>
+  </button>
+  </div>
+</header>
+<div class="layout" id="top">
+<aside class="sidebar" id="sidebar"><p data-i18n>On this page</p><a href="#types">1. <span data-lang="en">Types</span><span data-lang="fr">Types</span></a><a href="#geometry">2. <span data-lang="en">Geometry</span><span data-lang="fr">Géométrie</span></a><a href="#trigo">3. <span data-lang="en">Trigo</span><span data-lang="fr">Trigo</span></a><a href="#in-c">4. <span data-lang="en">In C</span><span data-lang="fr">En C</span></a><a href="#cpp-api">5. <span data-lang="en">C++ API</span><span data-lang="fr">API C++</span></a><a href="#c-api">6. <span data-lang="en">C API</span><span data-lang="fr">API C</span></a><hr><div class="grp"><span data-lang="en">User guide</span><span data-lang="fr">Guide utilisateur</span></div><a href="installation.html"><span data-lang="en">Installation</span><span data-lang="fr">Installation</span></a><a href="usage.html"><span data-lang="en">Link and include</span><span data-lang="fr">Lier et inclure</span></a><a href="custom-exceptions.html"><span data-lang="en">Custom exception codes</span><span data-lang="fr">Codes d&#x27;exception personnalisés</span></a><a href="warnings.html"><span data-lang="en">Warnings</span><span data-lang="fr">Avertissements</span></a><a href="c-api.html"><span data-lang="en">Use libutils from C</span><span data-lang="fr">Utiliser libutils depuis C</span></a><a href="windows.html"><span data-lang="en">Windows</span><span data-lang="fr">Windows</span></a><a href="development.html"><span data-lang="en">Build, tests and hooks</span><span data-lang="fr">Build, tests et hooks</span></a><div class="grp"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></div><a href="overview.html"><span data-lang="en">Architecture</span><span data-lang="fr">Architecture</span></a><a href="errors.html"><span data-lang="en">Errors</span><span data-lang="fr">Erreurs</span></a><a href="c-api-design.html"><span data-lang="en">The C API design</span><span data-lang="fr">Conception de l&#x27;API C</span></a><a href="network-ipc.html"><span data-lang="en">Communication</span><span data-lang="fr">Communication</span></a><a href="platforms.html"><span data-lang="en">Platforms</span><span data-lang="fr">Plateformes</span></a><div class="grp"><span data-lang="en">Reference</span><span data-lang="fr">Référence</span></div><a href="exception.html"><span data-lang="en">Exceptions</span><span data-lang="fr">Exceptions</span></a><a href="verbose.html"><span data-lang="en">Verbose</span><span data-lang="fr">Verbose</span></a><a href="pool.html"><span data-lang="en">Pool</span><span data-lang="fr">Pool</span></a><a href="cli.html"><span data-lang="en">Cli</span><span data-lang="fr">Cli</span></a><a href="arguments.html"><span data-lang="en">Arguments</span><span data-lang="fr">Arguments</span></a><a href="network.html"><span data-lang="en">Network</span><span data-lang="fr">Network</span></a><a href="math.html" class="cur" aria-current="page"><span data-lang="en">Math</span><span data-lang="fr">Math</span></a><a href="concepts.html"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></a><a href="encapsulation.html"><span data-lang="en">Encapsulation</span><span data-lang="fr">Encapsulation</span></a><a href="system.html"><span data-lang="en">System</span><span data-lang="fr">System</span></a><a href="type.html"><span data-lang="en">Type</span><span data-lang="fr">Type</span></a><a href="iomanip.html"><span data-lang="en">IOManip</span><span data-lang="fr">IOManip</span></a><a href="smanip.html"><span data-lang="en">SManip</span><span data-lang="fr">SManip</span></a><a href="algorithms.html"><span data-lang="en">Algorithms</span><span data-lang="fr">Algorithms</span></a><a href="security.html"><span data-lang="en">Security</span><span data-lang="fr">Security</span></a><a href="platform.html"><span data-lang="en">Platform</span><span data-lang="fr">Platform</span></a><a href="attribute.html"><span data-lang="en">Attribute</span><span data-lang="fr">Attribute</span></a><div class="grp"><span data-lang="en">Resources</span><span data-lang="fr">Ressources</span></div><a href="changelog.html"><span data-lang="en">Changelog</span><span data-lang="fr">Historique</span></a><a href="ci-cd.html"><span data-lang="en">CI / CD</span><span data-lang="fr">CI / CD</span></a><a href="licenses.html"><span data-lang="en">Licenses</span><span data-lang="fr">Licences</span></a><a href="project-graph.html"><span data-lang="en">Project graph</span><span data-lang="fr">Graphe du projet</span></a><a href="faq.html"><span data-lang="en">FAQ</span><span data-lang="fr">FAQ</span></a><a href="glossary.html"><span data-lang="en">Glossary</span><span data-lang="fr">Glossaire</span></a></aside><main id="main" tabindex="-1"><header><div class="page-eyebrow"><span data-lang="en">Reference</span><span data-lang="fr">Référence</span></div><h1><span data-lang="en">Math</span><span data-lang="fr">Math</span></h1><p class="lead"><span data-lang="en">Types for 2D / 3D coordinates and angles, point rotation, look vector and degree / radian conversion.</span><span data-lang="fr">Types pour les coordonnées et angles 2D / 3D, rotation de points, vecteur de visée et conversion degrés / radians.</span></p><div class="page-meta"><span><span data-i18n>Updated</span> 2026-11-26</span></div></header><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Define, Group, Namespace, Headers"><table><thead><tr><th scope="col" style="min-width:24ch">Define</th><th scope="col" style="min-width:10ch">Group</th><th scope="col" style="min-width:27ch">Namespace</th><th scope="col" style="min-width:25ch">Headers</th></tr></thead><tbody><tr><td><code>_Math</code></td><td><code>_Tools</code></td><td><code>utils::math</code></td><td><code>utils/math/</code></td></tr><tr><td><code>_Geometry</code> (from <code>_Math</code>)</td><td><code>_Math</code></td><td><code>utils::math::geometry</code></td><td><code>utils/math/geometry/</code></td></tr><tr><td><code>_Trigo</code> (from <code>_Math</code>)</td><td><code>_Math</code></td><td><code>utils::math::trigo</code></td><td><code>utils/math/trigo/Convertion.hpp</code></td></tr></tbody></table></div><p>Types and functions for 2D / 3D coordinates and angles, built on the <a href="type.html#vector">vector</a> types.</p></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Define, Groupe, Namespace, Headers"><table><thead><tr><th scope="col" style="min-width:19ch">Define</th><th scope="col" style="min-width:11ch">Groupe</th><th scope="col" style="min-width:27ch">Namespace</th><th scope="col" style="min-width:25ch">Headers</th></tr></thead><tbody><tr><td><code>_Math</code></td><td><code>_Tools</code></td><td><code>utils::math</code></td><td><code>utils/math/</code></td></tr><tr><td><code>_Geometry</code> (depuis <code>_Math</code>)</td><td><code>_Math</code></td><td><code>utils::math::geometry</code></td><td><code>utils/math/geometry/</code></td></tr><tr><td><code>_Trigo</code> (depuis <code>_Math</code>)</td><td><code>_Math</code></td><td><code>utils::math::trigo</code></td><td><code>utils/math/trigo/Convertion.hpp</code></td></tr></tbody></table></div><p>Types et fonctions pour les coordonnées et angles 2D / 3D, construits sur les types <a href="type.html#vector">vecteur</a>.</p></div><section id="types"><h2>1. <span data-lang="en">Types</span><span data-lang="fr">Types</span></h2><div data-lang="en"><p><code>utils/math/MathType.hpp</code>:</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Type, Definition"><table><thead><tr><th scope="col" style="min-width:22ch">Type</th><th scope="col" style="min-width:29ch">Definition</th></tr></thead><tbody><tr><td><code>Type</code> / <code>UType</code></td><td><code>double</code> / <code>std::uint64_t</code>, used for every coordinate and angle</td></tr><tr><td><code>Coord2D</code> (<code>V2Type</code>), <code>UCoord2D</code> (<code>V2UType</code>)</td><td><code>OVector2&lt;Type&gt;</code>, <code>OVector2&lt;UType&gt;</code></td></tr><tr><td><code>Coord</code> (<code>V3Type</code>), <code>UCoord</code> (<code>V3UType</code>)</td><td><code>OVector3&lt;Type&gt;</code>, <code>OVector3&lt;UType&gt;</code></td></tr><tr><td><code>Angle</code></td><td><code>Type</code>, in degrees by default</td></tr><tr><td><code>Direction</code></td><td><code>OVector3&lt;Angle&gt;</code> (orientation or normalized direction)</td></tr><tr><td><code>Chunk</code></td><td><code>OVector3&lt;std::int32_t&gt;</code>, for spatial partitioning</td></tr><tr><td><code>CFrame</code></td><td><code>{Coord position, Direction orientation (deg), Direction look (normalized)}</code></td></tr></tbody></table></div></div><div data-lang="fr"><p><code>utils/math/MathType.hpp</code> :</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Type, Définition"><table><thead><tr><th scope="col" style="min-width:22ch">Type</th><th scope="col" style="min-width:29ch">Définition</th></tr></thead><tbody><tr><td><code>Type</code> / <code>UType</code></td><td><code>double</code> / <code>std::uint64_t</code>, utilisés pour chaque coordonnée et chaque angle</td></tr><tr><td><code>Coord2D</code> (<code>V2Type</code>), <code>UCoord2D</code> (<code>V2UType</code>)</td><td><code>OVector2&lt;Type&gt;</code>, <code>OVector2&lt;UType&gt;</code></td></tr><tr><td><code>Coord</code> (<code>V3Type</code>), <code>UCoord</code> (<code>V3UType</code>)</td><td><code>OVector3&lt;Type&gt;</code>, <code>OVector3&lt;UType&gt;</code></td></tr><tr><td><code>Angle</code></td><td><code>Type</code>, en degrés par défaut</td></tr><tr><td><code>Direction</code></td><td><code>OVector3&lt;Angle&gt;</code> (orientation ou direction normalisée)</td></tr><tr><td><code>Chunk</code></td><td><code>OVector3&lt;std::int32_t&gt;</code>, pour le partitionnement spatial</td></tr><tr><td><code>CFrame</code></td><td><code>{Coord position, Direction orientation (deg), Direction look (normalized)}</code></td></tr></tbody></table></div></div></section><section id="geometry"><h2>2. <span data-lang="en">Geometry</span><span data-lang="fr">Géométrie</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Function, Description"><table><thead><tr><th scope="col" style="min-width:29ch">Function</th><th scope="col" style="min-width:22ch">Description</th></tr></thead><tbody><tr><td><code>rotate_point_2D(origin, point, angle, rad = false)</code></td><td>Rotate <code>point</code> around <code>origin</code> by <code>angle</code> (degrees, radians with <code>rad = true</code>)</td></tr><tr><td><code>rotate_point_3D(origin, point, orientation, rad = false)</code></td><td>Rotate <code>point</code> around <code>origin</code> by the <code>orientation</code> angles <code>{pitch (x), yaw (y), roll (z)}</code></td></tr><tr><td><code>to_look(orientation)</code></td><td>Normalized look vector of an orientation</td></tr></tbody></table></div><div class="callout"><p>Convention: <strong>y up, forward = +z</strong>. <code>rotate_point_3D</code> and <code>to_look</code> use the same one: rotating the forward vector <code>(0, 0, 1)</code> by an orientation gives <code>to_look(orientation)</code>.</p></div><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Geometry
+#include &lt;utils/utils.hpp&gt;
+
+utils::math::Coord2D p = utils::math::geometry::rotate_point_2D({0, 0}, {1, 0}, 90); // ~(0, 1)
+utils::math::Direction look = utils::math::geometry::to_look({0, 90, 0});           // ~(1, 0, 0)</code></pre></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Fonction, Description"><table><thead><tr><th scope="col" style="min-width:29ch">Fonction</th><th scope="col" style="min-width:23ch">Description</th></tr></thead><tbody><tr><td><code>rotate_point_2D(origin, point, angle, rad = false)</code></td><td>Fait tourner <code>point</code> autour de <code>origin</code> de <code>angle</code> (degrés, radians avec <code>rad = true</code>)</td></tr><tr><td><code>rotate_point_3D(origin, point, orientation, rad = false)</code></td><td>Fait tourner <code>point</code> autour de <code>origin</code> des angles de <code>orientation</code> <code>{pitch (x), yaw (y), roll (z)}</code></td></tr><tr><td><code>to_look(orientation)</code></td><td>Vecteur de visée normalisé d'une orientation</td></tr></tbody></table></div><div class="callout"><p>Convention : <strong>y vers le haut, avant = +z</strong>. <code>rotate_point_3D</code> et <code>to_look</code> utilisent la même : faire tourner le vecteur avant <code>(0, 0, 1)</code> d'une orientation donne <code>to_look(orientation)</code>.</p></div><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Geometry
+#include &lt;utils/utils.hpp&gt;
+
+utils::math::Coord2D p = utils::math::geometry::rotate_point_2D({0, 0}, {1, 0}, 90); // ~(0, 1)
+utils::math::Direction look = utils::math::geometry::to_look({0, 90, 0});           // ~(1, 0, 0)</code></pre></div></section><section id="trigo"><h2>3. <span data-lang="en">Trigo</span><span data-lang="fr">Trigo</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Function, Description"><table><thead><tr><th scope="col" style="min-width:20ch">Function</th><th scope="col" style="min-width:21ch">Description</th></tr></thead><tbody><tr><td><code>deg_to_rad(deg)</code></td><td>Degrees to radians</td></tr><tr><td><code>rad_to_deg(rad)</code></td><td>Radians to degrees</td></tr></tbody></table></div><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Trigo
+#include &lt;utils/utils.hpp&gt;
+
+utils::math::Type rad = utils::math::trigo::deg_to_rad(180); // pi</code></pre></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Fonction, Description"><table><thead><tr><th scope="col" style="min-width:20ch">Fonction</th><th scope="col" style="min-width:22ch">Description</th></tr></thead><tbody><tr><td><code>deg_to_rad(deg)</code></td><td>Degrés vers radians</td></tr><tr><td><code>rad_to_deg(rad)</code></td><td>Radians vers degrés</td></tr></tbody></table></div><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Trigo
+#include &lt;utils/utils.hpp&gt;
+
+utils::math::Type rad = utils::math::trigo::deg_to_rad(180); // pi</code></pre></div></section><section id="in-c"><h2>4. <span data-lang="en">In C</span><span data-lang="fr">En C</span></h2><div data-lang="en"><p>The math types are plain C structures passed by value (<code>utils_math_type_t</code> = <code>double</code>).</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: C++, C"><table><thead><tr><th scope="col" style="min-width:23ch">C++</th><th scope="col" style="min-width:32ch">C</th></tr></thead><tbody><tr><td><code>Coord2D</code> / <code>UCoord2D</code></td><td><code>utils_math_coord2d_t</code> / <code>utils_math_ucoord2d_t</code> <code>{x, y}</code></td></tr><tr><td><code>Coord</code> / <code>UCoord</code> / <code>Direction</code></td><td><code>utils_math_coord_t</code> / <code>utils_math_ucoord_t</code> / <code>utils_math_direction_t</code> <code>{x, y, z}</code></td></tr><tr><td><code>Chunk</code>, <code>CFrame</code></td><td><code>utils_math_chunk_t</code>, <code>utils_math_cframe_t {position, orientation, look}</code></td></tr><tr><td><code>rotate_point_2D</code> / <code>rotate_point_3D</code> / <code>to_look</code></td><td><code>utils_math_rotate_point_2d</code> / <code>utils_math_rotate_point_3d</code> / <code>utils_math_to_look</code></td></tr><tr><td><code>deg_to_rad</code> / <code>rad_to_deg</code></td><td><code>utils_math_deg_to_rad</code> / <code>utils_math_rad_to_deg</code></td></tr></tbody></table></div><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define _Geometry
+#define _Trigo
+#include &lt;utils.h&gt;
+#include &lt;stdio.h&gt;
+
+int main(void)
+{
+    utils_math_coord2d_t origin = {0, 0};
+    utils_math_coord2d_t point = {1, 0};
+    utils_math_coord2d_t p = utils_math_rotate_point_2d(origin, point, 90, false);    // ~(0, 1)
+    utils_math_direction_t look = utils_math_to_look((utils_math_direction_t){0, 90, 0}); // ~(1, 0, 0)
+
+    printf("(%.2f, %.2f) (%.2f, %.2f, %.2f) %f\n", p.x, p.y, look.x, look.y, look.z, utils_math_deg_to_rad(180));
+    return 0;
+}</code></pre></div><div data-lang="fr"><p>Les types math sont de simples structures C passées par valeur (<code>utils_math_type_t</code> = <code>double</code>).</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: C++, C"><table><thead><tr><th scope="col" style="min-width:23ch">C++</th><th scope="col" style="min-width:32ch">C</th></tr></thead><tbody><tr><td><code>Coord2D</code> / <code>UCoord2D</code></td><td><code>utils_math_coord2d_t</code> / <code>utils_math_ucoord2d_t</code> <code>{x, y}</code></td></tr><tr><td><code>Coord</code> / <code>UCoord</code> / <code>Direction</code></td><td><code>utils_math_coord_t</code> / <code>utils_math_ucoord_t</code> / <code>utils_math_direction_t</code> <code>{x, y, z}</code></td></tr><tr><td><code>Chunk</code>, <code>CFrame</code></td><td><code>utils_math_chunk_t</code>, <code>utils_math_cframe_t {position, orientation, look}</code></td></tr><tr><td><code>rotate_point_2D</code> / <code>rotate_point_3D</code> / <code>to_look</code></td><td><code>utils_math_rotate_point_2d</code> / <code>utils_math_rotate_point_3d</code> / <code>utils_math_to_look</code></td></tr><tr><td><code>deg_to_rad</code> / <code>rad_to_deg</code></td><td><code>utils_math_deg_to_rad</code> / <code>utils_math_rad_to_deg</code></td></tr></tbody></table></div><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define _Geometry
+#define _Trigo
+#include &lt;utils.h&gt;
+#include &lt;stdio.h&gt;
+
+int main(void)
+{
+    utils_math_coord2d_t origin = {0, 0};
+    utils_math_coord2d_t point = {1, 0};
+    utils_math_coord2d_t p = utils_math_rotate_point_2d(origin, point, 90, false);    // ~(0, 1)
+    utils_math_direction_t look = utils_math_to_look((utils_math_direction_t){0, 90, 0}); // ~(1, 0, 0)
+
+    printf("(%.2f, %.2f) (%.2f, %.2f, %.2f) %f\n", p.x, p.y, look.x, look.y, look.z, utils_math_deg_to_rad(180));
+    return 0;
+}</code></pre></div></section><section id="cpp-api"><h2>5. <span data-lang="en">C++ API</span><span data-lang="fr">API C++</span></h2><div data-lang="en"><p>Read from the headers of <code>include/utils/math/</code> (public part only, the trailing comments of the code kept). Include <code>&lt;utils/utils.hpp&gt;</code> with the define of the section, never these headers one by one.</p><h3 id="h-math-mathtype-hpp"><code>utils/math/MathType.hpp</code></h3><p>Type definition used in math computing</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::math
+using Type = double; // Type used everywhere for coord, angle, direction, ...
+using UType = std::uint64_t; // Type used everywhere for unsigned coord, angle, direction, ...
+using V2Type = utils::type::OVector2&lt;utils::math::Type&gt;;
+using Coord2D = utils::type::OVector2&lt;utils::math::Type&gt;;
+using V2UType = utils::type::OVector2&lt;utils::math::UType&gt;;
+using UCoord2D = utils::type::OVector2&lt;utils::math::UType&gt;;
+using V3Type = utils::type::OVector3&lt;utils::math::Type&gt;;
+using Coord = utils::type::OVector3&lt;utils::math::Type&gt;;
+using V3UType = utils::type::OVector3&lt;utils::math::UType&gt;;
+using UCoord = utils::type::OVector3&lt;utils::math::UType&gt;;
+using Angle = utils::math::Type; // Generaly in deg
+using Direction = utils::type::OVector3&lt;utils::math::Angle&gt;; // Generaly normalized
+using Chunk = utils::type::OVector3&lt;std::int32_t&gt;; // Used for spacial partitionning
+struct CFrame {
+    utils::math::Coord position = {0.0, 0.0, 0.0}; // Coord
+    utils::math::Direction orientation = {0.0, 0.0, 0.0}; // Orientation in deg
+    utils::math::Direction look = {0.0, 0.0, 0.0}; // Orientation normalized
+};</code></pre><h3 id="h-math-geometry-angle-hpp"><code>utils/math/geometry/Angle.hpp</code></h3><p>Prototype for angle computing</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::math::geometry
+utils::math::Direction to_look(const utils::math::Direction&amp; orientation);</code></pre><h3 id="h-math-geometry-point-hpp"><code>utils/math/geometry/Point.hpp</code></h3><p>Prototype for point computing</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::math::geometry
+utils::math::Coord2D rotate_point_2D(const utils::math::Coord2D&amp; origin, const utils::math::Coord2D&amp; point, utils::math::Angle angle, const bool rad = false);
+utils::math::Coord rotate_point_3D(const utils::math::Coord&amp; origin, const utils::math::Coord&amp; point, const utils::math::Direction&amp; orientation, const bool rad = false);</code></pre><h3 id="h-math-trigo-convertion-hpp"><code>utils/math/trigo/Convertion.hpp</code></h3><p>Angle unit conversion (deg &lt;-&gt; rad)</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::math::trigo
+utils::math::Type deg_to_rad(utils::math::Angle deg);
+utils::math::Angle rad_to_deg(utils::math::Type rad);</code></pre></div><div data-lang="fr"><p>Lu dans les en-têtes de <code>include/utils/math/</code> (partie publique seulement, avec les commentaires du code). Inclure <code>&lt;utils/utils.hpp&gt;</code> avec le define de la section, jamais ces en-têtes un par un.</p><h3 id="h-math-mathtype-hpp"><code>utils/math/MathType.hpp</code></h3><p>Type definition used in math computing</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::math
+using Type = double; // Type used everywhere for coord, angle, direction, ...
+using UType = std::uint64_t; // Type used everywhere for unsigned coord, angle, direction, ...
+using V2Type = utils::type::OVector2&lt;utils::math::Type&gt;;
+using Coord2D = utils::type::OVector2&lt;utils::math::Type&gt;;
+using V2UType = utils::type::OVector2&lt;utils::math::UType&gt;;
+using UCoord2D = utils::type::OVector2&lt;utils::math::UType&gt;;
+using V3Type = utils::type::OVector3&lt;utils::math::Type&gt;;
+using Coord = utils::type::OVector3&lt;utils::math::Type&gt;;
+using V3UType = utils::type::OVector3&lt;utils::math::UType&gt;;
+using UCoord = utils::type::OVector3&lt;utils::math::UType&gt;;
+using Angle = utils::math::Type; // Generaly in deg
+using Direction = utils::type::OVector3&lt;utils::math::Angle&gt;; // Generaly normalized
+using Chunk = utils::type::OVector3&lt;std::int32_t&gt;; // Used for spacial partitionning
+struct CFrame {
+    utils::math::Coord position = {0.0, 0.0, 0.0}; // Coord
+    utils::math::Direction orientation = {0.0, 0.0, 0.0}; // Orientation in deg
+    utils::math::Direction look = {0.0, 0.0, 0.0}; // Orientation normalized
+};</code></pre><h3 id="h-math-geometry-angle-hpp"><code>utils/math/geometry/Angle.hpp</code></h3><p>Prototype for angle computing</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::math::geometry
+utils::math::Direction to_look(const utils::math::Direction&amp; orientation);</code></pre><h3 id="h-math-geometry-point-hpp"><code>utils/math/geometry/Point.hpp</code></h3><p>Prototype for point computing</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::math::geometry
+utils::math::Coord2D rotate_point_2D(const utils::math::Coord2D&amp; origin, const utils::math::Coord2D&amp; point, utils::math::Angle angle, const bool rad = false);
+utils::math::Coord rotate_point_3D(const utils::math::Coord&amp; origin, const utils::math::Coord&amp; point, const utils::math::Direction&amp; orientation, const bool rad = false);</code></pre><h3 id="h-math-trigo-convertion-hpp"><code>utils/math/trigo/Convertion.hpp</code></h3><p>Angle unit conversion (deg &lt;-&gt; rad)</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::math::trigo
+utils::math::Type deg_to_rad(utils::math::Angle deg);
+utils::math::Angle rad_to_deg(utils::math::Type rad);</code></pre></div></section><section id="c-api"><h2>6. <span data-lang="en">C API</span><span data-lang="fr">API C</span></h2><div data-lang="en"><p>Read from <code>include/utils/math/CApi.h</code>, included by <code>&lt;utils.h&gt;</code> with the define of the section. Every function that can fail returns <code>UTILS_OK</code> / <code>UTILS_KO</code> (or <code>NULL</code> / <code>0</code>) and fills <code>utils_exception</code> (see <a href="c-api.html#errors">the C API guide</a>).</p><h3 id="c-1">Types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef double utils_math_type_t; // utils::math::Type: coord, angle, direction, ...
+typedef uint64_t utils_math_utype_t; // utils::math::UType: unsigned coord, angle, direction, ...
+typedef utils_math_type_t utils_math_angle_t; // utils::math::Angle: generaly in deg</code></pre><h3 id="c-2">Structures · 2D</h3><p><em>2D (utils::math::Coord2D / V2Type, UCoord2D / V2UType)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_math_coord2d {
+    utils_math_type_t x;
+    utils_math_type_t y;
+} utils_math_coord2d_t;
+
+typedef struct utils_math_ucoord2d {
+    utils_math_utype_t x;
+    utils_math_utype_t y;
+} utils_math_ucoord2d_t;</code></pre><h3 id="c-3">Structures · 3D</h3><p><em>3D (utils::math::Coord / V3Type / Direction, UCoord / V3UType)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_math_coord {
+    utils_math_type_t x;
+    utils_math_type_t y;
+    utils_math_type_t z;
+} utils_math_coord_t;
+
+typedef struct utils_math_ucoord {
+    utils_math_utype_t x;
+    utils_math_utype_t y;
+    utils_math_utype_t z;
+} utils_math_ucoord_t;
+
+typedef utils_math_coord_t utils_math_direction_t; // utils::math::Direction: generaly normalized</code></pre><h3 id="c-4">Structures · Spacial partitionning</h3><p><em>spacial partitionning (utils::math::Chunk)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_math_chunk {
+    int32_t x;
+    int32_t y;
+    int32_t z;
+} utils_math_chunk_t;</code></pre><h3 id="c-5">Structures · Utils::math::CFrame</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_math_cframe {
+    utils_math_coord_t position;
+    utils_math_direction_t orientation; // in deg
+    utils_math_direction_t look; // normalized
+} utils_math_cframe_t;</code></pre><h3 id="c-6">Functions · Trigonometry</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_math_type_t utils_math_deg_to_rad(utils_math_angle_t deg);
+utils_math_angle_t utils_math_rad_to_deg(utils_math_type_t rad);</code></pre><h3 id="c-7">Functions · Geometry</h3><p><em>geometry (rad: the angle / orientation is in radian, else in deg)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_math_direction_t utils_math_to_look(utils_math_direction_t orientation); // orientation in deg -&gt; look vector normalized
+utils_math_coord2d_t utils_math_rotate_point_2d(utils_math_coord2d_t origin, utils_math_coord2d_t point, utils_math_angle_t angle, bool rad);
+utils_math_coord_t utils_math_rotate_point_3d(utils_math_coord_t origin, utils_math_coord_t point, utils_math_direction_t orientation, bool rad);</code></pre></div><div data-lang="fr"><p>Lu dans <code>include/utils/math/CApi.h</code>, inclus par <code>&lt;utils.h&gt;</code> avec le define de la section. Chaque fonction qui peut échouer renvoie <code>UTILS_OK</code> / <code>UTILS_KO</code> (ou <code>NULL</code> / <code>0</code>) et remplit <code>utils_exception</code> (voir <a href="c-api.html#errors">le guide de l'API C</a>).</p><h3 id="c-1">Types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef double utils_math_type_t; // utils::math::Type: coord, angle, direction, ...
+typedef uint64_t utils_math_utype_t; // utils::math::UType: unsigned coord, angle, direction, ...
+typedef utils_math_type_t utils_math_angle_t; // utils::math::Angle: generaly in deg</code></pre><h3 id="c-2">Structures · 2D</h3><p><em>2D (utils::math::Coord2D / V2Type, UCoord2D / V2UType)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_math_coord2d {
+    utils_math_type_t x;
+    utils_math_type_t y;
+} utils_math_coord2d_t;
+
+typedef struct utils_math_ucoord2d {
+    utils_math_utype_t x;
+    utils_math_utype_t y;
+} utils_math_ucoord2d_t;</code></pre><h3 id="c-3">Structures · 3D</h3><p><em>3D (utils::math::Coord / V3Type / Direction, UCoord / V3UType)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_math_coord {
+    utils_math_type_t x;
+    utils_math_type_t y;
+    utils_math_type_t z;
+} utils_math_coord_t;
+
+typedef struct utils_math_ucoord {
+    utils_math_utype_t x;
+    utils_math_utype_t y;
+    utils_math_utype_t z;
+} utils_math_ucoord_t;
+
+typedef utils_math_coord_t utils_math_direction_t; // utils::math::Direction: generaly normalized</code></pre><h3 id="c-4">Structures · Spacial partitionning</h3><p><em>spacial partitionning (utils::math::Chunk)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_math_chunk {
+    int32_t x;
+    int32_t y;
+    int32_t z;
+} utils_math_chunk_t;</code></pre><h3 id="c-5">Structures · Utils::math::CFrame</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_math_cframe {
+    utils_math_coord_t position;
+    utils_math_direction_t orientation; // in deg
+    utils_math_direction_t look; // normalized
+} utils_math_cframe_t;</code></pre><h3 id="c-6">Fonctions · Trigonometry</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_math_type_t utils_math_deg_to_rad(utils_math_angle_t deg);
+utils_math_angle_t utils_math_rad_to_deg(utils_math_type_t rad);</code></pre><h3 id="c-7">Fonctions · Geometry</h3><p><em>geometry (rad: the angle / orientation is in radian, else in deg)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_math_direction_t utils_math_to_look(utils_math_direction_t orientation); // orientation in deg -&gt; look vector normalized
+utils_math_coord2d_t utils_math_rotate_point_2d(utils_math_coord2d_t origin, utils_math_coord2d_t point, utils_math_angle_t angle, bool rad);
+utils_math_coord_t utils_math_rotate_point_3d(utils_math_coord_t origin, utils_math_coord_t point, utils_math_direction_t orientation, bool rad);</code></pre></div></section><nav class="pager"><a href="network.html"><span data-i18n>Previous</span><span data-lang="en">Network</span><span data-lang="fr">Network</span></a><a class="next" href="concepts.html"><span data-i18n>Next</span><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></a></nav></main>
+</div>
+<footer class="site">libutils v5.0.0 · 23d2be3 · docs</footer>
+<script src="site.js"></script>
+<script src="search-index.js" defer></script>
+</body>
+</html>

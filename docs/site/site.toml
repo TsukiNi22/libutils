@@ -1,0 +1,47 @@
+# libutils documentation site (better-html-doc) - build: docs/site/build.sh (pages written in docs/)
+
+[site]
+name = "libutils"
+langs = ["en", "fr"]
+repo = "https://github.com/TsukiNi22/libutils"
+edit_url = ""
+pages_url = "https://tsukini22.github.io/libutils/docs/"
+storage_key = "libutils-docs"
+logo = ""
+copy = []
+
+[home]
+title = { en = "libutils documentation", fr = "Documentation de libutils" }
+tagline = { en = "A C++20 utility library with a C API: exceptions, verbose, CLI, arguments, TCP network, processes and shared memory, GPU memory, encryption, custom types and algorithms, for Unix and Windows.", fr = "Une bibliothèque utilitaire C++20 avec une API C : exceptions, verbose, CLI, arguments, réseau TCP, processus et mémoire partagée, mémoire GPU, chiffrement, types et algorithmes, pour Unix et Windows." }
+changelog = "../../CHANGELOG.md"
+links = [
+    { href = "installation.html", text = { en = "Install", fr = "Installer" } },
+    { href = "c-api.html", text = { en = "Use it from C", fr = "L'utiliser depuis C" } },
+    { href = "graph.html", text = { en = "Project graph", fr = "Graphe du projet" } },
+    { href = "faq.html", text = { en = "FAQ", fr = "FAQ" } },
+    { href = "https://github.com/TsukiNi22/libutils/wiki", text = { en = "Wiki", fr = "Wiki" } },
+]
+
+[[sections]]
+id = "guide"
+title = { en = "User guide", fr = "Guide utilisateur" }
+desc = { en = "Install, link, choose the sections, add your exception codes, use it from C or on Windows.", fr = "Installer, lier, choisir les sections, ajouter ses codes d'exception, l'utiliser depuis C ou sous Windows." }
+icon = '<path d="M12 3v12m0 0l-4-4m4 4l4-4M5 19h14"/>'
+
+[[sections]]
+id = "concepts"
+title = { en = "Concepts", fr = "Concepts" }
+desc = { en = "How the library is built: sections, errors, the C API, network and IPC, platforms.", fr = "Comment la bibliothèque est construite : sections, erreurs, API C, réseau et IPC, plateformes." }
+icon = '<circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M12 7v5M12 12l-6 5M12 12l6 5"/>'
+
+[[sections]]
+id = "reference"
+title = { en = "Reference", fr = "Référence" }
+desc = { en = "Every section of the library: its classes, its C++ API and its C API, read from the headers.", fr = "Chaque section de la bibliothèque : ses classes, son API C++ et son API C, lues dans les en-têtes." }
+icon = '<path d="M8 6l-5 6 5 6M16 6l5 6-5 6"/>'
+
+[[sections]]
+id = "resources"
+title = { en = "Resources", fr = "Ressources" }
+desc = { en = "Changelog, CI / CD, licenses, project graph, FAQ, glossary.", fr = "Historique, CI / CD, licences, graphe du projet, FAQ, glossaire." }
+icon = '<path d="M5 4h14v16H5zM9 8h6M9 12h6M9 16h4"/>'
