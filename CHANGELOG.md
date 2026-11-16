@@ -32,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `copy` / `copy_r` of the C API moved from `utils::exception::c_api` to `utils::smanip::c_api` (`utils/manip/smanip/CApi.hpp`)
 - The Windows versions of the POSIX defines, structures & types of `utils::platform` (`Dl_info`, `epoll_event`, `termios`, `socklen_t`, `nfds_t`, `RTLD_*`, `EPOLL*`, ...) moved to the C & C++ compatible `utils/platform/Types.h`
 - The handles of the C API of the cli & smanip derive from `utils_handle`
+- The documentation (`docs/`) is a searchable bilingual (EN / FR) site built from `docs/site/`: user guide (install, link, exception codes, warnings, C API, Windows, development), concepts (architecture, errors, C API design, communication, platforms), one reference page per section with its C++ API and its C API read from the headers, changelog, CI / CD, licenses, FAQ and glossary; it replaces the single page `docs/index.html` (same address), the project graph `docs/graph.html` is regenerated
+- The README documents the C API and the documentation site
 
 ### Fixed
 - `_noinline` was `[[noinline]]` in C++20 (not a standard attribute, ignored): now `[[gnu::noinline]]`
@@ -68,6 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `utils::exception::format`: the output of `formated()` from its fields (used by `formated()` and the C API)
 - Unit tests of the C API (every domain) and a pure C test built in C11 and C23
 - New attributes: `_export` / `_import` (symbols of the shared library, `dllexport` / `dllimport` on Windows), `_cleanup`, `_always_inline`, `_flatten`, `_const`, `_pure`, `_unreachable`, `_format`, `_sentinel`, `_malloc`, `_returns_nonnull`
+- `docs/site/build.sh`: build of the documentation site (`--check`: links, accessibility, style and search checks)
 
 ## [v4.3.1-pre] - 2026-10-19 (unofficial)
 ### Fixed
