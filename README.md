@@ -1,10 +1,11 @@
 # Utils
 
 > [!TIP]
-> Documentation [TsukiNi22/libutils/wiki](https://github.com/TsukiNi22/libutils/wiki) (v4.3.1-pre).
-> Technical documentation and project graph: [tsukini22.github.io/libutils/docs](https://tsukini22.github.io/libutils/docs/).
+> Documentation (EN / FR, searchable, with the C API of every section): [tsukini22.github.io/libutils/docs](https://tsukini22.github.io/libutils/docs/) (v5.0.0), sources in [`docs/site/`](docs/site).
+> Wiki: [TsukiNi22/libutils/wiki](https://github.com/TsukiNi22/libutils/wiki) · project graph: [docs/graph.html](https://tsukini22.github.io/libutils/docs/graph.html).
 
-C++20 utility library (`utils::`): exceptions, verbose, CLI, arguments, network, IPC, encryption, custom types, algorithms.
+C++20 utility library (`utils::`): exceptions, verbose, CLI, arguments, network, IPC, GPU memory, encryption, custom types, algorithms.
+Every section except the compile time concepts can also be called from C (C11 / C23) through its C API (`<utils.h>`), see [C API](#c-api).
 Built as a static library and distributed as RPM/DEB/Arch (pacman) packages (optimized, debug and asan variants, plus the `mingw64-libutils*` packages for Windows), or installed from the sources with CMake.
 Runs on Unix (Linux, BSD, macOS) and on Windows (cross compiled with MinGW-w64), see [Windows](#windows-cross-compilation).
 
@@ -15,8 +16,10 @@ Runs on Unix (Linux, BSD, macOS) and on Windows (cross compiled with MinGW-w64),
  - [Quick Setup 2 (Limited)](#quick-setup---2-limited)
  - [Windows (cross compilation)](#windows-cross-compilation)
  - [Usage](#usage)
+ - [C API](#c-api)
  - [Unit tests](#unit-tests)
  - [Pre-commit hook](#pre-commit-hook)
+ - [Documentation](#documentation)
  - [Workflows/Release](#workflowsrelease)
 
 ## Dependencies
@@ -128,7 +131,7 @@ Then install the packages: `sudo dnf install libutils`, `sudo apt install libuti
 | `-h`, `--help` | Display the usage |
 
 ## Windows (cross compilation)
-> Build `libutils.a` for Windows (x86_64) from Linux with the MinGW-w64 toolchain (complete guide: [wiki Windows (usage)](https://github.com/TsukiNi22/libutils/wiki/Windows-(usage)))
+> Build `libutils.a` for Windows (x86_64) from Linux with the MinGW-w64 toolchain (complete guide: [Windows](https://tsukini22.github.io/libutils/docs/windows.html))
 
 From the packages (after the `setup.sh` of [Quick Setup - 2](#quick-setup---2-limited)), installed in the MinGW sysroot:
 
@@ -195,7 +198,7 @@ cmake --build $BUILD_DIR --target package                       # mingw64-libuti
 ## Usage
 
 ```cmake
-find_package(utils 4.2.0 REQUIRED)                      # installed CMake configuration
+find_package(utils 5.0.0 REQUIRED)                      # installed CMake configuration
 target_link_libraries(${TARGET} PRIVATE utils::utils)   # includes, OpenSSL & library
 ```
 
@@ -234,6 +237,31 @@ A missing package stops the configuration with the name of the package to instal
 | `_Platform` | `utils::platform::` POSIX calls for Unix & Windows (`close`, `socket`, `epoll_*`, `dlopen`, `tcgetattr`...) |
 | `UTILS_UNIX` / `UTILS_WINDOWS` | Platform detected by `<utils/platform/Platform.hpp>` (always included), `UTILS_PLATFORM` = `"unix"` / `"windows"` |
 
+## C API
+
+Every section except `_Concepts` has a C API (C11 / C23, the same library): `utils/<section>/CApi.h`, included by `<utils.h>` with the same section defines as `utils.hpp`.
+
+```c
+#define _Cli                    // same defines as utils.hpp (nothing defined = everything)
+#include <utils.h>              // same as <utils/utils.h>
+
+utils_cli_t* cli = utils_cli_create(true);          // a class = an opaque handle (NULL on error)
+if (utils_cli_start(cli, NULL, 0, 1) != UTILS_OK)   // UTILS_OK / UTILS_KO (or NULL / 0)
+    fprintf(stderr, "%s\n", utils_exception_format()); // thread local status of the last error (like errno)
+utils_cli_destroy(cli);
+```
+
+| Rule | Detail |
+| ---- | ---- |
+| Link | libutils is C++: link with a C++ linker (`LINKER_LANGUAGE CXX`) or `-lstdc++`; `project(app LANGUAGES C CXX)` + `utils::utils` in CMake |
+| Errors | No exception crosses the C boundary: `UTILS_KO` / `NULL` / `0` and the status `utils_exception` (type, code, what, info, location, origin), `utils_exception_format()`, `utils_fail(code, info)` from a callback |
+| Objects | `utils_<name>_t*` handles (`_create` / `_destroy`), `utils_freezable_*` / `utils_worker_*` on any handle |
+| Templates | One set of functions per fixed type (`i8` ... `u64`, `size`, `f32`, `f64`, `f128`, `bool`, `char`, `str`) + a version in bytes |
+| Strings | Thread local result, or the `_r` version writing in your buffer (returns the full length like `snprintf`) |
+| Strict C | `#define _POSIX_C_SOURCE 200809L` for the sections with POSIX types (`_Platform`, `_Encapsulation`, `_Network`, `_Cli`...) |
+
+Complete guide: [Use libutils from C](https://tsukini22.github.io/libutils/docs/c-api.html), design: [The C API design](https://tsukini22.github.io/libutils/docs/c-api-design.html).
+
 ## Unit tests
 
 ```bash
@@ -245,7 +273,8 @@ ctest --test-dir $BUILD_DIR --output-on-failure --timeout 30   # or ./unit_tests
 
 > [!NOTE]
 > The GPU libraries are loaded at runtime by `HybridMemory` (`_System`): none is needed to build, and the memory falls back to the RAM without GPU (the backend tests are skipped).
-> The tests use GoogleTest (`tests/`, one file per module) and run in the `Unit Tests - Libraries (CI)` workflow.
+> The tests use GoogleTest (`tests/`, one file per module, `tests/<section>/CApi.cpp` for the C API) and run in the `Unit Tests - Libraries (CI)` workflow.
+> `tests/c/CApi.c` is a pure C program built in C11 and C23 (`c_api_c11`, `c_api_c23`), run by `ctest`.
 
 ## Pre-commit hook
 
@@ -259,6 +288,18 @@ xstyle --fix --staged                 # fix what can be, then git add -u
 
 > [!NOTE]
 > Without `xstyle` installed the hook only warns and the commit is accepted. The thresholds are the variables at the top of `.githooks/pre-commit`.
+
+## Documentation
+
+The documentation site (`docs/*.html`, EN / FR, search with `/` or Ctrl+K) is built from [`docs/site/`](docs/site): Markdown pages, and generators that read the headers (C++ API, C API), the exception codes and this changelog.
+
+```bash
+docs/site/build.sh            # docs/*.html, search-index.js, site.css, site.js, sitemap.xml
+docs/site/build.sh --check    # + links, accessibility, style and search checks
+```
+
+> [!NOTE]
+> The build uses the `better-html-doc` skill (`SKILLS=<folder of the skills>`, default `~/.claude/skills`). `docs/graph.html` (project graph) is generated separately.
 
 ## Workflows/Release
 ### Workflows
