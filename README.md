@@ -1,13 +1,17 @@
 # Utils
 
-> [!TIP]
-> Documentation (EN / FR, searchable, with the C API of every section): [tsukini22.github.io/libutils/docs](https://tsukini22.github.io/libutils/docs/) (v5.0.0), sources in [`docs/site/`](docs/site).
-> Wiki: [TsukiNi22/libutils/wiki](https://github.com/TsukiNi22/libutils/wiki) · project graph: [docs/graph.html](https://tsukini22.github.io/libutils/docs/graph.html).
+<p align="center">
+  <img alt="Version" src="https://img.shields.io/github/v/release/TsukiNi22/libutils">
+  <img alt="CI" src="https://github.com/TsukiNi22/libutils/actions/workflows/dispatch.yml/badge.svg">
+  <img alt="Last commit" src="https://img.shields.io/github/last-commit/TsukiNi22/libutils">
+  <img alt="License" src="https://img.shields.io/github/license/TsukiNi22/libutils">
+</p>
 
-C++20 utility library (`utils::`): exceptions, verbose, CLI, arguments, network, IPC, GPU memory, encryption, custom types, algorithms.
-Every section except the compile time concepts can also be called from C (C11 / C23) through its C API (`<utils.h>`), see [C API](#c-api).
-Built as a static library and distributed as RPM/DEB/Arch (pacman) packages (optimized, debug and asan variants, plus the `mingw64-libutils*` packages for Windows), or installed from the sources with CMake.
-Runs on Unix (Linux, BSD, macOS) and on Windows (cross compiled with MinGW-w64), see [Windows](#windows-cross-compilation).
+> [!TIP]
+> Documentation [tsukini22.github.io/libutils](https://tsukini22.github.io/libutils/docs/) (v5.0.0, EN / FR), [wiki](https://github.com/TsukiNi22/libutils/wiki), [project graph](https://tsukini22.github.io/libutils/docs/graph.html).
+
+C++20 utility library (`utils::`): exceptions, verbose, CLI, arguments, network, IPC, GPU memory, encryption, types.
+Also callable from C (`<utils.h>`), on Unix and on Windows (MinGW-w64).
 
 ### Table of Contents
  - [Dependencies](#dependencies)
@@ -21,61 +25,59 @@ Runs on Unix (Linux, BSD, macOS) and on Windows (cross compiled with MinGW-w64),
  - [Pre-commit hook](#pre-commit-hook)
  - [Documentation](#documentation)
  - [Workflows/Release](#workflowsrelease)
+ - [License](#license)
 
 ## Dependencies
 
 > [!CAUTION]
-> The MIT license of this project ([LICENSE](LICENSE)) only applies to the code of `libutils` itself.
-> It does **not** apply to the dependencies, included or linked: each one keeps its own license (see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)).
->
-> The algorithms synced in `include/utils/algorithms/` are under **CC BY-NC-SA 4.0** ([LICENSE.md](include/utils/algorithms/LICENSE.md)): no commercial use without an agreement with the author.
+> This project's license does not apply to the content of the dependencies used by `libutils`.
 
 | Name + Link | License | Status | Last Update |
 | ----------- | ------- | ------ | ----------- |
 | [c2dmp-hsm](https://github.com/TsukiNi22/c2dmp-hsm) | CC BY-NC-SA 4.0 | ![CD - Algorithm](https://github.com/TsukiNi22/c2dmp-hsm/actions/workflows/sync.yml/badge.svg) | ![](https://img.shields.io/github/last-commit/TsukiNi22/c2dmp-hsm) |
 | [s.o.s](https://github.com/TsukiNi22/s.o.s) | CC BY-NC-SA 4.0 | ![CD - Algorithm](https://github.com/TsukiNi22/s.o.s/actions/workflows/sync.yml/badge.svg) | ![](https://img.shields.io/github/last-commit/TsukiNi22/s.o.s) |
-| [OpenSSL](https://www.openssl.org) | Apache-2.0 | linked (system package) | — |
+| [OpenSSL](https://www.openssl.org) | Apache-2.0 | linked (system package) | - |
+
+Build requirements (only needed for the [Quick Setup 1](#quick-setup---1-all)):
 
 | Name | Version | Fedora (`dnf`) | Debian/Ubuntu (`apt`) | Arch (`pacman`) |
 | ---- | ------- | -------------- | --------------------- | --------------- |
-| `clang++` | C++20 | `clang` | `clang` | `clang` |
-| `cmake` | >= 3.20 | `cmake` | `cmake` | `cmake` |
-| OpenSSL | >= 3.0 | `openssl-devel` | `libssl-dev` | `openssl` |
-| GoogleTest (tests only) | — | `gtest-devel` | `libgtest-dev` | `gtest` |
-| `bsdtar` (Arch packages only) | — | `bsdtar` | `libarchive-tools` | `libarchive` |
-| MinGW-w64 (Windows only) | GCC >= 13 | `mingw64-gcc-c++ mingw64-openssl` | `g++-mingw-w64-x86-64` + OpenSSL built for MinGW (no package) | — |
-| GPU driver (`HybridMemory` only) | — | `libcuda` / `ocl-icd` / `vulkan-loader` | `libcuda1` / `ocl-icd-libopencl1` / `libvulkan1` | `nvidia-utils` / `ocl-icd` / `vulkan-icd-loader` |
-| Wine (Windows tests only) | — | `wine` | `wine64` | `wine` |
+| `clang++` / `cmake` | C++20 / `>= 3.20` | `clang cmake` | `clang cmake` | `clang cmake` |
+| OpenSSL | `>= 3.0` | `openssl-devel` | `libssl-dev` | `openssl` |
+| GoogleTest (tests) | - | `gtest-devel` | `libgtest-dev` | `gtest` |
+| `bsdtar` (Arch packages) | - | `bsdtar` | `libarchive-tools` | `libarchive` |
+| MinGW-w64 (Windows) | GCC `>= 13` | `mingw64-gcc-c++ mingw64-openssl` | `g++-mingw-w64-x86-64` (OpenSSL built by hand) | - |
+| Wine (Windows tests) | - | `wine` | `wine64` | `wine` |
+| GPU driver (`HybridMemory`, runtime) | - | `libcuda` / `ocl-icd` / `vulkan-loader` | `libcuda1` / `ocl-icd-libopencl1` / `libvulkan1` | `nvidia-utils` / `ocl-icd` / `vulkan-icd-loader` |
 
 ## Packages
 
 > [!NOTE]
-> Most packages have a pre-release/unstable version named `<package_name>-pre`.
-> The `-pre` packages are marked as obsolete by any release/stable package (without `-pre`) of the same version or higher.
->
-> The same packages exist as RPM (Fedora), DEB (Debian/Ubuntu) and Arch Linux (pacman, `.pkg.tar.zst`): same names, content and dependencies (on Arch the libraries are in `/usr/lib`).
+> `<package>-pre` is the pre-release: a stable package of the same version or newer replaces it.
+
+Same names and content as RPM (Fedora), DEB (Debian/Ubuntu) and Arch (pacman).
 
 | File Name | Content |
 | --------- | ------- |
-| `libutils` | Install the default packages (`libutils-dev`, `libutils-op`) |
-| `libutils-dev` | All the includes and the global CMake configuration (requires `openssl-devel` / `libssl-dev`) |
-| `libutils-dev-op` | CMake configuration for `libutils-op` |
-| `libutils-dev-db` | CMake configuration for `libutils-db` |
-| `libutils-dev-as` | CMake configuration for `libutils-as` |
-| `libutils-op` | Library compiled with the optimization options |
-| `libutils-db` | Library compiled with the debug options (intended for debugging only) |
-| `libutils-as` | Library compiled with the asan options (intended for debugging only) |
+| `libutils` | `libutils-dev` + `libutils-op` |
+| `libutils-dev` | Headers and CMake configuration (requires OpenSSL headers) |
+| `libutils-dev-op` | CMake configuration of `libutils-op` |
+| `libutils-dev-db` | CMake configuration of `libutils-db` |
+| `libutils-dev-as` | CMake configuration of `libutils-as` |
+| `libutils-op` | Optimized library |
+| `libutils-db` | Debug library (debugging only) |
+| `libutils-as` | AddressSanitizer library (debugging only) |
 
-**Windows** (MinGW-w64 cross compilation, installed in the MinGW sysroot: `/usr/x86_64-w64-mingw32/sys-root/mingw` on Fedora, `/usr/x86_64-w64-mingw32` on Debian/Ubuntu)
+Windows, installed in the MinGW sysroot ([`readme/windows.md`](readme/windows.md)):
 
 | File Name | Content |
 | --------- | ------- |
-| `mingw64-libutils` | Install the default Windows packages (`mingw64-libutils-dev`, `mingw64-libutils-op`) |
-| `mingw64-libutils-dev` | All the includes and the global CMake configuration (requires `mingw64-openssl` on Fedora, OpenSSL for MinGW built by hand on Debian) |
-| `mingw64-libutils-dev-op` | CMake configuration for `mingw64-libutils-op` |
-| `mingw64-libutils-dev-db` | CMake configuration for `mingw64-libutils-db` |
-| `mingw64-libutils-op` | Windows library compiled with the optimization options |
-| `mingw64-libutils-db` | Windows library compiled with the debug options (no asan version with MinGW) |
+| `mingw64-libutils` | `mingw64-libutils-dev` + `mingw64-libutils-op` |
+| `mingw64-libutils-dev` | Headers and CMake configuration (requires MinGW OpenSSL) |
+| `mingw64-libutils-dev-op` | CMake configuration of `mingw64-libutils-op` |
+| `mingw64-libutils-dev-db` | CMake configuration of `mingw64-libutils-db` |
+| `mingw64-libutils-op` | Optimized Windows library |
+| `mingw64-libutils-db` | Debug Windows library (no asan with MinGW) |
 
 ## Quick Setup - 1 (all)
 > Setup into `/usr/local`
@@ -97,103 +99,61 @@ sudo cmake --build $BUILD_DIR --target install --parallel $(nproc)
 > Setup into `/usr`
 
 > [!WARNING]
-> If during the installation using tools like `dnf`, `apt`... you see an `invalid hash` error, reset the cache of the tool or relaunch the `setup.sh` script.
->
-> If the error still persists, it might be due to an error in the repository.
-
-> [!WARNING]
 > Restriction: `fedora-based (rpm)`, `debian-based (deb)`, `arch-based (pacman)`
 
-> [!NOTE]
-> The usage of `sudo` in the script can be removed with the `--no-sudo` argument.
-
-Run the setup script directly, without cloning the repository. It registers the libutils package repository so the system package manager can install the packages:
-1. Detect the distribution from `/etc/os-release` (`rpm`, `deb` or `arch` based).
-2. `rpm`: add `/etc/yum.repos.d/libutils.repo` and import the GPG key.
-3. `deb`: add the GPG key in `/etc/apt/keyrings/libutils.gpg`, the source in `/etc/apt/sources.list.d/libutils.list`, then `apt-get update`.
-4. `arch`: add the GPG key to the pacman keyring (`pacman-key --add` + `--lsign-key`), the `[libutils]` repository in `/etc/pacman.conf` (`SigLevel = Required`), then `pacman -Sy`.
-
-```bash
-wget -qO- https://raw.githubusercontent.com/TsukiNi22/libutils/main/setup.sh | bash -s
-```
-
-or with `curl`:
+No clone needed. The script:
+1. detects the distribution (`/etc/os-release`)
+2. adds the libutils package repository
+3. imports its GPG key
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/TsukiNi22/libutils/main/setup.sh | bash -s
 ```
 
-Then install the packages: `sudo dnf install libutils`, `sudo apt install libutils` or `sudo pacman -S libutils`.
+or with `wget`:
+
+```bash
+wget -qO- https://raw.githubusercontent.com/TsukiNi22/libutils/main/setup.sh | bash -s
+```
+
+```bash
+sudo dnf install libutils       # Fedora
+sudo apt install libutils       # Debian/Ubuntu
+sudo pacman -S libutils         # Arch
+```
 
 | Argument | Effect |
 | -------- | ------ |
-| `--no-sudo` | Run without `sudo` (the script must already run as root) |
+| `--no-sudo` | No `sudo` (run it as root) |
 | `-h`, `--help` | Display the usage |
 
-## Windows (cross compilation)
-> Build `libutils.a` for Windows (x86_64) from Linux with the MinGW-w64 toolchain (complete guide: [Windows](https://tsukini22.github.io/libutils/docs/windows.html))
+Steps per distribution and known errors: [`readme/install.md`](readme/install.md).
 
-From the packages (after the `setup.sh` of [Quick Setup - 2](#quick-setup---2-limited)), installed in the MinGW sysroot:
+## Windows (cross compilation)
+> Build `libutils.a` for Windows (x86_64) from Linux with MinGW-w64
 
 ```bash
-sudo dnf install mingw64-libutils-pre       # Fedora: + mingw64-libutils-db-pre for Debug (requires mingw64-openssl)
-sudo apt install mingw64-libutils-pre       # Debian/Ubuntu: OpenSSL for MinGW must be built by hand
+# from the packages (after the setup.sh of the Quick Setup 2)
+sudo dnf install mingw64-libutils       # Fedora (+ mingw64-libutils-db for Debug)
+sudo apt install mingw64-libutils       # Debian/Ubuntu (OpenSSL for MinGW built by hand)
 ```
 
-From the sources:
-
 ```bash
+# from the sources
 export BUILD_DIR=build-windows
 cmake -S . -B $BUILD_DIR -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain/mingw-w64.cmake -DCMAKE_BUILD_TYPE=Optimized
 cmake --build $BUILD_DIR --parallel $(nproc)
-cmake --install $BUILD_DIR --prefix <windows_prefix>          # include/, lib/libutils.a, lib/cmake/utils/
-cmake --build $BUILD_DIR --target package                       # mingw64-libutils-* RPM/DEB (MinGW sysroot)
+cmake --install $BUILD_DIR --prefix <windows_prefix>    # include/, lib/libutils.a, lib/cmake/utils/
+cmake --build $BUILD_DIR --target package               # mingw64-libutils-* RPM/DEB
 ```
 
-> [!NOTE]
-> Every class has the same API on Unix and Windows: a program builds for both without any change, only the implementation used by the library differs.
-
-| Part | Windows implementation |
-| ---- | ---------------------- |
-| `utils::network::TCPSocket` (and `is_ip`, `resolve_*`) | Winsock 2 (`ws2_32`, linked by `utils::utils`), started on the first use |
-| `utils::network::Client` / `Server` | `utils::platform::epoll_*` (emulation over `WSAPoll`) |
-| `utils::encapsulation::Poll` | Same `struct epoll_event` / `EPOLL*` API, emulated over `WSAPoll` |
-| `utils::encapsulation::Process` | `CreateProcess` / `WaitForSingleObject` / `TerminateProcess`, `replace` with the CRT `_execvp` |
-| `utils::encapsulation::SharedMemory` | `CreateFileMapping` / `MapViewOfFile` (`Local\utils-shm-<name>`), named event instead of the futex |
-| `utils::encapsulation::SharedObject` | `LoadLibrary` / `GetProcAddress` / `FreeLibrary` (`.dll`) |
-| `utils::encapsulation::Pipe` / `Dup` | CRT `_pipe` (binary mode) / `_dup` / `_dup2` |
-| `utils::cli::Cli` | `utils::platform::tcgetattr` / `tcsetattr` on the console (VT input), `utils::platform::poll` / `read` on the console input |
-| `utils::iomanip` reports (`read_cursor_position`, mouse) | CRT `_read` on the standard input |
-| `utils::iomanip::enable_ansi()` | Enables the virtual terminal mode of the console (call it once at the start, `true` on Unix) |
-| Exceptions / observers module name | `utils::platform::dladdr` / `readlink("/proc/self/exe")` (`GetModuleHandleEx` / `GetModuleFileName`) |
-
-> [!TIP]
-> The library only calls the system through `utils::platform::` (section `_Platform`), the same calls are usable by a program:
-> same names and contract as the POSIX functions (-1 & `errno`, the Winsock errors are translated in `errno`), so the same code builds on Unix and Windows.
->
-> | Header | Calls |
-> | ------ | ----- |
-> | `utils/platform/Unistd.hpp` | `close`, `read`, `write`, `pipe`, `dup`, `dup2`, `isatty`, `poll`, `getpid`, `readlink`, `strerror` |
-> | `utils/platform/Socket.hpp` | `socket`, `connect`, `bind`, `listen`, `accept`, `recv`, `send`, `setsockopt`, `getsockname`, `getpeername`, `getaddrinfo`, `freeaddrinfo`, `gai_strerror` |
-> | `utils/platform/Epoll.hpp` | `epoll_create1`, `epoll_ctl`, `epoll_wait` (closed by `close`) |
-> | `utils/platform/Dlfcn.hpp` | `dlopen`, `dlsym`, `dlclose`, `dlerror`, `dladdr` |
-> | `utils/platform/Termios.hpp` | `tcgetattr`, `tcsetattr` |
->
-> On Windows the structures of Winsock (`sockaddr_in`, `addrinfo`, `pollfd`...) come from `<winsock2.h>` / `<ws2tcpip.h>`, included by the program (not by libutils).
+> [!IMPORTANT]
+> Include `<windows.h>` before `<utils/utils.hpp>`, or define `WIN32_LEAN_AND_MEAN`: it declares an `_unused` member.
 
 > [!WARNING]
-> Without equivalent on Windows, `FatalException` with `UndefinedCall` (like the raw calls of `ASocket`):
-> - `Process::spawn(void)`: a `fork`, use `spawn(path, args)`
-> - `Process::dup(origin, clone)` with a `clone` other than `0`, `1`, `2`: only the standard fds are given to the child
->
-> Different behaviors: `Poll` / `Client` / `Server` only handle sockets (`ENOTSOCK` -> `EPoll` error for a pipe), `EPOLLET` is refused (level triggered only), a `Process` has no signal (`Status::sig` = `0`, killed = exit code `137`), ctrl+z is a char for the `Cli` (no `SIGTSTP`), a `SharedMemory` is destroyed with its last handle (no `shm_unlink` persistence).
+> `Process::spawn()` (a `fork`) and `Process::dup` on a fd other than 0, 1, 2 raise a `FatalException`.
 
-> [!IMPORTANT]
-> The complete `<windows.h>` declares a member named `_unused` (`winioctl.h`), which is a libutils attribute macro.
-> Include `<windows.h>` **before** `<utils/utils.hpp>`, or define `WIN32_LEAN_AND_MEAN` before including it.
-
-> [!NOTE]
-> No AddressSanitizer with MinGW: the `Asan` mode is built like `Debug`. The tests (`-DBUILD_TESTS=ON`) download GoogleTest and run with `wine` through `ctest`.
+Same API on both systems. Implementations, `utils::platform::` calls and differences: [`readme/windows.md`](readme/windows.md).
 
 ## Usage
 
@@ -202,18 +162,13 @@ find_package(utils 5.0.0 REQUIRED)                      # installed CMake config
 target_link_libraries(${TARGET} PRIVATE utils::utils)   # includes, OpenSSL & library
 ```
 
-The same CMake code works for Linux and Windows: for Windows, configure the project with a MinGW toolchain whose
-`CMAKE_FIND_ROOT_PATH` is the MinGW sysroot (`-DCMAKE_TOOLCHAIN_FILE=`: the `cmake/toolchain/mingw-w64.cmake` of libutils,
-or `/usr/share/mingw/toolchain-mingw64.cmake` / `mingw64-cmake` on Fedora), `find_package` then finds the `mingw64-libutils*`
-packages and `utils::utils` also links `ws2_32`. The library follows the `CMAKE_BUILD_TYPE` of the project:
+The library follows the `CMAKE_BUILD_TYPE` of the project. A missing package stops the configuration with its name.
 
 | Build type | Library | Package (Linux) | Package (Windows) |
 | ---------- | ------- | --------------- | ----------------- |
 | `Debug` | `libutils_debug.a` | `libutils-db` | `mingw64-libutils-db` |
-| `Asan` | `libutils_asan.a` | `libutils-as` | none (no AddressSanitizer with MinGW, use `Debug`) |
-| anything else | `libutils.a` | `libutils-op` (in `libutils`) | `mingw64-libutils-op` (in `mingw64-libutils`) |
-
-A missing package stops the configuration with the name of the package to install.
+| `Asan` | `libutils_asan.a` | `libutils-as` | none (use `Debug`) |
+| anything else | `libutils.a` | `libutils-op` | `mingw64-libutils-op` |
 
 ```cpp
 #define _Utils          // every section (or only the needed ones: _Network, _Cli, ...)
@@ -225,42 +180,36 @@ A missing package stops the configuration with the name of the package to instal
 
 | Macro | Content |
 | ----- | ------- |
-| `_Utils` | Every section below (`_Handling`, `_Tools`, `_Attribute`) |
+| `_Utils` | `_Handling`, `_Tools`, `_Attribute` |
 | `_Handling` | `_Exception`, `_Verbose`, `_Pool`, `_Cli`, `_Arguments`, `_Network` |
 | `_Tools` | `_Math`, `_Concepts`, `_Encapsulation`, `_System`, `_CustomType`, `_Manip`, `_Algorithms`, `_Security`, `_Platform` |
-| `_Exception` | `utils::exception::` error / warning / fatal exceptions with codes |
+| `_Exception` | `utils::exception::` error / warning / fatal exceptions |
 | `_Network` | `utils::network::` sockets, `Client`, `Server` |
-| `_CustomType` | `utils::type::` `BidirectionalLookupTable`, vectors, matrices |
+| `_CustomType` | `utils::type::` lookup table, vectors, matrices |
 | `_Algorithms` | `utils::algorithms::` `c2dmp-hsm`, `s.o.s` |
-| `_Security` | `utils::security::` encryption (AES, RSA), observers |
-| `_Warning` / `_NoWarning` | Enable / disable every deprecation, linker and usage warning |
-| `_Platform` | `utils::platform::` POSIX calls for Unix & Windows (`close`, `socket`, `epoll_*`, `dlopen`, `tcgetattr`...) |
-| `UTILS_UNIX` / `UTILS_WINDOWS` | Platform detected by `<utils/platform/Platform.hpp>` (always included), `UTILS_PLATFORM` = `"unix"` / `"windows"` |
+| `_Security` | `utils::security::` AES, RSA, observers |
+| `_Platform` | `utils::platform::` POSIX calls for Unix & Windows |
+| `_Warning` / `_NoWarning` | Enable / disable the deprecation, linker, usage warnings |
+| `UTILS_UNIX` / `UTILS_WINDOWS` | Detected platform (`UTILS_PLATFORM`: `"unix"` / `"windows"`) |
 
 ## C API
 
-Every section except `_Concepts` has a C API (C11 / C23, the same library): `utils/<section>/CApi.h`, included by `<utils.h>` with the same section defines as `utils.hpp`.
+Every section except `_Concepts`, in C11 / C23: `utils/<section>/CApi.h`, included by `<utils.h>`.
 
 ```c
 #define _Cli                    // same defines as utils.hpp (nothing defined = everything)
 #include <utils.h>              // same as <utils/utils.h>
 
-utils_cli_t* cli = utils_cli_create(true);          // a class = an opaque handle (NULL on error)
-if (utils_cli_start(cli, NULL, 0, 1) != UTILS_OK)   // UTILS_OK / UTILS_KO (or NULL / 0)
-    fprintf(stderr, "%s\n", utils_exception_format()); // thread local status of the last error (like errno)
+utils_cli_t* cli = utils_cli_create(true);              // a class = an opaque handle (NULL on error)
+if (utils_cli_start(cli, NULL, 0, 1) != UTILS_OK)       // UTILS_OK / UTILS_KO (or NULL / 0)
+    fprintf(stderr, "%s\n", utils_exception_format());  // thread local status of the last error
 utils_cli_destroy(cli);
 ```
 
-| Rule | Detail |
-| ---- | ---- |
-| Link | libutils is C++: link with a C++ linker (`LINKER_LANGUAGE CXX`) or `-lstdc++`; `project(app LANGUAGES C CXX)` + `utils::utils` in CMake |
-| Errors | No exception crosses the C boundary: `UTILS_KO` / `NULL` / `0` and the status `utils_exception` (type, code, what, info, location, origin), `utils_exception_format()`, `utils_fail(code, info)` from a callback |
-| Objects | `utils_<name>_t*` handles (`_create` / `_destroy`), `utils_freezable_*` / `utils_worker_*` on any handle |
-| Templates | One set of functions per fixed type (`i8` ... `u64`, `size`, `f32`, `f64`, `f128`, `bool`, `char`, `str`) + a version in bytes |
-| Strings | Thread local result, or the `_r` version writing in your buffer (returns the full length like `snprintf`) |
-| Strict C | `#define _POSIX_C_SOURCE 200809L` for the sections with POSIX types (`_Platform`, `_Encapsulation`, `_Network`, `_Cli`...) |
+> [!IMPORTANT]
+> Link with a C++ linker (`LINKER_LANGUAGE CXX`) or `-lstdc++`: libutils is C++.
 
-Complete guide: [Use libutils from C](https://tsukini22.github.io/libutils/docs/c-api.html), design: [The C API design](https://tsukini22.github.io/libutils/docs/c-api-design.html).
+Rules (errors, templates, strings, strict C): [`readme/c-api.md`](readme/c-api.md). Guide: [Use libutils from C](https://tsukini22.github.io/libutils/docs/c-api.html).
 
 ## Unit tests
 
@@ -268,17 +217,15 @@ Complete guide: [Use libutils from C](https://tsukini22.github.io/libutils/docs/
 export BUILD_DIR=build
 cmake -S . -B $BUILD_DIR -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON
 cmake --build $BUILD_DIR --parallel $(nproc)
-ctest --test-dir $BUILD_DIR --output-on-failure --timeout 30   # or ./unit_tests (written at the root)
+ctest --test-dir $BUILD_DIR --output-on-failure --timeout 30   # GTest + C11 / C23 programs (or ./unit_tests)
 ```
 
 > [!NOTE]
-> The GPU libraries are loaded at runtime by `HybridMemory` (`_System`): none is needed to build, and the memory falls back to the RAM without GPU (the backend tests are skipped).
-> The tests use GoogleTest (`tests/`, one file per module, `tests/<section>/CApi.cpp` for the C API) and run in the `Unit Tests - Libraries (CI)` workflow.
-> `tests/c/CApi.c` is a pure C program built in C11 and C23 (`c_api_c11`, `c_api_c23`), run by `ctest`.
+> No GPU needed: `HybridMemory` falls back to the RAM and its backend tests are skipped.
 
 ## Pre-commit hook
 
-A shared [xstyle](https://github.com/TsukiNi22/ai-utils) hook (`.githooks/pre-commit`) checks the staged lines at each `git commit`: a `minor` (or worse) issue refuses the commit, anything else is only listed.
+An [xstyle](https://github.com/TsukiNi22/xstyle) hook checks the staged lines: a `minor` issue or worse refuses the commit.
 
 ```bash
 git config core.hooksPath .githooks   # once per clone
@@ -287,45 +234,31 @@ xstyle --fix --staged                 # fix what can be, then git add -u
 ```
 
 > [!NOTE]
-> Without `xstyle` installed the hook only warns and the commit is accepted. The thresholds are the variables at the top of `.githooks/pre-commit`.
+> Without `xstyle` the hook only warns. Thresholds: `FAIL_ON` / `WARN_ON` in `.githooks/pre-commit`.
 
 ## Documentation
 
-The documentation site (`docs/*.html`, EN / FR, search with `/` or Ctrl+K) is built from [`docs/site/`](docs/site): Markdown pages, and generators that read the headers (C++ API, C API), the exception codes and this changelog.
+`docs/*.html` (EN / FR, search with `/` or Ctrl+K) is built from [`docs/site/`](docs/site) and the headers.
 
 ```bash
-docs/site/build.sh            # docs/*.html, search-index.js, site.css, site.js, sitemap.xml
+docs/site/build.sh            # docs/*.html, search index, sitemap
 docs/site/build.sh --check    # + links, accessibility, style and search checks
 ```
 
 > [!NOTE]
-> The build uses the `better-html-doc` skill (`SKILLS=<folder of the skills>`, default `~/.claude/skills`). `docs/graph.html` (project graph) is generated separately.
+> Requires the `better-html-doc` skill (`SKILLS=<folder>`, default `~/.claude/skills`). `docs/graph.html` is generated apart.
 
 ## Workflows/Release
 ### Workflows
-- `Dispatch (CI/CD)`: runs on every push (branch `main` or tag `v*`, not for `*.md` / `*.txt` only changes) and decides what to trigger from the ref / commit message
-- `Unit Tests - Libraries (CI)`: builds and runs the unit tests, always first (Linux in the `unit-tests` image, Windows in the `mingw64-unit-tests` image under `wine`)
-- `Build - Packages (CI/CD)`: builds the packages (RPM/DEB/Arch: Linux in the `ci` image, Windows `mingw64-libutils*` in the `build-packages-windows` job on `mingw64-ci`), signs them and publishes them on the `gh-pages` repositories (`fedora/`, `debian/`, `arch/`)
-- `Build - Libraries (CI)`: only builds the libraries and checks the compilation, without producing or publishing packages
-
-> [!NOTE]
-> `Build - Libraries (CI)` only runs when `Dispatch (CI/CD)` decides **not** to build the packages, to check that the code still compiles.
-
-> [!TIP]
-> A commit containing `[ignore]` (preferably in the description) skips the whole CI.
+`Dispatch (CI/CD)` picks the jobs on each push to `main` or a `v*` tag; a commit with `[ignore]` skips the CI.
+The 4 workflows and the downstream notification: [`readme/workflows.md`](readme/workflows.md).
 
 ### Pre-Release (unstable)
-The pre-release of the packages (`<package_name>-pre`) is triggered by:
-- a tag with a suffix, matching `vx.x.x-<suffix>` (ex: `v4.0.1-pre`, `x` = `major`, `minor`, `fix`)
-- or a commit containing `[build]`, preferably in the description
-
-> [!NOTE]
-> Only the 5 last versions of each `-pre` package are kept in the package repository, every release is kept.
+- a tag `vX.Y.Z-<suffix>` (ex: `v5.0.1-pre`), or a commit with `[build]`
 
 ### Release (stable)
-The release of the packages (channel `stable`) is only triggered by a tag matching exactly `vx.x.x` (ex: `v4.0.0`).
+- a tag `vX.Y.Z` only
 
-### Downstream notification
-`Dispatch (CI/CD)` notifies the `docker-image` repository (`repository_dispatch` `libutils-released`, secret `DOCKER_IMAGE_REPO_TOKEN` shared with brain and xstyle) after the packages are published, to rebuild the `ci` and `mingw64-ci` images with the new packages:
-- on every package build (release or pre-release)
-- or on a commit containing `[release]`, preferably in the description
+## License
+[MIT](LICENSE), except `include/utils/algorithms/`: [CC BY-NC-SA 4.0](include/utils/algorithms/LICENSE.md) (commercial use: ask the author).
+Dependencies: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
