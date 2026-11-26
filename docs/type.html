@@ -1,0 +1,1383 @@
+<!doctype html>
+<html lang="en" data-storage-key="libutils-docs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Type - libutils</title>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n>Skip to the content</a>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" id="menuBtn" aria-label="Open the navigation" data-i18n-aria-label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v5.0.0</span></a>
+  <nav class="tabs" aria-label="Pages" hidden></nav>
+  <span class="spacer"></span>
+  <div class="top-actions">
+  <div class="lang-switch" role="group" aria-label="Language" data-i18n-aria-label>
+    <button type="button" data-set-lang="en" class="on">EN</button>
+    <button type="button" data-set-lang="fr">FR</button>
+  </div>
+  <span class="divider" aria-hidden="true"></span><div class="sbox small"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" autocomplete="off" aria-label="Search" data-i18n-aria-label placeholder="Search…" data-ph-fr="Rechercher…"><kbd class="hint" aria-hidden="true">/</kbd><ul class="results" hidden></ul></div>
+<a class="icon-btn" href="https://github.com/TsukiNi22/libutils" aria-label="GitHub repository" data-i18n-aria-label title="GitHub repository" data-i18n-title><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"/></svg></a>
+  <button class="theme-switch" type="button" id="themeToggle" role="switch" aria-checked="false" aria-label="Toggle theme" data-i18n-aria-label title="Toggle theme" data-i18n-title>
+    <span class="stars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="knob" aria-hidden="true">
+      <svg class="sun" viewBox="0 0 24 24" fill="#ffffff"><circle cx="12" cy="12" r="5.2"/><g stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"><path d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6M4.8 4.8l1.8 1.8M17.4 17.4l1.8 1.8M4.8 19.2l1.8-1.8M17.4 6.6l1.8-1.8"/></g></svg>
+      <svg class="moon" viewBox="0 0 24 24"><path d="M15.6 4.2a8 8 0 1 0 4.2 11.6A7 7 0 0 1 15.6 4.2z" fill="#f6c343"/></svg>
+    </span>
+  </button>
+  </div>
+</header>
+<div class="layout" id="top">
+<aside class="sidebar" id="sidebar"><p data-i18n>On this page</p><a href="#vector">1. <span data-lang="en">Vector</span><span data-lang="fr">Vector</span></a><a href="#matrix">2. <span data-lang="en">Matrix</span><span data-lang="fr">Matrix</span></a><a href="#blt">3. <span data-lang="en">BLT</span><span data-lang="fr">BLT</span></a><a href="#freezable">4. <span data-lang="en">Freezable</span><span data-lang="fr">Freezable</span></a><a href="#worker">5. <span data-lang="en">Worker</span><span data-lang="fr">Worker</span></a><a href="#in-c">6. <span data-lang="en">In C</span><span data-lang="fr">En C</span></a><a href="#cpp-api">7. <span data-lang="en">C++ API</span><span data-lang="fr">API C++</span></a><a href="#c-api">8. <span data-lang="en">C API</span><span data-lang="fr">API C</span></a><hr><div class="grp"><span data-lang="en">User guide</span><span data-lang="fr">Guide utilisateur</span></div><a href="installation.html"><span data-lang="en">Installation</span><span data-lang="fr">Installation</span></a><a href="usage.html"><span data-lang="en">Link and include</span><span data-lang="fr">Lier et inclure</span></a><a href="custom-exceptions.html"><span data-lang="en">Custom exception codes</span><span data-lang="fr">Codes d&#x27;exception personnalisés</span></a><a href="warnings.html"><span data-lang="en">Warnings</span><span data-lang="fr">Avertissements</span></a><a href="c-api.html"><span data-lang="en">Use libutils from C</span><span data-lang="fr">Utiliser libutils depuis C</span></a><a href="windows.html"><span data-lang="en">Windows</span><span data-lang="fr">Windows</span></a><a href="development.html"><span data-lang="en">Build, tests and hooks</span><span data-lang="fr">Build, tests et hooks</span></a><div class="grp"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></div><a href="overview.html"><span data-lang="en">Architecture</span><span data-lang="fr">Architecture</span></a><a href="errors.html"><span data-lang="en">Errors</span><span data-lang="fr">Erreurs</span></a><a href="c-api-design.html"><span data-lang="en">The C API design</span><span data-lang="fr">Conception de l&#x27;API C</span></a><a href="network-ipc.html"><span data-lang="en">Communication</span><span data-lang="fr">Communication</span></a><a href="platforms.html"><span data-lang="en">Platforms</span><span data-lang="fr">Plateformes</span></a><div class="grp"><span data-lang="en">Reference</span><span data-lang="fr">Référence</span></div><a href="exception.html"><span data-lang="en">Exceptions</span><span data-lang="fr">Exceptions</span></a><a href="verbose.html"><span data-lang="en">Verbose</span><span data-lang="fr">Verbose</span></a><a href="pool.html"><span data-lang="en">Pool</span><span data-lang="fr">Pool</span></a><a href="cli.html"><span data-lang="en">Cli</span><span data-lang="fr">Cli</span></a><a href="arguments.html"><span data-lang="en">Arguments</span><span data-lang="fr">Arguments</span></a><a href="network.html"><span data-lang="en">Network</span><span data-lang="fr">Network</span></a><a href="math.html"><span data-lang="en">Math</span><span data-lang="fr">Math</span></a><a href="concepts.html"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></a><a href="encapsulation.html"><span data-lang="en">Encapsulation</span><span data-lang="fr">Encapsulation</span></a><a href="system.html"><span data-lang="en">System</span><span data-lang="fr">System</span></a><a href="type.html" class="cur" aria-current="page"><span data-lang="en">Type</span><span data-lang="fr">Type</span></a><a href="iomanip.html"><span data-lang="en">IOManip</span><span data-lang="fr">IOManip</span></a><a href="smanip.html"><span data-lang="en">SManip</span><span data-lang="fr">SManip</span></a><a href="algorithms.html"><span data-lang="en">Algorithms</span><span data-lang="fr">Algorithms</span></a><a href="security.html"><span data-lang="en">Security</span><span data-lang="fr">Security</span></a><a href="platform.html"><span data-lang="en">Platform</span><span data-lang="fr">Platform</span></a><a href="attribute.html"><span data-lang="en">Attribute</span><span data-lang="fr">Attribute</span></a><div class="grp"><span data-lang="en">Resources</span><span data-lang="fr">Ressources</span></div><a href="changelog.html"><span data-lang="en">Changelog</span><span data-lang="fr">Historique</span></a><a href="ci-cd.html"><span data-lang="en">CI / CD</span><span data-lang="fr">CI / CD</span></a><a href="licenses.html"><span data-lang="en">Licenses</span><span data-lang="fr">Licences</span></a><a href="project-graph.html"><span data-lang="en">Project graph</span><span data-lang="fr">Graphe du projet</span></a><a href="faq.html"><span data-lang="en">FAQ</span><span data-lang="fr">FAQ</span></a><a href="glossary.html"><span data-lang="en">Glossary</span><span data-lang="fr">Glossaire</span></a></aside><main id="main" tabindex="-1"><header><div class="page-eyebrow"><span data-lang="en">Reference</span><span data-lang="fr">Référence</span></div><h1><span data-lang="en">Type</span><span data-lang="fr">Type</span></h1><p class="lead"><span data-lang="en">Custom types: 2D / 3D vectors, matrices, the bidirectional lookup table, and the Freezable / Worker base classes.</span><span data-lang="fr">Types personnalisés : vecteurs 2D / 3D, matrices, la table de correspondance bidirectionnelle et les classes de base Freezable / Worker.</span></p><div class="page-meta"><span><span data-i18n>Updated</span> 2026-11-26</span></div></header><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Define, Group, Namespace, Headers"><table><thead><tr><th scope="col" style="min-width:19ch">Define</th><th scope="col" style="min-width:16ch">Group</th><th scope="col" style="min-width:16ch">Namespace</th><th scope="col" style="min-width:42ch">Headers</th></tr></thead><tbody><tr><td><code>_CustomType</code></td><td><code>_Tools</code></td><td><code>utils::type</code></td><td><code>utils/type/</code></td></tr><tr><td><code>_Vector</code> / <code>_Matrix</code> / <code>_BLT</code> (from <code>_CustomType</code>)</td><td><code>_CustomType</code></td><td><code>utils::type</code></td><td><code>utils/type/vector/</code>, <code>utils/type/matrix/</code>, <code>utils/type/blt/</code></td></tr></tbody></table></div><p>Custom types used by the library and usable by your project.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Part, Define, Content"><table><thead><tr><th scope="col" style="min-width:20ch">Part</th><th scope="col" style="min-width:16ch">Define</th><th scope="col" style="min-width:33ch">Content</th></tr></thead><tbody><tr><td><a href="#vector">Vector</a></td><td><code>_Vector</code></td><td><code>Vector2&lt;T&gt;</code>, <code>Vector3&lt;T&gt;</code> (checked) and <code>OVector2&lt;T&gt;</code>, <code>OVector3&lt;T&gt;</code> (optimized)</td></tr><tr><td><a href="#matrix">Matrix</a></td><td><code>_Matrix</code></td><td><code>Matrix&lt;T&gt;</code> (checked) and <code>OMatrix&lt;T&gt;</code> (optimized)</td></tr><tr><td><a href="#blt">BLT</a></td><td><code>_BLT</code></td><td><code>BidirectionalLookupTable&lt;L, R&gt;</code></td></tr><tr><td><a href="#freezable">Freezable</a>, <a href="#worker">Worker</a></td><td><code>_CustomType</code></td><td>Base classes</td></tr></tbody></table></div></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Define, Groupe, Espace de noms, En-têtes"><table><thead><tr><th scope="col" style="min-width:19ch">Define</th><th scope="col" style="min-width:16ch">Groupe</th><th scope="col" style="min-width:20ch">Espace de noms</th><th scope="col" style="min-width:42ch">En-têtes</th></tr></thead><tbody><tr><td><code>_CustomType</code></td><td><code>_Tools</code></td><td><code>utils::type</code></td><td><code>utils/type/</code></td></tr><tr><td><code>_Vector</code> / <code>_Matrix</code> / <code>_BLT</code> (inclus par <code>_CustomType</code>)</td><td><code>_CustomType</code></td><td><code>utils::type</code></td><td><code>utils/type/vector/</code>, <code>utils/type/matrix/</code>, <code>utils/type/blt/</code></td></tr></tbody></table></div><p>Types personnalisés utilisés par la bibliothèque et utilisables par votre projet.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Partie, Define, Contenu"><table><thead><tr><th scope="col" style="min-width:20ch">Partie</th><th scope="col" style="min-width:16ch">Define</th><th scope="col" style="min-width:33ch">Contenu</th></tr></thead><tbody><tr><td><a href="#vector">Vector</a></td><td><code>_Vector</code></td><td><code>Vector2&lt;T&gt;</code>, <code>Vector3&lt;T&gt;</code> (vérifiés) et <code>OVector2&lt;T&gt;</code>, <code>OVector3&lt;T&gt;</code> (optimisés)</td></tr><tr><td><a href="#matrix">Matrix</a></td><td><code>_Matrix</code></td><td><code>Matrix&lt;T&gt;</code> (vérifiée) et <code>OMatrix&lt;T&gt;</code> (optimisée)</td></tr><tr><td><a href="#blt">BLT</a></td><td><code>_BLT</code></td><td><code>BidirectionalLookupTable&lt;L, R&gt;</code></td></tr><tr><td><a href="#freezable">Freezable</a>, <a href="#worker">Worker</a></td><td><code>_CustomType</code></td><td>Classes de base</td></tr></tbody></table></div></div><section id="vector"><h2>1. <span data-lang="en">Vector</span><span data-lang="fr">Vector</span></h2><div data-lang="en"><p>Vectors of 2 (<code>x</code>, <code>y</code>) or 3 (<code>x</code>, <code>y</code>, <code>z</code>) values of any type, with every operator.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Class, Description"><table><thead><tr><th scope="col" style="min-width:17ch">Class</th><th scope="col" style="min-width:21ch">Description</th></tr></thead><tbody><tr><td><code>Vector2&lt;T&gt;</code>, <code>Vector3&lt;T&gt;</code></td><td><strong>Checked</strong>: derive <code>IVector&lt;T&gt;</code> (instance tracking), every operation is constrained by a <a href="concepts.html">concept</a>, the operations between 2 types return the common type (<code>Vector2&lt;int&gt; + Vector2&lt;double&gt;</code> → <code>Vector2&lt;double&gt;</code>)</td></tr><tr><td><code>OVector2&lt;T&gt;</code>, <code>OVector3&lt;T&gt;</code></td><td><strong>Optimized</strong>: plain struct, no tracking, the operations keep <code>T</code> (used by the <a href="math.html">Math</a> types)</td></tr></tbody></table></div><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:20ch">Method</th><th scope="col" style="min-width:24ch">Description</th></tr></thead><tbody><tr><td><code>x</code>, <code>y</code> (, <code>z</code>)</td><td>Public members</td></tr><tr><td><code>get(i)</code> / <code>operator[](i)</code></td><td>Value by index (<code>VectorInvalidIndex</code> when out of range)</td></tr><tr><td><code>min(v)</code>, <code>max(v)</code>, <code>clamp(min, max)</code></td><td>Per component</td></tr><tr><td><code>dot(v)</code></td><td>Dot product</td></tr><tr><td><code>cross(v)</code></td><td><code>Vector2</code>: scalar <code>x1 * y2 - y1 * x2</code>; <code>Vector3</code>: vector</td></tr><tr><td><code>length()</code>, <code>lengthSquared()</code></td><td>Norm (truncated for the integer types)</td></tr><tr><td><code>normalize()</code></td><td>Unit vector (a zero vector stays zero)</td></tr><tr><td><code>sign()</code></td><td><code>-1</code>, <code>0</code> or <code>1</code> per component</td></tr></tbody></table></div><p>Operators: <code>+ - * /</code> (with a vector or a scalar, on both sides), <code>+= -= *= /=</code>, <code>&amp; | ^</code>, <code>++ --</code>, unary <code>-</code>, <code>== !=</code>, <code>&lt; &lt;= &gt; &gt;=</code> (all the components), <code>&lt;&lt;</code> (stream: <code>(x, y)</code>).</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Vector
+#include &lt;utils/utils.hpp&gt;
+
+utils::type::Vector2&lt;int&gt; a(1, 2);
+utils::type::Vector2&lt;double&gt; b = a + utils::type::Vector2&lt;double&gt;(0.5, 0.5); // (1.5, 2.5)
+utils::type::Vector3&lt;double&gt; up = utils::type::Vector3&lt;double&gt;(1, 0, 0).cross(utils::type::Vector3&lt;double&gt;(0, 1, 0)); // (0, 0, 1)
+std::cout &lt;&lt; b &lt;&lt; " " &lt;&lt; b.length() &lt;&lt; std::endl;</code></pre></div><div data-lang="fr"><p>Vecteurs de 2 (<code>x</code>, <code>y</code>) ou 3 (<code>x</code>, <code>y</code>, <code>z</code>) valeurs de n'importe quel type, avec tous les opérateurs.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Classe, Description"><table><thead><tr><th scope="col" style="min-width:17ch">Classe</th><th scope="col" style="min-width:21ch">Description</th></tr></thead><tbody><tr><td><code>Vector2&lt;T&gt;</code>, <code>Vector3&lt;T&gt;</code></td><td><strong>Vérifiés</strong> : dérivent d'<code>IVector&lt;T&gt;</code> (suivi des instances), chaque opération est contrainte par un <a href="concepts.html">concept</a>, les opérations entre 2 types renvoient le type commun (<code>Vector2&lt;int&gt; + Vector2&lt;double&gt;</code> → <code>Vector2&lt;double&gt;</code>)</td></tr><tr><td><code>OVector2&lt;T&gt;</code>, <code>OVector3&lt;T&gt;</code></td><td><strong>Optimisés</strong> : struct simple, sans suivi, les opérations gardent <code>T</code> (utilisés par les types de <a href="math.html">Math</a>)</td></tr></tbody></table></div><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:20ch">Méthode</th><th scope="col" style="min-width:24ch">Description</th></tr></thead><tbody><tr><td><code>x</code>, <code>y</code> (, <code>z</code>)</td><td>Membres publics</td></tr><tr><td><code>get(i)</code> / <code>operator[](i)</code></td><td>Valeur par indice (<code>VectorInvalidIndex</code> hors limites)</td></tr><tr><td><code>min(v)</code>, <code>max(v)</code>, <code>clamp(min, max)</code></td><td>Par composante</td></tr><tr><td><code>dot(v)</code></td><td>Produit scalaire</td></tr><tr><td><code>cross(v)</code></td><td><code>Vector2</code> : scalaire <code>x1 * y2 - y1 * x2</code> ; <code>Vector3</code> : vecteur</td></tr><tr><td><code>length()</code>, <code>lengthSquared()</code></td><td>Norme (tronquée pour les types entiers)</td></tr><tr><td><code>normalize()</code></td><td>Vecteur unitaire (un vecteur nul reste nul)</td></tr><tr><td><code>sign()</code></td><td><code>-1</code>, <code>0</code> ou <code>1</code> par composante</td></tr></tbody></table></div><p>Opérateurs : <code>+ - * /</code> (avec un vecteur ou un scalaire, des deux côtés), <code>+= -= *= /=</code>, <code>&amp; | ^</code>, <code>++ --</code>, <code>-</code> unaire, <code>== !=</code>, <code>&lt; &lt;= &gt; &gt;=</code> (sur toutes les composantes), <code>&lt;&lt;</code> (flux : <code>(x, y)</code>).</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Vector
+#include &lt;utils/utils.hpp&gt;
+
+utils::type::Vector2&lt;int&gt; a(1, 2);
+utils::type::Vector2&lt;double&gt; b = a + utils::type::Vector2&lt;double&gt;(0.5, 0.5); // (1.5, 2.5)
+utils::type::Vector3&lt;double&gt; up = utils::type::Vector3&lt;double&gt;(1, 0, 0).cross(utils::type::Vector3&lt;double&gt;(0, 1, 0)); // (0, 0, 1)
+std::cout &lt;&lt; b &lt;&lt; " " &lt;&lt; b.length() &lt;&lt; std::endl;</code></pre></div></section><section id="matrix"><h2>2. <span data-lang="en">Matrix</span><span data-lang="fr">Matrix</span></h2><div data-lang="en"><p>Matrices of <code>x</code> rows and <code>y</code> columns of any type (<code>m(x, y)</code>), with the usual operations.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Class, Storage, Description"><table><thead><tr><th scope="col" style="min-width:14ch">Class</th><th scope="col" style="min-width:33ch">Storage</th><th scope="col" style="min-width:27ch">Description</th></tr></thead><tbody><tr><td><code>Matrix&lt;T&gt;</code></td><td><code>std::vector&lt;std::vector&lt;T&gt;&gt;</code></td><td><strong>Checked</strong>: every operation is constrained by a <a href="concepts.html">concept</a>, the operations between 2 types return the common type, <code>invert</code> / <code>/</code> disabled for integers</td></tr><tr><td><code>OMatrix&lt;T&gt;</code></td><td>contiguous, row-major</td><td><strong>Optimized</strong>: no concept and no tracking, the operations keep <code>T</code> (<code>invert</code> of an integer matrix truncates)</td></tr></tbody></table></div><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:25ch">Method</th><th scope="col" style="min-width:21ch">Description</th></tr></thead><tbody><tr><td><code>Matrix(n)</code> / <code>Matrix(x, y)</code></td><td>Square <code>n x n</code> / <code>x</code> rows, <code>y</code> columns, default values</td></tr><tr><td><code>at(x, y)</code> / <code>operator()(x, y)</code></td><td>Value (<code>OutOfBounds</code> out of the matrix)</td></tr><tr><td><code>set(x, y, value)</code></td><td>Set one value</td></tr><tr><td><code>set(begin, end, x = 0, y = 0)</code></td><td>Fill row by row from <code>(x, y)</code></td></tr><tr><td><code>row(n)</code>, <code>col(n)</code></td><td>A row / column as <code>std::vector&lt;T&gt;</code></td></tr><tr><td><code>row()</code>, <code>col()</code>, <code>size()</code></td><td>Number of rows / columns / both</td></tr><tr><td><code>swap(a, b)</code>, <code>swapRow(a, b)</code>, <code>swapCol(a, b)</code></td><td>Swap values / rows / columns</td></tr><tr><td><code>transpose()</code></td><td>Transpose in place</td></tr><tr><td><code>det()</code>, <code>trace()</code></td><td>Determinant / trace (square matrix)</td></tr><tr><td><code>invert()</code></td><td>Invert in place (<code>MatrixSingular</code> when the determinant is 0)</td></tr><tr><td><code>clear()</code></td><td>Reset every value</td></tr></tbody></table></div><p>Operators: <code>+ -</code> (same size), <code>*</code> (matrix product, or scalar on both sides), <code>/</code> (<code>this * m^-1</code>, or scalar), the assignment versions, unary <code>-</code>, <code>== !=</code>, <code>&lt;&lt;</code> (stream).</p><div class="callout warn"><p><strong>Warning.</strong> Sizes that don't match throw <code>InvalidArgument</code>; <code>det</code>, <code>trace</code> and <code>invert</code> need a square matrix.</p></div><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Matrix
+#include &lt;utils/utils.hpp&gt;
+
+utils::type::Matrix&lt;double&gt; m(2);
+std::vector&lt;double&gt; values = {4, 7, 2, 6};
+m.set(values.begin(), values.end());   // [[4, 7], [2, 6]]
+std::cout &lt;&lt; m.det() &lt;&lt; std::endl;      // 10
+utils::type::Matrix&lt;double&gt; inv = m;
+inv.invert();
+std::cout &lt;&lt; m * inv &lt;&lt; std::endl;      // identity</code></pre></div><div data-lang="fr"><p>Matrices de <code>x</code> lignes et <code>y</code> colonnes de n'importe quel type (<code>m(x, y)</code>), avec les opérations usuelles.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Classe, Stockage, Description"><table><thead><tr><th scope="col" style="min-width:14ch">Classe</th><th scope="col" style="min-width:33ch">Stockage</th><th scope="col" style="min-width:28ch">Description</th></tr></thead><tbody><tr><td><code>Matrix&lt;T&gt;</code></td><td><code>std::vector&lt;std::vector&lt;T&gt;&gt;</code></td><td><strong>Vérifiée</strong> : chaque opération est contrainte par un <a href="concepts.html">concept</a>, les opérations entre 2 types renvoient le type commun, <code>invert</code> / <code>/</code> désactivés pour les entiers</td></tr><tr><td><code>OMatrix&lt;T&gt;</code></td><td>contigu, row-major</td><td><strong>Optimisée</strong> : ni concept ni suivi, les opérations gardent <code>T</code> (<code>invert</code> d'une matrice d'entiers tronque)</td></tr></tbody></table></div><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:25ch">Méthode</th><th scope="col" style="min-width:22ch">Description</th></tr></thead><tbody><tr><td><code>Matrix(n)</code> / <code>Matrix(x, y)</code></td><td>Carrée <code>n x n</code> / <code>x</code> lignes, <code>y</code> colonnes, valeurs par défaut</td></tr><tr><td><code>at(x, y)</code> / <code>operator()(x, y)</code></td><td>Valeur (<code>OutOfBounds</code> hors de la matrice)</td></tr><tr><td><code>set(x, y, value)</code></td><td>Définit une valeur</td></tr><tr><td><code>set(begin, end, x = 0, y = 0)</code></td><td>Remplit ligne par ligne à partir de <code>(x, y)</code></td></tr><tr><td><code>row(n)</code>, <code>col(n)</code></td><td>Une ligne / colonne en <code>std::vector&lt;T&gt;</code></td></tr><tr><td><code>row()</code>, <code>col()</code>, <code>size()</code></td><td>Nombre de lignes / colonnes / les deux</td></tr><tr><td><code>swap(a, b)</code>, <code>swapRow(a, b)</code>, <code>swapCol(a, b)</code></td><td>Échange des valeurs / lignes / colonnes</td></tr><tr><td><code>transpose()</code></td><td>Transpose sur place</td></tr><tr><td><code>det()</code>, <code>trace()</code></td><td>Déterminant / trace (matrice carrée)</td></tr><tr><td><code>invert()</code></td><td>Inverse sur place (<code>MatrixSingular</code> quand le déterminant vaut 0)</td></tr><tr><td><code>clear()</code></td><td>Réinitialise toutes les valeurs</td></tr></tbody></table></div><p>Opérateurs : <code>+ -</code> (même taille), <code>*</code> (produit matriciel, ou scalaire des deux côtés), <code>/</code> (<code>this * m^-1</code>, ou scalaire), les versions avec affectation, <code>-</code> unaire, <code>== !=</code>, <code>&lt;&lt;</code> (flux).</p><div class="callout warn"><p><strong>Attention.</strong> Des tailles qui ne correspondent pas lancent <code>InvalidArgument</code> ; <code>det</code>, <code>trace</code> et <code>invert</code> demandent une matrice carrée.</p></div><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Matrix
+#include &lt;utils/utils.hpp&gt;
+
+utils::type::Matrix&lt;double&gt; m(2);
+std::vector&lt;double&gt; values = {4, 7, 2, 6};
+m.set(values.begin(), values.end());   // [[4, 7], [2, 6]]
+std::cout &lt;&lt; m.det() &lt;&lt; std::endl;      // 10
+utils::type::Matrix&lt;double&gt; inv = m;
+inv.invert();
+std::cout &lt;&lt; m * inv &lt;&lt; std::endl;      // identity</code></pre></div></section><section id="blt"><h2>3. <span data-lang="en">BLT</span><span data-lang="fr">BLT</span></h2><div data-lang="en"><p><code>BidirectionalLookupTable&lt;L, R&gt;</code>: a map where each pair can be found from both sides (<code>table[left] → right</code>, <code>table[right] → left</code>). It is a <a href="#freezable">Freezable</a>: once frozen it can't be edited anymore.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:29ch">Method</th><th scope="col" style="min-width:20ch">Description</th></tr></thead><tbody><tr><td><code>addElement(left, right)</code></td><td>Add a pair (<code>Override</code> when one side already exists)</td></tr><tr><td><code>setElement&lt;force&gt;(left, right)</code></td><td>Same, <code>force = true</code> replaces the existing pairs of both sides</td></tr><tr><td><code>operator[](left)</code> / <code>operator[](right)</code></td><td>The other side of the pair (<code>UnknownKey</code> when missing)</td></tr><tr><td><code>removeElement(side)</code> / <code>removeElements(sides)</code></td><td>Remove the pairs (unknown key: warning on <code>std::cerr</code>)</td></tr><tr><td><code>clear()</code></td><td>Remove everything</td></tr><tr><td><code>freeze()</code>, <code>isFrozen()</code></td><td>From <code>Freezable</code>; editing a frozen table throws <code>Frozen</code></td></tr></tbody></table></div><p>Custom hash / equality: <code>BidirectionalLookupTable&lt;L, R, HashL, HashR, EqualL, EqualR&gt;</code>. When both sides have the same type, use <code>BLT_TYPE(T)</code> (<code>BidirectionalLookupTable&lt;BLT_TYPE(std::string)&gt;</code>): an element is looked up on both sides with <code>operator[](element)</code>.</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _BLT
+#include &lt;utils/utils.hpp&gt;
+
+utils::type::BidirectionalLookupTable&lt;int, std::string&gt; codes;
+codes.addElement(404, std::string("Not Found"));
+codes.addElement(500, std::string("Internal Server Error"));
+codes.freeze();
+std::cout &lt;&lt; codes[404] &lt;&lt; " / " &lt;&lt; codes[std::string("Not Found")] &lt;&lt; std::endl; // Not Found / 404</code></pre></div><div data-lang="fr"><p><code>BidirectionalLookupTable&lt;L, R&gt;</code> : une map où chaque paire peut être trouvée depuis ses deux côtés (<code>table[left] → right</code>, <code>table[right] → left</code>). C'est un <a href="#freezable">Freezable</a> : une fois gelée, elle ne peut plus être modifiée.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:29ch">Méthode</th><th scope="col" style="min-width:20ch">Description</th></tr></thead><tbody><tr><td><code>addElement(left, right)</code></td><td>Ajoute une paire (<code>Override</code> quand un côté existe déjà)</td></tr><tr><td><code>setElement&lt;force&gt;(left, right)</code></td><td>Pareil, <code>force = true</code> remplace les paires existantes des deux côtés</td></tr><tr><td><code>operator[](left)</code> / <code>operator[](right)</code></td><td>L'autre côté de la paire (<code>UnknownKey</code> s'il est absent)</td></tr><tr><td><code>removeElement(side)</code> / <code>removeElements(sides)</code></td><td>Supprime les paires (clé inconnue : avertissement sur <code>std::cerr</code>)</td></tr><tr><td><code>clear()</code></td><td>Supprime tout</td></tr><tr><td><code>freeze()</code>, <code>isFrozen()</code></td><td>Hérités de <code>Freezable</code> ; modifier une table gelée lance <code>Frozen</code></td></tr></tbody></table></div><p>Hash / égalité personnalisés : <code>BidirectionalLookupTable&lt;L, R, HashL, HashR, EqualL, EqualR&gt;</code>. Quand les deux côtés ont le même type, utilisez <code>BLT_TYPE(T)</code> (<code>BidirectionalLookupTable&lt;BLT_TYPE(std::string)&gt;</code>) : un élément est cherché des deux côtés avec <code>operator[](element)</code>.</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _BLT
+#include &lt;utils/utils.hpp&gt;
+
+utils::type::BidirectionalLookupTable&lt;int, std::string&gt; codes;
+codes.addElement(404, std::string("Not Found"));
+codes.addElement(500, std::string("Internal Server Error"));
+codes.freeze();
+std::cout &lt;&lt; codes[404] &lt;&lt; " / " &lt;&lt; codes[std::string("Not Found")] &lt;&lt; std::endl; // Not Found / 404</code></pre></div></section><section id="freezable"><h2>4. <span data-lang="en">Freezable</span><span data-lang="fr">Freezable</span></h2><div data-lang="en"><p>Base class of an object that can be locked against edition (used by <code>BidirectionalLookupTable</code>).</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:22ch">Method</th><th scope="col" style="min-width:20ch">Description</th></tr></thead><tbody><tr><td><code>Freezable(frozen = false)</code></td><td>Initial state</td></tr><tr><td><code>freeze()</code> / <code>isFrozen()</code></td><td>Freeze for good / state</td></tr><tr><td><code>requireUnfrozen()</code></td><td>Throw <code>Frozen</code> when frozen (call it at the start of an edition method)</td></tr><tr><td><code>requireFrozen()</code></td><td>Throw <code>ShouldBeFrozen</code> when not frozen</td></tr></tbody></table></div></div><div data-lang="fr"><p>Classe de base d'un objet qui peut être verrouillé contre la modification (utilisée par <code>BidirectionalLookupTable</code>).</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:22ch">Méthode</th><th scope="col" style="min-width:22ch">Description</th></tr></thead><tbody><tr><td><code>Freezable(frozen = false)</code></td><td>État initial</td></tr><tr><td><code>freeze()</code> / <code>isFrozen()</code></td><td>Gèle définitivement / état</td></tr><tr><td><code>requireUnfrozen()</code></td><td>Lance <code>Frozen</code> si l'objet est gelé (à appeler au début d'une méthode de modification)</td></tr><tr><td><code>requireFrozen()</code></td><td>Lance <code>ShouldBeFrozen</code> si l'objet n'est pas gelé</td></tr></tbody></table></div></div></section><section id="worker"><h2>5. <span data-lang="en">Worker</span><span data-lang="fr">Worker</span></h2><div data-lang="en"><p>Base class of the workers of a <a href="system.html#loadbalancer">LoadBalancer</a>.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:33ch">Method</th><th scope="col" style="min-width:20ch">Description</th></tr></thead><tbody><tr><td><code>setWorkingStatus(bool)</code></td><td>Mark the worker working / free (give it back to the balancer with <code>false</code>)</td></tr><tr><td><code>isWorking()</code></td><td>State</td></tr><tr><td><code>getStopedWorkingTimestamp()</code></td><td>When it became free (used by the lifespan of the balancer)</td></tr></tbody></table></div></div><div data-lang="fr"><p>Classe de base des workers d'un <a href="system.html#loadbalancer">LoadBalancer</a>.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:33ch">Méthode</th><th scope="col" style="min-width:20ch">Description</th></tr></thead><tbody><tr><td><code>setWorkingStatus(bool)</code></td><td>Marque le worker occupé / libre (le rend au balancer avec <code>false</code>)</td></tr><tr><td><code>isWorking()</code></td><td>État</td></tr><tr><td><code>getStopedWorkingTimestamp()</code></td><td>Moment où il est devenu libre (utilisé par la durée de vie du balancer)</td></tr></tbody></table></div></div></section><section id="in-c"><h2>6. <span data-lang="en">In C</span><span data-lang="fr">En C</span></h2><div data-lang="en"><p>Each template is generated for the <a href="c-api-design.html#fixed-types">fixed types</a> (<code>&lt;name&gt;</code> = <code>i8</code> ... <code>u64</code>, <code>size</code>, <code>f32</code>, <code>f64</code>, <code>f128</code>).</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: C++, C"><table><thead><tr><th scope="col" style="min-width:30ch">C++</th><th scope="col" style="min-width:33ch">C</th></tr></thead><tbody><tr><td><code>OVector2&lt;T&gt;</code> / <code>OVector3&lt;T&gt;</code></td><td><code>utils_vector2_&lt;name&gt;_t</code> / <code>utils_vector3_&lt;name&gt;_t</code> <strong>by value</strong> (<code>{x, y}</code> / <code>{x, y, z}</code>): <code>utils_vector2_&lt;name&gt;_add(a, b)</code>, <code>_dot</code>, <code>_cross</code>, <code>_length</code>, <code>_normalize</code>... (<code>_and</code> / <code>_or</code> / <code>_xor</code> for the integers)</td></tr><tr><td><code>OMatrix&lt;T&gt;</code></td><td>handle <code>utils_matrix_&lt;name&gt;_t*</code>: each operation exists 3 times, <code>utils_matrix_&lt;name&gt;_add(a, b)</code> (a new handle), <code>_add_r(a, b, out)</code> (in a given handle), <code>_add_assign(a, b)</code> (in place); <code>_div</code> / <code>_invert</code> for the floating points</td></tr><tr><td><code>BidirectionalLookupTable</code></td><td><code>utils_blt_str_str_t*</code>, <code>utils_blt_size_size_t*</code>, <code>utils_blt_i64_i64_t*</code> (one type), <code>utils_blt_str_&lt;name&gt;_t*</code> / <code>utils_blt_&lt;name&gt;_str_t*</code> (string ↔ integer), <code>utils_blt_t*</code> (bytes)</td></tr><tr><td><code>Freezable</code> / <code>Worker</code> of any handle</td><td><code>utils_freezable_*(handle)</code>, <code>utils_worker_*(handle)</code> (an error when the handle has no such base)</td></tr></tbody></table></div><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define _Vector
+#define _Matrix
+#define _BLT
+#include &lt;utils.h&gt;
+#include &lt;stdio.h&gt;
+
+int main(void)
+{
+    utils_vector3_f64_t up = utils_vector3_f64_cross((utils_vector3_f64_t){1, 0, 0}, (utils_vector3_f64_t){0, 1, 0}); // (0, 0, 1)
+    utils_matrix_f64_t* m = utils_matrix_f64_create(2, 2);
+    utils_matrix_f64_t* inv = NULL;
+    utils_blt_i32_str_t* codes = utils_blt_i32_str_create();
+    double values[] = {4, 7, 2, 6};
+    const char* text = NULL;
+
+    if (!m || !codes)
+        return 1;
+    utils_matrix_f64_set_values(m, values, 4, 0, 0);          // [[4, 7], [2, 6]]
+    inv = utils_matrix_f64_invert(m);                         // a new handle
+    utils_blt_i32_str_add(codes, 404, "Not Found");
+    utils_freezable_freeze(codes);                            // Freezable of any handle
+    utils_blt_i32_str_get_right(codes, 404, &amp;text);
+    printf("(%g, %g, %g) %s frozen: %d\n", up.x, up.y, up.z, text, utils_freezable_is_frozen(codes));
+    utils_matrix_f64_destroy(inv);
+    utils_matrix_f64_destroy(m);
+    utils_blt_i32_str_destroy(codes);
+    return 0;
+}</code></pre></div><div data-lang="fr"><p>Chaque template est généré pour les <a href="c-api-design.html#fixed-types">types fixes</a> (<code>&lt;name&gt;</code> = <code>i8</code> ... <code>u64</code>, <code>size</code>, <code>f32</code>, <code>f64</code>, <code>f128</code>).</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: C++, C"><table><thead><tr><th scope="col" style="min-width:30ch">C++</th><th scope="col" style="min-width:34ch">C</th></tr></thead><tbody><tr><td><code>OVector2&lt;T&gt;</code> / <code>OVector3&lt;T&gt;</code></td><td><code>utils_vector2_&lt;name&gt;_t</code> / <code>utils_vector3_&lt;name&gt;_t</code> <strong>par valeur</strong> (<code>{x, y}</code> / <code>{x, y, z}</code>) : <code>utils_vector2_&lt;name&gt;_add(a, b)</code>, <code>_dot</code>, <code>_cross</code>, <code>_length</code>, <code>_normalize</code>... (<code>_and</code> / <code>_or</code> / <code>_xor</code> pour les entiers)</td></tr><tr><td><code>OMatrix&lt;T&gt;</code></td><td>handle <code>utils_matrix_&lt;name&gt;_t*</code> : chaque opération existe en 3 versions, <code>utils_matrix_&lt;name&gt;_add(a, b)</code> (un nouveau handle), <code>_add_r(a, b, out)</code> (dans un handle donné), <code>_add_assign(a, b)</code> (sur place) ; <code>_div</code> / <code>_invert</code> pour les flottants</td></tr><tr><td><code>BidirectionalLookupTable</code></td><td><code>utils_blt_str_str_t*</code>, <code>utils_blt_size_size_t*</code>, <code>utils_blt_i64_i64_t*</code> (un seul type), <code>utils_blt_str_&lt;name&gt;_t*</code> / <code>utils_blt_&lt;name&gt;_str_t*</code> (chaîne ↔ entier), <code>utils_blt_t*</code> (octets)</td></tr><tr><td><code>Freezable</code> / <code>Worker</code> de n'importe quel handle</td><td><code>utils_freezable_*(handle)</code>, <code>utils_worker_*(handle)</code> (une erreur quand le handle n'a pas cette base)</td></tr></tbody></table></div><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define _Vector
+#define _Matrix
+#define _BLT
+#include &lt;utils.h&gt;
+#include &lt;stdio.h&gt;
+
+int main(void)
+{
+    utils_vector3_f64_t up = utils_vector3_f64_cross((utils_vector3_f64_t){1, 0, 0}, (utils_vector3_f64_t){0, 1, 0}); // (0, 0, 1)
+    utils_matrix_f64_t* m = utils_matrix_f64_create(2, 2);
+    utils_matrix_f64_t* inv = NULL;
+    utils_blt_i32_str_t* codes = utils_blt_i32_str_create();
+    double values[] = {4, 7, 2, 6};
+    const char* text = NULL;
+
+    if (!m || !codes)
+        return 1;
+    utils_matrix_f64_set_values(m, values, 4, 0, 0);          // [[4, 7], [2, 6]]
+    inv = utils_matrix_f64_invert(m);                         // a new handle
+    utils_blt_i32_str_add(codes, 404, "Not Found");
+    utils_freezable_freeze(codes);                            // Freezable of any handle
+    utils_blt_i32_str_get_right(codes, 404, &amp;text);
+    printf("(%g, %g, %g) %s frozen: %d\n", up.x, up.y, up.z, text, utils_freezable_is_frozen(codes));
+    utils_matrix_f64_destroy(inv);
+    utils_matrix_f64_destroy(m);
+    utils_blt_i32_str_destroy(codes);
+    return 0;
+}</code></pre></div></section><section id="cpp-api"><h2>7. <span data-lang="en">C++ API</span><span data-lang="fr">API C++</span></h2><div data-lang="en"><p>Read from the headers of <code>include/utils/type/</code> (public part only, the trailing comments of the code kept). Include <code>&lt;utils/utils.hpp&gt;</code> with the define of the section, never these headers one by one.</p><h3 id="h-type-freezable-hpp"><code>utils/type/Freezable.hpp</code></h3><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::type
+class Freezable: private utils::security::observer::Observer&lt;"Freezable"&gt; {
+    void freeze(void);
+    bool isFrozen(void) const;
+    void requireFrozen(void) const;
+    void requireUnfrozen(void) const;
+    Freezable&amp; operator=(const Freezable&amp; other);
+    Freezable&amp; operator=(Freezable&amp;&amp; other);
+    Freezable(const bool frozen = false);
+    Freezable(const Freezable&amp; other);
+    Freezable(Freezable&amp;&amp; other);
+    ~Freezable() = default;
+};</code></pre><h3 id="h-type-worker-hpp"><code>utils/type/Worker.hpp</code></h3><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::type
+class Worker: private utils::security::observer::Observer&lt;"Worker"&gt; {
+    void setWorkingStatus(const bool status);
+    std::chrono::steady_clock::time_point getStopedWorkingTimestamp(void) const;
+    bool isWorking(void) const;
+    Worker&amp; operator=(const Worker&amp; other);
+    Worker&amp; operator=(Worker&amp;&amp; other);
+    Worker() = default;
+    Worker(const Worker&amp; other);
+    Worker(Worker&amp;&amp; other);
+    ~Worker() = default;
+};</code></pre><h3 id="h-type-blt-bidirectionallookuptable-t-t-hpp"><code>utils/type/blt/BidirectionalLookupTable_t-t.hpp</code></h3><p>Class used for a bidirectional lookup table</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::type
+template&lt; typename L, typename R, typename HashL = std::hash&lt;L&gt;, typename HashR = std::hash&lt;R&gt;, typename EqualL = std::equal_to&lt;L&gt;, typename EqualR = std::equal_to&lt;R&gt; &gt; class BidirectionalLookupTable: public utils::type::Freezable, private utils::security::observer::Observer&lt;"BidirectionalLookupTable"&gt; {
+    void clear(void);
+    void removeElement(const L&amp; left);
+    void removeElements(const std::vector&lt;L&gt;&amp; lefts);
+    void removeElement(const R&amp; right);
+    void removeElements(const std::vector&lt;R&gt;&amp; rights);
+    void addElement(const L&amp; left, const R&amp; right);
+    void addElement(const R&amp; right, const L&amp; left);
+    template&lt;bool force = false&gt; void setElement(const L&amp; left, const R&amp; right);
+    template&lt;bool force = false&gt; void setElement(const R&amp; right, const L&amp; left);
+    BidirectionalLookupTable&amp; operator=(BidirectionalLookupTable&amp;&amp; other) = default;
+    const R&amp; operator[](const L&amp; left) const;
+    const L&amp; operator[](const R&amp; right) const;
+    BidirectionalLookupTable() = default;
+    BidirectionalLookupTable(BidirectionalLookupTable&amp;&amp; other) = default;
+    ~BidirectionalLookupTable() = default;
+};</code></pre><h3 id="h-type-blt-bidirectionallookuptable-t-hpp"><code>utils/type/blt/BidirectionalLookupTable_t.hpp</code></h3><p>Class used for a bidirectional lookup table specialized for one type</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define BLT_TYPE(T) T, T, std::hash&lt;T&gt;, std::hash&lt;T&gt;, std::equal_to&lt;T&gt;, std::equal_to&lt;T&gt;
+
+// namespace utils::type
+template&lt; typename T, typename Hash, typename Equal &gt; class BidirectionalLookupTable&lt;T, T, Hash, Hash, Equal, Equal&gt;: public utils::type::Freezable, private utils::security::observer::Observer&lt;"BidirectionalLookupTable"&gt; {
+    void clear(void);
+    void removeElement(const T&amp; element); // throw if frozen
+    void removeElements(const std::vector&lt;T&gt;&amp; elements);
+    void addElement(const T&amp; left, const T&amp; right);
+    template&lt;bool force = false&gt; void setElement(const T&amp; left, const T&amp; right);
+    BidirectionalLookupTable&amp; operator=(BidirectionalLookupTable&amp;&amp; other) = default;
+    const T&amp; operator[](const T&amp; element) const;
+    BidirectionalLookupTable() = default;
+    BidirectionalLookupTable(BidirectionalLookupTable&amp;&amp; other) = default;
+    ~BidirectionalLookupTable() = default;
+};</code></pre><h3 id="h-type-matrix-matrix-hpp"><code>utils/type/matrix/Matrix.hpp</code></h3><p>Matrix that contains x * y value of undefined type x -&gt; row &amp; y -&gt; column (_matrix[x][y])</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::type
+template&lt;typename T&gt; class Matrix: private utils::security::observer::Observer&lt;"Matrix"&gt; {
+    template&lt;typename It&gt; void set(It begin, It end, const std::size_t x = 0, const std::size_t y = 0) requires std::input_iterator&lt;It&gt; &amp;&amp; std::same_as&lt;std::iter_value_t&lt;It&gt;, T&gt;; // fill row by row from (x, y)
+    void set(const std::size_t x, const std::size_t y, const T&amp; value);
+    void set(const std::size_t x, const std::size_t y, T&amp;&amp; value);
+    void swap(const std::pair&lt;std::size_t, std::size_t&gt;&amp; a, const std::pair&lt;std::size_t, std::size_t&gt;&amp; b);
+    void swapCol(const std::size_t a, const std::size_t b);
+    void swapRow(const std::size_t a, const std::size_t b);
+    void clear(void); // reinit all value to default
+    void transpose(void);
+    void invert(void) requires utils::concepts::Arithmetic&lt;T&gt; &amp;&amp; utils::concepts::EqualityComparable&lt;T&gt; &amp;&amp; (!std::is_integral_v&lt;T&gt;); // disabled for integer (the result would be truncated)
+    T det(void) const requires utils::concepts::Arithmetic&lt;T&gt; &amp;&amp; utils::concepts::EqualityComparable&lt;T&gt; &amp;&amp; utils::concepts::Negatable&lt;T&gt;;
+    T trace(void) const requires utils::concepts::Addable&lt;T&gt;;
+    T&amp; at(const std::size_t x, const std::size_t y);
+    const T&amp; at(const std::size_t x, const std::size_t y) const;
+    std::vector&lt;T&gt; col(const std::size_t n) const;
+    std::vector&lt;T&gt; row(const std::size_t n) const;
+    std::pair&lt;std::size_t, std::size_t&gt; size(void) const;
+    std::size_t col(void) const;
+    std::size_t row(void) const;
+    T&amp; operator()(const std::size_t x, const std::size_t y);
+    const T&amp; operator()(const std::size_t x, const std::size_t y) const;
+    template&lt;typename U&gt; utils::type::Matrix&lt;std::common_type_t&lt;T, U&gt;&gt; operator+(const utils::type::Matrix&lt;U&gt;&amp; m) const requires utils::concepts::AddableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Matrix&lt;std::common_type_t&lt;T, U&gt;&gt; operator-(const utils::type::Matrix&lt;U&gt;&amp; m) const requires utils::concepts::SubtractableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Matrix&lt;std::common_type_t&lt;T, U&gt;&gt; operator*(const utils::type::Matrix&lt;U&gt;&amp; m) const requires utils::concepts::MultipliableWith&lt;T, U&gt; &amp;&amp; utils::concepts::AddableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Matrix&lt;std::common_type_t&lt;T, U&gt;&gt; operator/(const utils::type::Matrix&lt;U&gt;&amp; m) const requires utils::concepts::MultipliableWith&lt;T, U&gt; &amp;&amp; utils::concepts::AddableWith&lt;T, U&gt; &amp;&amp; (!std::is_integral_v&lt;std::common_type_t&lt;T, U&gt;&gt;); // this * m^-1
+    template&lt;typename U&gt; utils::type::Matrix&lt;std::common_type_t&lt;T, U&gt;&gt; operator*(const U&amp; v) const requires utils::concepts::MultipliableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Matrix&lt;std::common_type_t&lt;T, U&gt;&gt; operator/(const U&amp; v) const requires utils::concepts::DivisibleWith&lt;T, U&gt;;
+    Matrix&amp; operator=(const Matrix&amp; other) = default;
+    Matrix&amp; operator=(Matrix&amp;&amp; other);
+    template&lt;typename U&gt; Matrix&amp; operator+=(const utils::type::Matrix&lt;U&gt;&amp; m) requires utils::concepts::AddAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Matrix&amp; operator-=(const utils::type::Matrix&lt;U&gt;&amp; m) requires utils::concepts::SubtractAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Matrix&amp; operator*=(const utils::type::Matrix&lt;U&gt;&amp; m) requires utils::concepts::MultipliableWith&lt;T, U&gt; &amp;&amp; utils::concepts::AddAssignable&lt;T&gt;;
+    template&lt;typename U&gt; Matrix&amp; operator/=(const utils::type::Matrix&lt;U&gt;&amp; m) requires utils::concepts::MultipliableWith&lt;T, U&gt; &amp;&amp; utils::concepts::AddAssignable&lt;T&gt; &amp;&amp; (!std::is_integral_v&lt;std::common_type_t&lt;T, U&gt;&gt;); // this * m^-1
+    template&lt;typename U&gt; Matrix&amp; operator*=(const U&amp; v) requires utils::concepts::MultiplyAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Matrix&amp; operator/=(const U&amp; v) requires utils::concepts::DivideAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator==(const utils::type::Matrix&lt;U&gt;&amp; m) const requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator!=(const utils::type::Matrix&lt;U&gt;&amp; m) const requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+    Matrix operator-(void) const requires utils::concepts::Negatable&lt;T&gt;;
+    explicit Matrix(const std::size_t n);
+    Matrix(const std::size_t x, const std::size_t y);
+    template&lt;typename U&gt; Matrix(const utils::type::Matrix&lt;U&gt;&amp; m) requires std::constructible_from&lt;T, U&gt;;
+    Matrix(const Matrix&amp; other) = default;
+    Matrix(Matrix&amp;&amp; other);
+    ~Matrix() = default;
+};
+template&lt;typename T, typename U&gt; utils::type::Matrix&lt;std::common_type_t&lt;T, U&gt;&gt; operator*(const T&amp; lhs, const utils::type::Matrix&lt;U&gt;&amp; rhs) requires utils::concepts::MultipliableWith&lt;T, U&gt;;
+template&lt;typename T&gt; std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, const utils::type::Matrix&lt;T&gt;&amp; m);</code></pre><h3 id="h-type-matrix-omatrix-hpp"><code>utils/type/matrix/OMatrix.hpp</code></h3><p>Matrix that contains x * y value of undefined type x -&gt; row &amp; y -&gt; column (row-major contiguous storage) Optimized version</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::type
+template&lt;typename T&gt; class OMatrix {
+    template&lt;typename It&gt; void set(It begin, It end, const std::size_t x = 0, const std::size_t y = 0) requires std::input_iterator&lt;It&gt; &amp;&amp; std::same_as&lt;std::iter_value_t&lt;It&gt;, T&gt;; // fill row by row from (x, y)
+    void set(const std::size_t x, const std::size_t y, const T&amp; value);
+    void set(const std::size_t x, const std::size_t y, T&amp;&amp; value);
+    void swap(const std::pair&lt;std::size_t, std::size_t&gt;&amp; a, const std::pair&lt;std::size_t, std::size_t&gt;&amp; b);
+    void swapCol(const std::size_t a, const std::size_t b);
+    void swapRow(const std::size_t a, const std::size_t b);
+    void clear(void); // reinit all value to default
+    void transpose(void);
+    void invert(void); // integer type will be truncated (Be careful!!!)
+    T det(void) const;
+    T trace(void) const;
+    T&amp; at(const std::size_t x, const std::size_t y);
+    const T&amp; at(const std::size_t x, const std::size_t y) const;
+    std::vector&lt;T&gt; col(const std::size_t n) const;
+    std::vector&lt;T&gt; row(const std::size_t n) const;
+    std::pair&lt;std::size_t, std::size_t&gt; size(void) const;
+    std::size_t col(void) const;
+    std::size_t row(void) const;
+    T&amp; operator()(const std::size_t x, const std::size_t y); // no bound check
+    const T&amp; operator()(const std::size_t x, const std::size_t y) const; // no bound check
+    template&lt;typename U&gt; OMatrix operator+(const utils::type::OMatrix&lt;U&gt;&amp; m) const;
+    template&lt;typename U&gt; OMatrix operator-(const utils::type::OMatrix&lt;U&gt;&amp; m) const;
+    template&lt;typename U&gt; OMatrix operator*(const utils::type::OMatrix&lt;U&gt;&amp; m) const;
+    template&lt;typename U&gt; OMatrix operator/(const utils::type::OMatrix&lt;U&gt;&amp; m) const; // this * m^-1
+    template&lt;typename U&gt; OMatrix operator*(const U&amp; v) const;
+    template&lt;typename U&gt; OMatrix operator/(const U&amp; v) const;
+    OMatrix&amp; operator=(const OMatrix&amp; other) = default;
+    OMatrix&amp; operator=(OMatrix&amp;&amp; other) noexcept;
+    template&lt;typename U&gt; OMatrix&amp; operator+=(const utils::type::OMatrix&lt;U&gt;&amp; m);
+    template&lt;typename U&gt; OMatrix&amp; operator-=(const utils::type::OMatrix&lt;U&gt;&amp; m);
+    template&lt;typename U&gt; OMatrix&amp; operator*=(const utils::type::OMatrix&lt;U&gt;&amp; m);
+    template&lt;typename U&gt; OMatrix&amp; operator/=(const utils::type::OMatrix&lt;U&gt;&amp; m);
+    template&lt;typename U&gt; OMatrix&amp; operator*=(const U&amp; v);
+    template&lt;typename U&gt; OMatrix&amp; operator/=(const U&amp; v);
+    template&lt;typename U&gt; bool operator==(const utils::type::OMatrix&lt;U&gt;&amp; m) const;
+    template&lt;typename U&gt; bool operator!=(const utils::type::OMatrix&lt;U&gt;&amp; m) const;
+    OMatrix operator-(void) const;
+    explicit OMatrix(const std::size_t n);
+    OMatrix(const std::size_t x, const std::size_t y);
+    template&lt;typename U&gt; OMatrix(const utils::type::OMatrix&lt;U&gt;&amp; m);
+    OMatrix(const OMatrix&amp; other) = default;
+    OMatrix(OMatrix&amp;&amp; other) noexcept;
+    ~OMatrix() = default;
+};
+template&lt;typename T, typename U&gt; utils::type::OMatrix&lt;U&gt; operator*(const T&amp; lhs, const utils::type::OMatrix&lt;U&gt;&amp; rhs);
+template&lt;typename T&gt; std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, const utils::type::OMatrix&lt;T&gt;&amp; m);</code></pre><h3 id="h-type-vector-ivector-hpp"><code>utils/type/vector/IVector.hpp</code></h3><p>Interface for the cutomized vector</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::type
+template&lt;typename T&gt; class IVector: private utils::security::observer::Observer&lt;"IVector"&gt; {
+    virtual T get(std::size_t index) const = 0;
+    IVector&amp; operator=(const IVector&amp; other) = default;
+    IVector&amp; operator=(IVector&amp;&amp; other) = default;
+    IVector() = default;
+    IVector(const IVector&amp; other) = default;
+    IVector(IVector&amp;&amp; other) = default;
+    virtual ~IVector() = default;
+};</code></pre><h3 id="h-type-vector-ovector2-hpp"><code>utils/type/vector/OVector2.hpp</code></h3><p>Vector hat contains 2 value respectivly x &amp; y of undefined type Optimized version</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define MAX_INDEX_OVECTOR2 2
+
+// namespace utils::type
+template&lt;typename T&gt; class OVector2 {
+    T x;
+    T y;
+    T get(std::size_t index) const;
+    OVector2 min(const OVector2&amp; min) const;
+    OVector2 max(const OVector2&amp; max) const;
+    OVector2 clamp(const OVector2&amp; min, const OVector2&amp; max) const;
+    template&lt;typename U&gt; T dot(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; T cross(const OVector2&lt;U&gt;&amp; v) const;
+    T length(void) const;
+    T lengthSquared(void) const;
+    OVector2 sign(void) const;
+    OVector2 normalize(void) const;
+    T&amp; operator[](std::size_t index);
+    const T&amp; operator[](std::size_t index) const;
+    template&lt;typename U&gt; OVector2 operator+(const U&amp; v) const;
+    template&lt;typename U&gt; OVector2 operator+(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector2 operator-(const U&amp; v) const;
+    template&lt;typename U&gt; OVector2 operator-(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector2 operator*(const U&amp; v) const;
+    template&lt;typename U&gt; OVector2 operator*(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector2 operator/(const U&amp; v) const;
+    template&lt;typename U&gt; OVector2 operator/(const OVector2&lt;U&gt;&amp; v) const;
+    OVector2&amp; operator++(void);
+    OVector2 operator++(int);
+    OVector2&amp; operator--(void);
+    OVector2 operator--(int);
+    template&lt;typename U&gt; OVector2 operator&amp;(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector2 operator|(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector2 operator^(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector2&amp; operator=(const OVector2&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; OVector2&amp; operator=(OVector2&lt;U&gt;&amp;&amp; v);
+    template&lt;typename U&gt; OVector2&amp; operator+=(const U&amp; v);
+    template&lt;typename U&gt; OVector2&amp; operator+=(const OVector2&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; OVector2&amp; operator-=(const U&amp; v);
+    template&lt;typename U&gt; OVector2&amp; operator-=(const OVector2&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; OVector2&amp; operator*=(const U&amp; v);
+    template&lt;typename U&gt; OVector2&amp; operator*=(const OVector2&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; OVector2&amp; operator/=(const U&amp; v);
+    template&lt;typename U&gt; OVector2&amp; operator/=(const OVector2&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; bool operator==(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator==(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; bool operator!=(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator!=(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; bool operator&lt;(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator&lt;(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; bool operator&lt;=(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator&lt;=(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; bool operator&gt;(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator&gt;(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; bool operator&gt;=(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator&gt;=(const OVector2&lt;U&gt;&amp; v) const;
+    OVector2 operator-(void) const;
+    OVector2() = default;
+    template&lt;typename U, typename R&gt; OVector2(U x, R y);
+    template&lt;typename U&gt; OVector2(const OVector2&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; OVector2(OVector2&lt;U&gt;&amp;&amp; v);
+    ~OVector2() = default;
+};
+template&lt;typename T, typename U&gt; utils::type::OVector2&lt;U&gt; operator+(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector2&lt;U&gt; operator-(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector2&lt;U&gt; operator*(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector2&lt;U&gt; operator/(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector2&lt;U&gt; operator&amp;(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector2&lt;U&gt; operator|(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector2&lt;U&gt; operator^(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator==(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator!=(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator&lt;(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator&lt;=(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator&gt;(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator&gt;=(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T&gt; std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, const utils::type::OVector2&lt;T&gt;&amp; v);</code></pre><h3 id="h-type-vector-ovector3-hpp"><code>utils/type/vector/OVector3.hpp</code></h3><p>Vector hat contains 3 value respectivly x, y &amp; z of undefined type Optimized version</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define MAX_INDEX_OVECTOR3 3
+
+// namespace utils::type
+template&lt;typename T&gt; class OVector3 {
+    T x;
+    T y;
+    T z;
+    T get(std::size_t index) const;
+    OVector3 min(const OVector3&amp; min) const;
+    OVector3 max(const OVector3&amp; max) const;
+    OVector3 clamp(const OVector3&amp; min, const OVector3&amp; max) const;
+    template&lt;typename U&gt; T dot(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector3 cross(const OVector3&lt;U&gt;&amp; v) const;
+    T length(void) const;
+    T lengthSquared(void) const;
+    OVector3 sign(void) const;
+    OVector3 normalize(void) const;
+    T&amp; operator[](std::size_t index);
+    const T&amp; operator[](std::size_t index) const;
+    template&lt;typename U&gt; OVector3 operator+(const U&amp; v) const;
+    template&lt;typename U&gt; OVector3 operator+(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector3 operator-(const U&amp; v) const;
+    template&lt;typename U&gt; OVector3 operator-(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector3 operator*(const U&amp; v) const;
+    template&lt;typename U&gt; OVector3 operator*(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector3 operator/(const U&amp; v) const;
+    template&lt;typename U&gt; OVector3 operator/(const OVector3&lt;U&gt;&amp; v) const;
+    OVector3&amp; operator++(void);
+    OVector3 operator++(int);
+    OVector3&amp; operator--(void);
+    OVector3 operator--(int);
+    template&lt;typename U&gt; OVector3 operator&amp;(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector3 operator|(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector3 operator^(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector3&amp; operator=(const OVector3&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; OVector3&amp; operator=(OVector3&lt;U&gt;&amp;&amp; v);
+    template&lt;typename U&gt; OVector3&amp; operator+=(const U&amp; v);
+    template&lt;typename U&gt; OVector3&amp; operator+=(const OVector3&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; OVector3&amp; operator-=(const U&amp; v);
+    template&lt;typename U&gt; OVector3&amp; operator-=(const OVector3&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; OVector3&amp; operator*=(const U&amp; v);
+    template&lt;typename U&gt; OVector3&amp; operator*=(const OVector3&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; OVector3&amp; operator/=(const U&amp; v);
+    template&lt;typename U&gt; OVector3&amp; operator/=(const OVector3&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; bool operator==(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator==(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; bool operator!=(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator!=(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; bool operator&lt;(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator&lt;(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; bool operator&lt;=(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator&lt;=(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; bool operator&gt;(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator&gt;(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; bool operator&gt;=(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator&gt;=(const OVector3&lt;U&gt;&amp; v) const;
+    OVector3 operator-(void) const;
+    OVector3() = default;
+    template&lt;typename U, typename R, typename J&gt; OVector3(U x, R y, J z);
+    template&lt;typename U&gt; OVector3(const OVector3&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; OVector3(OVector3&lt;U&gt;&amp;&amp; v);
+    ~OVector3() = default;
+};
+template&lt;typename T, typename U&gt; utils::type::OVector3&lt;U&gt; operator+(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector3&lt;U&gt; operator-(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector3&lt;U&gt; operator*(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector3&lt;U&gt; operator/(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector3&lt;U&gt; operator&amp;(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector3&lt;U&gt; operator|(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector3&lt;U&gt; operator^(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator==(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator!=(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator&lt;(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator&lt;=(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator&gt;(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator&gt;=(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T&gt; std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, const utils::type::OVector3&lt;T&gt;&amp; v);</code></pre><h3 id="h-type-vector-vector2-hpp"><code>utils/type/vector/Vector2.hpp</code></h3><p>Vector hat contains 2 value respectivly x &amp; y of undefined type</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define MAX_INDEX_VECTOR2 2
+
+// namespace utils::type
+template&lt;typename T&gt; class Vector2: public utils::type::IVector&lt;T&gt; {
+    T x;
+    T y;
+    T get(std::size_t index) const;
+    Vector2 min(const Vector2&amp; min) const requires utils::concepts::Comparable&lt;T&gt;;
+    Vector2 max(const Vector2&amp; max) const requires utils::concepts::Comparable&lt;T&gt;;
+    Vector2 clamp(const Vector2&amp; min, const Vector2&amp; max) const requires utils::concepts::Comparable&lt;T&gt;;
+    template&lt;typename U&gt; std::common_type_t&lt;T, U&gt; dot(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::MultipliableWith&lt;T, U&gt; &amp;&amp; utils::concepts::AddableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; std::common_type_t&lt;T, U&gt; cross(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::MultipliableWith&lt;T, U&gt; &amp;&amp; utils::concepts::SubtractableWith&lt;T, U&gt;;
+    T length(void) const requires utils::concepts::Multipliable&lt;T&gt;;
+    T lengthSquared(void) const requires utils::concepts::Multipliable&lt;T&gt; &amp;&amp; utils::concepts::Addable&lt;T&gt;;
+    Vector2 sign(void) const requires utils::concepts::ComparableWith&lt;T, int&gt;;
+    Vector2 normalize(void) const requires utils::concepts::Divisible&lt;T&gt;;
+    T&amp; operator[](std::size_t index);
+    const T&amp; operator[](std::size_t index) const;
+    template&lt;typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator+(const U&amp; v) const requires utils::concepts::AddableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator+(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::AddableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator-(const U&amp; v) const requires utils::concepts::SubtractableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator-(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::SubtractableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator*(const U&amp; v) const requires utils::concepts::MultipliableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator*(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::MultipliableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator/(const U&amp; v) const requires utils::concepts::DivisibleWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator/(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::DivisibleWith&lt;T, U&gt;;
+    Vector2&amp; operator++(void) requires utils::concepts::Incrementable&lt;T&gt;;
+    Vector2 operator++(int) requires utils::concepts::Incrementable&lt;T&gt;;
+    Vector2&amp; operator--(void) requires utils::concepts::Decrementable&lt;T&gt;;
+    Vector2 operator--(int) requires utils::concepts::Decrementable&lt;T&gt;;
+    template&lt;typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator&amp;(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::BitwiseAndableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator|(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::BitwiseOrableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator^(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::BitwiseXorableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector2&amp; operator=(const Vector2&lt;U&gt;&amp; v) requires std::assignable_from&lt;T&amp;, U&gt;;
+    template&lt;typename U&gt; Vector2&amp; operator=(Vector2&lt;U&gt;&amp;&amp; v) requires std::assignable_from&lt;T&amp;, U&gt;;
+    template&lt;typename U&gt; Vector2&amp; operator+=(const U&amp; v) requires utils::concepts::AddAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector2&amp; operator+=(const Vector2&lt;U&gt;&amp; v) requires utils::concepts::AddAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector2&amp; operator-=(const U&amp; v) requires utils::concepts::SubtractAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector2&amp; operator-=(const Vector2&lt;U&gt;&amp; v) requires utils::concepts::SubtractAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector2&amp; operator*=(const U&amp; v) requires utils::concepts::MultiplyAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector2&amp; operator*=(const Vector2&lt;U&gt;&amp; v) requires utils::concepts::MultiplyAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector2&amp; operator/=(const U&amp; v) requires utils::concepts::DivideAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector2&amp; operator/=(const Vector2&lt;U&gt;&amp; v) requires utils::concepts::DivideAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator==(const U&amp; v) const requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator==(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator!=(const U&amp; v) const requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator!=(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&lt;(const U&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&lt;(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&lt;=(const U&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&lt;=(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&gt;(const U&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&gt;(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&gt;=(const U&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&gt;=(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    Vector2 operator-(void) const requires utils::concepts::Negatable&lt;T&gt;;
+    Vector2() = default;
+    template&lt;typename U, typename R&gt; Vector2(U x, R y) requires std::constructible_from&lt;T, U&gt; &amp;&amp; std::constructible_from&lt;T, R&gt;;
+    template&lt;typename U&gt; Vector2(const Vector2&lt;U&gt;&amp; v) requires std::constructible_from&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector2(Vector2&lt;U&gt;&amp;&amp; v) requires std::constructible_from&lt;T, U&amp;&amp;&gt;;
+    ~Vector2() = default;
+};
+template&lt;typename T, typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator+(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::AddableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator-(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::SubtractableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator*(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::MultipliableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator/(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::DivisibleWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator&amp;(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::BitwiseAndableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator|(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::BitwiseOrableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator^(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::BitwiseXorableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator==(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator!=(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator&lt;(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::ComparableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator&lt;=(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::ComparableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator&gt;(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::ComparableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator&gt;=(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::ComparableWith&lt;T, U&gt;;
+template&lt;typename T&gt; std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, const utils::type::Vector2&lt;T&gt;&amp; v);</code></pre><h3 id="h-type-vector-vector3-hpp"><code>utils/type/vector/Vector3.hpp</code></h3><p>Vector hat contains 3 value respectivly x, y &amp; z of undefined type</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define MAX_INDEX_VECTOR3 3
+
+// namespace utils::type
+template&lt;typename T&gt; class Vector3: public utils::type::IVector&lt;T&gt; {
+    T x;
+    T y;
+    T z;
+    T get(std::size_t index) const;
+    Vector3 min(const Vector3&amp; min) const requires utils::concepts::Comparable&lt;T&gt;;
+    Vector3 max(const Vector3&amp; max) const requires utils::concepts::Comparable&lt;T&gt;;
+    Vector3 clamp(const Vector3&amp; min, const Vector3&amp; max) const requires utils::concepts::Comparable&lt;T&gt;;
+    template&lt;typename U&gt; std::common_type_t&lt;T, U&gt; dot(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::MultipliableWith&lt;T, U&gt; &amp;&amp; utils::concepts::AddableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; cross(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::MultipliableWith&lt;T, U&gt; &amp;&amp; utils::concepts::SubtractableWith&lt;T, U&gt;;
+    T length(void) const requires utils::concepts::Multipliable&lt;T&gt;;
+    T lengthSquared(void) const requires utils::concepts::Multipliable&lt;T&gt; &amp;&amp; utils::concepts::Addable&lt;T&gt;;
+    Vector3 sign(void) const requires utils::concepts::ComparableWith&lt;T, int&gt;;
+    Vector3 normalize(void) const requires utils::concepts::Divisible&lt;T&gt;;
+    T&amp; operator[](std::size_t index);
+    const T&amp; operator[](std::size_t index) const;
+    template&lt;typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator+(const U&amp; v) const requires utils::concepts::AddableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator+(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::AddableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator-(const U&amp; v) const requires utils::concepts::SubtractableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator-(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::SubtractableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator*(const U&amp; v) const requires utils::concepts::MultipliableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator*(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::MultipliableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator/(const U&amp; v) const requires utils::concepts::DivisibleWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator/(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::DivisibleWith&lt;T, U&gt;;
+    Vector3&amp; operator++(void) requires utils::concepts::Incrementable&lt;T&gt;;
+    Vector3 operator++(int) requires utils::concepts::Incrementable&lt;T&gt;;
+    Vector3&amp; operator--(void) requires utils::concepts::Decrementable&lt;T&gt;;
+    Vector3 operator--(int) requires utils::concepts::Decrementable&lt;T&gt;;
+    template&lt;typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator&amp;(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::BitwiseAndableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator|(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::BitwiseOrableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator^(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::BitwiseXorableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector3&amp; operator=(const Vector3&lt;U&gt;&amp; v) requires std::assignable_from&lt;T&amp;, U&gt;;
+    template&lt;typename U&gt; Vector3&amp; operator=(Vector3&lt;U&gt;&amp;&amp; v) requires std::assignable_from&lt;T&amp;, U&gt;;
+    template&lt;typename U&gt; Vector3&amp; operator+=(const U&amp; v) requires utils::concepts::AddAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector3&amp; operator+=(const Vector3&lt;U&gt;&amp; v) requires utils::concepts::AddAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector3&amp; operator-=(const U&amp; v) requires utils::concepts::SubtractAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector3&amp; operator-=(const Vector3&lt;U&gt;&amp; v) requires utils::concepts::SubtractAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector3&amp; operator*=(const U&amp; v) requires utils::concepts::MultiplyAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector3&amp; operator*=(const Vector3&lt;U&gt;&amp; v) requires utils::concepts::MultiplyAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector3&amp; operator/=(const U&amp; v) requires utils::concepts::DivideAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector3&amp; operator/=(const Vector3&lt;U&gt;&amp; v) requires utils::concepts::DivideAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator==(const U&amp; v) const requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator==(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator!=(const U&amp; v) const requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator!=(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&lt;(const U&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&lt;(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&lt;=(const U&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&lt;=(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&gt;(const U&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&gt;(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&gt;=(const U&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&gt;=(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    Vector3 operator-(void) const requires utils::concepts::Negatable&lt;T&gt;;
+    Vector3() = default;
+    template&lt;typename U, typename R, typename J&gt; Vector3(U x, R y, J z) requires std::constructible_from&lt;T, U&gt; &amp;&amp; std::constructible_from&lt;T, R&gt; &amp;&amp; std::constructible_from&lt;T, J&gt;;
+    template&lt;typename U&gt; Vector3(const Vector3&lt;U&gt;&amp; v) requires std::constructible_from&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector3(Vector3&lt;U&gt;&amp;&amp; v) requires std::constructible_from&lt;T, U&amp;&amp;&gt;;
+    ~Vector3() = default;
+};
+template&lt;typename T, typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator+(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::AddableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator-(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::SubtractableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator*(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::MultipliableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator/(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::DivisibleWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator&amp;(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::BitwiseAndableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator|(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::BitwiseOrableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator^(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::BitwiseXorableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator==(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator!=(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator&lt;(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::ComparableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator&lt;=(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::ComparableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator&gt;(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::ComparableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator&gt;=(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::ComparableWith&lt;T, U&gt;;
+template&lt;typename T&gt; std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, const utils::type::Vector3&lt;T&gt;&amp; v);</code></pre></div><div data-lang="fr"><p>Lu dans les en-têtes de <code>include/utils/type/</code> (partie publique seulement, avec les commentaires du code). Inclure <code>&lt;utils/utils.hpp&gt;</code> avec le define de la section, jamais ces en-têtes un par un.</p><h3 id="h-type-freezable-hpp"><code>utils/type/Freezable.hpp</code></h3><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::type
+class Freezable: private utils::security::observer::Observer&lt;"Freezable"&gt; {
+    void freeze(void);
+    bool isFrozen(void) const;
+    void requireFrozen(void) const;
+    void requireUnfrozen(void) const;
+    Freezable&amp; operator=(const Freezable&amp; other);
+    Freezable&amp; operator=(Freezable&amp;&amp; other);
+    Freezable(const bool frozen = false);
+    Freezable(const Freezable&amp; other);
+    Freezable(Freezable&amp;&amp; other);
+    ~Freezable() = default;
+};</code></pre><h3 id="h-type-worker-hpp"><code>utils/type/Worker.hpp</code></h3><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::type
+class Worker: private utils::security::observer::Observer&lt;"Worker"&gt; {
+    void setWorkingStatus(const bool status);
+    std::chrono::steady_clock::time_point getStopedWorkingTimestamp(void) const;
+    bool isWorking(void) const;
+    Worker&amp; operator=(const Worker&amp; other);
+    Worker&amp; operator=(Worker&amp;&amp; other);
+    Worker() = default;
+    Worker(const Worker&amp; other);
+    Worker(Worker&amp;&amp; other);
+    ~Worker() = default;
+};</code></pre><h3 id="h-type-blt-bidirectionallookuptable-t-t-hpp"><code>utils/type/blt/BidirectionalLookupTable_t-t.hpp</code></h3><p>Class used for a bidirectional lookup table</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::type
+template&lt; typename L, typename R, typename HashL = std::hash&lt;L&gt;, typename HashR = std::hash&lt;R&gt;, typename EqualL = std::equal_to&lt;L&gt;, typename EqualR = std::equal_to&lt;R&gt; &gt; class BidirectionalLookupTable: public utils::type::Freezable, private utils::security::observer::Observer&lt;"BidirectionalLookupTable"&gt; {
+    void clear(void);
+    void removeElement(const L&amp; left);
+    void removeElements(const std::vector&lt;L&gt;&amp; lefts);
+    void removeElement(const R&amp; right);
+    void removeElements(const std::vector&lt;R&gt;&amp; rights);
+    void addElement(const L&amp; left, const R&amp; right);
+    void addElement(const R&amp; right, const L&amp; left);
+    template&lt;bool force = false&gt; void setElement(const L&amp; left, const R&amp; right);
+    template&lt;bool force = false&gt; void setElement(const R&amp; right, const L&amp; left);
+    BidirectionalLookupTable&amp; operator=(BidirectionalLookupTable&amp;&amp; other) = default;
+    const R&amp; operator[](const L&amp; left) const;
+    const L&amp; operator[](const R&amp; right) const;
+    BidirectionalLookupTable() = default;
+    BidirectionalLookupTable(BidirectionalLookupTable&amp;&amp; other) = default;
+    ~BidirectionalLookupTable() = default;
+};</code></pre><h3 id="h-type-blt-bidirectionallookuptable-t-hpp"><code>utils/type/blt/BidirectionalLookupTable_t.hpp</code></h3><p>Class used for a bidirectional lookup table specialized for one type</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define BLT_TYPE(T) T, T, std::hash&lt;T&gt;, std::hash&lt;T&gt;, std::equal_to&lt;T&gt;, std::equal_to&lt;T&gt;
+
+// namespace utils::type
+template&lt; typename T, typename Hash, typename Equal &gt; class BidirectionalLookupTable&lt;T, T, Hash, Hash, Equal, Equal&gt;: public utils::type::Freezable, private utils::security::observer::Observer&lt;"BidirectionalLookupTable"&gt; {
+    void clear(void);
+    void removeElement(const T&amp; element); // throw if frozen
+    void removeElements(const std::vector&lt;T&gt;&amp; elements);
+    void addElement(const T&amp; left, const T&amp; right);
+    template&lt;bool force = false&gt; void setElement(const T&amp; left, const T&amp; right);
+    BidirectionalLookupTable&amp; operator=(BidirectionalLookupTable&amp;&amp; other) = default;
+    const T&amp; operator[](const T&amp; element) const;
+    BidirectionalLookupTable() = default;
+    BidirectionalLookupTable(BidirectionalLookupTable&amp;&amp; other) = default;
+    ~BidirectionalLookupTable() = default;
+};</code></pre><h3 id="h-type-matrix-matrix-hpp"><code>utils/type/matrix/Matrix.hpp</code></h3><p>Matrix that contains x * y value of undefined type x -&gt; row &amp; y -&gt; column (_matrix[x][y])</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::type
+template&lt;typename T&gt; class Matrix: private utils::security::observer::Observer&lt;"Matrix"&gt; {
+    template&lt;typename It&gt; void set(It begin, It end, const std::size_t x = 0, const std::size_t y = 0) requires std::input_iterator&lt;It&gt; &amp;&amp; std::same_as&lt;std::iter_value_t&lt;It&gt;, T&gt;; // fill row by row from (x, y)
+    void set(const std::size_t x, const std::size_t y, const T&amp; value);
+    void set(const std::size_t x, const std::size_t y, T&amp;&amp; value);
+    void swap(const std::pair&lt;std::size_t, std::size_t&gt;&amp; a, const std::pair&lt;std::size_t, std::size_t&gt;&amp; b);
+    void swapCol(const std::size_t a, const std::size_t b);
+    void swapRow(const std::size_t a, const std::size_t b);
+    void clear(void); // reinit all value to default
+    void transpose(void);
+    void invert(void) requires utils::concepts::Arithmetic&lt;T&gt; &amp;&amp; utils::concepts::EqualityComparable&lt;T&gt; &amp;&amp; (!std::is_integral_v&lt;T&gt;); // disabled for integer (the result would be truncated)
+    T det(void) const requires utils::concepts::Arithmetic&lt;T&gt; &amp;&amp; utils::concepts::EqualityComparable&lt;T&gt; &amp;&amp; utils::concepts::Negatable&lt;T&gt;;
+    T trace(void) const requires utils::concepts::Addable&lt;T&gt;;
+    T&amp; at(const std::size_t x, const std::size_t y);
+    const T&amp; at(const std::size_t x, const std::size_t y) const;
+    std::vector&lt;T&gt; col(const std::size_t n) const;
+    std::vector&lt;T&gt; row(const std::size_t n) const;
+    std::pair&lt;std::size_t, std::size_t&gt; size(void) const;
+    std::size_t col(void) const;
+    std::size_t row(void) const;
+    T&amp; operator()(const std::size_t x, const std::size_t y);
+    const T&amp; operator()(const std::size_t x, const std::size_t y) const;
+    template&lt;typename U&gt; utils::type::Matrix&lt;std::common_type_t&lt;T, U&gt;&gt; operator+(const utils::type::Matrix&lt;U&gt;&amp; m) const requires utils::concepts::AddableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Matrix&lt;std::common_type_t&lt;T, U&gt;&gt; operator-(const utils::type::Matrix&lt;U&gt;&amp; m) const requires utils::concepts::SubtractableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Matrix&lt;std::common_type_t&lt;T, U&gt;&gt; operator*(const utils::type::Matrix&lt;U&gt;&amp; m) const requires utils::concepts::MultipliableWith&lt;T, U&gt; &amp;&amp; utils::concepts::AddableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Matrix&lt;std::common_type_t&lt;T, U&gt;&gt; operator/(const utils::type::Matrix&lt;U&gt;&amp; m) const requires utils::concepts::MultipliableWith&lt;T, U&gt; &amp;&amp; utils::concepts::AddableWith&lt;T, U&gt; &amp;&amp; (!std::is_integral_v&lt;std::common_type_t&lt;T, U&gt;&gt;); // this * m^-1
+    template&lt;typename U&gt; utils::type::Matrix&lt;std::common_type_t&lt;T, U&gt;&gt; operator*(const U&amp; v) const requires utils::concepts::MultipliableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Matrix&lt;std::common_type_t&lt;T, U&gt;&gt; operator/(const U&amp; v) const requires utils::concepts::DivisibleWith&lt;T, U&gt;;
+    Matrix&amp; operator=(const Matrix&amp; other) = default;
+    Matrix&amp; operator=(Matrix&amp;&amp; other);
+    template&lt;typename U&gt; Matrix&amp; operator+=(const utils::type::Matrix&lt;U&gt;&amp; m) requires utils::concepts::AddAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Matrix&amp; operator-=(const utils::type::Matrix&lt;U&gt;&amp; m) requires utils::concepts::SubtractAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Matrix&amp; operator*=(const utils::type::Matrix&lt;U&gt;&amp; m) requires utils::concepts::MultipliableWith&lt;T, U&gt; &amp;&amp; utils::concepts::AddAssignable&lt;T&gt;;
+    template&lt;typename U&gt; Matrix&amp; operator/=(const utils::type::Matrix&lt;U&gt;&amp; m) requires utils::concepts::MultipliableWith&lt;T, U&gt; &amp;&amp; utils::concepts::AddAssignable&lt;T&gt; &amp;&amp; (!std::is_integral_v&lt;std::common_type_t&lt;T, U&gt;&gt;); // this * m^-1
+    template&lt;typename U&gt; Matrix&amp; operator*=(const U&amp; v) requires utils::concepts::MultiplyAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Matrix&amp; operator/=(const U&amp; v) requires utils::concepts::DivideAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator==(const utils::type::Matrix&lt;U&gt;&amp; m) const requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator!=(const utils::type::Matrix&lt;U&gt;&amp; m) const requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+    Matrix operator-(void) const requires utils::concepts::Negatable&lt;T&gt;;
+    explicit Matrix(const std::size_t n);
+    Matrix(const std::size_t x, const std::size_t y);
+    template&lt;typename U&gt; Matrix(const utils::type::Matrix&lt;U&gt;&amp; m) requires std::constructible_from&lt;T, U&gt;;
+    Matrix(const Matrix&amp; other) = default;
+    Matrix(Matrix&amp;&amp; other);
+    ~Matrix() = default;
+};
+template&lt;typename T, typename U&gt; utils::type::Matrix&lt;std::common_type_t&lt;T, U&gt;&gt; operator*(const T&amp; lhs, const utils::type::Matrix&lt;U&gt;&amp; rhs) requires utils::concepts::MultipliableWith&lt;T, U&gt;;
+template&lt;typename T&gt; std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, const utils::type::Matrix&lt;T&gt;&amp; m);</code></pre><h3 id="h-type-matrix-omatrix-hpp"><code>utils/type/matrix/OMatrix.hpp</code></h3><p>Matrix that contains x * y value of undefined type x -&gt; row &amp; y -&gt; column (row-major contiguous storage) Optimized version</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::type
+template&lt;typename T&gt; class OMatrix {
+    template&lt;typename It&gt; void set(It begin, It end, const std::size_t x = 0, const std::size_t y = 0) requires std::input_iterator&lt;It&gt; &amp;&amp; std::same_as&lt;std::iter_value_t&lt;It&gt;, T&gt;; // fill row by row from (x, y)
+    void set(const std::size_t x, const std::size_t y, const T&amp; value);
+    void set(const std::size_t x, const std::size_t y, T&amp;&amp; value);
+    void swap(const std::pair&lt;std::size_t, std::size_t&gt;&amp; a, const std::pair&lt;std::size_t, std::size_t&gt;&amp; b);
+    void swapCol(const std::size_t a, const std::size_t b);
+    void swapRow(const std::size_t a, const std::size_t b);
+    void clear(void); // reinit all value to default
+    void transpose(void);
+    void invert(void); // integer type will be truncated (Be careful!!!)
+    T det(void) const;
+    T trace(void) const;
+    T&amp; at(const std::size_t x, const std::size_t y);
+    const T&amp; at(const std::size_t x, const std::size_t y) const;
+    std::vector&lt;T&gt; col(const std::size_t n) const;
+    std::vector&lt;T&gt; row(const std::size_t n) const;
+    std::pair&lt;std::size_t, std::size_t&gt; size(void) const;
+    std::size_t col(void) const;
+    std::size_t row(void) const;
+    T&amp; operator()(const std::size_t x, const std::size_t y); // no bound check
+    const T&amp; operator()(const std::size_t x, const std::size_t y) const; // no bound check
+    template&lt;typename U&gt; OMatrix operator+(const utils::type::OMatrix&lt;U&gt;&amp; m) const;
+    template&lt;typename U&gt; OMatrix operator-(const utils::type::OMatrix&lt;U&gt;&amp; m) const;
+    template&lt;typename U&gt; OMatrix operator*(const utils::type::OMatrix&lt;U&gt;&amp; m) const;
+    template&lt;typename U&gt; OMatrix operator/(const utils::type::OMatrix&lt;U&gt;&amp; m) const; // this * m^-1
+    template&lt;typename U&gt; OMatrix operator*(const U&amp; v) const;
+    template&lt;typename U&gt; OMatrix operator/(const U&amp; v) const;
+    OMatrix&amp; operator=(const OMatrix&amp; other) = default;
+    OMatrix&amp; operator=(OMatrix&amp;&amp; other) noexcept;
+    template&lt;typename U&gt; OMatrix&amp; operator+=(const utils::type::OMatrix&lt;U&gt;&amp; m);
+    template&lt;typename U&gt; OMatrix&amp; operator-=(const utils::type::OMatrix&lt;U&gt;&amp; m);
+    template&lt;typename U&gt; OMatrix&amp; operator*=(const utils::type::OMatrix&lt;U&gt;&amp; m);
+    template&lt;typename U&gt; OMatrix&amp; operator/=(const utils::type::OMatrix&lt;U&gt;&amp; m);
+    template&lt;typename U&gt; OMatrix&amp; operator*=(const U&amp; v);
+    template&lt;typename U&gt; OMatrix&amp; operator/=(const U&amp; v);
+    template&lt;typename U&gt; bool operator==(const utils::type::OMatrix&lt;U&gt;&amp; m) const;
+    template&lt;typename U&gt; bool operator!=(const utils::type::OMatrix&lt;U&gt;&amp; m) const;
+    OMatrix operator-(void) const;
+    explicit OMatrix(const std::size_t n);
+    OMatrix(const std::size_t x, const std::size_t y);
+    template&lt;typename U&gt; OMatrix(const utils::type::OMatrix&lt;U&gt;&amp; m);
+    OMatrix(const OMatrix&amp; other) = default;
+    OMatrix(OMatrix&amp;&amp; other) noexcept;
+    ~OMatrix() = default;
+};
+template&lt;typename T, typename U&gt; utils::type::OMatrix&lt;U&gt; operator*(const T&amp; lhs, const utils::type::OMatrix&lt;U&gt;&amp; rhs);
+template&lt;typename T&gt; std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, const utils::type::OMatrix&lt;T&gt;&amp; m);</code></pre><h3 id="h-type-vector-ivector-hpp"><code>utils/type/vector/IVector.hpp</code></h3><p>Interface for the cutomized vector</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::type
+template&lt;typename T&gt; class IVector: private utils::security::observer::Observer&lt;"IVector"&gt; {
+    virtual T get(std::size_t index) const = 0;
+    IVector&amp; operator=(const IVector&amp; other) = default;
+    IVector&amp; operator=(IVector&amp;&amp; other) = default;
+    IVector() = default;
+    IVector(const IVector&amp; other) = default;
+    IVector(IVector&amp;&amp; other) = default;
+    virtual ~IVector() = default;
+};</code></pre><h3 id="h-type-vector-ovector2-hpp"><code>utils/type/vector/OVector2.hpp</code></h3><p>Vector hat contains 2 value respectivly x &amp; y of undefined type Optimized version</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define MAX_INDEX_OVECTOR2 2
+
+// namespace utils::type
+template&lt;typename T&gt; class OVector2 {
+    T x;
+    T y;
+    T get(std::size_t index) const;
+    OVector2 min(const OVector2&amp; min) const;
+    OVector2 max(const OVector2&amp; max) const;
+    OVector2 clamp(const OVector2&amp; min, const OVector2&amp; max) const;
+    template&lt;typename U&gt; T dot(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; T cross(const OVector2&lt;U&gt;&amp; v) const;
+    T length(void) const;
+    T lengthSquared(void) const;
+    OVector2 sign(void) const;
+    OVector2 normalize(void) const;
+    T&amp; operator[](std::size_t index);
+    const T&amp; operator[](std::size_t index) const;
+    template&lt;typename U&gt; OVector2 operator+(const U&amp; v) const;
+    template&lt;typename U&gt; OVector2 operator+(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector2 operator-(const U&amp; v) const;
+    template&lt;typename U&gt; OVector2 operator-(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector2 operator*(const U&amp; v) const;
+    template&lt;typename U&gt; OVector2 operator*(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector2 operator/(const U&amp; v) const;
+    template&lt;typename U&gt; OVector2 operator/(const OVector2&lt;U&gt;&amp; v) const;
+    OVector2&amp; operator++(void);
+    OVector2 operator++(int);
+    OVector2&amp; operator--(void);
+    OVector2 operator--(int);
+    template&lt;typename U&gt; OVector2 operator&amp;(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector2 operator|(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector2 operator^(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector2&amp; operator=(const OVector2&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; OVector2&amp; operator=(OVector2&lt;U&gt;&amp;&amp; v);
+    template&lt;typename U&gt; OVector2&amp; operator+=(const U&amp; v);
+    template&lt;typename U&gt; OVector2&amp; operator+=(const OVector2&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; OVector2&amp; operator-=(const U&amp; v);
+    template&lt;typename U&gt; OVector2&amp; operator-=(const OVector2&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; OVector2&amp; operator*=(const U&amp; v);
+    template&lt;typename U&gt; OVector2&amp; operator*=(const OVector2&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; OVector2&amp; operator/=(const U&amp; v);
+    template&lt;typename U&gt; OVector2&amp; operator/=(const OVector2&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; bool operator==(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator==(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; bool operator!=(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator!=(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; bool operator&lt;(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator&lt;(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; bool operator&lt;=(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator&lt;=(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; bool operator&gt;(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator&gt;(const OVector2&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; bool operator&gt;=(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator&gt;=(const OVector2&lt;U&gt;&amp; v) const;
+    OVector2 operator-(void) const;
+    OVector2() = default;
+    template&lt;typename U, typename R&gt; OVector2(U x, R y);
+    template&lt;typename U&gt; OVector2(const OVector2&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; OVector2(OVector2&lt;U&gt;&amp;&amp; v);
+    ~OVector2() = default;
+};
+template&lt;typename T, typename U&gt; utils::type::OVector2&lt;U&gt; operator+(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector2&lt;U&gt; operator-(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector2&lt;U&gt; operator*(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector2&lt;U&gt; operator/(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector2&lt;U&gt; operator&amp;(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector2&lt;U&gt; operator|(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector2&lt;U&gt; operator^(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator==(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator!=(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator&lt;(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator&lt;=(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator&gt;(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator&gt;=(const T&amp; lhs, const utils::type::OVector2&lt;U&gt;&amp; rhs);
+template&lt;typename T&gt; std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, const utils::type::OVector2&lt;T&gt;&amp; v);</code></pre><h3 id="h-type-vector-ovector3-hpp"><code>utils/type/vector/OVector3.hpp</code></h3><p>Vector hat contains 3 value respectivly x, y &amp; z of undefined type Optimized version</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define MAX_INDEX_OVECTOR3 3
+
+// namespace utils::type
+template&lt;typename T&gt; class OVector3 {
+    T x;
+    T y;
+    T z;
+    T get(std::size_t index) const;
+    OVector3 min(const OVector3&amp; min) const;
+    OVector3 max(const OVector3&amp; max) const;
+    OVector3 clamp(const OVector3&amp; min, const OVector3&amp; max) const;
+    template&lt;typename U&gt; T dot(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector3 cross(const OVector3&lt;U&gt;&amp; v) const;
+    T length(void) const;
+    T lengthSquared(void) const;
+    OVector3 sign(void) const;
+    OVector3 normalize(void) const;
+    T&amp; operator[](std::size_t index);
+    const T&amp; operator[](std::size_t index) const;
+    template&lt;typename U&gt; OVector3 operator+(const U&amp; v) const;
+    template&lt;typename U&gt; OVector3 operator+(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector3 operator-(const U&amp; v) const;
+    template&lt;typename U&gt; OVector3 operator-(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector3 operator*(const U&amp; v) const;
+    template&lt;typename U&gt; OVector3 operator*(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector3 operator/(const U&amp; v) const;
+    template&lt;typename U&gt; OVector3 operator/(const OVector3&lt;U&gt;&amp; v) const;
+    OVector3&amp; operator++(void);
+    OVector3 operator++(int);
+    OVector3&amp; operator--(void);
+    OVector3 operator--(int);
+    template&lt;typename U&gt; OVector3 operator&amp;(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector3 operator|(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector3 operator^(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; OVector3&amp; operator=(const OVector3&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; OVector3&amp; operator=(OVector3&lt;U&gt;&amp;&amp; v);
+    template&lt;typename U&gt; OVector3&amp; operator+=(const U&amp; v);
+    template&lt;typename U&gt; OVector3&amp; operator+=(const OVector3&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; OVector3&amp; operator-=(const U&amp; v);
+    template&lt;typename U&gt; OVector3&amp; operator-=(const OVector3&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; OVector3&amp; operator*=(const U&amp; v);
+    template&lt;typename U&gt; OVector3&amp; operator*=(const OVector3&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; OVector3&amp; operator/=(const U&amp; v);
+    template&lt;typename U&gt; OVector3&amp; operator/=(const OVector3&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; bool operator==(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator==(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; bool operator!=(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator!=(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; bool operator&lt;(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator&lt;(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; bool operator&lt;=(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator&lt;=(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; bool operator&gt;(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator&gt;(const OVector3&lt;U&gt;&amp; v) const;
+    template&lt;typename U&gt; bool operator&gt;=(const U&amp; v) const;
+    template&lt;typename U&gt; bool operator&gt;=(const OVector3&lt;U&gt;&amp; v) const;
+    OVector3 operator-(void) const;
+    OVector3() = default;
+    template&lt;typename U, typename R, typename J&gt; OVector3(U x, R y, J z);
+    template&lt;typename U&gt; OVector3(const OVector3&lt;U&gt;&amp; v);
+    template&lt;typename U&gt; OVector3(OVector3&lt;U&gt;&amp;&amp; v);
+    ~OVector3() = default;
+};
+template&lt;typename T, typename U&gt; utils::type::OVector3&lt;U&gt; operator+(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector3&lt;U&gt; operator-(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector3&lt;U&gt; operator*(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector3&lt;U&gt; operator/(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector3&lt;U&gt; operator&amp;(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector3&lt;U&gt; operator|(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; utils::type::OVector3&lt;U&gt; operator^(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator==(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator!=(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator&lt;(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator&lt;=(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator&gt;(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T, typename U&gt; bool operator&gt;=(const T&amp; lhs, const utils::type::OVector3&lt;U&gt;&amp; rhs);
+template&lt;typename T&gt; std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, const utils::type::OVector3&lt;T&gt;&amp; v);</code></pre><h3 id="h-type-vector-vector2-hpp"><code>utils/type/vector/Vector2.hpp</code></h3><p>Vector hat contains 2 value respectivly x &amp; y of undefined type</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define MAX_INDEX_VECTOR2 2
+
+// namespace utils::type
+template&lt;typename T&gt; class Vector2: public utils::type::IVector&lt;T&gt; {
+    T x;
+    T y;
+    T get(std::size_t index) const;
+    Vector2 min(const Vector2&amp; min) const requires utils::concepts::Comparable&lt;T&gt;;
+    Vector2 max(const Vector2&amp; max) const requires utils::concepts::Comparable&lt;T&gt;;
+    Vector2 clamp(const Vector2&amp; min, const Vector2&amp; max) const requires utils::concepts::Comparable&lt;T&gt;;
+    template&lt;typename U&gt; std::common_type_t&lt;T, U&gt; dot(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::MultipliableWith&lt;T, U&gt; &amp;&amp; utils::concepts::AddableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; std::common_type_t&lt;T, U&gt; cross(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::MultipliableWith&lt;T, U&gt; &amp;&amp; utils::concepts::SubtractableWith&lt;T, U&gt;;
+    T length(void) const requires utils::concepts::Multipliable&lt;T&gt;;
+    T lengthSquared(void) const requires utils::concepts::Multipliable&lt;T&gt; &amp;&amp; utils::concepts::Addable&lt;T&gt;;
+    Vector2 sign(void) const requires utils::concepts::ComparableWith&lt;T, int&gt;;
+    Vector2 normalize(void) const requires utils::concepts::Divisible&lt;T&gt;;
+    T&amp; operator[](std::size_t index);
+    const T&amp; operator[](std::size_t index) const;
+    template&lt;typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator+(const U&amp; v) const requires utils::concepts::AddableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator+(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::AddableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator-(const U&amp; v) const requires utils::concepts::SubtractableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator-(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::SubtractableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator*(const U&amp; v) const requires utils::concepts::MultipliableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator*(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::MultipliableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator/(const U&amp; v) const requires utils::concepts::DivisibleWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator/(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::DivisibleWith&lt;T, U&gt;;
+    Vector2&amp; operator++(void) requires utils::concepts::Incrementable&lt;T&gt;;
+    Vector2 operator++(int) requires utils::concepts::Incrementable&lt;T&gt;;
+    Vector2&amp; operator--(void) requires utils::concepts::Decrementable&lt;T&gt;;
+    Vector2 operator--(int) requires utils::concepts::Decrementable&lt;T&gt;;
+    template&lt;typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator&amp;(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::BitwiseAndableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator|(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::BitwiseOrableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator^(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::BitwiseXorableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector2&amp; operator=(const Vector2&lt;U&gt;&amp; v) requires std::assignable_from&lt;T&amp;, U&gt;;
+    template&lt;typename U&gt; Vector2&amp; operator=(Vector2&lt;U&gt;&amp;&amp; v) requires std::assignable_from&lt;T&amp;, U&gt;;
+    template&lt;typename U&gt; Vector2&amp; operator+=(const U&amp; v) requires utils::concepts::AddAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector2&amp; operator+=(const Vector2&lt;U&gt;&amp; v) requires utils::concepts::AddAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector2&amp; operator-=(const U&amp; v) requires utils::concepts::SubtractAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector2&amp; operator-=(const Vector2&lt;U&gt;&amp; v) requires utils::concepts::SubtractAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector2&amp; operator*=(const U&amp; v) requires utils::concepts::MultiplyAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector2&amp; operator*=(const Vector2&lt;U&gt;&amp; v) requires utils::concepts::MultiplyAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector2&amp; operator/=(const U&amp; v) requires utils::concepts::DivideAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector2&amp; operator/=(const Vector2&lt;U&gt;&amp; v) requires utils::concepts::DivideAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator==(const U&amp; v) const requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator==(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator!=(const U&amp; v) const requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator!=(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&lt;(const U&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&lt;(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&lt;=(const U&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&lt;=(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&gt;(const U&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&gt;(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&gt;=(const U&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&gt;=(const Vector2&lt;U&gt;&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    Vector2 operator-(void) const requires utils::concepts::Negatable&lt;T&gt;;
+    Vector2() = default;
+    template&lt;typename U, typename R&gt; Vector2(U x, R y) requires std::constructible_from&lt;T, U&gt; &amp;&amp; std::constructible_from&lt;T, R&gt;;
+    template&lt;typename U&gt; Vector2(const Vector2&lt;U&gt;&amp; v) requires std::constructible_from&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector2(Vector2&lt;U&gt;&amp;&amp; v) requires std::constructible_from&lt;T, U&amp;&amp;&gt;;
+    ~Vector2() = default;
+};
+template&lt;typename T, typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator+(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::AddableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator-(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::SubtractableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator*(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::MultipliableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator/(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::DivisibleWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator&amp;(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::BitwiseAndableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator|(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::BitwiseOrableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector2&lt;std::common_type_t&lt;T, U&gt;&gt; operator^(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::BitwiseXorableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator==(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator!=(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator&lt;(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::ComparableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator&lt;=(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::ComparableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator&gt;(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::ComparableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator&gt;=(const T&amp; lhs, const utils::type::Vector2&lt;U&gt;&amp; rhs) requires utils::concepts::ComparableWith&lt;T, U&gt;;
+template&lt;typename T&gt; std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, const utils::type::Vector2&lt;T&gt;&amp; v);</code></pre><h3 id="h-type-vector-vector3-hpp"><code>utils/type/vector/Vector3.hpp</code></h3><p>Vector hat contains 3 value respectivly x, y &amp; z of undefined type</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define MAX_INDEX_VECTOR3 3
+
+// namespace utils::type
+template&lt;typename T&gt; class Vector3: public utils::type::IVector&lt;T&gt; {
+    T x;
+    T y;
+    T z;
+    T get(std::size_t index) const;
+    Vector3 min(const Vector3&amp; min) const requires utils::concepts::Comparable&lt;T&gt;;
+    Vector3 max(const Vector3&amp; max) const requires utils::concepts::Comparable&lt;T&gt;;
+    Vector3 clamp(const Vector3&amp; min, const Vector3&amp; max) const requires utils::concepts::Comparable&lt;T&gt;;
+    template&lt;typename U&gt; std::common_type_t&lt;T, U&gt; dot(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::MultipliableWith&lt;T, U&gt; &amp;&amp; utils::concepts::AddableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; cross(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::MultipliableWith&lt;T, U&gt; &amp;&amp; utils::concepts::SubtractableWith&lt;T, U&gt;;
+    T length(void) const requires utils::concepts::Multipliable&lt;T&gt;;
+    T lengthSquared(void) const requires utils::concepts::Multipliable&lt;T&gt; &amp;&amp; utils::concepts::Addable&lt;T&gt;;
+    Vector3 sign(void) const requires utils::concepts::ComparableWith&lt;T, int&gt;;
+    Vector3 normalize(void) const requires utils::concepts::Divisible&lt;T&gt;;
+    T&amp; operator[](std::size_t index);
+    const T&amp; operator[](std::size_t index) const;
+    template&lt;typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator+(const U&amp; v) const requires utils::concepts::AddableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator+(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::AddableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator-(const U&amp; v) const requires utils::concepts::SubtractableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator-(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::SubtractableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator*(const U&amp; v) const requires utils::concepts::MultipliableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator*(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::MultipliableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator/(const U&amp; v) const requires utils::concepts::DivisibleWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator/(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::DivisibleWith&lt;T, U&gt;;
+    Vector3&amp; operator++(void) requires utils::concepts::Incrementable&lt;T&gt;;
+    Vector3 operator++(int) requires utils::concepts::Incrementable&lt;T&gt;;
+    Vector3&amp; operator--(void) requires utils::concepts::Decrementable&lt;T&gt;;
+    Vector3 operator--(int) requires utils::concepts::Decrementable&lt;T&gt;;
+    template&lt;typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator&amp;(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::BitwiseAndableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator|(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::BitwiseOrableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator^(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::BitwiseXorableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector3&amp; operator=(const Vector3&lt;U&gt;&amp; v) requires std::assignable_from&lt;T&amp;, U&gt;;
+    template&lt;typename U&gt; Vector3&amp; operator=(Vector3&lt;U&gt;&amp;&amp; v) requires std::assignable_from&lt;T&amp;, U&gt;;
+    template&lt;typename U&gt; Vector3&amp; operator+=(const U&amp; v) requires utils::concepts::AddAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector3&amp; operator+=(const Vector3&lt;U&gt;&amp; v) requires utils::concepts::AddAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector3&amp; operator-=(const U&amp; v) requires utils::concepts::SubtractAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector3&amp; operator-=(const Vector3&lt;U&gt;&amp; v) requires utils::concepts::SubtractAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector3&amp; operator*=(const U&amp; v) requires utils::concepts::MultiplyAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector3&amp; operator*=(const Vector3&lt;U&gt;&amp; v) requires utils::concepts::MultiplyAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector3&amp; operator/=(const U&amp; v) requires utils::concepts::DivideAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector3&amp; operator/=(const Vector3&lt;U&gt;&amp; v) requires utils::concepts::DivideAssignableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator==(const U&amp; v) const requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator==(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator!=(const U&amp; v) const requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator!=(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&lt;(const U&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&lt;(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&lt;=(const U&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&lt;=(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&gt;(const U&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&gt;(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&gt;=(const U&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    template&lt;typename U&gt; bool operator&gt;=(const Vector3&lt;U&gt;&amp; v) const requires utils::concepts::ComparableWith&lt;T, U&gt;;
+    Vector3 operator-(void) const requires utils::concepts::Negatable&lt;T&gt;;
+    Vector3() = default;
+    template&lt;typename U, typename R, typename J&gt; Vector3(U x, R y, J z) requires std::constructible_from&lt;T, U&gt; &amp;&amp; std::constructible_from&lt;T, R&gt; &amp;&amp; std::constructible_from&lt;T, J&gt;;
+    template&lt;typename U&gt; Vector3(const Vector3&lt;U&gt;&amp; v) requires std::constructible_from&lt;T, U&gt;;
+    template&lt;typename U&gt; Vector3(Vector3&lt;U&gt;&amp;&amp; v) requires std::constructible_from&lt;T, U&amp;&amp;&gt;;
+    ~Vector3() = default;
+};
+template&lt;typename T, typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator+(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::AddableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator-(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::SubtractableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator*(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::MultipliableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator/(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::DivisibleWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator&amp;(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::BitwiseAndableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator|(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::BitwiseOrableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; utils::type::Vector3&lt;std::common_type_t&lt;T, U&gt;&gt; operator^(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::BitwiseXorableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator==(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator!=(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::EqualityComparableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator&lt;(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::ComparableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator&lt;=(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::ComparableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator&gt;(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::ComparableWith&lt;T, U&gt;;
+template&lt;typename T, typename U&gt; bool operator&gt;=(const T&amp; lhs, const utils::type::Vector3&lt;U&gt;&amp; rhs) requires utils::concepts::ComparableWith&lt;T, U&gt;;
+template&lt;typename T&gt; std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, const utils::type::Vector3&lt;T&gt;&amp; v);</code></pre></div></section><section id="c-api"><h2>8. <span data-lang="en">C API</span><span data-lang="fr">API C</span></h2><div data-lang="en"><p>Read from <code>include/utils/type/CApiTypes.h</code>, <code>include/utils/type/CApi.h</code>, included by <code>&lt;utils.h&gt;</code> with the define of the section. Every function that can fail returns <code>UTILS_OK</code> / <code>UTILS_KO</code> (or <code>NULL</code> / <code>0</code>) and fills <code>utils_exception</code> (see <a href="c-api.html#errors">the C API guide</a>).</p><h3 id="c-type-capitypes-h"><code>utils/type/CApiTypes.h</code></h3><p>Fixed types of the C API (X-macros: X(name, type) unrolled by each C API for its templates) (C &amp; C++ compatible) name: suffix of the functions &amp; types (utils_vector2_f64_t, utils_blt_str_size_*), str: const char* in C (std::string in c++, copied)</p><h4 id="c-1">Macros · Integers</h4><p><em>integers (signed, unsigned, size)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_INT_TYPES(X) \
+    X(i8, int8_t) \
+    X(i16, int16_t) \
+    X(i32, int32_t) \
+    X(i64, int64_t) \
+    X(u8, uint8_t) \
+    X(u16, uint16_t) \
+    X(u32, uint32_t) \
+    X(u64, uint64_t) \
+    X(size, size_t)</code></pre><h4 id="c-2">Macros · Floating points</h4><p><em>floating points (f128: long double, the utils::arguments::float128_t of libutils)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_FLOAT_TYPES(X) \
+    X(f32, float) \
+    X(f64, double) \
+    X(f128, long double)</code></pre><h4 id="c-3">Macros · Numeric</h4><p><em>numeric (math: vector, matrix)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_NUMERIC_TYPES(X) \
+    C_API_INT_TYPES(X) \
+    C_API_FLOAT_TYPES(X)</code></pre><h4 id="c-4">Macros · Every value type</h4><p><em>every value type (containers)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_VALUE_TYPES(X) \
+    C_API_NUMERIC_TYPES(X) \
+    X(bool, bool) \
+    X(char, char)</code></pre><h4 id="c-5">Macros · Every type</h4><p><em>every type (containers), str: const char* (copied in a std::string)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_TYPES(X) \
+    C_API_VALUE_TYPES(X) \
+    X(str, const char*)</code></pre><h3 id="c-type-capi-h"><code>utils/type/CApi.h</code></h3><p>C API of utils::type: Freezable / Worker of any handle, vectors, matrices &amp; bidirectional lookup tables (C &amp; C++ compatible) The templates are given for the fixed types of type/CApiTypes.h (suffix: i8 ... u64, size, f32, f64, f128, bool, char, str) &amp; as bytes (void* + size) Every function that can fail returns UTILS_OK / UTILS_KO (or NULL / 0), details in utils_exception</p><h4 id="c-6">Macros · Vector2</h4><p><em>vector2 (by value, utils::type::OVector2)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_VECTOR2_DECL(name, type) \
+    typedef struct utils_vector2_##name { \
+        type x; \
+        type y; \
+    } utils_vector2_##name##_t; \
+    utils_vector2_##name##_t utils_vector2_##name##_add(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    utils_vector2_##name##_t utils_vector2_##name##_sub(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    utils_vector2_##name##_t utils_vector2_##name##_mul(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    utils_vector2_##name##_t utils_vector2_##name##_div(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    utils_vector2_##name##_t utils_vector2_##name##_add_scalar(utils_vector2_##name##_t v, type s); \
+    utils_vector2_##name##_t utils_vector2_##name##_sub_scalar(utils_vector2_##name##_t v, type s); \
+    utils_vector2_##name##_t utils_vector2_##name##_mul_scalar(utils_vector2_##name##_t v, type s); \
+    utils_vector2_##name##_t utils_vector2_##name##_div_scalar(utils_vector2_##name##_t v, type s); \
+    utils_vector2_##name##_t utils_vector2_##name##_neg(utils_vector2_##name##_t v); \
+    utils_vector2_##name##_t utils_vector2_##name##_min(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    utils_vector2_##name##_t utils_vector2_##name##_max(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    utils_vector2_##name##_t utils_vector2_##name##_clamp(utils_vector2_##name##_t v, utils_vector2_##name##_t min, utils_vector2_##name##_t max); \
+    utils_vector2_##name##_t utils_vector2_##name##_sign(utils_vector2_##name##_t v); \
+    utils_vector2_##name##_t utils_vector2_##name##_normalize(utils_vector2_##name##_t v); /* zero vector: kept */ \
+    type utils_vector2_##name##_dot(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    type utils_vector2_##name##_cross(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    type utils_vector2_##name##_length(utils_vector2_##name##_t v); /* truncated for the integer types */ \
+    type utils_vector2_##name##_length_squared(utils_vector2_##name##_t v); \
+    bool utils_vector2_##name##_equal(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    bool utils_vector2_##name##_less(utils_vector2_##name##_t a, utils_vector2_##name##_t b); /* like operator&lt; of the c++ */ \
+    bool utils_vector2_##name##_less_equal(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    bool utils_vector2_##name##_greater(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    bool utils_vector2_##name##_greater_equal(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    type utils_vector2_##name##_get(utils_vector2_##name##_t v, size_t index); /* 0 on error (index &gt;= 2) */ \
+    int utils_vector2_##name##_set(utils_vector2_##name##_t* v, size_t index, type value);</code></pre><h4 id="c-7">Macros · Vector2 of the integers</h4><p><em>vector2 of the integers (bitwise)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_VECTOR2_INT_DECL(name, type) \
+    utils_vector2_##name##_t utils_vector2_##name##_and(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    utils_vector2_##name##_t utils_vector2_##name##_or(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    utils_vector2_##name##_t utils_vector2_##name##_xor(utils_vector2_##name##_t a, utils_vector2_##name##_t b);</code></pre><h4 id="c-8">Macros · Vector3</h4><p><em>vector3 (by value, utils::type::OVector3)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_VECTOR3_DECL(name, type) \
+    typedef struct utils_vector3_##name { \
+        type x; \
+        type y; \
+        type z; \
+    } utils_vector3_##name##_t; \
+    utils_vector3_##name##_t utils_vector3_##name##_add(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    utils_vector3_##name##_t utils_vector3_##name##_sub(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    utils_vector3_##name##_t utils_vector3_##name##_mul(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    utils_vector3_##name##_t utils_vector3_##name##_div(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    utils_vector3_##name##_t utils_vector3_##name##_add_scalar(utils_vector3_##name##_t v, type s); \
+    utils_vector3_##name##_t utils_vector3_##name##_sub_scalar(utils_vector3_##name##_t v, type s); \
+    utils_vector3_##name##_t utils_vector3_##name##_mul_scalar(utils_vector3_##name##_t v, type s); \
+    utils_vector3_##name##_t utils_vector3_##name##_div_scalar(utils_vector3_##name##_t v, type s); \
+    utils_vector3_##name##_t utils_vector3_##name##_neg(utils_vector3_##name##_t v); \
+    utils_vector3_##name##_t utils_vector3_##name##_min(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    utils_vector3_##name##_t utils_vector3_##name##_max(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    utils_vector3_##name##_t utils_vector3_##name##_clamp(utils_vector3_##name##_t v, utils_vector3_##name##_t min, utils_vector3_##name##_t max); \
+    utils_vector3_##name##_t utils_vector3_##name##_sign(utils_vector3_##name##_t v); \
+    utils_vector3_##name##_t utils_vector3_##name##_normalize(utils_vector3_##name##_t v); /* zero vector: kept */ \
+    utils_vector3_##name##_t utils_vector3_##name##_cross(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    type utils_vector3_##name##_dot(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    type utils_vector3_##name##_length(utils_vector3_##name##_t v); /* truncated for the integer types */ \
+    type utils_vector3_##name##_length_squared(utils_vector3_##name##_t v); \
+    bool utils_vector3_##name##_equal(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    bool utils_vector3_##name##_less(utils_vector3_##name##_t a, utils_vector3_##name##_t b); /* like operator&lt; of the c++ */ \
+    bool utils_vector3_##name##_less_equal(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    bool utils_vector3_##name##_greater(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    bool utils_vector3_##name##_greater_equal(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    type utils_vector3_##name##_get(utils_vector3_##name##_t v, size_t index); /* 0 on error (index &gt;= 3) */ \
+    int utils_vector3_##name##_set(utils_vector3_##name##_t* v, size_t index, type value);</code></pre><h4 id="c-9">Macros · Vector3 of the integers</h4><p><em>vector3 of the integers (bitwise)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_VECTOR3_INT_DECL(name, type) \
+    utils_vector3_##name##_t utils_vector3_##name##_and(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    utils_vector3_##name##_t utils_vector3_##name##_or(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    utils_vector3_##name##_t utils_vector3_##name##_xor(utils_vector3_##name##_t a, utils_vector3_##name##_t b);</code></pre><h4 id="c-10">Macros · Operation of a matrix</h4><p><em>operation of a matrix: new handle (NULL on error, destroy it), _r: in out (replaced, can be a / b), _assign: in a</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_MATRIX_OP2_DECL(name, op, arg) \
+    utils_matrix_##name##_t* utils_matrix_##name##_##op(const utils_matrix_##name##_t* a, arg); \
+    int utils_matrix_##name##_##op##_r(const utils_matrix_##name##_t* a, arg, utils_matrix_##name##_t* out); \
+    int utils_matrix_##name##_##op##_assign(utils_matrix_##name##_t* a, arg);
+#define C_API_MATRIX_OP1_DECL(name, op) \
+    utils_matrix_##name##_t* utils_matrix_##name##_##op(const utils_matrix_##name##_t* a); \
+    int utils_matrix_##name##_##op##_r(const utils_matrix_##name##_t* a, utils_matrix_##name##_t* out); \
+    int utils_matrix_##name##_##op##_assign(utils_matrix_##name##_t* a);</code></pre><h4 id="c-11">Macros · Matrix</h4><p><em>matrix (handle, utils::type::OMatrix, (x, y) = (row, col))</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_MATRIX_DECL(name, type) \
+    typedef struct utils_matrix_##name utils_matrix_##name##_t; \
+    utils_matrix_##name##_t* utils_matrix_##name##_create(size_t rows, size_t cols); /* every value at 0, NULL on error */ \
+    utils_matrix_##name##_t* utils_matrix_##name##_copy(const utils_matrix_##name##_t* m); /* NULL on error */ \
+    void utils_matrix_##name##_destroy(utils_matrix_##name##_t* m); /* NULL: nothing */ \
+    size_t utils_matrix_##name##_rows(const utils_matrix_##name##_t* m); \
+    size_t utils_matrix_##name##_cols(const utils_matrix_##name##_t* m); \
+    int utils_matrix_##name##_get(const utils_matrix_##name##_t* m, size_t x, size_t y, type* value); \
+    int utils_matrix_##name##_set(utils_matrix_##name##_t* m, size_t x, size_t y, type value); \
+    int utils_matrix_##name##_set_values(utils_matrix_##name##_t* m, const type* values, size_t count, size_t x, size_t y); /* row by row from (x, y) */ \
+    size_t utils_matrix_##name##_row_r(const utils_matrix_##name##_t* m, size_t n, type* buf, size_t count); /* copied in buf (count max), returns the full length (0 on error) */ \
+    size_t utils_matrix_##name##_col_r(const utils_matrix_##name##_t* m, size_t n, type* buf, size_t count); \
+    int utils_matrix_##name##_swap(utils_matrix_##name##_t* m, size_t ax, size_t ay, size_t bx, size_t by); \
+    int utils_matrix_##name##_swap_row(utils_matrix_##name##_t* m, size_t a, size_t b); \
+    int utils_matrix_##name##_swap_col(utils_matrix_##name##_t* m, size_t a, size_t b); \
+    int utils_matrix_##name##_clear(utils_matrix_##name##_t* m); /* every value at 0 */ \
+    int utils_matrix_##name##_det(const utils_matrix_##name##_t* m, type* value); /* square only */ \
+    int utils_matrix_##name##_trace(const utils_matrix_##name##_t* m, type* value); /* square only */ \
+    bool utils_matrix_##name##_equal(const utils_matrix_##name##_t* a, const utils_matrix_##name##_t* b); \
+    C_API_MATRIX_OP2_DECL(name, add, const utils_matrix_##name##_t* b) \
+    C_API_MATRIX_OP2_DECL(name, sub, const utils_matrix_##name##_t* b) \
+    C_API_MATRIX_OP2_DECL(name, mul, const utils_matrix_##name##_t* b) /* product */ \
+    C_API_MATRIX_OP2_DECL(name, mul_scalar, type s) \
+    C_API_MATRIX_OP2_DECL(name, div_scalar, type s) \
+    C_API_MATRIX_OP1_DECL(name, neg) \
+    C_API_MATRIX_OP1_DECL(name, transpose)</code></pre><h4 id="c-12">Macros · Matrix of the floating points</h4><p><em>matrix of the floating points (the integers would be truncated)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_MATRIX_FLOAT_DECL(name, type) \
+    C_API_MATRIX_OP2_DECL(name, div, const utils_matrix_##name##_t* b) /* a * b^-1 */ \
+    C_API_MATRIX_OP1_DECL(name, invert)</code></pre><h4 id="c-13">Macros · Bidirectional lookup table of one type</h4><p><em>bidirectional lookup table of one type (utils::type::BidirectionalLookupTable&lt;T, T&gt;, an element is found on both sides)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_BLT_SAME_DECL(name, type) \
+    typedef struct utils_blt_##name utils_blt_##name##_t; \
+    utils_blt_##name##_t* utils_blt_##name##_create(void); /* NULL on error */ \
+    void utils_blt_##name##_destroy(utils_blt_##name##_t* blt); /* NULL: nothing */ \
+    int utils_blt_##name##_clear(utils_blt_##name##_t* blt); \
+    int utils_blt_##name##_set(utils_blt_##name##_t* blt, type left, type right, bool force); /* force: override an existing one */ \
+    int utils_blt_##name##_add(utils_blt_##name##_t* blt, type left, type right); \
+    int utils_blt_##name##_remove(utils_blt_##name##_t* blt, type element); \
+    int utils_blt_##name##_remove_all(utils_blt_##name##_t* blt, type const* elements, size_t count); \
+    int utils_blt_##name##_get(const utils_blt_##name##_t* blt, type element, type* other); /* the other side of element */</code></pre><h4 id="c-14">Macros · Bidirectional lookup table of two types</h4><p><em>bidirectional lookup table of two types (utils::type::BidirectionalLookupTable&lt;L, R&gt;)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_BLT_DECL(name, left_type, right_type) \
+    typedef struct utils_blt_##name utils_blt_##name##_t; \
+    utils_blt_##name##_t* utils_blt_##name##_create(void); /* NULL on error */ \
+    void utils_blt_##name##_destroy(utils_blt_##name##_t* blt); /* NULL: nothing */ \
+    int utils_blt_##name##_clear(utils_blt_##name##_t* blt); \
+    int utils_blt_##name##_set(utils_blt_##name##_t* blt, left_type left, right_type right, bool force); /* force: override an existing one */ \
+    int utils_blt_##name##_add(utils_blt_##name##_t* blt, left_type left, right_type right); \
+    int utils_blt_##name##_remove_left(utils_blt_##name##_t* blt, left_type left); \
+    int utils_blt_##name##_remove_right(utils_blt_##name##_t* blt, right_type right); \
+    int utils_blt_##name##_remove_lefts(utils_blt_##name##_t* blt, left_type const* lefts, size_t count); \
+    int utils_blt_##name##_remove_rights(utils_blt_##name##_t* blt, right_type const* rights, size_t count); \
+    int utils_blt_##name##_get_right(const utils_blt_##name##_t* blt, left_type left, right_type* right); \
+    int utils_blt_##name##_get_left(const utils_blt_##name##_t* blt, right_type right, left_type* left);</code></pre><h4 id="c-15">Macros · String &lt;-&gt; integer</h4><p><em>string &lt;-&gt; integer, both orders (str_i32 &amp; i32_str, ...)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_BLT_STR_INT_DECL(name, type) \
+    C_API_BLT_DECL(str_##name, const char*, type) \
+    C_API_BLT_DECL(name##_str, type, const char*)</code></pre><h4 id="c-16">Types · Opaque types</h4><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_worker utils_worker_t; // utils::type::Worker + data of the C side (element of a load balancer)
+typedef struct utils_blt utils_blt_t; // utils::type::BidirectionalLookupTable of bytes (an element is found on both sides)</code></pre><h4 id="c-17">Functions · Freezable of any handle</h4><p><em>Freezable of any handle (utils::type::Freezable in its class, else UTILS_KO / false: "This handle has no Freezable")</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_freezable_freeze(void* handle);
+bool utils_freezable_is_frozen(const void* handle);
+int utils_freezable_require_frozen(const void* handle); // UTILS_KO (ShouldBeFrozen) when not frozen
+int utils_freezable_require_unfrozen(const void* handle); // UTILS_KO (Frozen) when frozen</code></pre><h4 id="c-18">Functions · Worker of any handle</h4><p><em>Worker of any handle (utils::type::Worker in its class, else UTILS_KO / false / 0: "This handle has no Worker")</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_worker_t* utils_worker_create(void* data); // NULL on error
+void utils_worker_destroy(utils_worker_t* worker); // NULL: nothing
+void* utils_worker_get_data(const utils_worker_t* worker);
+int utils_worker_set_data(utils_worker_t* worker, void* data);
+int utils_worker_set_working_status(void* handle, bool status);
+bool utils_worker_is_working(const void* handle);
+uint64_t utils_worker_get_stoped_working_timestamp(const void* handle); // steady clock in ns (when the status was set to false), 0 on error</code></pre><h4 id="c-19">Functions · Vectors</h4><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_NUMERIC_TYPES(C_API_VECTOR2_DECL)
+C_API_INT_TYPES(C_API_VECTOR2_INT_DECL)
+C_API_NUMERIC_TYPES(C_API_VECTOR3_DECL)
+C_API_INT_TYPES(C_API_VECTOR3_INT_DECL)</code></pre><h4 id="c-20">Functions · Matrices</h4><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_NUMERIC_TYPES(C_API_MATRIX_DECL)
+C_API_FLOAT_TYPES(C_API_MATRIX_FLOAT_DECL)</code></pre><h4 id="c-21">Functions · Bidirectional lookup tables of bytes</h4><p><em>bidirectional lookup tables of bytes (generic: an element = data + size, copied)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_blt_t* utils_blt_create(void); // NULL on error
+void utils_blt_destroy(utils_blt_t* blt); // NULL: nothing
+int utils_blt_clear(utils_blt_t* blt);
+int utils_blt_set(utils_blt_t* blt, const void* left, size_t left_size, const void* right, size_t right_size, bool force); // force: override an existing one
+int utils_blt_add(utils_blt_t* blt, const void* left, size_t left_size, const void* right, size_t right_size);
+int utils_blt_remove(utils_blt_t* blt, const void* element, size_t size);
+const void* utils_blt_get(const utils_blt_t* blt, const void* element, size_t size, size_t* other_size); // the other side of element, valid until the table is changed (NULL on error), other_size: optional</code></pre><h4 id="c-22">Functions · Bidirectional lookup tables of the fixed types</h4><p><em>bidirectional lookup tables of the fixed types (str: const char* copied, the str given back are valid until the table is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_BLT_SAME_DECL(str_str, const char*)
+C_API_BLT_SAME_DECL(size_size, size_t)
+C_API_BLT_SAME_DECL(i64_i64, int64_t)
+C_API_INT_TYPES(C_API_BLT_STR_INT_DECL)</code></pre></div><div data-lang="fr"><p>Lu dans <code>include/utils/type/CApiTypes.h</code>, <code>include/utils/type/CApi.h</code>, inclus par <code>&lt;utils.h&gt;</code> avec le define de la section. Chaque fonction qui peut échouer renvoie <code>UTILS_OK</code> / <code>UTILS_KO</code> (ou <code>NULL</code> / <code>0</code>) et remplit <code>utils_exception</code> (voir <a href="c-api.html#errors">le guide de l'API C</a>).</p><h3 id="c-type-capitypes-h"><code>utils/type/CApiTypes.h</code></h3><p>Fixed types of the C API (X-macros: X(name, type) unrolled by each C API for its templates) (C &amp; C++ compatible) name: suffix of the functions &amp; types (utils_vector2_f64_t, utils_blt_str_size_*), str: const char* in C (std::string in c++, copied)</p><h4 id="c-1">Macros · Integers</h4><p><em>integers (signed, unsigned, size)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_INT_TYPES(X) \
+    X(i8, int8_t) \
+    X(i16, int16_t) \
+    X(i32, int32_t) \
+    X(i64, int64_t) \
+    X(u8, uint8_t) \
+    X(u16, uint16_t) \
+    X(u32, uint32_t) \
+    X(u64, uint64_t) \
+    X(size, size_t)</code></pre><h4 id="c-2">Macros · Floating points</h4><p><em>floating points (f128: long double, the utils::arguments::float128_t of libutils)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_FLOAT_TYPES(X) \
+    X(f32, float) \
+    X(f64, double) \
+    X(f128, long double)</code></pre><h4 id="c-3">Macros · Numeric</h4><p><em>numeric (math: vector, matrix)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_NUMERIC_TYPES(X) \
+    C_API_INT_TYPES(X) \
+    C_API_FLOAT_TYPES(X)</code></pre><h4 id="c-4">Macros · Every value type</h4><p><em>every value type (containers)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_VALUE_TYPES(X) \
+    C_API_NUMERIC_TYPES(X) \
+    X(bool, bool) \
+    X(char, char)</code></pre><h4 id="c-5">Macros · Every type</h4><p><em>every type (containers), str: const char* (copied in a std::string)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_TYPES(X) \
+    C_API_VALUE_TYPES(X) \
+    X(str, const char*)</code></pre><h3 id="c-type-capi-h"><code>utils/type/CApi.h</code></h3><p>C API of utils::type: Freezable / Worker of any handle, vectors, matrices &amp; bidirectional lookup tables (C &amp; C++ compatible) The templates are given for the fixed types of type/CApiTypes.h (suffix: i8 ... u64, size, f32, f64, f128, bool, char, str) &amp; as bytes (void* + size) Every function that can fail returns UTILS_OK / UTILS_KO (or NULL / 0), details in utils_exception</p><h4 id="c-6">Macros · Vector2</h4><p><em>vector2 (by value, utils::type::OVector2)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_VECTOR2_DECL(name, type) \
+    typedef struct utils_vector2_##name { \
+        type x; \
+        type y; \
+    } utils_vector2_##name##_t; \
+    utils_vector2_##name##_t utils_vector2_##name##_add(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    utils_vector2_##name##_t utils_vector2_##name##_sub(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    utils_vector2_##name##_t utils_vector2_##name##_mul(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    utils_vector2_##name##_t utils_vector2_##name##_div(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    utils_vector2_##name##_t utils_vector2_##name##_add_scalar(utils_vector2_##name##_t v, type s); \
+    utils_vector2_##name##_t utils_vector2_##name##_sub_scalar(utils_vector2_##name##_t v, type s); \
+    utils_vector2_##name##_t utils_vector2_##name##_mul_scalar(utils_vector2_##name##_t v, type s); \
+    utils_vector2_##name##_t utils_vector2_##name##_div_scalar(utils_vector2_##name##_t v, type s); \
+    utils_vector2_##name##_t utils_vector2_##name##_neg(utils_vector2_##name##_t v); \
+    utils_vector2_##name##_t utils_vector2_##name##_min(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    utils_vector2_##name##_t utils_vector2_##name##_max(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    utils_vector2_##name##_t utils_vector2_##name##_clamp(utils_vector2_##name##_t v, utils_vector2_##name##_t min, utils_vector2_##name##_t max); \
+    utils_vector2_##name##_t utils_vector2_##name##_sign(utils_vector2_##name##_t v); \
+    utils_vector2_##name##_t utils_vector2_##name##_normalize(utils_vector2_##name##_t v); /* zero vector: kept */ \
+    type utils_vector2_##name##_dot(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    type utils_vector2_##name##_cross(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    type utils_vector2_##name##_length(utils_vector2_##name##_t v); /* truncated for the integer types */ \
+    type utils_vector2_##name##_length_squared(utils_vector2_##name##_t v); \
+    bool utils_vector2_##name##_equal(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    bool utils_vector2_##name##_less(utils_vector2_##name##_t a, utils_vector2_##name##_t b); /* like operator&lt; of the c++ */ \
+    bool utils_vector2_##name##_less_equal(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    bool utils_vector2_##name##_greater(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    bool utils_vector2_##name##_greater_equal(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    type utils_vector2_##name##_get(utils_vector2_##name##_t v, size_t index); /* 0 on error (index &gt;= 2) */ \
+    int utils_vector2_##name##_set(utils_vector2_##name##_t* v, size_t index, type value);</code></pre><h4 id="c-7">Macros · Vector2 of the integers</h4><p><em>vector2 of the integers (bitwise)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_VECTOR2_INT_DECL(name, type) \
+    utils_vector2_##name##_t utils_vector2_##name##_and(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    utils_vector2_##name##_t utils_vector2_##name##_or(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+    utils_vector2_##name##_t utils_vector2_##name##_xor(utils_vector2_##name##_t a, utils_vector2_##name##_t b);</code></pre><h4 id="c-8">Macros · Vector3</h4><p><em>vector3 (by value, utils::type::OVector3)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_VECTOR3_DECL(name, type) \
+    typedef struct utils_vector3_##name { \
+        type x; \
+        type y; \
+        type z; \
+    } utils_vector3_##name##_t; \
+    utils_vector3_##name##_t utils_vector3_##name##_add(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    utils_vector3_##name##_t utils_vector3_##name##_sub(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    utils_vector3_##name##_t utils_vector3_##name##_mul(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    utils_vector3_##name##_t utils_vector3_##name##_div(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    utils_vector3_##name##_t utils_vector3_##name##_add_scalar(utils_vector3_##name##_t v, type s); \
+    utils_vector3_##name##_t utils_vector3_##name##_sub_scalar(utils_vector3_##name##_t v, type s); \
+    utils_vector3_##name##_t utils_vector3_##name##_mul_scalar(utils_vector3_##name##_t v, type s); \
+    utils_vector3_##name##_t utils_vector3_##name##_div_scalar(utils_vector3_##name##_t v, type s); \
+    utils_vector3_##name##_t utils_vector3_##name##_neg(utils_vector3_##name##_t v); \
+    utils_vector3_##name##_t utils_vector3_##name##_min(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    utils_vector3_##name##_t utils_vector3_##name##_max(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    utils_vector3_##name##_t utils_vector3_##name##_clamp(utils_vector3_##name##_t v, utils_vector3_##name##_t min, utils_vector3_##name##_t max); \
+    utils_vector3_##name##_t utils_vector3_##name##_sign(utils_vector3_##name##_t v); \
+    utils_vector3_##name##_t utils_vector3_##name##_normalize(utils_vector3_##name##_t v); /* zero vector: kept */ \
+    utils_vector3_##name##_t utils_vector3_##name##_cross(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    type utils_vector3_##name##_dot(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    type utils_vector3_##name##_length(utils_vector3_##name##_t v); /* truncated for the integer types */ \
+    type utils_vector3_##name##_length_squared(utils_vector3_##name##_t v); \
+    bool utils_vector3_##name##_equal(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    bool utils_vector3_##name##_less(utils_vector3_##name##_t a, utils_vector3_##name##_t b); /* like operator&lt; of the c++ */ \
+    bool utils_vector3_##name##_less_equal(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    bool utils_vector3_##name##_greater(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    bool utils_vector3_##name##_greater_equal(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    type utils_vector3_##name##_get(utils_vector3_##name##_t v, size_t index); /* 0 on error (index &gt;= 3) */ \
+    int utils_vector3_##name##_set(utils_vector3_##name##_t* v, size_t index, type value);</code></pre><h4 id="c-9">Macros · Vector3 of the integers</h4><p><em>vector3 of the integers (bitwise)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_VECTOR3_INT_DECL(name, type) \
+    utils_vector3_##name##_t utils_vector3_##name##_and(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    utils_vector3_##name##_t utils_vector3_##name##_or(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+    utils_vector3_##name##_t utils_vector3_##name##_xor(utils_vector3_##name##_t a, utils_vector3_##name##_t b);</code></pre><h4 id="c-10">Macros · Operation of a matrix</h4><p><em>operation of a matrix: new handle (NULL on error, destroy it), _r: in out (replaced, can be a / b), _assign: in a</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_MATRIX_OP2_DECL(name, op, arg) \
+    utils_matrix_##name##_t* utils_matrix_##name##_##op(const utils_matrix_##name##_t* a, arg); \
+    int utils_matrix_##name##_##op##_r(const utils_matrix_##name##_t* a, arg, utils_matrix_##name##_t* out); \
+    int utils_matrix_##name##_##op##_assign(utils_matrix_##name##_t* a, arg);
+#define C_API_MATRIX_OP1_DECL(name, op) \
+    utils_matrix_##name##_t* utils_matrix_##name##_##op(const utils_matrix_##name##_t* a); \
+    int utils_matrix_##name##_##op##_r(const utils_matrix_##name##_t* a, utils_matrix_##name##_t* out); \
+    int utils_matrix_##name##_##op##_assign(utils_matrix_##name##_t* a);</code></pre><h4 id="c-11">Macros · Matrix</h4><p><em>matrix (handle, utils::type::OMatrix, (x, y) = (row, col))</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_MATRIX_DECL(name, type) \
+    typedef struct utils_matrix_##name utils_matrix_##name##_t; \
+    utils_matrix_##name##_t* utils_matrix_##name##_create(size_t rows, size_t cols); /* every value at 0, NULL on error */ \
+    utils_matrix_##name##_t* utils_matrix_##name##_copy(const utils_matrix_##name##_t* m); /* NULL on error */ \
+    void utils_matrix_##name##_destroy(utils_matrix_##name##_t* m); /* NULL: nothing */ \
+    size_t utils_matrix_##name##_rows(const utils_matrix_##name##_t* m); \
+    size_t utils_matrix_##name##_cols(const utils_matrix_##name##_t* m); \
+    int utils_matrix_##name##_get(const utils_matrix_##name##_t* m, size_t x, size_t y, type* value); \
+    int utils_matrix_##name##_set(utils_matrix_##name##_t* m, size_t x, size_t y, type value); \
+    int utils_matrix_##name##_set_values(utils_matrix_##name##_t* m, const type* values, size_t count, size_t x, size_t y); /* row by row from (x, y) */ \
+    size_t utils_matrix_##name##_row_r(const utils_matrix_##name##_t* m, size_t n, type* buf, size_t count); /* copied in buf (count max), returns the full length (0 on error) */ \
+    size_t utils_matrix_##name##_col_r(const utils_matrix_##name##_t* m, size_t n, type* buf, size_t count); \
+    int utils_matrix_##name##_swap(utils_matrix_##name##_t* m, size_t ax, size_t ay, size_t bx, size_t by); \
+    int utils_matrix_##name##_swap_row(utils_matrix_##name##_t* m, size_t a, size_t b); \
+    int utils_matrix_##name##_swap_col(utils_matrix_##name##_t* m, size_t a, size_t b); \
+    int utils_matrix_##name##_clear(utils_matrix_##name##_t* m); /* every value at 0 */ \
+    int utils_matrix_##name##_det(const utils_matrix_##name##_t* m, type* value); /* square only */ \
+    int utils_matrix_##name##_trace(const utils_matrix_##name##_t* m, type* value); /* square only */ \
+    bool utils_matrix_##name##_equal(const utils_matrix_##name##_t* a, const utils_matrix_##name##_t* b); \
+    C_API_MATRIX_OP2_DECL(name, add, const utils_matrix_##name##_t* b) \
+    C_API_MATRIX_OP2_DECL(name, sub, const utils_matrix_##name##_t* b) \
+    C_API_MATRIX_OP2_DECL(name, mul, const utils_matrix_##name##_t* b) /* product */ \
+    C_API_MATRIX_OP2_DECL(name, mul_scalar, type s) \
+    C_API_MATRIX_OP2_DECL(name, div_scalar, type s) \
+    C_API_MATRIX_OP1_DECL(name, neg) \
+    C_API_MATRIX_OP1_DECL(name, transpose)</code></pre><h4 id="c-12">Macros · Matrix of the floating points</h4><p><em>matrix of the floating points (the integers would be truncated)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_MATRIX_FLOAT_DECL(name, type) \
+    C_API_MATRIX_OP2_DECL(name, div, const utils_matrix_##name##_t* b) /* a * b^-1 */ \
+    C_API_MATRIX_OP1_DECL(name, invert)</code></pre><h4 id="c-13">Macros · Bidirectional lookup table of one type</h4><p><em>bidirectional lookup table of one type (utils::type::BidirectionalLookupTable&lt;T, T&gt;, an element is found on both sides)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_BLT_SAME_DECL(name, type) \
+    typedef struct utils_blt_##name utils_blt_##name##_t; \
+    utils_blt_##name##_t* utils_blt_##name##_create(void); /* NULL on error */ \
+    void utils_blt_##name##_destroy(utils_blt_##name##_t* blt); /* NULL: nothing */ \
+    int utils_blt_##name##_clear(utils_blt_##name##_t* blt); \
+    int utils_blt_##name##_set(utils_blt_##name##_t* blt, type left, type right, bool force); /* force: override an existing one */ \
+    int utils_blt_##name##_add(utils_blt_##name##_t* blt, type left, type right); \
+    int utils_blt_##name##_remove(utils_blt_##name##_t* blt, type element); \
+    int utils_blt_##name##_remove_all(utils_blt_##name##_t* blt, type const* elements, size_t count); \
+    int utils_blt_##name##_get(const utils_blt_##name##_t* blt, type element, type* other); /* the other side of element */</code></pre><h4 id="c-14">Macros · Bidirectional lookup table of two types</h4><p><em>bidirectional lookup table of two types (utils::type::BidirectionalLookupTable&lt;L, R&gt;)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_BLT_DECL(name, left_type, right_type) \
+    typedef struct utils_blt_##name utils_blt_##name##_t; \
+    utils_blt_##name##_t* utils_blt_##name##_create(void); /* NULL on error */ \
+    void utils_blt_##name##_destroy(utils_blt_##name##_t* blt); /* NULL: nothing */ \
+    int utils_blt_##name##_clear(utils_blt_##name##_t* blt); \
+    int utils_blt_##name##_set(utils_blt_##name##_t* blt, left_type left, right_type right, bool force); /* force: override an existing one */ \
+    int utils_blt_##name##_add(utils_blt_##name##_t* blt, left_type left, right_type right); \
+    int utils_blt_##name##_remove_left(utils_blt_##name##_t* blt, left_type left); \
+    int utils_blt_##name##_remove_right(utils_blt_##name##_t* blt, right_type right); \
+    int utils_blt_##name##_remove_lefts(utils_blt_##name##_t* blt, left_type const* lefts, size_t count); \
+    int utils_blt_##name##_remove_rights(utils_blt_##name##_t* blt, right_type const* rights, size_t count); \
+    int utils_blt_##name##_get_right(const utils_blt_##name##_t* blt, left_type left, right_type* right); \
+    int utils_blt_##name##_get_left(const utils_blt_##name##_t* blt, right_type right, left_type* left);</code></pre><h4 id="c-15">Macros · String &lt;-&gt; integer</h4><p><em>string &lt;-&gt; integer, both orders (str_i32 &amp; i32_str, ...)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_BLT_STR_INT_DECL(name, type) \
+    C_API_BLT_DECL(str_##name, const char*, type) \
+    C_API_BLT_DECL(name##_str, type, const char*)</code></pre><h4 id="c-16">Types · Opaque types</h4><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_worker utils_worker_t; // utils::type::Worker + data of the C side (element of a load balancer)
+typedef struct utils_blt utils_blt_t; // utils::type::BidirectionalLookupTable of bytes (an element is found on both sides)</code></pre><h4 id="c-17">Fonctions · Freezable of any handle</h4><p><em>Freezable of any handle (utils::type::Freezable in its class, else UTILS_KO / false: "This handle has no Freezable")</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_freezable_freeze(void* handle);
+bool utils_freezable_is_frozen(const void* handle);
+int utils_freezable_require_frozen(const void* handle); // UTILS_KO (ShouldBeFrozen) when not frozen
+int utils_freezable_require_unfrozen(const void* handle); // UTILS_KO (Frozen) when frozen</code></pre><h4 id="c-18">Fonctions · Worker of any handle</h4><p><em>Worker of any handle (utils::type::Worker in its class, else UTILS_KO / false / 0: "This handle has no Worker")</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_worker_t* utils_worker_create(void* data); // NULL on error
+void utils_worker_destroy(utils_worker_t* worker); // NULL: nothing
+void* utils_worker_get_data(const utils_worker_t* worker);
+int utils_worker_set_data(utils_worker_t* worker, void* data);
+int utils_worker_set_working_status(void* handle, bool status);
+bool utils_worker_is_working(const void* handle);
+uint64_t utils_worker_get_stoped_working_timestamp(const void* handle); // steady clock in ns (when the status was set to false), 0 on error</code></pre><h4 id="c-19">Fonctions · Vectors</h4><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_NUMERIC_TYPES(C_API_VECTOR2_DECL)
+C_API_INT_TYPES(C_API_VECTOR2_INT_DECL)
+C_API_NUMERIC_TYPES(C_API_VECTOR3_DECL)
+C_API_INT_TYPES(C_API_VECTOR3_INT_DECL)</code></pre><h4 id="c-20">Fonctions · Matrices</h4><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_NUMERIC_TYPES(C_API_MATRIX_DECL)
+C_API_FLOAT_TYPES(C_API_MATRIX_FLOAT_DECL)</code></pre><h4 id="c-21">Fonctions · Bidirectional lookup tables of bytes</h4><p><em>bidirectional lookup tables of bytes (generic: an element = data + size, copied)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_blt_t* utils_blt_create(void); // NULL on error
+void utils_blt_destroy(utils_blt_t* blt); // NULL: nothing
+int utils_blt_clear(utils_blt_t* blt);
+int utils_blt_set(utils_blt_t* blt, const void* left, size_t left_size, const void* right, size_t right_size, bool force); // force: override an existing one
+int utils_blt_add(utils_blt_t* blt, const void* left, size_t left_size, const void* right, size_t right_size);
+int utils_blt_remove(utils_blt_t* blt, const void* element, size_t size);
+const void* utils_blt_get(const utils_blt_t* blt, const void* element, size_t size, size_t* other_size); // the other side of element, valid until the table is changed (NULL on error), other_size: optional</code></pre><h4 id="c-22">Fonctions · Bidirectional lookup tables of the fixed types</h4><p><em>bidirectional lookup tables of the fixed types (str: const char* copied, the str given back are valid until the table is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_BLT_SAME_DECL(str_str, const char*)
+C_API_BLT_SAME_DECL(size_size, size_t)
+C_API_BLT_SAME_DECL(i64_i64, int64_t)
+C_API_INT_TYPES(C_API_BLT_STR_INT_DECL)</code></pre></div></section><nav class="pager"><a href="system.html"><span data-i18n>Previous</span><span data-lang="en">System</span><span data-lang="fr">System</span></a><a class="next" href="iomanip.html"><span data-i18n>Next</span><span data-lang="en">IOManip</span><span data-lang="fr">IOManip</span></a></nav></main>
+</div>
+<footer class="site">libutils v5.0.0 · 23d2be3 · docs</footer>
+<script src="site.js"></script>
+<script src="search-index.js" defer></script>
+</body>
+</html>

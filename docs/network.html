@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en" data-storage-key="libutils-docs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Network - libutils</title>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n>Skip to the content</a>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" id="menuBtn" aria-label="Open the navigation" data-i18n-aria-label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v5.0.0</span></a>
+  <nav class="tabs" aria-label="Pages" hidden></nav>
+  <span class="spacer"></span>
+  <div class="top-actions">
+  <div class="lang-switch" role="group" aria-label="Language" data-i18n-aria-label>
+    <button type="button" data-set-lang="en" class="on">EN</button>
+    <button type="button" data-set-lang="fr">FR</button>
+  </div>
+  <span class="divider" aria-hidden="true"></span><div class="sbox small"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" autocomplete="off" aria-label="Search" data-i18n-aria-label placeholder="Search…" data-ph-fr="Rechercher…"><kbd class="hint" aria-hidden="true">/</kbd><ul class="results" hidden></ul></div>
+<a class="icon-btn" href="https://github.com/TsukiNi22/libutils" aria-label="GitHub repository" data-i18n-aria-label title="GitHub repository" data-i18n-title><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"/></svg></a>
+  <button class="theme-switch" type="button" id="themeToggle" role="switch" aria-checked="false" aria-label="Toggle theme" data-i18n-aria-label title="Toggle theme" data-i18n-title>
+    <span class="stars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="knob" aria-hidden="true">
+      <svg class="sun" viewBox="0 0 24 24" fill="#ffffff"><circle cx="12" cy="12" r="5.2"/><g stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"><path d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6M4.8 4.8l1.8 1.8M17.4 17.4l1.8 1.8M4.8 19.2l1.8-1.8M17.4 6.6l1.8-1.8"/></g></svg>
+      <svg class="moon" viewBox="0 0 24 24"><path d="M15.6 4.2a8 8 0 1 0 4.2 11.6A7 7 0 0 1 15.6 4.2z" fill="#f6c343"/></svg>
+    </span>
+  </button>
+  </div>
+</header>
+<div class="layout" id="top">
+<aside class="sidebar" id="sidebar"><p data-i18n>On this page</p><a href="#types">1. <span data-lang="en">Types</span><span data-lang="fr">Types</span></a><a href="#server">2. <span data-lang="en">Server</span><span data-lang="fr">Server</span></a><a href="#client">3. <span data-lang="en">Client</span><span data-lang="fr">Client</span></a><a href="#threads">4. <span data-lang="en">Threads</span><span data-lang="fr">Threads</span></a><a href="#example">5. <span data-lang="en">Example</span><span data-lang="fr">Exemple</span></a><a href="#errors">6. <span data-lang="en">Errors</span><span data-lang="fr">Erreurs</span></a><a href="#socket">7. <span data-lang="en">Socket</span><span data-lang="fr">Socket</span></a><a href="#in-c">8. <span data-lang="en">In C</span><span data-lang="fr">En C</span></a><a href="#cpp-api">9. <span data-lang="en">C++ API</span><span data-lang="fr">API C++</span></a><a href="#c-api">10. <span data-lang="en">C API</span><span data-lang="fr">API C</span></a><hr><div class="grp"><span data-lang="en">User guide</span><span data-lang="fr">Guide utilisateur</span></div><a href="installation.html"><span data-lang="en">Installation</span><span data-lang="fr">Installation</span></a><a href="usage.html"><span data-lang="en">Link and include</span><span data-lang="fr">Lier et inclure</span></a><a href="custom-exceptions.html"><span data-lang="en">Custom exception codes</span><span data-lang="fr">Codes d&#x27;exception personnalisés</span></a><a href="warnings.html"><span data-lang="en">Warnings</span><span data-lang="fr">Avertissements</span></a><a href="c-api.html"><span data-lang="en">Use libutils from C</span><span data-lang="fr">Utiliser libutils depuis C</span></a><a href="windows.html"><span data-lang="en">Windows</span><span data-lang="fr">Windows</span></a><a href="development.html"><span data-lang="en">Build, tests and hooks</span><span data-lang="fr">Build, tests et hooks</span></a><div class="grp"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></div><a href="overview.html"><span data-lang="en">Architecture</span><span data-lang="fr">Architecture</span></a><a href="errors.html"><span data-lang="en">Errors</span><span data-lang="fr">Erreurs</span></a><a href="c-api-design.html"><span data-lang="en">The C API design</span><span data-lang="fr">Conception de l&#x27;API C</span></a><a href="network-ipc.html"><span data-lang="en">Communication</span><span data-lang="fr">Communication</span></a><a href="platforms.html"><span data-lang="en">Platforms</span><span data-lang="fr">Plateformes</span></a><div class="grp"><span data-lang="en">Reference</span><span data-lang="fr">Référence</span></div><a href="exception.html"><span data-lang="en">Exceptions</span><span data-lang="fr">Exceptions</span></a><a href="verbose.html"><span data-lang="en">Verbose</span><span data-lang="fr">Verbose</span></a><a href="pool.html"><span data-lang="en">Pool</span><span data-lang="fr">Pool</span></a><a href="cli.html"><span data-lang="en">Cli</span><span data-lang="fr">Cli</span></a><a href="arguments.html"><span data-lang="en">Arguments</span><span data-lang="fr">Arguments</span></a><a href="network.html" class="cur" aria-current="page"><span data-lang="en">Network</span><span data-lang="fr">Network</span></a><a href="math.html"><span data-lang="en">Math</span><span data-lang="fr">Math</span></a><a href="concepts.html"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></a><a href="encapsulation.html"><span data-lang="en">Encapsulation</span><span data-lang="fr">Encapsulation</span></a><a href="system.html"><span data-lang="en">System</span><span data-lang="fr">System</span></a><a href="type.html"><span data-lang="en">Type</span><span data-lang="fr">Type</span></a><a href="iomanip.html"><span data-lang="en">IOManip</span><span data-lang="fr">IOManip</span></a><a href="smanip.html"><span data-lang="en">SManip</span><span data-lang="fr">SManip</span></a><a href="algorithms.html"><span data-lang="en">Algorithms</span><span data-lang="fr">Algorithms</span></a><a href="security.html"><span data-lang="en">Security</span><span data-lang="fr">Security</span></a><a href="platform.html"><span data-lang="en">Platform</span><span data-lang="fr">Platform</span></a><a href="attribute.html"><span data-lang="en">Attribute</span><span data-lang="fr">Attribute</span></a><div class="grp"><span data-lang="en">Resources</span><span data-lang="fr">Ressources</span></div><a href="changelog.html"><span data-lang="en">Changelog</span><span data-lang="fr">Historique</span></a><a href="ci-cd.html"><span data-lang="en">CI / CD</span><span data-lang="fr">CI / CD</span></a><a href="licenses.html"><span data-lang="en">Licenses</span><span data-lang="fr">Licences</span></a><a href="project-graph.html"><span data-lang="en">Project graph</span><span data-lang="fr">Graphe du projet</span></a><a href="faq.html"><span data-lang="en">FAQ</span><span data-lang="fr">FAQ</span></a><a href="glossary.html"><span data-lang="en">Glossary</span><span data-lang="fr">Glossaire</span></a></aside><main id="main" tabindex="-1"><header><div class="page-eyebrow"><span data-lang="en">Reference</span><span data-lang="fr">Référence</span></div><h1><span data-lang="en">Network</span><span data-lang="fr">Network</span></h1><p class="lead"><span data-lang="en">A TCP Server and Client exchanging payloads through a socket object; the socket layer that splits the stream into payloads, and how to write your own transport.</span><span data-lang="fr">Un Server et un Client TCP qui échangent des payloads via un objet socket ; la couche socket qui découpe le flux en payloads, et comment écrire son propre transport.</span></p><div class="page-meta"><span><span data-i18n>Updated</span> 2026-11-26</span></div></header><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Define, Group, Namespace, Headers"><table><thead><tr><th scope="col" style="min-width:18ch">Define</th><th scope="col" style="min-width:13ch">Group</th><th scope="col" style="min-width:19ch">Namespace</th><th scope="col" style="min-width:27ch">Headers</th></tr></thead><tbody><tr><td><code>_Network</code></td><td><code>_Handling</code></td><td><code>utils::network</code></td><td><code>utils/network/</code></td></tr><tr><td><code>_Socket</code> (from <code>_Network</code>)</td><td><code>_Network</code></td><td><code>utils::network</code></td><td><code>utils/network/socket/</code></td></tr></tbody></table></div><p>A TCP <code>Server</code> and <code>Client</code> built on a socket object. The messages (<strong>payloads</strong>) are strings separated by <code>'\n'</code> by default; <code>listen</code> reads what is available without blocking, <code>join</code> waits for the next event. Same API on Unix and Windows (the epoll is emulated over <code>WSAPoll</code> on Windows, see <a href="platform.html#windows-behavior">Platform</a>). The layers and the EETP protocol are explained in <a href="network-ipc.html">Communication</a>.</p></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Define, Groupe, Espace de noms, En-têtes"><table><thead><tr><th scope="col" style="min-width:19ch">Define</th><th scope="col" style="min-width:13ch">Groupe</th><th scope="col" style="min-width:20ch">Espace de noms</th><th scope="col" style="min-width:27ch">En-têtes</th></tr></thead><tbody><tr><td><code>_Network</code></td><td><code>_Handling</code></td><td><code>utils::network</code></td><td><code>utils/network/</code></td></tr><tr><td><code>_Socket</code> (inclus par <code>_Network</code>)</td><td><code>_Network</code></td><td><code>utils::network</code></td><td><code>utils/network/socket/</code></td></tr></tbody></table></div><p>Un <code>Server</code> et un <code>Client</code> TCP construits sur un objet socket. Les messages (<strong>payloads</strong>) sont des chaînes séparées par <code>'\n'</code> par défaut ; <code>listen</code> lit ce qui est disponible sans bloquer, <code>join</code> attend le prochain événement. Même API sous Unix et Windows (l'epoll est émulé par-dessus <code>WSAPoll</code> sous Windows, voir <a href="platform.html#windows-behavior">Platform</a>). Les couches et le protocole EETP sont expliqués dans <a href="network-ipc.html">Communication</a>.</p></div><section id="types"><h2>1. <span data-lang="en">Types</span><span data-lang="fr">Types</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Type, Definition"><table><thead><tr><th scope="col" style="min-width:12ch">Type</th><th scope="col" style="min-width:28ch">Definition</th></tr></thead><tbody><tr><td><code>Payload</code></td><td><code>std::string</code> (one message, without its separator)</td></tr><tr><td><code>Payloads</code></td><td><code>std::vector&lt;Payload&gt;</code></td></tr><tr><td><code>Ip</code></td><td><code>std::pair&lt;std::string, std::string&gt;</code>: <code>&lt;ipv4 or hostname, hostname&gt;</code></td></tr><tr><td><code>Address</code></td><td><code>{Ip ip = {"localhost", ""}, std::uint16_t port = 8080}</code> (the ip is ignored by a server, port <code>0</code> = any free port)</td></tr><tr><td><code>Status</code></td><td><code>Up</code>, <code>Down</code> (stopped, can be restarted), <code>Terminated</code> (killed), <code>Crashed</code></td></tr></tbody></table></div><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Define, Value"><table><thead><tr><th scope="col" style="min-width:22ch">Define</th><th scope="col" style="min-width:23ch">Value</th></tr></thead><tbody><tr><td><code>DEFAULT_IP</code> / <code>DEFAULT_PORT</code></td><td><code>"localhost"</code> / <code>8080</code></td></tr><tr><td><code>OVERFLOW_LIMIT</code></td><td><code>4048</code> characters without a separator before an error</td></tr><tr><td><code>SOCKET_CHUNK_SIZE</code></td><td><code>4096</code> bytes read per call</td></tr><tr><td><code>SOCKET_TIMEOUT</code></td><td><code>7</code> seconds</td></tr></tbody></table></div></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Type, Définition"><table><thead><tr><th scope="col" style="min-width:12ch">Type</th><th scope="col" style="min-width:28ch">Définition</th></tr></thead><tbody><tr><td><code>Payload</code></td><td><code>std::string</code> (un message, sans son séparateur)</td></tr><tr><td><code>Payloads</code></td><td><code>std::vector&lt;Payload&gt;</code></td></tr><tr><td><code>Ip</code></td><td><code>std::pair&lt;std::string, std::string&gt;</code> : <code>&lt;ipv4 or hostname, hostname&gt;</code></td></tr><tr><td><code>Address</code></td><td><code>{Ip ip = {"localhost", ""}, std::uint16_t port = 8080}</code> (l'ip est ignorée par un serveur, port <code>0</code> = n'importe quel port libre)</td></tr><tr><td><code>Status</code></td><td><code>Up</code>, <code>Down</code> (arrêté, peut être redémarré), <code>Terminated</code> (tué), <code>Crashed</code></td></tr></tbody></table></div><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Define, Valeur"><table><thead><tr><th scope="col" style="min-width:22ch">Define</th><th scope="col" style="min-width:23ch">Valeur</th></tr></thead><tbody><tr><td><code>DEFAULT_IP</code> / <code>DEFAULT_PORT</code></td><td><code>"localhost"</code> / <code>8080</code></td></tr><tr><td><code>OVERFLOW_LIMIT</code></td><td><code>4048</code> caractères sans séparateur avant une erreur</td></tr><tr><td><code>SOCKET_CHUNK_SIZE</code></td><td><code>4096</code> octets lus par appel</td></tr><tr><td><code>SOCKET_TIMEOUT</code></td><td><code>7</code> secondes</td></tr></tbody></table></div></div></section><section id="server"><h2>2. <span data-lang="en">Server</span><span data-lang="fr">Server</span></h2><div data-lang="en"><p><code>Server(std::shared_ptr&lt;ISocket&gt; socket, Address address = {})</code>: every client is identified by its fd.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:24ch">Method</th><th scope="col" style="min-width:23ch">Description</th></tr></thead><tbody><tr><td><code>start()</code></td><td>Listen on the address (restart after a <code>stop</code>)</td></tr><tr><td><code>stop()</code> / <code>kill()</code></td><td>Close every connection; after <code>kill</code> the server can't be restarted</td></tr><tr><td><code>listen()</code></td><td>Accept the new clients, read what is available, return <code>fd → Payloads</code> (cleared at the next call)</td></tr><tr><td><code>listen(fd)</code></td><td>Same for one client (<code>UnknownFd</code> if not connected)</td></tr><tr><td><code>join(fd = -1)</code></td><td>Wait for the next event (any client, or one fd)</td></tr><tr><td><code>send&lt;buffered = false&gt;(fd, payload)</code></td><td>Send now, or store it until <code>flush</code></td></tr><tr><td><code>flush()</code> / <code>flush(fd)</code></td><td>Send the stored payloads</td></tr><tr><td><code>getFds()</code></td><td>Connected clients</td></tr><tr><td><code>getStatus()</code></td><td><code>Status</code></td></tr></tbody></table></div></div><div data-lang="fr"><p><code>Server(std::shared_ptr&lt;ISocket&gt; socket, Address address = {})</code> : chaque client est identifié par son fd.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:24ch">Méthode</th><th scope="col" style="min-width:24ch">Description</th></tr></thead><tbody><tr><td><code>start()</code></td><td>Écoute sur l'adresse (redémarre après un <code>stop</code>)</td></tr><tr><td><code>stop()</code> / <code>kill()</code></td><td>Ferme toutes les connexions ; après <code>kill</code>, le serveur ne peut plus être redémarré</td></tr><tr><td><code>listen()</code></td><td>Accepte les nouveaux clients, lit ce qui est disponible, renvoie <code>fd → Payloads</code> (vidé au prochain appel)</td></tr><tr><td><code>listen(fd)</code></td><td>Pareil pour un seul client (<code>UnknownFd</code> s'il n'est pas connecté)</td></tr><tr><td><code>join(fd = -1)</code></td><td>Attend le prochain événement (n'importe quel client, ou un fd)</td></tr><tr><td><code>send&lt;buffered = false&gt;(fd, payload)</code></td><td>Envoie tout de suite, ou le stocke jusqu'au <code>flush</code></td></tr><tr><td><code>flush()</code> / <code>flush(fd)</code></td><td>Envoie les payloads stockés</td></tr><tr><td><code>getFds()</code></td><td>Clients connectés</td></tr><tr><td><code>getStatus()</code></td><td><code>Status</code></td></tr></tbody></table></div></div></section><section id="client"><h2>3. <span data-lang="en">Client</span><span data-lang="fr">Client</span></h2><div data-lang="en"><p><code>Client(std::shared_ptr&lt;ISocket&gt; socket, Address address = {})</code>: the hostname of the address is resolved by the constructor.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:20ch">Method</th><th scope="col" style="min-width:20ch">Description</th></tr></thead><tbody><tr><td><code>start()</code> / <code>stop()</code> / <code>kill()</code></td><td>Connect / disconnect / disconnect for good</td></tr><tr><td><code>listen()</code></td><td>Read what is available, return the <code>Payloads</code> (cleared at the next call)</td></tr><tr><td><code>join()</code></td><td>Wait for the next event</td></tr><tr><td><code>send&lt;buffered = false&gt;(payload)</code> / <code>flush()</code></td><td>Send now or later</td></tr><tr><td><code>getStatus()</code></td><td><code>Status</code> (<code>Down</code> when the server closed the connection)</td></tr></tbody></table></div></div><div data-lang="fr"><p><code>Client(std::shared_ptr&lt;ISocket&gt; socket, Address address = {})</code> : le hostname de l'adresse est résolu par le constructeur.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:20ch">Méthode</th><th scope="col" style="min-width:19ch">Description</th></tr></thead><tbody><tr><td><code>start()</code> / <code>stop()</code> / <code>kill()</code></td><td>Connexion / déconnexion / déconnexion définitive</td></tr><tr><td><code>listen()</code></td><td>Lit ce qui est disponible, renvoie les <code>Payloads</code> (vidés au prochain appel)</td></tr><tr><td><code>join()</code></td><td>Attend le prochain événement</td></tr><tr><td><code>send&lt;buffered = false&gt;(payload)</code> / <code>flush()</code></td><td>Envoie maintenant ou plus tard</td></tr><tr><td><code>getStatus()</code></td><td><code>Status</code> (<code>Down</code> quand le serveur a fermé la connexion)</td></tr></tbody></table></div></div></section><section id="threads"><h2>4. <span data-lang="en">Threads</span><span data-lang="fr">Threads</span></h2><div data-lang="en"><p><code>stop()</code> and <code>kill()</code> can be called from another thread while a <code>listen</code> / <code>join</code> runs: the <code>join</code> returns, the epoll is closed when the last <code>join</code> leaves. Sending to a closed peer never raises <code>SIGPIPE</code>.</p></div><div data-lang="fr"><p><code>stop()</code> et <code>kill()</code> peuvent être appelés depuis un autre thread pendant qu'un <code>listen</code> / <code>join</code> tourne : le <code>join</code> retourne, l'epoll est fermé quand le dernier <code>join</code> se termine. Un envoi vers un pair fermé ne lève jamais <code>SIGPIPE</code>.</p></div></section><section id="example"><h2>5. <span data-lang="en">Example</span><span data-lang="fr">Exemple</span></h2><div data-lang="en"><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Network
+#include &lt;utils/utils.hpp&gt;
+
+// Server: echo every payload
+utils::network::Server server(std::make_shared&lt;utils::network::TCPSocket&gt;(), {{"", ""}, 4242});
+server.start();
+while (server.getStatus() == utils::network::Status::Up) {
+    server.join();
+    for (const auto&amp; [fd, payloads]: server.listen())
+        for (const utils::network::Payload&amp; payload: payloads)
+            server.send(fd, payload);
+}
+
+// Client
+utils::network::Client client(std::make_shared&lt;utils::network::TCPSocket&gt;(), {{"127.0.0.1", ""}, 4242});
+client.start();
+client.send("hello");
+client.join();
+for (const utils::network::Payload&amp; payload: client.listen())
+    std::cout &lt;&lt; payload &lt;&lt; std::endl;</code></pre></div><div data-lang="fr"><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Network
+#include &lt;utils/utils.hpp&gt;
+
+// Server: echo every payload
+utils::network::Server server(std::make_shared&lt;utils::network::TCPSocket&gt;(), {{"", ""}, 4242});
+server.start();
+while (server.getStatus() == utils::network::Status::Up) {
+    server.join();
+    for (const auto&amp; [fd, payloads]: server.listen())
+        for (const utils::network::Payload&amp; payload: payloads)
+            server.send(fd, payload);
+}
+
+// Client
+utils::network::Client client(std::make_shared&lt;utils::network::TCPSocket&gt;(), {{"127.0.0.1", ""}, 4242});
+client.start();
+client.send("hello");
+client.join();
+for (const utils::network::Payload&amp; payload: client.listen())
+    std::cout &lt;&lt; payload &lt;&lt; std::endl;</code></pre></div></section><section id="errors"><h2>6. <span data-lang="en">Errors</span><span data-lang="fr">Erreurs</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Code, When"><table><thead><tr><th scope="col" style="min-width:24ch">Code</th><th scope="col" style="min-width:23ch">When</th></tr></thead><tbody><tr><td><code>AlreadyRunning</code>, <code>Killed</code> (warnings)</td><td><code>start</code> while up / after a <code>kill</code></td></tr><tr><td><code>UnknownFd</code></td><td><code>listen(fd)</code> / <code>send(fd)</code> / <code>join(fd)</code> on an unknown client</td></tr><tr><td><code>SocketInit</code>, <code>Socket</code>, <code>Poll</code>, <code>Accept</code></td><td>Socket / epoll failure (the server is <code>Crashed</code>); <code>Socket</code> also for a payload over the overflow limit</td></tr><tr><td><code>SocketClosed</code> (<code>None</code>)</td><td>The peer closed the connection (the status becomes <code>Down</code>)</td></tr></tbody></table></div></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Code, Quand"><table><thead><tr><th scope="col" style="min-width:28ch">Code</th><th scope="col" style="min-width:25ch">Quand</th></tr></thead><tbody><tr><td><code>AlreadyRunning</code>, <code>Killed</code> (avertissements)</td><td><code>start</code> alors qu'il tourne déjà / après un <code>kill</code></td></tr><tr><td><code>UnknownFd</code></td><td><code>listen(fd)</code> / <code>send(fd)</code> / <code>join(fd)</code> sur un client inconnu</td></tr><tr><td><code>SocketInit</code>, <code>Socket</code>, <code>Poll</code>, <code>Accept</code></td><td>Échec du socket / de l'epoll (le serveur passe à <code>Crashed</code>) ; <code>Socket</code> aussi pour un payload au-delà de la limite d'overflow</td></tr><tr><td><code>SocketClosed</code> (<code>None</code>)</td><td>Le pair a fermé la connexion (le statut devient <code>Down</code>)</td></tr></tbody></table></div></div></section><section id="socket"><h2>7. <span data-lang="en">Socket</span><span data-lang="fr">Socket</span></h2><div data-lang="en"><p>The socket layer used by the <code>Server</code> and the <code>Client</code>: it opens the connection, splits the stream into payloads and buffers what is not complete yet. One socket object handles every fd of a server (each method takes the fd, <code>-1</code> = the socket itself). Same API on Unix and Windows (Winsock 2 through <a href="platform.html">Platform</a>).</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Class, Description"><table><thead><tr><th scope="col" style="min-width:13ch">Class</th><th scope="col" style="min-width:19ch">Description</th></tr></thead><tbody><tr><td><code>ISocket</code></td><td>Interface used by the <code>Server</code> / <code>Client</code></td></tr><tr><td><code>ASocket</code></td><td>Common implementation: buffers, payload splitting, overflow check</td></tr><tr><td><code>TCPSocket</code></td><td>TCP implementation (<code>connect</code>, <code>listen</code>, <code>accept</code>, <code>recv</code>, <code>send</code> of <a href="platform.html">Platform</a>, <code>MSG_NOSIGNAL</code>)</td></tr></tbody></table></div><h3 id="socket-connection">Connection</h3><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:21ch">Method</th><th scope="col" style="min-width:22ch">Description</th></tr></thead><tbody><tr><td><code>connect(address)</code></td><td>Connect as a client</td></tr><tr><td><code>listen(address)</code></td><td>Listen as a server</td></tr><tr><td><code>accept()</code></td><td>Accept a new client, return its fd (server only)</td></tr><tr><td><code>close()</code></td><td>Close the socket, <code>connect</code> / <code>listen</code> can be used again</td></tr><tr><td><code>reset()</code></td><td>Forget the fd and the buffers <strong>without closing</strong> the fd</td></tr><tr><td><code>getFd()</code></td><td>fd of the socket (<code>-1</code> = closed)</td></tr></tbody></table></div><h3 id="socket-payloads">Payloads</h3><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:21ch">Method</th><th scope="col" style="min-width:19ch">Description</th></tr></thead><tbody><tr><td><code>send(s, fd = -1)</code></td><td>Send <code>s</code> followed by the separator now</td></tr><tr><td><code>sendBuffered(s, fd = -1)</code> / <code>flush(fd = -1)</code></td><td>Store the payload, send the stored ones</td></tr><tr><td><code>receive(fd = -1)</code></td><td>Read <strong>once</strong> (after a poll event) into the internal buffer, never waits for a full payload, returns the number of bytes read</td></tr><tr><td><code>recv(fd = -1)</code></td><td>Read until one full payload is available and return it (the rest stays in the buffer)</td></tr><tr><td><code>recvAll(fd = -1)</code></td><td>Return every full payload of the buffer</td></tr><tr><td><code>empty(fd = -1)</code></td><td>No full payload in the buffer</td></tr><tr><td><code>discard(fd = -1)</code></td><td>Forget the buffers of a fd (closed client), <code>-1</code> = every fd</td></tr></tbody></table></div><h3 id="socket-settings">Settings</h3><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Default, Description"><table><thead><tr><th scope="col" style="min-width:39ch">Method</th><th scope="col" style="min-width:12ch">Default</th><th scope="col" style="min-width:22ch">Description</th></tr></thead><tbody><tr><td><code>setPayloadSeparator(char)</code> / <code>setPayloadSeparator(std::string)</code></td><td><code>'\n'</code></td><td>End of a payload (an empty separator = raw mode, every read is a payload)</td></tr><tr><td><code>setChunckSize(size)</code></td><td><code>4096</code></td><td>Bytes read per call</td></tr><tr><td><code>setOverflow(size)</code></td><td><code>4048</code></td><td>Characters without a separator before a <code>Socket</code> error (<code>0</code> = unlimited)</td></tr></tbody></table></div><h3 id="socket-tools">Tools</h3><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Function, Description"><table><thead><tr><th scope="col" style="min-width:32ch">Function</th><th scope="col" style="min-width:25ch">Description</th></tr></thead><tbody><tr><td><code>is_ip(s)</code></td><td>Is <code>s</code> an IPv4 address</td></tr><tr><td><code>resolve_hostname(hostname)</code></td><td>IPv4 of a hostname</td></tr><tr><td><code>resolve_address(address)</code></td><td>Fill the ip of the <code>Address</code> from its hostname (done by the <code>Client</code> constructor)</td></tr></tbody></table></div><h3 id="custom-socket">Custom socket</h3><p><code>TCPSocket</code> is <code>final</code> on its methods: a new transport derives <code>ASocket</code>, implements <code>connect</code> / <code>listen</code> and the 3 system calls, and returns <code>true</code> from the matching <code>has*Overload()</code> so that <code>ASocket</code> uses them (the buffering and payload splitting stay the ones of <code>ASocket</code>).</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Socket
+#include &lt;utils/utils.hpp&gt;
+
+class MySocket: public utils::network::ASocket {
+    public:
+        void connect(const utils::network::Address&amp; address) override; // set the fd of the socket
+        void listen(const utils::network::Address&amp; address) override;
+
+        bool hasAcceptOverload(void) const override {return true;};
+        bool hasRecvOverload(void) const override   {return true;};
+        bool hasSendOverload(void) const override   {return true;};
+        int accept(int fd, sockaddr* addr, socklen_t* len) const override;
+        ssize_t recv(int fd, char* buf, std::size_t len) const override;
+        ssize_t send(int fd, const char* buf, std::size_t len) const override;
+};
+
+utils::network::Server server(std::make_shared&lt;MySocket&gt;(), {{"", ""}, 4242});</code></pre></div><div data-lang="fr"><p>La couche socket utilisée par le <code>Server</code> et le <code>Client</code> : elle ouvre la connexion, découpe le flux en payloads et garde en buffer ce qui n'est pas encore complet. Un seul objet socket gère tous les fd d'un serveur (chaque méthode prend le fd, <code>-1</code> = le socket lui-même). Même API sous Unix et Windows (Winsock 2 via <a href="platform.html">Platform</a>).</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Classe, Description"><table><thead><tr><th scope="col" style="min-width:13ch">Classe</th><th scope="col" style="min-width:19ch">Description</th></tr></thead><tbody><tr><td><code>ISocket</code></td><td>Interface utilisée par le <code>Server</code> / <code>Client</code></td></tr><tr><td><code>ASocket</code></td><td>Implémentation commune : buffers, découpage en payloads, contrôle de l'overflow</td></tr><tr><td><code>TCPSocket</code></td><td>Implémentation TCP (<code>connect</code>, <code>listen</code>, <code>accept</code>, <code>recv</code>, <code>send</code> de <a href="platform.html">Platform</a>, <code>MSG_NOSIGNAL</code>)</td></tr></tbody></table></div><h3 id="socket-connection">Connexion</h3><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:21ch">Méthode</th><th scope="col" style="min-width:19ch">Description</th></tr></thead><tbody><tr><td><code>connect(address)</code></td><td>Se connecte en tant que client</td></tr><tr><td><code>listen(address)</code></td><td>Écoute en tant que serveur</td></tr><tr><td><code>accept()</code></td><td>Accepte un nouveau client, renvoie son fd (serveur seulement)</td></tr><tr><td><code>close()</code></td><td>Ferme le socket, <code>connect</code> / <code>listen</code> peuvent être réutilisés</td></tr><tr><td><code>reset()</code></td><td>Oublie le fd et les buffers <strong>sans fermer</strong> le fd</td></tr><tr><td><code>getFd()</code></td><td>fd du socket (<code>-1</code> = fermé)</td></tr></tbody></table></div><h3 id="socket-payloads">Payloads</h3><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:21ch">Méthode</th><th scope="col" style="min-width:19ch">Description</th></tr></thead><tbody><tr><td><code>send(s, fd = -1)</code></td><td>Envoie <code>s</code> suivi du séparateur, tout de suite</td></tr><tr><td><code>sendBuffered(s, fd = -1)</code> / <code>flush(fd = -1)</code></td><td>Stocke le payload, envoie ceux qui sont stockés</td></tr><tr><td><code>receive(fd = -1)</code></td><td>Lit <strong>une fois</strong> (après un événement de poll) dans le buffer interne, n'attend jamais un payload complet, renvoie le nombre d'octets lus</td></tr><tr><td><code>recv(fd = -1)</code></td><td>Lit jusqu'à ce qu'un payload complet soit disponible et le renvoie (le reste reste dans le buffer)</td></tr><tr><td><code>recvAll(fd = -1)</code></td><td>Renvoie tous les payloads complets du buffer</td></tr><tr><td><code>empty(fd = -1)</code></td><td>Aucun payload complet dans le buffer</td></tr><tr><td><code>discard(fd = -1)</code></td><td>Oublie les buffers d'un fd (client fermé), <code>-1</code> = tous les fd</td></tr></tbody></table></div><h3 id="socket-settings">Réglages</h3><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Défaut, Description"><table><thead><tr><th scope="col" style="min-width:39ch">Méthode</th><th scope="col" style="min-width:11ch">Défaut</th><th scope="col" style="min-width:23ch">Description</th></tr></thead><tbody><tr><td><code>setPayloadSeparator(char)</code> / <code>setPayloadSeparator(std::string)</code></td><td><code>'\n'</code></td><td>Fin d'un payload (un séparateur vide = mode brut, chaque lecture est un payload)</td></tr><tr><td><code>setChunckSize(size)</code></td><td><code>4096</code></td><td>Octets lus par appel</td></tr><tr><td><code>setOverflow(size)</code></td><td><code>4048</code></td><td>Caractères sans séparateur avant une erreur <code>Socket</code> (<code>0</code> = illimité)</td></tr></tbody></table></div><h3 id="socket-tools">Outils</h3><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Fonction, Description"><table><thead><tr><th scope="col" style="min-width:32ch">Fonction</th><th scope="col" style="min-width:22ch">Description</th></tr></thead><tbody><tr><td><code>is_ip(s)</code></td><td><code>s</code> est-il une adresse IPv4</td></tr><tr><td><code>resolve_hostname(hostname)</code></td><td>IPv4 d'un hostname</td></tr><tr><td><code>resolve_address(address)</code></td><td>Remplit l'ip de l'<code>Address</code> à partir de son hostname (fait par le constructeur du <code>Client</code>)</td></tr></tbody></table></div><h3 id="custom-socket">Socket personnalisé</h3><p><code>TCPSocket</code> est <code>final</code> sur ses méthodes : un nouveau transport dérive d'<code>ASocket</code>, implémente <code>connect</code> / <code>listen</code> et les 3 appels système, et renvoie <code>true</code> depuis le <code>has*Overload()</code> correspondant pour qu'<code>ASocket</code> les utilise (le buffering et le découpage en payloads restent ceux d'<code>ASocket</code>).</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Socket
+#include &lt;utils/utils.hpp&gt;
+
+class MySocket: public utils::network::ASocket {
+    public:
+        void connect(const utils::network::Address&amp; address) override; // set the fd of the socket
+        void listen(const utils::network::Address&amp; address) override;
+
+        bool hasAcceptOverload(void) const override {return true;};
+        bool hasRecvOverload(void) const override   {return true;};
+        bool hasSendOverload(void) const override   {return true;};
+        int accept(int fd, sockaddr* addr, socklen_t* len) const override;
+        ssize_t recv(int fd, char* buf, std::size_t len) const override;
+        ssize_t send(int fd, const char* buf, std::size_t len) const override;
+};
+
+utils::network::Server server(std::make_shared&lt;MySocket&gt;(), {{"", ""}, 4242});</code></pre></div></section><section id="in-c"><h2>8. <span data-lang="en">In C</span><span data-lang="fr">En C</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: C++, C"><table><thead><tr><th scope="col" style="min-width:35ch">C++</th><th scope="col" style="min-width:38ch">C</th></tr></thead><tbody><tr><td><code>std::make_shared&lt;TCPSocket&gt;()</code></td><td><code>utils_socket_create_tcp()</code>; a transport of the C side: <code>utils_socket_create(&amp;callbacks, data)</code> (<code>utils_socket_callbacks_t</code>)</td></tr><tr><td><code>Server(socket, address)</code> / <code>Client(socket, address)</code></td><td><code>utils_server_create(socket, &amp;address)</code> / <code>utils_client_create(socket, &amp;address)</code> (socket <code>NULL</code> = a new TCP socket, address <code>NULL</code> = the default one)</td></tr><tr><td><code>Address</code></td><td><code>utils_network_address_t</code></td></tr><tr><td><code>server.listen()</code></td><td><code>utils_server_listen(server, messages)</code> into a <code>utils_network_messages_t*</code> (fd → payloads)</td></tr><tr><td><code>client.listen()</code></td><td><code>utils_client_listen(client, payloads)</code> into a <code>utils_payloads_t*</code></td></tr><tr><td><code>send(payload)</code> / <code>send&lt;true&gt;</code> / <code>flush</code></td><td><code>utils_*_send(..., data, size)</code> / <code>utils_*_send_buffered</code> / <code>utils_*_flush</code> (a payload can hold <code>'\0'</code>)</td></tr><tr><td><code>getStatus()</code></td><td><code>utils_*_get_status</code> (<code>C_API_NETWORK_STATUS_*</code>)</td></tr><tr><td><code>is_ip</code> / <code>resolve_hostname</code></td><td><code>utils_network_is_ip</code> / <code>utils_network_resolve_hostname</code> (and <code>_r</code>)</td></tr></tbody></table></div><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define _POSIX_C_SOURCE 200809L // strict C on Unix: the POSIX structures (pid_t, struct sockaddr...)
+#define _Network
+#include &lt;utils.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+int main(void)
+{
+    utils_client_t* client = utils_client_create(NULL, NULL);     // new TCP socket, localhost:8080
+    utils_payloads_t* payloads = utils_payloads_create();
+    int ret = 1;
+
+    if (client &amp;&amp; payloads &amp;&amp; utils_client_start(client) == UTILS_OK
+        &amp;&amp; utils_client_send(client, "hello", strlen("hello")) == UTILS_OK
+        &amp;&amp; utils_client_join(client) == UTILS_OK
+        &amp;&amp; utils_client_listen(client, payloads) == UTILS_OK) {
+        for (size_t i = 0; i &lt; utils_payloads_count(payloads); ++i)
+            printf("%s\n", utils_payloads_get(payloads, i, NULL));
+        ret = 0;
+    } else {
+        fprintf(stderr, "%s\n", utils_exception_format());
+    }
+    utils_payloads_destroy(payloads);
+    utils_client_destroy(client);
+    return ret;
+}</code></pre></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: C++, C"><table><thead><tr><th scope="col" style="min-width:35ch">C++</th><th scope="col" style="min-width:38ch">C</th></tr></thead><tbody><tr><td><code>std::make_shared&lt;TCPSocket&gt;()</code></td><td><code>utils_socket_create_tcp()</code> ; un transport côté C : <code>utils_socket_create(&amp;callbacks, data)</code> (<code>utils_socket_callbacks_t</code>)</td></tr><tr><td><code>Server(socket, address)</code> / <code>Client(socket, address)</code></td><td><code>utils_server_create(socket, &amp;address)</code> / <code>utils_client_create(socket, &amp;address)</code> (socket <code>NULL</code> = un nouveau socket TCP, adresse <code>NULL</code> = celle par défaut)</td></tr><tr><td><code>Address</code></td><td><code>utils_network_address_t</code></td></tr><tr><td><code>server.listen()</code></td><td><code>utils_server_listen(server, messages)</code> dans un <code>utils_network_messages_t*</code> (fd → payloads)</td></tr><tr><td><code>client.listen()</code></td><td><code>utils_client_listen(client, payloads)</code> dans un <code>utils_payloads_t*</code></td></tr><tr><td><code>send(payload)</code> / <code>send&lt;true&gt;</code> / <code>flush</code></td><td><code>utils_*_send(..., data, size)</code> / <code>utils_*_send_buffered</code> / <code>utils_*_flush</code> (un payload peut contenir <code>'\0'</code>)</td></tr><tr><td><code>getStatus()</code></td><td><code>utils_*_get_status</code> (<code>C_API_NETWORK_STATUS_*</code>)</td></tr><tr><td><code>is_ip</code> / <code>resolve_hostname</code></td><td><code>utils_network_is_ip</code> / <code>utils_network_resolve_hostname</code> (et <code>_r</code>)</td></tr></tbody></table></div><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define _POSIX_C_SOURCE 200809L // strict C on Unix: the POSIX structures (pid_t, struct sockaddr...)
+#define _Network
+#include &lt;utils.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+int main(void)
+{
+    utils_client_t* client = utils_client_create(NULL, NULL);     // new TCP socket, localhost:8080
+    utils_payloads_t* payloads = utils_payloads_create();
+    int ret = 1;
+
+    if (client &amp;&amp; payloads &amp;&amp; utils_client_start(client) == UTILS_OK
+        &amp;&amp; utils_client_send(client, "hello", strlen("hello")) == UTILS_OK
+        &amp;&amp; utils_client_join(client) == UTILS_OK
+        &amp;&amp; utils_client_listen(client, payloads) == UTILS_OK) {
+        for (size_t i = 0; i &lt; utils_payloads_count(payloads); ++i)
+            printf("%s\n", utils_payloads_get(payloads, i, NULL));
+        ret = 0;
+    } else {
+        fprintf(stderr, "%s\n", utils_exception_format());
+    }
+    utils_payloads_destroy(payloads);
+    utils_client_destroy(client);
+    return ret;
+}</code></pre></div></section><section id="cpp-api"><h2>9. <span data-lang="en">C++ API</span><span data-lang="fr">API C++</span></h2><div data-lang="en"><p>Read from the headers of <code>include/utils/network/</code> (public part only, the trailing comments of the code kept). Include <code>&lt;utils/utils.hpp&gt;</code> with the define of the section, never these headers one by one.</p><h3 id="h-network-client-hpp"><code>utils/network/Client.hpp</code></h3><p>Definition of the client class for custom network</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::network
+class Client: private utils::security::observer::Observer&lt;"Client"&gt; {
+    void start(void); // start/restart the client
+    void stop(void); // stop the client (can be restarted, same has error)
+    void kill(void); // terminate the client (can't be restarted)
+    const utils::network::Payloads&amp; listen(void);
+    void join(void); // Await until the next listen event
+    void flush(void); // send all the stack
+    template&lt;bool buffered = false&gt; void send(const utils::network::Payload&amp; payload);
+    utils::network::Status getStatus(void) const;
+    Client() = default;
+    Client(const std::shared_ptr&lt;utils::network::ISocket&gt;&amp; socket, const utils::network::Address&amp; address = {});
+    ~Client();
+};</code></pre><h3 id="h-network-networkdefine-hpp"><code>utils/network/NetworkDefine.hpp</code></h3><p>Different definition of values for socket definition</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define OVERFLOW_LIMIT 4048 // Number of char before detecting an 'overflow'
+#define IP_REGEX ...
+#define DEFAULT_IP "localhost"
+#define DEFAULT_PORT 8080
+#define SOCKET_TIMEOUT 7 // Timeout in seconds
+#define SOCKET_CHUNK_SIZE 4096 // Size of the chunck readed at recv call
+
+// namespace utils::network
+enum class Status {Up, Down, Terminated, Crashed}</code></pre><h3 id="h-network-networktype-hpp"><code>utils/network/NetworkType.hpp</code></h3><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::network
+using Ip = std::pair&lt;std::string, std::string&gt;; // &lt;ipv4 (hostname by default), hostname&gt;
+using Payload = std::string; // Not parsed (raw from the socket)
+using Payloads = std::vector&lt;utils::network::Payload&gt;;
+struct Address {
+    utils::network::Ip ip = {DEFAULT_IP, ""}; // Ignored on server side
+    std::uint16_t port = DEFAULT_PORT;
+};</code></pre><h3 id="h-network-server-hpp"><code>utils/network/Server.hpp</code></h3><p>Definition of the server class for custom network</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::network
+class Server: private utils::security::observer::Observer&lt;"Server"&gt; {
+    void start(void); // start/restart the server
+    void stop(void); // stop the server (can be restarted, same has error)
+    void kill(void); // terminate the server (can't be restarted)
+    void join(const int fd = -1); // Await until the next listen event on this precise fd or every one (-1)
+    void flush(void); // send all the stack
+    void flush(const int fd); // send all the stack of the specified client
+    template&lt;bool buffered = false&gt; void send(const int fd, const utils::network::Payload&amp; payload);
+    const utils::network::Payloads&amp; listen(const int fd);
+    std::vector&lt;int&gt; getFds(void) const;
+    const std::unordered_map&lt;int, utils::network::Payloads&gt;&amp; listen(void);
+    utils::network::Status getStatus(void) const;
+    Server() = default;
+    Server(const std::shared_ptr&lt;utils::network::ISocket&gt;&amp; socket, const utils::network::Address&amp; address = {});
+    ~Server();
+};</code></pre><h3 id="h-network-socket-asocket-hpp"><code>utils/network/socket/ASocket.hpp</code></h3><p>Abstract for socket handling</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::network
+bool is_ip(const std::string&amp; s);
+std::string resolve_hostname(const std::string&amp; hostname);
+void resolve_address(utils::network::Address&amp; address);
+class ASocket: public utils::network::ISocket {
+    int accept(void); // accept a new connection (only server mode), fd is used as an id in server
+    void close(void) noexcept; // reallow the use of connect/listen
+    void reset(void); // reset fd and buffers (DOES NOT CLOSE FD!!!)
+    bool empty(int fd = -1) const; // is there no valid payload in the stored buffer ?
+    std::string recv(int fd = -1); // (default) read by chunck of 4096, store the payload overflow into a buffer
+    std::vector&lt;std::string&gt; recvAll(int fd = -1); // read by chunck of 4096, return all valid payloads, store the overflow into a buffer
+    void flush(int fd = -1); // send the internal buffer
+    std::size_t receive(int fd = -1); // read once (after a poll event) into the internal buffer, never wait for a full payload
+    void discard(int fd = -1); // forget the internal buffers of a fd (closed connection), -1 = every fd
+    void send(const std::string&amp; s, int fd = -1); // (default) send it now
+    void sendBuffered(const std::string&amp; s, int fd = -1); // store in a buffer
+    void setPayloadSeparator(char c = '\n'); // default: '\n'
+    void setPayloadSeparator(std::string s = "\n");
+    void setChunckSize(std::size_t size = SOCKET_CHUNK_SIZE); // default: 4096
+    void setOverflow(std::size_t overflow = OVERFLOW_LIMIT); // size without a valid payload before throw, default: 4096 (0 = unlimited)
+    int getFd(void) const; // fd of the socket
+    bool hasAcceptOverload(void) const;
+    bool hasRecvOverload(void) const;
+    bool hasSendOverload(void) const;
+    int accept(int fd, sockaddr* addr, socklen_t* len) const;
+    ssize_t recv(int fd, char* buf, std::size_t len) const;
+    ssize_t send(int fd, const char* buf, std::size_t len) const;
+    ASocket() = default;
+    ~ASocket() noexcept;
+};</code></pre><h3 id="h-network-socket-isocket-hpp"><code>utils/network/socket/ISocket.hpp</code></h3><p>Interface for socket handling</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::network
+class ISocket: private utils::security::observer::Observer&lt;"ISocket"&gt; {
+    virtual void setPayloadSeparator(char c) = 0; // default: '\n'
+    virtual void setPayloadSeparator(std::string s) = 0;
+    virtual void setChunckSize(std::size_t size) = 0; // default: 4096
+    virtual void setOverflow(std::size_t overflow) = 0; // size without a valid payload before throw, default: 4096 (0 = unlimited)
+    virtual int getFd(void) const = 0; // fd of the socket (-1 == closed)
+    virtual bool hasAcceptOverload(void) const = 0;
+    virtual bool hasRecvOverload(void) const = 0;
+    virtual bool hasSendOverload(void) const = 0;
+    virtual void connect(const utils::network::Address&amp; address) = 0; // build a connection as a client
+    virtual void listen(const utils::network::Address&amp; address) = 0; // build a connection as a server
+    virtual void reset(void) = 0; // reset fd (DOES NOT CLOSE!!!)
+    virtual void close(void) noexcept = 0; // reallow the use of connect/listen
+    virtual int accept(void) = 0; // accept a new connection (only server mode), fd is used as an id in server
+    virtual int accept(int fd, sockaddr* addr, socklen_t* len) const = 0;
+    virtual ssize_t recv(int fd, char* buf, std::size_t len) const = 0;
+    virtual ssize_t send(int fd, const char* buf, std::size_t len) const = 0;
+    virtual bool empty(int fd = -1) const = 0; // is there no valid payload in the stored buffer ?
+    virtual std::string recv(int fd = -1) = 0; // (default) read by chunck of 4096, store the payload overflow into a buffer
+    virtual std::vector&lt;std::string&gt; recvAll(int fd = -1) = 0; // read by chunck of 4096, return all valid payloads from the buffer, store the overflow into a buffer
+    virtual void flush(int fd = -1) = 0; // send the internal buffer
+    virtual std::size_t receive(int fd = -1) = 0; // read once (after a poll event) into the internal buffer, never wait for a full payload
+    virtual void discard(int fd = -1) = 0; // forget the internal buffers of a fd (closed connection), -1 = every fd
+    virtual void send(const std::string&amp; s, int fd = -1) = 0; // (default) send it now
+    virtual void sendBuffered(const std::string&amp; s, int fd = -1) = 0; // store in a buffer
+    ISocket() = default;
+    virtual ~ISocket() = default;
+};</code></pre><h3 id="h-network-socket-tcpsocket-hpp"><code>utils/network/socket/TCPSocket.hpp</code></h3><p>Socket that handle tcp communication</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::network
+class TCPSocket: public utils::network::ASocket {
+    void connect(const utils::network::Address&amp; address); // build a connection as a client
+    void listen(const utils::network::Address&amp; address); // build a connection as a server
+    bool hasAcceptOverload(void) const;
+    bool hasRecvOverload(void) const;
+    bool hasSendOverload(void) const;
+    using utils::network::ASocket::accept;
+    using utils::network::ASocket::recv;
+    using utils::network::ASocket::send;
+    int accept(int fd, sockaddr* addr, socklen_t* len) const;
+    ssize_t recv(int fd, char* buf, std::size_t len) const;
+    ssize_t send(int fd, const char* buf, std::size_t len) const;
+    TCPSocket() = default;
+    ~TCPSocket() = default;
+};</code></pre></div><div data-lang="fr"><p>Lu dans les en-têtes de <code>include/utils/network/</code> (partie publique seulement, avec les commentaires du code). Inclure <code>&lt;utils/utils.hpp&gt;</code> avec le define de la section, jamais ces en-têtes un par un.</p><h3 id="h-network-client-hpp"><code>utils/network/Client.hpp</code></h3><p>Definition of the client class for custom network</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::network
+class Client: private utils::security::observer::Observer&lt;"Client"&gt; {
+    void start(void); // start/restart the client
+    void stop(void); // stop the client (can be restarted, same has error)
+    void kill(void); // terminate the client (can't be restarted)
+    const utils::network::Payloads&amp; listen(void);
+    void join(void); // Await until the next listen event
+    void flush(void); // send all the stack
+    template&lt;bool buffered = false&gt; void send(const utils::network::Payload&amp; payload);
+    utils::network::Status getStatus(void) const;
+    Client() = default;
+    Client(const std::shared_ptr&lt;utils::network::ISocket&gt;&amp; socket, const utils::network::Address&amp; address = {});
+    ~Client();
+};</code></pre><h3 id="h-network-networkdefine-hpp"><code>utils/network/NetworkDefine.hpp</code></h3><p>Different definition of values for socket definition</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define OVERFLOW_LIMIT 4048 // Number of char before detecting an 'overflow'
+#define IP_REGEX ...
+#define DEFAULT_IP "localhost"
+#define DEFAULT_PORT 8080
+#define SOCKET_TIMEOUT 7 // Timeout in seconds
+#define SOCKET_CHUNK_SIZE 4096 // Size of the chunck readed at recv call
+
+// namespace utils::network
+enum class Status {Up, Down, Terminated, Crashed}</code></pre><h3 id="h-network-networktype-hpp"><code>utils/network/NetworkType.hpp</code></h3><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::network
+using Ip = std::pair&lt;std::string, std::string&gt;; // &lt;ipv4 (hostname by default), hostname&gt;
+using Payload = std::string; // Not parsed (raw from the socket)
+using Payloads = std::vector&lt;utils::network::Payload&gt;;
+struct Address {
+    utils::network::Ip ip = {DEFAULT_IP, ""}; // Ignored on server side
+    std::uint16_t port = DEFAULT_PORT;
+};</code></pre><h3 id="h-network-server-hpp"><code>utils/network/Server.hpp</code></h3><p>Definition of the server class for custom network</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::network
+class Server: private utils::security::observer::Observer&lt;"Server"&gt; {
+    void start(void); // start/restart the server
+    void stop(void); // stop the server (can be restarted, same has error)
+    void kill(void); // terminate the server (can't be restarted)
+    void join(const int fd = -1); // Await until the next listen event on this precise fd or every one (-1)
+    void flush(void); // send all the stack
+    void flush(const int fd); // send all the stack of the specified client
+    template&lt;bool buffered = false&gt; void send(const int fd, const utils::network::Payload&amp; payload);
+    const utils::network::Payloads&amp; listen(const int fd);
+    std::vector&lt;int&gt; getFds(void) const;
+    const std::unordered_map&lt;int, utils::network::Payloads&gt;&amp; listen(void);
+    utils::network::Status getStatus(void) const;
+    Server() = default;
+    Server(const std::shared_ptr&lt;utils::network::ISocket&gt;&amp; socket, const utils::network::Address&amp; address = {});
+    ~Server();
+};</code></pre><h3 id="h-network-socket-asocket-hpp"><code>utils/network/socket/ASocket.hpp</code></h3><p>Abstract for socket handling</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::network
+bool is_ip(const std::string&amp; s);
+std::string resolve_hostname(const std::string&amp; hostname);
+void resolve_address(utils::network::Address&amp; address);
+class ASocket: public utils::network::ISocket {
+    int accept(void); // accept a new connection (only server mode), fd is used as an id in server
+    void close(void) noexcept; // reallow the use of connect/listen
+    void reset(void); // reset fd and buffers (DOES NOT CLOSE FD!!!)
+    bool empty(int fd = -1) const; // is there no valid payload in the stored buffer ?
+    std::string recv(int fd = -1); // (default) read by chunck of 4096, store the payload overflow into a buffer
+    std::vector&lt;std::string&gt; recvAll(int fd = -1); // read by chunck of 4096, return all valid payloads, store the overflow into a buffer
+    void flush(int fd = -1); // send the internal buffer
+    std::size_t receive(int fd = -1); // read once (after a poll event) into the internal buffer, never wait for a full payload
+    void discard(int fd = -1); // forget the internal buffers of a fd (closed connection), -1 = every fd
+    void send(const std::string&amp; s, int fd = -1); // (default) send it now
+    void sendBuffered(const std::string&amp; s, int fd = -1); // store in a buffer
+    void setPayloadSeparator(char c = '\n'); // default: '\n'
+    void setPayloadSeparator(std::string s = "\n");
+    void setChunckSize(std::size_t size = SOCKET_CHUNK_SIZE); // default: 4096
+    void setOverflow(std::size_t overflow = OVERFLOW_LIMIT); // size without a valid payload before throw, default: 4096 (0 = unlimited)
+    int getFd(void) const; // fd of the socket
+    bool hasAcceptOverload(void) const;
+    bool hasRecvOverload(void) const;
+    bool hasSendOverload(void) const;
+    int accept(int fd, sockaddr* addr, socklen_t* len) const;
+    ssize_t recv(int fd, char* buf, std::size_t len) const;
+    ssize_t send(int fd, const char* buf, std::size_t len) const;
+    ASocket() = default;
+    ~ASocket() noexcept;
+};</code></pre><h3 id="h-network-socket-isocket-hpp"><code>utils/network/socket/ISocket.hpp</code></h3><p>Interface for socket handling</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::network
+class ISocket: private utils::security::observer::Observer&lt;"ISocket"&gt; {
+    virtual void setPayloadSeparator(char c) = 0; // default: '\n'
+    virtual void setPayloadSeparator(std::string s) = 0;
+    virtual void setChunckSize(std::size_t size) = 0; // default: 4096
+    virtual void setOverflow(std::size_t overflow) = 0; // size without a valid payload before throw, default: 4096 (0 = unlimited)
+    virtual int getFd(void) const = 0; // fd of the socket (-1 == closed)
+    virtual bool hasAcceptOverload(void) const = 0;
+    virtual bool hasRecvOverload(void) const = 0;
+    virtual bool hasSendOverload(void) const = 0;
+    virtual void connect(const utils::network::Address&amp; address) = 0; // build a connection as a client
+    virtual void listen(const utils::network::Address&amp; address) = 0; // build a connection as a server
+    virtual void reset(void) = 0; // reset fd (DOES NOT CLOSE!!!)
+    virtual void close(void) noexcept = 0; // reallow the use of connect/listen
+    virtual int accept(void) = 0; // accept a new connection (only server mode), fd is used as an id in server
+    virtual int accept(int fd, sockaddr* addr, socklen_t* len) const = 0;
+    virtual ssize_t recv(int fd, char* buf, std::size_t len) const = 0;
+    virtual ssize_t send(int fd, const char* buf, std::size_t len) const = 0;
+    virtual bool empty(int fd = -1) const = 0; // is there no valid payload in the stored buffer ?
+    virtual std::string recv(int fd = -1) = 0; // (default) read by chunck of 4096, store the payload overflow into a buffer
+    virtual std::vector&lt;std::string&gt; recvAll(int fd = -1) = 0; // read by chunck of 4096, return all valid payloads from the buffer, store the overflow into a buffer
+    virtual void flush(int fd = -1) = 0; // send the internal buffer
+    virtual std::size_t receive(int fd = -1) = 0; // read once (after a poll event) into the internal buffer, never wait for a full payload
+    virtual void discard(int fd = -1) = 0; // forget the internal buffers of a fd (closed connection), -1 = every fd
+    virtual void send(const std::string&amp; s, int fd = -1) = 0; // (default) send it now
+    virtual void sendBuffered(const std::string&amp; s, int fd = -1) = 0; // store in a buffer
+    ISocket() = default;
+    virtual ~ISocket() = default;
+};</code></pre><h3 id="h-network-socket-tcpsocket-hpp"><code>utils/network/socket/TCPSocket.hpp</code></h3><p>Socket that handle tcp communication</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::network
+class TCPSocket: public utils::network::ASocket {
+    void connect(const utils::network::Address&amp; address); // build a connection as a client
+    void listen(const utils::network::Address&amp; address); // build a connection as a server
+    bool hasAcceptOverload(void) const;
+    bool hasRecvOverload(void) const;
+    bool hasSendOverload(void) const;
+    using utils::network::ASocket::accept;
+    using utils::network::ASocket::recv;
+    using utils::network::ASocket::send;
+    int accept(int fd, sockaddr* addr, socklen_t* len) const;
+    ssize_t recv(int fd, char* buf, std::size_t len) const;
+    ssize_t send(int fd, const char* buf, std::size_t len) const;
+    TCPSocket() = default;
+    ~TCPSocket() = default;
+};</code></pre></div></section><section id="c-api"><h2>10. <span data-lang="en">C API</span><span data-lang="fr">API C</span></h2><div data-lang="en"><p>Read from <code>include/utils/network/CApi.h</code>, included by <code>&lt;utils.h&gt;</code> with the define of the section. Every function that can fail returns <code>UTILS_OK</code> / <code>UTILS_KO</code> (or <code>NULL</code> / <code>0</code>) and fills <code>utils_exception</code> (see <a href="c-api.html#errors">the C API guide</a>).</p><h3 id="c-1">Defines · Defaults</h3><p><em>defaults (utils/network/NetworkDefine.hpp)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_NETWORK_DEFAULT_IP "localhost"
+#define C_API_NETWORK_DEFAULT_PORT 8080
+#define C_API_NETWORK_SELF -1 // fd of the socket itself (the default fd of the c++)</code></pre><h3 id="c-2">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_socket utils_socket_t; // std::shared_ptr&lt;utils::network::ISocket&gt; (TCPSocket or a socket of the C side)
+typedef struct utils_client utils_client_t; // utils::network::Client
+typedef struct utils_server utils_server_t; // utils::network::Server
+typedef struct utils_payloads utils_payloads_t; // utils::network::Payloads (list of payloads)
+typedef struct utils_network_messages utils_network_messages_t; // payloads of each client of a server (fd -&gt; payloads)</code></pre><h3 id="c-3">Enums · Status of a client / server</h3><p><em>status of a client / server (utils::network::Status)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_network_status {
+    C_API_NETWORK_STATUS_UP = 0,
+    C_API_NETWORK_STATUS_DOWN,
+    C_API_NETWORK_STATUS_TERMINATED,
+    C_API_NETWORK_STATUS_CRASHED
+} utils_network_status_t;</code></pre><h3 id="c-4">Structures · Address</h3><p><em>address (utils::network::Address: ip = &lt;ipv4 (hostname by default), hostname&gt;)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_network_address {
+    const char* ip; // NULL: C_API_NETWORK_DEFAULT_IP (ignored on server side)
+    const char* hostname; // NULL: ""
+    uint16_t port;
+} utils_network_address_t;</code></pre><h3 id="c-5">Structures · Socket of the C side</h3><p><em>socket of the C side (connect / listen: the fd of the connection, -1 on error, raw: NULL = no overload)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_socket_callbacks {
+    int (*connect)(const utils_network_address_t* address, void* data); // build a connection as a client
+    int (*listen)(const utils_network_address_t* address, void* data); // build a connection as a server
+    int (*accept)(int fd, struct sockaddr* addr, socklen_t* len, void* data); // raw overload (optional)
+    ssize_t (*recv)(int fd, char* buf, size_t len, void* data); // raw overload (optional)
+    ssize_t (*send)(int fd, const char* buf, size_t len, void* data); // raw overload (optional)
+} utils_socket_callbacks_t;</code></pre><h3 id="c-6">Functions · Tools</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">bool utils_network_is_ip(const char* str);
+const char* utils_network_resolve_hostname(const char* hostname); // ipv4 of the hostname, valid until the next call in the thread (NULL on error)
+size_t utils_network_resolve_hostname_r(const char* hostname, char* buf, size_t size); // copied in buf (truncated, always '\0' terminated), returns the full length like snprintf (0 on error)</code></pre><h3 id="c-7">Functions · Payloads</h3><p><em>payloads (list of strings, can hold '\0')</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_payloads_t* utils_payloads_create(void); // NULL on error
+void utils_payloads_destroy(utils_payloads_t* payloads); // NULL: nothing
+size_t utils_payloads_count(const utils_payloads_t* payloads);
+const char* utils_payloads_get(const utils_payloads_t* payloads, size_t i, size_t* size); // valid until payloads is changed, size: optional (NULL on error)</code></pre><h3 id="c-8">Functions · Messages of a server</h3><p><em>messages of a server (fd -&gt; payloads, fds in any order)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_network_messages_t* utils_network_messages_create(void); // NULL on error
+void utils_network_messages_destroy(utils_network_messages_t* messages); // NULL: nothing
+size_t utils_network_messages_count(const utils_network_messages_t* messages); // number of fds
+int utils_network_messages_fd(const utils_network_messages_t* messages, size_t i); // -1 on error
+size_t utils_network_messages_size(const utils_network_messages_t* messages, size_t i); // number of payloads of the fd i
+const char* utils_network_messages_get(const utils_network_messages_t* messages, size_t i, size_t j, size_t* size); // valid until messages is changed, size: optional (NULL on error)</code></pre><h3 id="c-9">Functions · Socket</h3><p><em>socket (fd: C_API_NETWORK_SELF = the socket itself)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_socket_t* utils_socket_create_tcp(void); // utils::network::TCPSocket, NULL on error
+utils_socket_t* utils_socket_create(const utils_socket_callbacks_t* callbacks, void* data); // socket of the C side (connect &amp; listen mandatory), NULL on error
+void utils_socket_destroy(utils_socket_t* socket); // NULL: nothing (closed when the last client / server using it is destroyed)
+int utils_socket_set_payload_separator(utils_socket_t* socket, const char* separator); // default: "\n"
+int utils_socket_set_chunk_size(utils_socket_t* socket, size_t size); // default: 4096
+int utils_socket_set_overflow(utils_socket_t* socket, size_t overflow); // size without a valid payload before an error, default: 4096 (0 = unlimited)
+int utils_socket_get_fd(const utils_socket_t* socket); // -1: closed or error
+bool utils_socket_has_accept_overload(const utils_socket_t* socket);
+bool utils_socket_has_recv_overload(const utils_socket_t* socket);
+bool utils_socket_has_send_overload(const utils_socket_t* socket);
+int utils_socket_connect(utils_socket_t* socket, const utils_network_address_t* address); // once (close to reuse it)
+int utils_socket_listen(utils_socket_t* socket, const utils_network_address_t* address); // once (close to reuse it)
+int utils_socket_reset(utils_socket_t* socket); // reset the fd &amp; the buffers (the fd is NOT closed)
+int utils_socket_close(utils_socket_t* socket);
+int utils_socket_accept(utils_socket_t* socket); // server mode only: the fd of the new connection, -1 on error
+int utils_socket_accept_raw(const utils_socket_t* socket, int fd, struct sockaddr* addr, socklen_t* len); // -1 on error
+ssize_t utils_socket_recv_raw(const utils_socket_t* socket, int fd, char* buf, size_t len); // -1 on error
+ssize_t utils_socket_send_raw(const utils_socket_t* socket, int fd, const char* buf, size_t len); // -1 on error
+bool utils_socket_empty(const utils_socket_t* socket, int fd); // no valid payload in the buffer
+int utils_socket_recv(utils_socket_t* socket, int fd, utils_string_t* payload); // the next payload (payload replaced)
+int utils_socket_recv_all(utils_socket_t* socket, int fd, utils_payloads_t* payloads); // every valid payload (payloads replaced)
+int utils_socket_flush(utils_socket_t* socket, int fd); // send the buffer
+size_t utils_socket_receive(utils_socket_t* socket, int fd); // read once (after a poll event) in the buffer, never wait for a full payload (0: nothing or error)
+int utils_socket_discard(utils_socket_t* socket, int fd); // forget the buffers of a fd, -1: every fd
+int utils_socket_send(utils_socket_t* socket, const char* data, size_t size, int fd); // send it now
+int utils_socket_send_buffered(utils_socket_t* socket, const char* data, size_t size, int fd); // store it in the buffer</code></pre><h3 id="c-10">Functions · Client</h3><p><em>client (socket: NULL = a new TCP socket, else shared with the socket handle)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_client_t* utils_client_create(const utils_socket_t* socket, const utils_network_address_t* address); // address: NULL = the default one, NULL on error
+void utils_client_destroy(utils_client_t* client); // NULL: nothing (killed)
+int utils_client_start(utils_client_t* client); // start / restart
+int utils_client_stop(utils_client_t* client); // can be restarted (thread safe)
+int utils_client_kill(utils_client_t* client); // can't be restarted (thread safe)
+int utils_client_listen(utils_client_t* client, utils_payloads_t* payloads); // the payloads received (payloads replaced)
+int utils_client_join(utils_client_t* client); // wait until the next listen event
+int utils_client_flush(utils_client_t* client); // send the buffered payloads
+int utils_client_send(utils_client_t* client, const char* payload, size_t size); // send it now
+int utils_client_send_buffered(utils_client_t* client, const char* payload, size_t size); // sent at the next send / flush
+utils_network_status_t utils_client_get_status(const utils_client_t* client); // C_API_NETWORK_STATUS_CRASHED on error</code></pre><h3 id="c-11">Functions · Server</h3><p><em>server (socket: NULL = a new TCP socket, else shared with the socket handle)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_server_t* utils_server_create(const utils_socket_t* socket, const utils_network_address_t* address); // address: NULL = the default one, NULL on error
+void utils_server_destroy(utils_server_t* server); // NULL: nothing (killed)
+int utils_server_start(utils_server_t* server); // start / restart
+int utils_server_stop(utils_server_t* server); // can be restarted (thread safe)
+int utils_server_kill(utils_server_t* server); // can't be restarted (thread safe)
+int utils_server_join(utils_server_t* server, int fd); // wait until the next listen event on this fd (-1: any)
+int utils_server_flush(utils_server_t* server); // send the buffered payloads of every client
+int utils_server_flush_fd(utils_server_t* server, int fd); // of a client
+int utils_server_send(utils_server_t* server, int fd, const char* payload, size_t size); // send it now
+int utils_server_send_buffered(utils_server_t* server, int fd, const char* payload, size_t size); // sent at the next send / flush
+int utils_server_listen(utils_server_t* server, utils_network_messages_t* messages); // the payloads of every client (messages replaced)
+int utils_server_listen_fd(utils_server_t* server, int fd, utils_payloads_t* payloads); // the payloads of a client (payloads replaced, empty if it was removed)
+size_t utils_server_get_fds(const utils_server_t* server, int* fds, size_t max); // fds of the clients copied (max at most), returns their number (0 on error)
+utils_network_status_t utils_server_get_status(const utils_server_t* server); // C_API_NETWORK_STATUS_CRASHED on error</code></pre></div><div data-lang="fr"><p>Lu dans <code>include/utils/network/CApi.h</code>, inclus par <code>&lt;utils.h&gt;</code> avec le define de la section. Chaque fonction qui peut échouer renvoie <code>UTILS_OK</code> / <code>UTILS_KO</code> (ou <code>NULL</code> / <code>0</code>) et remplit <code>utils_exception</code> (voir <a href="c-api.html#errors">le guide de l'API C</a>).</p><h3 id="c-1">Defines · Defaults</h3><p><em>defaults (utils/network/NetworkDefine.hpp)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_NETWORK_DEFAULT_IP "localhost"
+#define C_API_NETWORK_DEFAULT_PORT 8080
+#define C_API_NETWORK_SELF -1 // fd of the socket itself (the default fd of the c++)</code></pre><h3 id="c-2">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_socket utils_socket_t; // std::shared_ptr&lt;utils::network::ISocket&gt; (TCPSocket or a socket of the C side)
+typedef struct utils_client utils_client_t; // utils::network::Client
+typedef struct utils_server utils_server_t; // utils::network::Server
+typedef struct utils_payloads utils_payloads_t; // utils::network::Payloads (list of payloads)
+typedef struct utils_network_messages utils_network_messages_t; // payloads of each client of a server (fd -&gt; payloads)</code></pre><h3 id="c-3">Énumérations · Status of a client / server</h3><p><em>status of a client / server (utils::network::Status)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_network_status {
+    C_API_NETWORK_STATUS_UP = 0,
+    C_API_NETWORK_STATUS_DOWN,
+    C_API_NETWORK_STATUS_TERMINATED,
+    C_API_NETWORK_STATUS_CRASHED
+} utils_network_status_t;</code></pre><h3 id="c-4">Structures · Address</h3><p><em>address (utils::network::Address: ip = &lt;ipv4 (hostname by default), hostname&gt;)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_network_address {
+    const char* ip; // NULL: C_API_NETWORK_DEFAULT_IP (ignored on server side)
+    const char* hostname; // NULL: ""
+    uint16_t port;
+} utils_network_address_t;</code></pre><h3 id="c-5">Structures · Socket of the C side</h3><p><em>socket of the C side (connect / listen: the fd of the connection, -1 on error, raw: NULL = no overload)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_socket_callbacks {
+    int (*connect)(const utils_network_address_t* address, void* data); // build a connection as a client
+    int (*listen)(const utils_network_address_t* address, void* data); // build a connection as a server
+    int (*accept)(int fd, struct sockaddr* addr, socklen_t* len, void* data); // raw overload (optional)
+    ssize_t (*recv)(int fd, char* buf, size_t len, void* data); // raw overload (optional)
+    ssize_t (*send)(int fd, const char* buf, size_t len, void* data); // raw overload (optional)
+} utils_socket_callbacks_t;</code></pre><h3 id="c-6">Fonctions · Tools</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">bool utils_network_is_ip(const char* str);
+const char* utils_network_resolve_hostname(const char* hostname); // ipv4 of the hostname, valid until the next call in the thread (NULL on error)
+size_t utils_network_resolve_hostname_r(const char* hostname, char* buf, size_t size); // copied in buf (truncated, always '\0' terminated), returns the full length like snprintf (0 on error)</code></pre><h3 id="c-7">Fonctions · Payloads</h3><p><em>payloads (list of strings, can hold '\0')</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_payloads_t* utils_payloads_create(void); // NULL on error
+void utils_payloads_destroy(utils_payloads_t* payloads); // NULL: nothing
+size_t utils_payloads_count(const utils_payloads_t* payloads);
+const char* utils_payloads_get(const utils_payloads_t* payloads, size_t i, size_t* size); // valid until payloads is changed, size: optional (NULL on error)</code></pre><h3 id="c-8">Fonctions · Messages of a server</h3><p><em>messages of a server (fd -&gt; payloads, fds in any order)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_network_messages_t* utils_network_messages_create(void); // NULL on error
+void utils_network_messages_destroy(utils_network_messages_t* messages); // NULL: nothing
+size_t utils_network_messages_count(const utils_network_messages_t* messages); // number of fds
+int utils_network_messages_fd(const utils_network_messages_t* messages, size_t i); // -1 on error
+size_t utils_network_messages_size(const utils_network_messages_t* messages, size_t i); // number of payloads of the fd i
+const char* utils_network_messages_get(const utils_network_messages_t* messages, size_t i, size_t j, size_t* size); // valid until messages is changed, size: optional (NULL on error)</code></pre><h3 id="c-9">Fonctions · Socket</h3><p><em>socket (fd: C_API_NETWORK_SELF = the socket itself)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_socket_t* utils_socket_create_tcp(void); // utils::network::TCPSocket, NULL on error
+utils_socket_t* utils_socket_create(const utils_socket_callbacks_t* callbacks, void* data); // socket of the C side (connect &amp; listen mandatory), NULL on error
+void utils_socket_destroy(utils_socket_t* socket); // NULL: nothing (closed when the last client / server using it is destroyed)
+int utils_socket_set_payload_separator(utils_socket_t* socket, const char* separator); // default: "\n"
+int utils_socket_set_chunk_size(utils_socket_t* socket, size_t size); // default: 4096
+int utils_socket_set_overflow(utils_socket_t* socket, size_t overflow); // size without a valid payload before an error, default: 4096 (0 = unlimited)
+int utils_socket_get_fd(const utils_socket_t* socket); // -1: closed or error
+bool utils_socket_has_accept_overload(const utils_socket_t* socket);
+bool utils_socket_has_recv_overload(const utils_socket_t* socket);
+bool utils_socket_has_send_overload(const utils_socket_t* socket);
+int utils_socket_connect(utils_socket_t* socket, const utils_network_address_t* address); // once (close to reuse it)
+int utils_socket_listen(utils_socket_t* socket, const utils_network_address_t* address); // once (close to reuse it)
+int utils_socket_reset(utils_socket_t* socket); // reset the fd &amp; the buffers (the fd is NOT closed)
+int utils_socket_close(utils_socket_t* socket);
+int utils_socket_accept(utils_socket_t* socket); // server mode only: the fd of the new connection, -1 on error
+int utils_socket_accept_raw(const utils_socket_t* socket, int fd, struct sockaddr* addr, socklen_t* len); // -1 on error
+ssize_t utils_socket_recv_raw(const utils_socket_t* socket, int fd, char* buf, size_t len); // -1 on error
+ssize_t utils_socket_send_raw(const utils_socket_t* socket, int fd, const char* buf, size_t len); // -1 on error
+bool utils_socket_empty(const utils_socket_t* socket, int fd); // no valid payload in the buffer
+int utils_socket_recv(utils_socket_t* socket, int fd, utils_string_t* payload); // the next payload (payload replaced)
+int utils_socket_recv_all(utils_socket_t* socket, int fd, utils_payloads_t* payloads); // every valid payload (payloads replaced)
+int utils_socket_flush(utils_socket_t* socket, int fd); // send the buffer
+size_t utils_socket_receive(utils_socket_t* socket, int fd); // read once (after a poll event) in the buffer, never wait for a full payload (0: nothing or error)
+int utils_socket_discard(utils_socket_t* socket, int fd); // forget the buffers of a fd, -1: every fd
+int utils_socket_send(utils_socket_t* socket, const char* data, size_t size, int fd); // send it now
+int utils_socket_send_buffered(utils_socket_t* socket, const char* data, size_t size, int fd); // store it in the buffer</code></pre><h3 id="c-10">Fonctions · Client</h3><p><em>client (socket: NULL = a new TCP socket, else shared with the socket handle)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_client_t* utils_client_create(const utils_socket_t* socket, const utils_network_address_t* address); // address: NULL = the default one, NULL on error
+void utils_client_destroy(utils_client_t* client); // NULL: nothing (killed)
+int utils_client_start(utils_client_t* client); // start / restart
+int utils_client_stop(utils_client_t* client); // can be restarted (thread safe)
+int utils_client_kill(utils_client_t* client); // can't be restarted (thread safe)
+int utils_client_listen(utils_client_t* client, utils_payloads_t* payloads); // the payloads received (payloads replaced)
+int utils_client_join(utils_client_t* client); // wait until the next listen event
+int utils_client_flush(utils_client_t* client); // send the buffered payloads
+int utils_client_send(utils_client_t* client, const char* payload, size_t size); // send it now
+int utils_client_send_buffered(utils_client_t* client, const char* payload, size_t size); // sent at the next send / flush
+utils_network_status_t utils_client_get_status(const utils_client_t* client); // C_API_NETWORK_STATUS_CRASHED on error</code></pre><h3 id="c-11">Fonctions · Server</h3><p><em>server (socket: NULL = a new TCP socket, else shared with the socket handle)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_server_t* utils_server_create(const utils_socket_t* socket, const utils_network_address_t* address); // address: NULL = the default one, NULL on error
+void utils_server_destroy(utils_server_t* server); // NULL: nothing (killed)
+int utils_server_start(utils_server_t* server); // start / restart
+int utils_server_stop(utils_server_t* server); // can be restarted (thread safe)
+int utils_server_kill(utils_server_t* server); // can't be restarted (thread safe)
+int utils_server_join(utils_server_t* server, int fd); // wait until the next listen event on this fd (-1: any)
+int utils_server_flush(utils_server_t* server); // send the buffered payloads of every client
+int utils_server_flush_fd(utils_server_t* server, int fd); // of a client
+int utils_server_send(utils_server_t* server, int fd, const char* payload, size_t size); // send it now
+int utils_server_send_buffered(utils_server_t* server, int fd, const char* payload, size_t size); // sent at the next send / flush
+int utils_server_listen(utils_server_t* server, utils_network_messages_t* messages); // the payloads of every client (messages replaced)
+int utils_server_listen_fd(utils_server_t* server, int fd, utils_payloads_t* payloads); // the payloads of a client (payloads replaced, empty if it was removed)
+size_t utils_server_get_fds(const utils_server_t* server, int* fds, size_t max); // fds of the clients copied (max at most), returns their number (0 on error)
+utils_network_status_t utils_server_get_status(const utils_server_t* server); // C_API_NETWORK_STATUS_CRASHED on error</code></pre></div></section><nav class="pager"><a href="arguments.html"><span data-i18n>Previous</span><span data-lang="en">Arguments</span><span data-lang="fr">Arguments</span></a><a class="next" href="math.html"><span data-i18n>Next</span><span data-lang="en">Math</span><span data-lang="fr">Math</span></a></nav></main>
+</div>
+<footer class="site">libutils v5.0.0 · 23d2be3 · docs</footer>
+<script src="site.js"></script>
+<script src="search-index.js" defer></script>
+</body>
+</html>

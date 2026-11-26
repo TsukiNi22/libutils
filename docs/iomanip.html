@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="en" data-storage-key="libutils-docs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IOManip - libutils</title>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n>Skip to the content</a>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" id="menuBtn" aria-label="Open the navigation" data-i18n-aria-label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v5.0.0</span></a>
+  <nav class="tabs" aria-label="Pages" hidden></nav>
+  <span class="spacer"></span>
+  <div class="top-actions">
+  <div class="lang-switch" role="group" aria-label="Language" data-i18n-aria-label>
+    <button type="button" data-set-lang="en" class="on">EN</button>
+    <button type="button" data-set-lang="fr">FR</button>
+  </div>
+  <span class="divider" aria-hidden="true"></span><div class="sbox small"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" autocomplete="off" aria-label="Search" data-i18n-aria-label placeholder="Search…" data-ph-fr="Rechercher…"><kbd class="hint" aria-hidden="true">/</kbd><ul class="results" hidden></ul></div>
+<a class="icon-btn" href="https://github.com/TsukiNi22/libutils" aria-label="GitHub repository" data-i18n-aria-label title="GitHub repository" data-i18n-title><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"/></svg></a>
+  <button class="theme-switch" type="button" id="themeToggle" role="switch" aria-checked="false" aria-label="Toggle theme" data-i18n-aria-label title="Toggle theme" data-i18n-title>
+    <span class="stars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="knob" aria-hidden="true">
+      <svg class="sun" viewBox="0 0 24 24" fill="#ffffff"><circle cx="12" cy="12" r="5.2"/><g stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"><path d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6M4.8 4.8l1.8 1.8M17.4 17.4l1.8 1.8M4.8 19.2l1.8-1.8M17.4 6.6l1.8-1.8"/></g></svg>
+      <svg class="moon" viewBox="0 0 24 24"><path d="M15.6 4.2a8 8 0 1 0 4.2 11.6A7 7 0 0 1 15.6 4.2z" fill="#f6c343"/></svg>
+    </span>
+  </button>
+  </div>
+</header>
+<div class="layout" id="top">
+<aside class="sidebar" id="sidebar"><p data-i18n>On this page</p><a href="#styles">1. <span data-lang="en">Styles</span><span data-lang="fr">Styles</span></a><a href="#colors">2. <span data-lang="en">Colors</span><span data-lang="fr">Couleurs</span></a><a href="#cursor-screen">3. <span data-lang="en">Cursor and screen</span><span data-lang="fr">Curseur et écran</span></a><a href="#modes">4. <span data-lang="en">Modes</span><span data-lang="fr">Modes</span></a><a href="#reports">5. <span data-lang="en">Reports</span><span data-lang="fr">Rapports</span></a><a href="#special-characters">6. <span data-lang="en">Special characters</span><span data-lang="fr">Caractères spéciaux</span></a><a href="#example">7. <span data-lang="en">Example</span><span data-lang="fr">Exemple</span></a><a href="#in-c">8. <span data-lang="en">In C</span><span data-lang="fr">En C</span></a><a href="#cpp-api">9. <span data-lang="en">C++ API</span><span data-lang="fr">API C++</span></a><a href="#c-api">10. <span data-lang="en">C API</span><span data-lang="fr">API C</span></a><hr><div class="grp"><span data-lang="en">User guide</span><span data-lang="fr">Guide utilisateur</span></div><a href="installation.html"><span data-lang="en">Installation</span><span data-lang="fr">Installation</span></a><a href="usage.html"><span data-lang="en">Link and include</span><span data-lang="fr">Lier et inclure</span></a><a href="custom-exceptions.html"><span data-lang="en">Custom exception codes</span><span data-lang="fr">Codes d&#x27;exception personnalisés</span></a><a href="warnings.html"><span data-lang="en">Warnings</span><span data-lang="fr">Avertissements</span></a><a href="c-api.html"><span data-lang="en">Use libutils from C</span><span data-lang="fr">Utiliser libutils depuis C</span></a><a href="windows.html"><span data-lang="en">Windows</span><span data-lang="fr">Windows</span></a><a href="development.html"><span data-lang="en">Build, tests and hooks</span><span data-lang="fr">Build, tests et hooks</span></a><div class="grp"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></div><a href="overview.html"><span data-lang="en">Architecture</span><span data-lang="fr">Architecture</span></a><a href="errors.html"><span data-lang="en">Errors</span><span data-lang="fr">Erreurs</span></a><a href="c-api-design.html"><span data-lang="en">The C API design</span><span data-lang="fr">Conception de l&#x27;API C</span></a><a href="network-ipc.html"><span data-lang="en">Communication</span><span data-lang="fr">Communication</span></a><a href="platforms.html"><span data-lang="en">Platforms</span><span data-lang="fr">Plateformes</span></a><div class="grp"><span data-lang="en">Reference</span><span data-lang="fr">Référence</span></div><a href="exception.html"><span data-lang="en">Exceptions</span><span data-lang="fr">Exceptions</span></a><a href="verbose.html"><span data-lang="en">Verbose</span><span data-lang="fr">Verbose</span></a><a href="pool.html"><span data-lang="en">Pool</span><span data-lang="fr">Pool</span></a><a href="cli.html"><span data-lang="en">Cli</span><span data-lang="fr">Cli</span></a><a href="arguments.html"><span data-lang="en">Arguments</span><span data-lang="fr">Arguments</span></a><a href="network.html"><span data-lang="en">Network</span><span data-lang="fr">Network</span></a><a href="math.html"><span data-lang="en">Math</span><span data-lang="fr">Math</span></a><a href="concepts.html"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></a><a href="encapsulation.html"><span data-lang="en">Encapsulation</span><span data-lang="fr">Encapsulation</span></a><a href="system.html"><span data-lang="en">System</span><span data-lang="fr">System</span></a><a href="type.html"><span data-lang="en">Type</span><span data-lang="fr">Type</span></a><a href="iomanip.html" class="cur" aria-current="page"><span data-lang="en">IOManip</span><span data-lang="fr">IOManip</span></a><a href="smanip.html"><span data-lang="en">SManip</span><span data-lang="fr">SManip</span></a><a href="algorithms.html"><span data-lang="en">Algorithms</span><span data-lang="fr">Algorithms</span></a><a href="security.html"><span data-lang="en">Security</span><span data-lang="fr">Security</span></a><a href="platform.html"><span data-lang="en">Platform</span><span data-lang="fr">Platform</span></a><a href="attribute.html"><span data-lang="en">Attribute</span><span data-lang="fr">Attribute</span></a><div class="grp"><span data-lang="en">Resources</span><span data-lang="fr">Ressources</span></div><a href="changelog.html"><span data-lang="en">Changelog</span><span data-lang="fr">Historique</span></a><a href="ci-cd.html"><span data-lang="en">CI / CD</span><span data-lang="fr">CI / CD</span></a><a href="licenses.html"><span data-lang="en">Licenses</span><span data-lang="fr">Licences</span></a><a href="project-graph.html"><span data-lang="en">Project graph</span><span data-lang="fr">Graphe du projet</span></a><a href="faq.html"><span data-lang="en">FAQ</span><span data-lang="fr">FAQ</span></a><a href="glossary.html"><span data-lang="en">Glossary</span><span data-lang="fr">Glossaire</span></a></aside><main id="main" tabindex="-1"><header><div class="page-eyebrow"><span data-lang="en">Reference</span><span data-lang="fr">Référence</span></div><h1><span data-lang="en">IOManip</span><span data-lang="fr">IOManip</span></h1><p class="lead"><span data-lang="en">Functions returning the ANSI escape sequences (styles, colors, cursor, screen, modes, links) and readers of the terminal reports.</span><span data-lang="fr">Fonctions qui renvoient les séquences d&#x27;échappement ANSI (styles, couleurs, curseur, écran, modes, liens) et lecteurs des rapports du terminal.</span></p><div class="page-meta"><span><span data-i18n>Updated</span> 2026-11-26</span></div></header><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Define, Group, Namespace, Headers"><table><thead><tr><th scope="col" style="min-width:18ch">Define</th><th scope="col" style="min-width:10ch">Group</th><th scope="col" style="min-width:19ch">Namespace</th><th scope="col" style="min-width:25ch">Headers</th></tr></thead><tbody><tr><td><code>_IOManip</code> (from <code>_Manip</code>)</td><td><code>_Tools</code></td><td><code>utils::iomanip</code></td><td><code>utils/manip/iomanip/</code></td></tr></tbody></table></div><p>Functions returning the ANSI escape sequences (to write on a terminal) and readers of the terminal reports. The string tools of the same group are in <a href="smanip.html">SManip</a>.</p></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Define, Groupe, Namespace, Headers"><table><thead><tr><th scope="col" style="min-width:20ch">Define</th><th scope="col" style="min-width:11ch">Groupe</th><th scope="col" style="min-width:19ch">Namespace</th><th scope="col" style="min-width:25ch">Headers</th></tr></thead><tbody><tr><td><code>_IOManip</code> (depuis <code>_Manip</code>)</td><td><code>_Tools</code></td><td><code>utils::iomanip</code></td><td><code>utils/manip/iomanip/</code></td></tr></tbody></table></div><p>Fonctions qui renvoient les séquences d'échappement ANSI (à écrire sur un terminal) et lecteurs des rapports du terminal. Les outils de chaînes du même groupe sont dans <a href="smanip.html">SManip</a>.</p></div><section id="styles"><h2>1. <span data-lang="en">Styles</span><span data-lang="fr">Styles</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Function, Sequence"><table><thead><tr><th scope="col" style="min-width:31ch">Function</th><th scope="col" style="min-width:23ch">Sequence</th></tr></thead><tbody><tr><td><code>reset()</code></td><td><code>ESC[0m</code></td></tr><tr><td><code>strong()</code>, <code>dark()</code>, <code>italic()</code>, <code>underlined()</code></td><td><code>1</code>, <code>2</code>, <code>3</code>, <code>4</code></td></tr><tr><td><code>flashing_slow()</code>, <code>flashing_fast()</code></td><td><code>5</code>, <code>6</code></td></tr><tr><td><code>reversed()</code>, <code>hide()</code>, <code>bar()</code></td><td><code>7</code>, <code>8</code>, <code>9</code></td></tr><tr><td><code>monospace()</code>, <code>framed()</code>, <code>encircled()</code>, <code>overlined()</code></td><td><code>50</code>, <code>51</code>, <code>52</code>, <code>53</code></td></tr><tr><td><code>exposant()</code>, <code>indice()</code></td><td><code>73</code>, <code>74</code> (rarely supported)</td></tr><tr><td><code>&lt;style&gt;_reset()</code></td><td>the matching reset (<code>strong_reset()</code> / <code>dark_reset()</code> = <code>22</code>, <code>flashing_*_reset()</code> = <code>25</code>...)</td></tr><tr><td><code>set_style(Style)</code> / <code>set_style({Style, ...})</code></td><td>one sequence for several <code>Style</code> values</td></tr><tr><td><code>reset_style(ResetStyle)</code> / <code>reset_style({ResetStyle, ...})</code></td><td>same for the resets</td></tr></tbody></table></div><div class="callout"><p>The codes follow ECMA-48 / xterm since <code>v3.0.0</code> (the slow / fast blink were swapped, the bold reset was <code>21</code>).</p></div></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Fonction, Séquence"><table><thead><tr><th scope="col" style="min-width:31ch">Fonction</th><th scope="col" style="min-width:23ch">Séquence</th></tr></thead><tbody><tr><td><code>reset()</code></td><td><code>ESC[0m</code></td></tr><tr><td><code>strong()</code>, <code>dark()</code>, <code>italic()</code>, <code>underlined()</code></td><td><code>1</code>, <code>2</code>, <code>3</code>, <code>4</code></td></tr><tr><td><code>flashing_slow()</code>, <code>flashing_fast()</code></td><td><code>5</code>, <code>6</code></td></tr><tr><td><code>reversed()</code>, <code>hide()</code>, <code>bar()</code></td><td><code>7</code>, <code>8</code>, <code>9</code></td></tr><tr><td><code>monospace()</code>, <code>framed()</code>, <code>encircled()</code>, <code>overlined()</code></td><td><code>50</code>, <code>51</code>, <code>52</code>, <code>53</code></td></tr><tr><td><code>exposant()</code>, <code>indice()</code></td><td><code>73</code>, <code>74</code> (rarement pris en charge)</td></tr><tr><td><code>&lt;style&gt;_reset()</code></td><td>la réinitialisation correspondante (<code>strong_reset()</code> / <code>dark_reset()</code> = <code>22</code>, <code>flashing_*_reset()</code> = <code>25</code>...)</td></tr><tr><td><code>set_style(Style)</code> / <code>set_style({Style, ...})</code></td><td>une seule séquence pour plusieurs valeurs <code>Style</code></td></tr><tr><td><code>reset_style(ResetStyle)</code> / <code>reset_style({ResetStyle, ...})</code></td><td>pareil pour les réinitialisations</td></tr></tbody></table></div><div class="callout"><p>Les codes suivent ECMA-48 / xterm depuis <code>v3.0.0</code> (les clignotements lent / rapide étaient inversés, la réinitialisation du gras était <code>21</code>).</p></div></div></section><section id="colors"><h2>2. <span data-lang="en">Colors</span><span data-lang="fr">Couleurs</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Function, Description"><table><thead><tr><th scope="col" style="min-width:39ch">Function</th><th scope="col" style="min-width:21ch">Description</th></tr></thead><tbody><tr><td><code>color(Color)</code> / <code>color(BackColor)</code></td><td>16 colors (<code>Black</code>... <code>BrightWhite</code>, <code>Default</code>) for the text / background</td></tr><tr><td><code>color_id(id)</code>, <code>back_color_id(id)</code>, <code>underline_color_id(id)</code></td><td>256 colors palette</td></tr><tr><td><code>color_rgb(r, g, b)</code>, <code>back_color_rgb(r, g, b)</code>, <code>underline_color_rgb(r, g, b)</code></td><td>True colors</td></tr></tbody></table></div></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Fonction, Description"><table><thead><tr><th scope="col" style="min-width:39ch">Fonction</th><th scope="col" style="min-width:20ch">Description</th></tr></thead><tbody><tr><td><code>color(Color)</code> / <code>color(BackColor)</code></td><td>16 couleurs (<code>Black</code>... <code>BrightWhite</code>, <code>Default</code>) pour le texte / le fond</td></tr><tr><td><code>color_id(id)</code>, <code>back_color_id(id)</code>, <code>underline_color_id(id)</code></td><td>Palette de 256 couleurs</td></tr><tr><td><code>color_rgb(r, g, b)</code>, <code>back_color_rgb(r, g, b)</code>, <code>underline_color_rgb(r, g, b)</code></td><td>Couleurs vraies (true color)</td></tr></tbody></table></div></div></section><section id="cursor-screen"><h2>3. <span data-lang="en">Cursor and screen</span><span data-lang="fr">Curseur et écran</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Function, Description"><table><thead><tr><th scope="col" style="min-width:31ch">Function</th><th scope="col" style="min-width:19ch">Description</th></tr></thead><tbody><tr><td><code>up(n)</code>, <code>down(n)</code>, <code>right(n)</code>, <code>left(n)</code></td><td>Move the cursor</td></tr><tr><td><code>next_line(n)</code>, <code>previous_line(n)</code>, <code>column(col)</code>, <code>pos(row, col)</code></td><td>Move to a line / column / position</td></tr><tr><td><code>save_cur()</code>, <code>load_cur()</code>, <code>show_cur()</code>, <code>hide_cur()</code></td><td>Cursor state</td></tr><tr><td><code>screen()</code>, <code>screen_start()</code>, <code>screen_end()</code>, <code>scrollback_buffer()</code></td><td>Clear the screen (all / to the start / to the end / history)</td></tr><tr><td><code>line()</code>, <code>line_start()</code>, <code>line_end()</code></td><td>Clear the line</td></tr><tr><td><code>scroll_up(n)</code>, <code>scroll_down(n)</code></td><td>Scroll</td></tr><tr><td><code>save_screen()</code>, <code>load_screen()</code></td><td>Alternate screen</td></tr><tr><td><code>hyperlink(display, link)</code>, <code>file_hyperlink(display, path)</code></td><td>Clickable links (OSC 8)</td></tr><tr><td><code>esc()</code>, <code>csi(code)</code></td><td>Raw <code>ESC</code> / <code>ESC[</code> + code</td></tr></tbody></table></div></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Fonction, Description"><table><thead><tr><th scope="col" style="min-width:31ch">Fonction</th><th scope="col" style="min-width:21ch">Description</th></tr></thead><tbody><tr><td><code>up(n)</code>, <code>down(n)</code>, <code>right(n)</code>, <code>left(n)</code></td><td>Déplace le curseur</td></tr><tr><td><code>next_line(n)</code>, <code>previous_line(n)</code>, <code>column(col)</code>, <code>pos(row, col)</code></td><td>Va à une ligne / colonne / position</td></tr><tr><td><code>save_cur()</code>, <code>load_cur()</code>, <code>show_cur()</code>, <code>hide_cur()</code></td><td>État du curseur</td></tr><tr><td><code>screen()</code>, <code>screen_start()</code>, <code>screen_end()</code>, <code>scrollback_buffer()</code></td><td>Efface l'écran (tout / jusqu'au début / jusqu'à la fin / historique)</td></tr><tr><td><code>line()</code>, <code>line_start()</code>, <code>line_end()</code></td><td>Efface la ligne</td></tr><tr><td><code>scroll_up(n)</code>, <code>scroll_down(n)</code></td><td>Défilement</td></tr><tr><td><code>save_screen()</code>, <code>load_screen()</code></td><td>Écran alternatif</td></tr><tr><td><code>hyperlink(display, link)</code>, <code>file_hyperlink(display, path)</code></td><td>Liens cliquables (OSC 8)</td></tr><tr><td><code>esc()</code>, <code>csi(code)</code></td><td><code>ESC</code> / <code>ESC[</code> brut + code</td></tr></tbody></table></div></div></section><section id="modes"><h2>4. <span data-lang="en">Modes</span><span data-lang="fr">Modes</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Functions, Description"><table><thead><tr><th scope="col" style="min-width:34ch">Functions</th><th scope="col" style="min-width:28ch">Description</th></tr></thead><tbody><tr><td><code>wrapping_enable()</code> / <code>wrapping_disable()</code></td><td>Line wrapping</td></tr><tr><td><code>inverted_color_enable()</code> / <code>inverted_color_disable()</code></td><td>Inverted screen colors</td></tr><tr><td><code>mouse_tracking_enable()</code> / <code>_disable()</code></td><td>Mouse clicks reports (classic)</td></tr><tr><td><code>mouse_move_tracking_enable()</code> / <code>_disable()</code></td><td>Mouse moves reports</td></tr><tr><td><code>mouse_adv_tracking_enable()</code> / <code>_disable()</code></td><td>SGR mouse reports</td></tr><tr><td><code>report_focus_enable()</code> / <code>report_focus_disabled()</code></td><td>Focus in / out (<code>ESC[I</code> / <code>ESC[O</code>)</td></tr><tr><td><code>report_past_enable()</code> / <code>report_past_disable()</code></td><td>Bracketed paste (<code>ESC[200~ ... ESC[201~</code>)</td></tr><tr><td><code>enable_ansi()</code></td><td>Windows: enable the virtual terminal mode of the console (the sequences are interpreted), call it once at the start; <code>true</code> on Unix (nothing to do)</td></tr></tbody></table></div></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Fonctions, Description"><table><thead><tr><th scope="col" style="min-width:34ch">Fonctions</th><th scope="col" style="min-width:28ch">Description</th></tr></thead><tbody><tr><td><code>wrapping_enable()</code> / <code>wrapping_disable()</code></td><td>Retour à la ligne automatique</td></tr><tr><td><code>inverted_color_enable()</code> / <code>inverted_color_disable()</code></td><td>Couleurs de l'écran inversées</td></tr><tr><td><code>mouse_tracking_enable()</code> / <code>_disable()</code></td><td>Rapports des clics de souris (classiques)</td></tr><tr><td><code>mouse_move_tracking_enable()</code> / <code>_disable()</code></td><td>Rapports des mouvements de souris</td></tr><tr><td><code>mouse_adv_tracking_enable()</code> / <code>_disable()</code></td><td>Rapports de souris SGR</td></tr><tr><td><code>report_focus_enable()</code> / <code>report_focus_disabled()</code></td><td>Prise / perte du focus (<code>ESC[I</code> / <code>ESC[O</code>)</td></tr><tr><td><code>report_past_enable()</code> / <code>report_past_disable()</code></td><td>Bracketed paste (<code>ESC[200~ ... ESC[201~</code>)</td></tr><tr><td><code>enable_ansi()</code></td><td>Windows : active le mode terminal virtuel de la console (les séquences sont interprétées), à appeler une fois au début ; <code>true</code> sous Unix (rien à faire)</td></tr></tbody></table></div></div></section><section id="reports"><h2>5. <span data-lang="en">Reports</span><span data-lang="fr">Rapports</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Function, Description"><table><thead><tr><th scope="col" style="min-width:33ch">Function</th><th scope="col" style="min-width:32ch">Description</th></tr></thead><tbody><tr><td><code>get_pos()</code></td><td>Ask the cursor position (the terminal answers <code>ESC[row;colR</code>)</td></tr><tr><td><code>read_cursor_position()</code></td><td>Read that answer on stdin, <code>{row, col}</code> (<code>{-1, -1}</code> when invalid)</td></tr><tr><td><code>read_mouse_event()</code></td><td>Read a classic mouse report (<code>ESC[M</code> + 3 bytes), returns <code>MouseEvent{button, x, y}</code></td></tr><tr><td><code>read_advanced_mouse_event()</code></td><td>Read an SGR report (<code>ESC[&lt;b;x;yM</code>), returns <code>AdvancedMouseEvent{button, x, y, pressed}</code></td></tr></tbody></table></div><p><code>MouseButton</code>: <code>Left</code>, <code>Right</code>, <code>Middle</code>, <code>Release</code>, <code>Unknown</code>. Invalid reports throw <code>ANSIMouseEvent</code>.</p></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Fonction, Description"><table><thead><tr><th scope="col" style="min-width:33ch">Fonction</th><th scope="col" style="min-width:32ch">Description</th></tr></thead><tbody><tr><td><code>get_pos()</code></td><td>Demande la position du curseur (le terminal répond <code>ESC[row;colR</code>)</td></tr><tr><td><code>read_cursor_position()</code></td><td>Lit cette réponse sur stdin, <code>{row, col}</code> (<code>{-1, -1}</code> si invalide)</td></tr><tr><td><code>read_mouse_event()</code></td><td>Lit un rapport de souris classique (<code>ESC[M</code> + 3 octets), renvoie <code>MouseEvent{button, x, y}</code></td></tr><tr><td><code>read_advanced_mouse_event()</code></td><td>Lit un rapport SGR (<code>ESC[&lt;b;x;yM</code>), renvoie <code>AdvancedMouseEvent{button, x, y, pressed}</code></td></tr></tbody></table></div><p><code>MouseButton</code> : <code>Left</code>, <code>Right</code>, <code>Middle</code>, <code>Release</code>, <code>Unknown</code>. Les rapports invalides lèvent <code>ANSIMouseEvent</code>.</p></div></section><section id="special-characters"><h2>6. <span data-lang="en">Special characters</span><span data-lang="fr">Caractères spéciaux</span></h2><div data-lang="en"><p><code>utils::iomanip::Char</code> (<code>enum class: char</code>): the ASCII control characters <code>NUL</code>, <code>SOH</code>... <code>ESC</code>, <code>DEL</code> and <code>EOF</code> (<code>static_cast&lt;char&gt;(utils::iomanip::Char::ESC)</code>).</p></div><div data-lang="fr"><p><code>utils::iomanip::Char</code> (<code>enum class: char</code>) : les caractères de contrôle ASCII <code>NUL</code>, <code>SOH</code>... <code>ESC</code>, <code>DEL</code> et <code>EOF</code> (<code>static_cast&lt;char&gt;(utils::iomanip::Char::ESC)</code>).</p></div></section><section id="example"><h2>7. <span data-lang="en">Example</span><span data-lang="fr">Exemple</span></h2><div data-lang="en"><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _IOManip
+#include &lt;utils/utils.hpp&gt;
+
+std::cout &lt;&lt; utils::iomanip::set_style({utils::iomanip::Style::Strong, utils::iomanip::Style::Underlined})
+          &lt;&lt; utils::iomanip::color(utils::iomanip::Color::Red) &lt;&lt; "error" &lt;&lt; utils::iomanip::reset()
+          &lt;&lt; " see " &lt;&lt; utils::iomanip::hyperlink("the docs", "https://tsukini22.github.io/libutils/docs/") &lt;&lt; std::endl;</code></pre></div><div data-lang="fr"><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _IOManip
+#include &lt;utils/utils.hpp&gt;
+
+std::cout &lt;&lt; utils::iomanip::set_style({utils::iomanip::Style::Strong, utils::iomanip::Style::Underlined})
+          &lt;&lt; utils::iomanip::color(utils::iomanip::Color::Red) &lt;&lt; "error" &lt;&lt; utils::iomanip::reset()
+          &lt;&lt; " see " &lt;&lt; utils::iomanip::hyperlink("the docs", "https://tsukini22.github.io/libutils/docs/") &lt;&lt; std::endl;</code></pre></div></section><section id="in-c"><h2>8. <span data-lang="en">In C</span><span data-lang="fr">En C</span></h2><div data-lang="en"><p>Every sequence is a string: <code>utils_iomanip_&lt;name&gt;</code> with the C++ name. A sequence without argument is a static string; a sequence with arguments is kept in a thread local buffer valid until the next call of the same function in the thread, and its <code>_r</code> version copies it in a buffer of yours (returns the full length like <code>snprintf</code>). The enums are <code>utils_iomanip_color_t</code> (<code>C_API_IOMANIP_COLOR_*</code>), <code>utils_iomanip_back_color_t</code>, <code>utils_iomanip_style_t</code> (<code>C_API_IOMANIP_STYLE_*</code>), <code>utils_iomanip_reset_style_t</code>, <code>utils_iomanip_char_t</code> (<code>C_API_IOMANIP_CHAR_*</code>), <code>utils_iomanip_mouse_button_t</code>.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: C++, C"><table><thead><tr><th scope="col" style="min-width:28ch">C++</th><th scope="col" style="min-width:52ch">C</th></tr></thead><tbody><tr><td><code>set_style({...})</code></td><td><code>utils_iomanip_set_styles(styles, count)</code> (<code>utils_iomanip_set_style</code> for one)</td></tr><tr><td><code>color(Color::Red)</code></td><td><code>utils_iomanip_color(C_API_IOMANIP_COLOR_RED)</code></td></tr><tr><td><code>pos(row, col)</code></td><td><code>utils_iomanip_pos(row, col)</code> / <code>utils_iomanip_pos_r(row, col, buf, size)</code></td></tr><tr><td><code>read_cursor_position()</code></td><td><code>utils_iomanip_read_cursor_position(&amp;row, &amp;col)</code></td></tr><tr><td><code>read_mouse_event()</code></td><td><code>utils_iomanip_read_mouse_event(&amp;event)</code> (<code>utils_iomanip_mouse_event_t</code>)</td></tr></tbody></table></div><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define _IOManip
+#include &lt;utils.h&gt;
+#include &lt;stdio.h&gt;
+
+int main(void)
+{
+    utils_iomanip_style_t styles[] = {C_API_IOMANIP_STYLE_STRONG, C_API_IOMANIP_STYLE_UNDERLINED};
+    char link[256];
+
+    utils_iomanip_enable_ansi(); // Windows console: interpret the sequences
+    utils_iomanip_hyperlink_r("the docs", "https://tsukini22.github.io/libutils/docs/", link, sizeof(link));
+    printf("%s%serror%s see %s\n", utils_iomanip_set_styles(styles, 2), utils_iomanip_color(C_API_IOMANIP_COLOR_RED),
+        utils_iomanip_reset(), link);
+    return 0;
+}</code></pre></div><div data-lang="fr"><p>Chaque séquence est une chaîne : <code>utils_iomanip_&lt;name&gt;</code> avec le nom C++. Une séquence sans argument est une chaîne statique ; une séquence avec arguments est gardée dans un buffer thread local valide jusqu'au prochain appel de la même fonction dans le thread, et sa version <code>_r</code> la copie dans un buffer à vous (renvoie la longueur complète comme <code>snprintf</code>). Les enums sont <code>utils_iomanip_color_t</code> (<code>C_API_IOMANIP_COLOR_*</code>), <code>utils_iomanip_back_color_t</code>, <code>utils_iomanip_style_t</code> (<code>C_API_IOMANIP_STYLE_*</code>), <code>utils_iomanip_reset_style_t</code>, <code>utils_iomanip_char_t</code> (<code>C_API_IOMANIP_CHAR_*</code>), <code>utils_iomanip_mouse_button_t</code>.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: C++, C"><table><thead><tr><th scope="col" style="min-width:28ch">C++</th><th scope="col" style="min-width:52ch">C</th></tr></thead><tbody><tr><td><code>set_style({...})</code></td><td><code>utils_iomanip_set_styles(styles, count)</code> (<code>utils_iomanip_set_style</code> pour un seul)</td></tr><tr><td><code>color(Color::Red)</code></td><td><code>utils_iomanip_color(C_API_IOMANIP_COLOR_RED)</code></td></tr><tr><td><code>pos(row, col)</code></td><td><code>utils_iomanip_pos(row, col)</code> / <code>utils_iomanip_pos_r(row, col, buf, size)</code></td></tr><tr><td><code>read_cursor_position()</code></td><td><code>utils_iomanip_read_cursor_position(&amp;row, &amp;col)</code></td></tr><tr><td><code>read_mouse_event()</code></td><td><code>utils_iomanip_read_mouse_event(&amp;event)</code> (<code>utils_iomanip_mouse_event_t</code>)</td></tr></tbody></table></div><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define _IOManip
+#include &lt;utils.h&gt;
+#include &lt;stdio.h&gt;
+
+int main(void)
+{
+    utils_iomanip_style_t styles[] = {C_API_IOMANIP_STYLE_STRONG, C_API_IOMANIP_STYLE_UNDERLINED};
+    char link[256];
+
+    utils_iomanip_enable_ansi(); // Windows console: interpret the sequences
+    utils_iomanip_hyperlink_r("the docs", "https://tsukini22.github.io/libutils/docs/", link, sizeof(link));
+    printf("%s%serror%s see %s\n", utils_iomanip_set_styles(styles, 2), utils_iomanip_color(C_API_IOMANIP_COLOR_RED),
+        utils_iomanip_reset(), link);
+    return 0;
+}</code></pre></div></section><section id="cpp-api"><h2>9. <span data-lang="en">C++ API</span><span data-lang="fr">API C++</span></h2><div data-lang="en"><p>Read from the headers of <code>include/utils/manip/iomanip/</code> (public part only, the trailing comments of the code kept). Include <code>&lt;utils/utils.hpp&gt;</code> with the define of the section, never these headers one by one.</p><h3 id="h-manip-iomanip-ansi-hpp"><code>utils/manip/iomanip/ANSI.hpp</code></h3><p>Definition of ANSI escape sequences</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::iomanip
+std::string set_style(std::initializer_list&lt;utils::iomanip::Style&gt; styles);
+std::string reset_style(std::initializer_list&lt;utils::iomanip::ResetStyle&gt; styles);
+bool enable_ansi(void); // Windows: enable the virtual terminal mode of the console (ANSI sequences), Unix: nothing to do (true)
+constexpr std::string esc(void);
+constexpr std::string csi(const std::string&amp; code);
+constexpr std::string file_hyperlink(const std::string&amp; display, const std::string&amp; path);
+constexpr std::string hyperlink(const std::string&amp; display, const std::string&amp; link);
+constexpr std::string reset(void);
+constexpr std::string strong_reset(void);
+constexpr std::string dark_reset(void);
+constexpr std::string italic_reset(void);
+constexpr std::string underlined_reset(void);
+constexpr std::string flashing_fast_reset(void);
+constexpr std::string flashing_slow_reset(void);
+constexpr std::string reversed_reset(void);
+constexpr std::string hide_reset(void);
+constexpr std::string bar_reset(void);
+constexpr std::string framed_encircled_reset(void);
+constexpr std::string overlined_reset(void);
+constexpr std::string underline_color_reset(void);
+constexpr std::string exposant_indice_reset(void);
+constexpr std::string reset_style(utils::iomanip::ResetStyle style);
+constexpr std::string strong(void);
+constexpr std::string dark(void);
+constexpr std::string italic(void);
+constexpr std::string underlined(void);
+constexpr std::string flashing_fast(void);
+constexpr std::string flashing_slow(void);
+constexpr std::string reversed(void);
+constexpr std::string hide(void);
+constexpr std::string bar(void);
+constexpr std::string monospace(void);
+constexpr std::string framed(void); // Rarely supported
+constexpr std::string encircled(void); // Rarely supported
+constexpr std::string overlined(void);
+constexpr std::string exposant(void); // Rarely supported
+constexpr std::string indice(void); // Rarely supported
+constexpr std::string set_style(utils::iomanip::Style style);
+constexpr std::string color(utils::iomanip::Color c);
+constexpr std::string color(utils::iomanip::BackColor c);
+constexpr std::string color_id(std::uint8_t id);
+constexpr std::string back_color_id(std::uint8_t id);
+constexpr std::string underline_color_id(std::uint8_t id);
+constexpr std::string color_rgb(std::uint8_t r, std::uint8_t g, std::uint8_t b);
+constexpr std::string back_color_rgb(std::uint8_t r, std::uint8_t g, std::uint8_t b);
+constexpr std::string underline_color_rgb(std::uint8_t r, std::uint8_t g, std::uint8_t b);
+constexpr std::string load_cur(void);
+constexpr std::string save_cur(void);
+constexpr std::string up(std::size_t n);
+constexpr std::string down(std::size_t n);
+constexpr std::string right(std::size_t n);
+constexpr std::string left(std::size_t n);
+constexpr std::string next_line(std::size_t n);
+constexpr std::string previous_line(std::size_t n);
+constexpr std::string column(std::size_t col);
+constexpr std::string pos(std::size_t row, std::size_t col);
+constexpr std::string scroll_up(std::size_t n);
+constexpr std::string scroll_down(std::size_t n);
+constexpr std::string screen_end(void);
+constexpr std::string screen_start(void);
+constexpr std::string screen(void);
+constexpr std::string scrollback_buffer(void); // Can delete the term history
+constexpr std::string line_end(void);
+constexpr std::string line_start(void);
+constexpr std::string line(void);
+constexpr std::string inverted_color_enable(void);
+constexpr std::string inverted_color_disable(void);
+constexpr std::string wrapping_enable(void);
+constexpr std::string wrapping_disable(void);
+constexpr std::string show_cur(void);
+constexpr std::string hide_cur(void);
+constexpr std::string save_screen(void);
+constexpr std::string load_screen(void);
+constexpr std::string get_pos(void); // Reports cursor position as "ESC[row;colR"
+constexpr std::string mouse_tracking_enable(void);
+constexpr std::string mouse_tracking_disable(void);
+constexpr std::string mouse_move_tracking_enable(void);
+constexpr std::string mouse_move_tracking_disable(void);
+constexpr std::string mouse_adv_tracking_enable(void);
+constexpr std::string mouse_adv_tracking_disable(void);
+constexpr std::string report_focus_enable(void); // Focus in: "ESC[I" | Focus out: "ESC[O"
+constexpr std::string report_focus_disabled(void);
+constexpr std::string report_past_enable(void); // Reports for pasted data: "ESC[200~{data}ESC[201~"
+constexpr std::string report_past_disable(void);
+enum class MouseButton {Left, Right, Middle, Release, Unknown}
+struct MouseEvent {
+    utils::iomanip::MouseButton button = utils::iomanip::MouseButton::Unknown;
+    std::size_t x = 0;
+    std::size_t y = 0;
+};
+struct AdvancedMouseEvent {
+    utils::iomanip::MouseButton button = utils::iomanip::MouseButton::Unknown;
+    std::size_t x = 0;
+    std::size_t y = 0;
+    bool pressed = false;
+};
+std::pair&lt;int, int&gt; read_cursor_position(void);
+utils::iomanip::MouseEvent read_mouse_event(void);
+utils::iomanip::AdvancedMouseEvent read_advanced_mouse_event(void);</code></pre><h3 id="h-manip-iomanip-char-hpp"><code>utils/manip/iomanip/Char.hpp</code></h3><p>Definition of some special char</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::iomanip
+enum class Char: char {EOF, NUL, SOH, STX, ETX, EOT, ENQ, ACK, BEL, BS, HT, LF, VT, FF, CR, SO, SI, DLE, DC1, DC2, DC3, DC4, NAK, SYN, ETB, CAN, EM, SUB, ESC, FS, GS, RS, US, DEL}</code></pre><h3 id="h-manip-iomanip-color-hpp"><code>utils/manip/iomanip/Color.hpp</code></h3><p>Definition of color used in ANSI escape sequences</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::iomanip
+enum class Color: std::uint8_t {Black, Red, Green, Yellow, Blue, Magenta, Cyan, White, BrightBlack, BrightRed, BrightGreen, BrightYellow, BrightBlue, BrightMagenta, BrightCyan, BrightWhite, Default}
+enum class BackColor: std::uint8_t {Black, Red, Green, Yellow, Blue, Magenta, Cyan, White, BrightBlack, BrightRed, BrightGreen, BrightYellow, BrightBlue, BrightMagenta, BrightCyan, BrightWhite, Default}</code></pre><h3 id="h-manip-iomanip-style-hpp"><code>utils/manip/iomanip/Style.hpp</code></h3><p>Define of the different style used in ANSI</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::iomanip
+enum class Style: std::uint8_t {Strong, Dark, Italic, Underlined, FlashingSlow, FlashingFast, Reversed, Hide, Bar, Monospace, Framed, Encircled, Overlined, Exposant, Indice}
+enum class ResetStyle: std::uint8_t {All, Strong, Dark, Italic, Underlined, FlashingFast, FlashingSlow, Reversed, Hide, Bar, FramedEncircled, Overlined, UnderlineColor, ExposantIndice}</code></pre></div><div data-lang="fr"><p>Lu dans les en-têtes de <code>include/utils/manip/iomanip/</code> (partie publique seulement, avec les commentaires du code). Inclure <code>&lt;utils/utils.hpp&gt;</code> avec le define de la section, jamais ces en-têtes un par un.</p><h3 id="h-manip-iomanip-ansi-hpp"><code>utils/manip/iomanip/ANSI.hpp</code></h3><p>Definition of ANSI escape sequences</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::iomanip
+std::string set_style(std::initializer_list&lt;utils::iomanip::Style&gt; styles);
+std::string reset_style(std::initializer_list&lt;utils::iomanip::ResetStyle&gt; styles);
+bool enable_ansi(void); // Windows: enable the virtual terminal mode of the console (ANSI sequences), Unix: nothing to do (true)
+constexpr std::string esc(void);
+constexpr std::string csi(const std::string&amp; code);
+constexpr std::string file_hyperlink(const std::string&amp; display, const std::string&amp; path);
+constexpr std::string hyperlink(const std::string&amp; display, const std::string&amp; link);
+constexpr std::string reset(void);
+constexpr std::string strong_reset(void);
+constexpr std::string dark_reset(void);
+constexpr std::string italic_reset(void);
+constexpr std::string underlined_reset(void);
+constexpr std::string flashing_fast_reset(void);
+constexpr std::string flashing_slow_reset(void);
+constexpr std::string reversed_reset(void);
+constexpr std::string hide_reset(void);
+constexpr std::string bar_reset(void);
+constexpr std::string framed_encircled_reset(void);
+constexpr std::string overlined_reset(void);
+constexpr std::string underline_color_reset(void);
+constexpr std::string exposant_indice_reset(void);
+constexpr std::string reset_style(utils::iomanip::ResetStyle style);
+constexpr std::string strong(void);
+constexpr std::string dark(void);
+constexpr std::string italic(void);
+constexpr std::string underlined(void);
+constexpr std::string flashing_fast(void);
+constexpr std::string flashing_slow(void);
+constexpr std::string reversed(void);
+constexpr std::string hide(void);
+constexpr std::string bar(void);
+constexpr std::string monospace(void);
+constexpr std::string framed(void); // Rarely supported
+constexpr std::string encircled(void); // Rarely supported
+constexpr std::string overlined(void);
+constexpr std::string exposant(void); // Rarely supported
+constexpr std::string indice(void); // Rarely supported
+constexpr std::string set_style(utils::iomanip::Style style);
+constexpr std::string color(utils::iomanip::Color c);
+constexpr std::string color(utils::iomanip::BackColor c);
+constexpr std::string color_id(std::uint8_t id);
+constexpr std::string back_color_id(std::uint8_t id);
+constexpr std::string underline_color_id(std::uint8_t id);
+constexpr std::string color_rgb(std::uint8_t r, std::uint8_t g, std::uint8_t b);
+constexpr std::string back_color_rgb(std::uint8_t r, std::uint8_t g, std::uint8_t b);
+constexpr std::string underline_color_rgb(std::uint8_t r, std::uint8_t g, std::uint8_t b);
+constexpr std::string load_cur(void);
+constexpr std::string save_cur(void);
+constexpr std::string up(std::size_t n);
+constexpr std::string down(std::size_t n);
+constexpr std::string right(std::size_t n);
+constexpr std::string left(std::size_t n);
+constexpr std::string next_line(std::size_t n);
+constexpr std::string previous_line(std::size_t n);
+constexpr std::string column(std::size_t col);
+constexpr std::string pos(std::size_t row, std::size_t col);
+constexpr std::string scroll_up(std::size_t n);
+constexpr std::string scroll_down(std::size_t n);
+constexpr std::string screen_end(void);
+constexpr std::string screen_start(void);
+constexpr std::string screen(void);
+constexpr std::string scrollback_buffer(void); // Can delete the term history
+constexpr std::string line_end(void);
+constexpr std::string line_start(void);
+constexpr std::string line(void);
+constexpr std::string inverted_color_enable(void);
+constexpr std::string inverted_color_disable(void);
+constexpr std::string wrapping_enable(void);
+constexpr std::string wrapping_disable(void);
+constexpr std::string show_cur(void);
+constexpr std::string hide_cur(void);
+constexpr std::string save_screen(void);
+constexpr std::string load_screen(void);
+constexpr std::string get_pos(void); // Reports cursor position as "ESC[row;colR"
+constexpr std::string mouse_tracking_enable(void);
+constexpr std::string mouse_tracking_disable(void);
+constexpr std::string mouse_move_tracking_enable(void);
+constexpr std::string mouse_move_tracking_disable(void);
+constexpr std::string mouse_adv_tracking_enable(void);
+constexpr std::string mouse_adv_tracking_disable(void);
+constexpr std::string report_focus_enable(void); // Focus in: "ESC[I" | Focus out: "ESC[O"
+constexpr std::string report_focus_disabled(void);
+constexpr std::string report_past_enable(void); // Reports for pasted data: "ESC[200~{data}ESC[201~"
+constexpr std::string report_past_disable(void);
+enum class MouseButton {Left, Right, Middle, Release, Unknown}
+struct MouseEvent {
+    utils::iomanip::MouseButton button = utils::iomanip::MouseButton::Unknown;
+    std::size_t x = 0;
+    std::size_t y = 0;
+};
+struct AdvancedMouseEvent {
+    utils::iomanip::MouseButton button = utils::iomanip::MouseButton::Unknown;
+    std::size_t x = 0;
+    std::size_t y = 0;
+    bool pressed = false;
+};
+std::pair&lt;int, int&gt; read_cursor_position(void);
+utils::iomanip::MouseEvent read_mouse_event(void);
+utils::iomanip::AdvancedMouseEvent read_advanced_mouse_event(void);</code></pre><h3 id="h-manip-iomanip-char-hpp"><code>utils/manip/iomanip/Char.hpp</code></h3><p>Definition of some special char</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::iomanip
+enum class Char: char {EOF, NUL, SOH, STX, ETX, EOT, ENQ, ACK, BEL, BS, HT, LF, VT, FF, CR, SO, SI, DLE, DC1, DC2, DC3, DC4, NAK, SYN, ETB, CAN, EM, SUB, ESC, FS, GS, RS, US, DEL}</code></pre><h3 id="h-manip-iomanip-color-hpp"><code>utils/manip/iomanip/Color.hpp</code></h3><p>Definition of color used in ANSI escape sequences</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::iomanip
+enum class Color: std::uint8_t {Black, Red, Green, Yellow, Blue, Magenta, Cyan, White, BrightBlack, BrightRed, BrightGreen, BrightYellow, BrightBlue, BrightMagenta, BrightCyan, BrightWhite, Default}
+enum class BackColor: std::uint8_t {Black, Red, Green, Yellow, Blue, Magenta, Cyan, White, BrightBlack, BrightRed, BrightGreen, BrightYellow, BrightBlue, BrightMagenta, BrightCyan, BrightWhite, Default}</code></pre><h3 id="h-manip-iomanip-style-hpp"><code>utils/manip/iomanip/Style.hpp</code></h3><p>Define of the different style used in ANSI</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::iomanip
+enum class Style: std::uint8_t {Strong, Dark, Italic, Underlined, FlashingSlow, FlashingFast, Reversed, Hide, Bar, Monospace, Framed, Encircled, Overlined, Exposant, Indice}
+enum class ResetStyle: std::uint8_t {All, Strong, Dark, Italic, Underlined, FlashingFast, FlashingSlow, Reversed, Hide, Bar, FramedEncircled, Overlined, UnderlineColor, ExposantIndice}</code></pre></div></section><section id="c-api"><h2>10. <span data-lang="en">C API</span><span data-lang="fr">API C</span></h2><div data-lang="en"><p>Read from <code>include/utils/manip/iomanip/CApi.h</code>, included by <code>&lt;utils.h&gt;</code> with the define of the section. Every function that can fail returns <code>UTILS_OK</code> / <code>UTILS_KO</code> (or <code>NULL</code> / <code>0</code>) and fills <code>utils_exception</code> (see <a href="c-api.html#errors">the C API guide</a>).</p><h3 id="c-1">Enums · Special chars</h3><p><em>special chars (utils::iomanip::Char)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_iomanip_char {
+    C_API_IOMANIP_CHAR_NUL = 0,   // Null
+    C_API_IOMANIP_CHAR_SOH = 1,   // Start of Header
+    C_API_IOMANIP_CHAR_STX = 2,   // Start of Text
+    C_API_IOMANIP_CHAR_ETX = 3,   // End of Text
+    C_API_IOMANIP_CHAR_EOT = 4,   // End of Transmission
+    C_API_IOMANIP_CHAR_ENQ = 5,   // Enquiry
+    C_API_IOMANIP_CHAR_ACK = 6,   // Acknowledge
+    C_API_IOMANIP_CHAR_BEL = 7,   // Bell
+    C_API_IOMANIP_CHAR_BS  = 8,   // Backspace
+    C_API_IOMANIP_CHAR_HT  = 9,   // Horizontal Tab
+    C_API_IOMANIP_CHAR_LF  = 10,  // Line Feed
+    C_API_IOMANIP_CHAR_VT  = 11,  // Vertical Tab
+    C_API_IOMANIP_CHAR_FF  = 12,  // Form Feed
+    C_API_IOMANIP_CHAR_CR  = 13,  // Carriage Return
+    C_API_IOMANIP_CHAR_SO  = 14,  // Shift Out
+    C_API_IOMANIP_CHAR_SI  = 15,  // Shift In
+    C_API_IOMANIP_CHAR_DLE = 16,  // Data Link Escape
+    C_API_IOMANIP_CHAR_DC1 = 17,  // Device Control 1
+    C_API_IOMANIP_CHAR_DC2 = 18,  // Device Control 2
+    C_API_IOMANIP_CHAR_DC3 = 19,  // Device Control 3
+    C_API_IOMANIP_CHAR_DC4 = 20,  // Device Control 4
+    C_API_IOMANIP_CHAR_NAK = 21,  // Negative Acknowledge
+    C_API_IOMANIP_CHAR_SYN = 22,  // Synchronous Idle
+    C_API_IOMANIP_CHAR_ETB = 23,  // End of Transmission Block
+    C_API_IOMANIP_CHAR_CAN = 24,  // Cancel
+    C_API_IOMANIP_CHAR_EM  = 25,  // End of Medium
+    C_API_IOMANIP_CHAR_SUB = 26,  // Substitute
+    C_API_IOMANIP_CHAR_ESC = 27,  // Escape
+    C_API_IOMANIP_CHAR_FS  = 28,  // File Separator
+    C_API_IOMANIP_CHAR_GS  = 29,  // Group Separator
+    C_API_IOMANIP_CHAR_RS  = 30,  // Record Separator
+    C_API_IOMANIP_CHAR_US  = 31,  // Unit Separator
+    C_API_IOMANIP_CHAR_DEL = 127  // Delete
+} utils_iomanip_char_t;</code></pre><h3 id="c-2">Enums · Color</h3><p><em>color (utils::iomanip::Color)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_iomanip_color {
+    C_API_IOMANIP_COLOR_BLACK = 30,
+    C_API_IOMANIP_COLOR_RED = 31,
+    C_API_IOMANIP_COLOR_GREEN = 32,
+    C_API_IOMANIP_COLOR_YELLOW = 33,
+    C_API_IOMANIP_COLOR_BLUE = 34,
+    C_API_IOMANIP_COLOR_MAGENTA = 35,
+    C_API_IOMANIP_COLOR_CYAN = 36,
+    C_API_IOMANIP_COLOR_WHITE = 37,
+    C_API_IOMANIP_COLOR_BRIGHT_BLACK = 90,
+    C_API_IOMANIP_COLOR_BRIGHT_RED = 91,
+    C_API_IOMANIP_COLOR_BRIGHT_GREEN = 92,
+    C_API_IOMANIP_COLOR_BRIGHT_YELLOW = 93,
+    C_API_IOMANIP_COLOR_BRIGHT_BLUE = 94,
+    C_API_IOMANIP_COLOR_BRIGHT_MAGENTA = 95,
+    C_API_IOMANIP_COLOR_BRIGHT_CYAN = 96,
+    C_API_IOMANIP_COLOR_BRIGHT_WHITE = 97,
+    C_API_IOMANIP_COLOR_DEFAULT = 39
+} utils_iomanip_color_t;</code></pre><h3 id="c-3">Enums · Back color</h3><p><em>back color (utils::iomanip::BackColor)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_iomanip_back_color {
+    C_API_IOMANIP_BACK_COLOR_BLACK = 40,
+    C_API_IOMANIP_BACK_COLOR_RED = 41,
+    C_API_IOMANIP_BACK_COLOR_GREEN = 42,
+    C_API_IOMANIP_BACK_COLOR_YELLOW = 43,
+    C_API_IOMANIP_BACK_COLOR_BLUE = 44,
+    C_API_IOMANIP_BACK_COLOR_MAGENTA = 45,
+    C_API_IOMANIP_BACK_COLOR_CYAN = 46,
+    C_API_IOMANIP_BACK_COLOR_WHITE = 47,
+    C_API_IOMANIP_BACK_COLOR_BRIGHT_BLACK = 100,
+    C_API_IOMANIP_BACK_COLOR_BRIGHT_RED = 101,
+    C_API_IOMANIP_BACK_COLOR_BRIGHT_GREEN = 102,
+    C_API_IOMANIP_BACK_COLOR_BRIGHT_YELLOW = 103,
+    C_API_IOMANIP_BACK_COLOR_BRIGHT_BLUE = 104,
+    C_API_IOMANIP_BACK_COLOR_BRIGHT_MAGENTA = 105,
+    C_API_IOMANIP_BACK_COLOR_BRIGHT_CYAN = 106,
+    C_API_IOMANIP_BACK_COLOR_BRIGHT_WHITE = 107,
+    C_API_IOMANIP_BACK_COLOR_DEFAULT = 49
+} utils_iomanip_back_color_t;</code></pre><h3 id="c-4">Enums · Style</h3><p><em>style (utils::iomanip::Style)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_iomanip_style {
+    C_API_IOMANIP_STYLE_STRONG = 1,
+    C_API_IOMANIP_STYLE_DARK = 2,
+    C_API_IOMANIP_STYLE_ITALIC = 3,
+    C_API_IOMANIP_STYLE_UNDERLINED = 4,
+    C_API_IOMANIP_STYLE_FLASHING_SLOW = 5,
+    C_API_IOMANIP_STYLE_FLASHING_FAST = 6,
+    C_API_IOMANIP_STYLE_REVERSED = 7,
+    C_API_IOMANIP_STYLE_HIDE = 8,
+    C_API_IOMANIP_STYLE_BAR = 9,
+    C_API_IOMANIP_STYLE_MONOSPACE = 50,
+    C_API_IOMANIP_STYLE_FRAMED = 51,
+    C_API_IOMANIP_STYLE_ENCIRCLED = 52,
+    C_API_IOMANIP_STYLE_OVERLINED = 53,
+    C_API_IOMANIP_STYLE_EXPOSANT = 73,
+    C_API_IOMANIP_STYLE_INDICE = 74
+} utils_iomanip_style_t;</code></pre><h3 id="c-5">Enums · Reset style</h3><p><em>reset style (utils::iomanip::ResetStyle)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_iomanip_reset_style {
+    C_API_IOMANIP_RESET_STYLE_ALL = 0,
+    C_API_IOMANIP_RESET_STYLE_STRONG = 22,
+    C_API_IOMANIP_RESET_STYLE_DARK = 22,
+    C_API_IOMANIP_RESET_STYLE_ITALIC = 23,
+    C_API_IOMANIP_RESET_STYLE_UNDERLINED = 24,
+    C_API_IOMANIP_RESET_STYLE_FLASHING_FAST = 25,
+    C_API_IOMANIP_RESET_STYLE_FLASHING_SLOW = 25,
+    C_API_IOMANIP_RESET_STYLE_REVERSED = 27,
+    C_API_IOMANIP_RESET_STYLE_HIDE = 28,
+    C_API_IOMANIP_RESET_STYLE_BAR = 29,
+    C_API_IOMANIP_RESET_STYLE_FRAMED_ENCIRCLED = 54,
+    C_API_IOMANIP_RESET_STYLE_OVERLINED = 55,
+    C_API_IOMANIP_RESET_STYLE_UNDERLINE_COLOR = 59,
+    C_API_IOMANIP_RESET_STYLE_EXPOSANT_INDICE = 75
+} utils_iomanip_reset_style_t;</code></pre><h3 id="c-6">Enums · Mouse button</h3><p><em>mouse button (utils::iomanip::MouseButton)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_iomanip_mouse_button {
+    C_API_IOMANIP_MOUSE_BUTTON_LEFT = 0,
+    C_API_IOMANIP_MOUSE_BUTTON_RIGHT,
+    C_API_IOMANIP_MOUSE_BUTTON_MIDDLE,
+    C_API_IOMANIP_MOUSE_BUTTON_RELEASE,
+    C_API_IOMANIP_MOUSE_BUTTON_UNKNOWN
+} utils_iomanip_mouse_button_t;</code></pre><h3 id="c-7">Structures · Mouse event -&gt; "ESC[M" Cb Cx Cy</h3><p><em>mouse event -&gt; "ESC[M" Cb Cx Cy (utils::iomanip::MouseEvent)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_iomanip_mouse_event {
+    utils_iomanip_mouse_button_t button;
+    size_t x;
+    size_t y;
+} utils_iomanip_mouse_event_t;</code></pre><h3 id="c-8">Structures · Mouse event -&gt; "ESC[&lt;b;x;y(M|m)"</h3><p><em>mouse event -&gt; "ESC[&lt;b;x;y(M|m)" (utils::iomanip::AdvancedMouseEvent)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_iomanip_advanced_mouse_event {
+    utils_iomanip_mouse_button_t button;
+    size_t x;
+    size_t y;
+    bool pressed;
+} utils_iomanip_advanced_mouse_event_t;</code></pre><h3 id="c-9">Functions · Terminal</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">bool utils_iomanip_enable_ansi(void); // Windows: enable the virtual terminal mode of the console (ANSI sequences), Unix: nothing to do (true)</code></pre><h3 id="c-10">Functions · Reports</h3><p><em>reports (read on stdin, after the matching sequence), UTILS_OK / UTILS_KO</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_iomanip_read_cursor_position(int* row, int* col); // after utils_iomanip_get_pos (-1, -1 when nothing was read)
+int utils_iomanip_read_mouse_event(utils_iomanip_mouse_event_t* event); // after utils_iomanip_mouse_tracking_enable
+int utils_iomanip_read_advanced_mouse_event(utils_iomanip_advanced_mouse_event_t* event); // after utils_iomanip_mouse_adv_tracking_enable</code></pre><h3 id="c-11">Functions · Sequences without argument</h3><p><em>sequences without argument (static strings)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">// internal
+const char* utils_iomanip_esc(void);
+// reset
+const char* utils_iomanip_reset(void);
+const char* utils_iomanip_strong_reset(void);
+const char* utils_iomanip_dark_reset(void);
+const char* utils_iomanip_italic_reset(void);
+const char* utils_iomanip_underlined_reset(void);
+const char* utils_iomanip_flashing_fast_reset(void);
+const char* utils_iomanip_flashing_slow_reset(void);
+const char* utils_iomanip_reversed_reset(void);
+const char* utils_iomanip_hide_reset(void);
+const char* utils_iomanip_bar_reset(void);
+const char* utils_iomanip_framed_encircled_reset(void);
+const char* utils_iomanip_overlined_reset(void);
+const char* utils_iomanip_underline_color_reset(void);
+const char* utils_iomanip_exposant_indice_reset(void);
+// style
+const char* utils_iomanip_strong(void);
+const char* utils_iomanip_dark(void);
+const char* utils_iomanip_italic(void);
+const char* utils_iomanip_underlined(void);
+const char* utils_iomanip_flashing_fast(void);
+const char* utils_iomanip_flashing_slow(void);
+const char* utils_iomanip_reversed(void);
+const char* utils_iomanip_hide(void);
+const char* utils_iomanip_bar(void);
+const char* utils_iomanip_monospace(void);
+const char* utils_iomanip_framed(void); // Rarely supported
+const char* utils_iomanip_encircled(void); // Rarely supported
+const char* utils_iomanip_overlined(void);
+const char* utils_iomanip_exposant(void); // Rarely supported
+const char* utils_iomanip_indice(void); // Rarely supported
+// cursor
+const char* utils_iomanip_load_cur(void);
+const char* utils_iomanip_save_cur(void);
+// erase
+const char* utils_iomanip_screen_end(void);
+const char* utils_iomanip_screen_start(void);
+const char* utils_iomanip_screen(void);
+const char* utils_iomanip_scrollback_buffer(void); // Can delete the term history
+const char* utils_iomanip_line_end(void);
+const char* utils_iomanip_line_start(void);
+const char* utils_iomanip_line(void);
+// private modes
+const char* utils_iomanip_inverted_color_enable(void);
+const char* utils_iomanip_inverted_color_disable(void);
+const char* utils_iomanip_wrapping_enable(void);
+const char* utils_iomanip_wrapping_disable(void);
+const char* utils_iomanip_show_cur(void);
+const char* utils_iomanip_hide_cur(void);
+const char* utils_iomanip_save_screen(void);
+const char* utils_iomanip_load_screen(void);
+// reports
+const char* utils_iomanip_get_pos(void); // Reports cursor position as "ESC[row;colR" (utils_iomanip_read_cursor_position)
+const char* utils_iomanip_mouse_tracking_enable(void);
+const char* utils_iomanip_mouse_tracking_disable(void);
+const char* utils_iomanip_mouse_move_tracking_enable(void);
+const char* utils_iomanip_mouse_move_tracking_disable(void);
+const char* utils_iomanip_mouse_adv_tracking_enable(void); // Reports "ESC[&lt;b;x;y(M|m)" (utils_iomanip_read_advanced_mouse_event)
+const char* utils_iomanip_mouse_adv_tracking_disable(void);
+const char* utils_iomanip_report_focus_enable(void); // Focus in: "ESC[I" | Focus out: "ESC[O"
+const char* utils_iomanip_report_focus_disabled(void);
+const char* utils_iomanip_report_past_enable(void); // Reports for pasted data: "ESC[200~{data}ESC[201~"
+const char* utils_iomanip_report_past_disable(void);</code></pre><h3 id="c-12">Functions · Sequences with arguments</h3><p><em>sequences with arguments (valid until the next call of the same function in the thread, NULL on error) &amp; _r (copied in buf, truncated &amp; always '\0' terminated, returns the full length like snprintf, 0 on error)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">// internal
+const char* utils_iomanip_csi(const char* code); // ESC[ + code
+size_t utils_iomanip_csi_r(const char* code, char* buf, size_t size);
+// special
+const char* utils_iomanip_hyperlink(const char* display, const char* link);
+size_t utils_iomanip_hyperlink_r(const char* display, const char* link, char* buf, size_t size);
+const char* utils_iomanip_file_hyperlink(const char* display, const char* path);
+size_t utils_iomanip_file_hyperlink_r(const char* display, const char* path, char* buf, size_t size);
+// style
+const char* utils_iomanip_set_style(utils_iomanip_style_t style);
+size_t utils_iomanip_set_style_r(utils_iomanip_style_t style, char* buf, size_t size);
+const char* utils_iomanip_set_styles(const utils_iomanip_style_t* styles, size_t count); // every style in one sequence (utils::iomanip::set_style({...}))
+size_t utils_iomanip_set_styles_r(const utils_iomanip_style_t* styles, size_t count, char* buf, size_t size);
+const char* utils_iomanip_reset_style(utils_iomanip_reset_style_t style);
+size_t utils_iomanip_reset_style_r(utils_iomanip_reset_style_t style, char* buf, size_t size);
+const char* utils_iomanip_reset_styles(const utils_iomanip_reset_style_t* styles, size_t count); // every reset in one sequence (utils::iomanip::reset_style({...}))
+size_t utils_iomanip_reset_styles_r(const utils_iomanip_reset_style_t* styles, size_t count, char* buf, size_t size);
+// color
+const char* utils_iomanip_color(utils_iomanip_color_t color);
+size_t utils_iomanip_color_r(utils_iomanip_color_t color, char* buf, size_t size);
+const char* utils_iomanip_back_color(utils_iomanip_back_color_t color);
+size_t utils_iomanip_back_color_r(utils_iomanip_back_color_t color, char* buf, size_t size);
+const char* utils_iomanip_color_id(uint8_t id); // 256 colors
+size_t utils_iomanip_color_id_r(uint8_t id, char* buf, size_t size);
+const char* utils_iomanip_back_color_id(uint8_t id);
+size_t utils_iomanip_back_color_id_r(uint8_t id, char* buf, size_t size);
+const char* utils_iomanip_underline_color_id(uint8_t id);
+size_t utils_iomanip_underline_color_id_r(uint8_t id, char* buf, size_t size);
+const char* utils_iomanip_color_rgb(uint8_t r, uint8_t g, uint8_t b);
+size_t utils_iomanip_color_rgb_r(uint8_t r, uint8_t g, uint8_t b, char* buf, size_t size);
+const char* utils_iomanip_back_color_rgb(uint8_t r, uint8_t g, uint8_t b);
+size_t utils_iomanip_back_color_rgb_r(uint8_t r, uint8_t g, uint8_t b, char* buf, size_t size);
+const char* utils_iomanip_underline_color_rgb(uint8_t r, uint8_t g, uint8_t b);
+size_t utils_iomanip_underline_color_rgb_r(uint8_t r, uint8_t g, uint8_t b, char* buf, size_t size);
+// cursor
+const char* utils_iomanip_up(size_t n);
+size_t utils_iomanip_up_r(size_t n, char* buf, size_t size);
+const char* utils_iomanip_down(size_t n);
+size_t utils_iomanip_down_r(size_t n, char* buf, size_t size);
+const char* utils_iomanip_right(size_t n);
+size_t utils_iomanip_right_r(size_t n, char* buf, size_t size);
+const char* utils_iomanip_left(size_t n);
+size_t utils_iomanip_left_r(size_t n, char* buf, size_t size);
+const char* utils_iomanip_next_line(size_t n);
+size_t utils_iomanip_next_line_r(size_t n, char* buf, size_t size);
+const char* utils_iomanip_previous_line(size_t n);
+size_t utils_iomanip_previous_line_r(size_t n, char* buf, size_t size);
+const char* utils_iomanip_column(size_t col);
+size_t utils_iomanip_column_r(size_t col, char* buf, size_t size);
+const char* utils_iomanip_pos(size_t row, size_t col);
+size_t utils_iomanip_pos_r(size_t row, size_t col, char* buf, size_t size);
+const char* utils_iomanip_scroll_up(size_t n);
+size_t utils_iomanip_scroll_up_r(size_t n, char* buf, size_t size);
+const char* utils_iomanip_scroll_down(size_t n);
+size_t utils_iomanip_scroll_down_r(size_t n, char* buf, size_t size);</code></pre></div><div data-lang="fr"><p>Lu dans <code>include/utils/manip/iomanip/CApi.h</code>, inclus par <code>&lt;utils.h&gt;</code> avec le define de la section. Chaque fonction qui peut échouer renvoie <code>UTILS_OK</code> / <code>UTILS_KO</code> (ou <code>NULL</code> / <code>0</code>) et remplit <code>utils_exception</code> (voir <a href="c-api.html#errors">le guide de l'API C</a>).</p><h3 id="c-1">Énumérations · Special chars</h3><p><em>special chars (utils::iomanip::Char)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_iomanip_char {
+    C_API_IOMANIP_CHAR_NUL = 0,   // Null
+    C_API_IOMANIP_CHAR_SOH = 1,   // Start of Header
+    C_API_IOMANIP_CHAR_STX = 2,   // Start of Text
+    C_API_IOMANIP_CHAR_ETX = 3,   // End of Text
+    C_API_IOMANIP_CHAR_EOT = 4,   // End of Transmission
+    C_API_IOMANIP_CHAR_ENQ = 5,   // Enquiry
+    C_API_IOMANIP_CHAR_ACK = 6,   // Acknowledge
+    C_API_IOMANIP_CHAR_BEL = 7,   // Bell
+    C_API_IOMANIP_CHAR_BS  = 8,   // Backspace
+    C_API_IOMANIP_CHAR_HT  = 9,   // Horizontal Tab
+    C_API_IOMANIP_CHAR_LF  = 10,  // Line Feed
+    C_API_IOMANIP_CHAR_VT  = 11,  // Vertical Tab
+    C_API_IOMANIP_CHAR_FF  = 12,  // Form Feed
+    C_API_IOMANIP_CHAR_CR  = 13,  // Carriage Return
+    C_API_IOMANIP_CHAR_SO  = 14,  // Shift Out
+    C_API_IOMANIP_CHAR_SI  = 15,  // Shift In
+    C_API_IOMANIP_CHAR_DLE = 16,  // Data Link Escape
+    C_API_IOMANIP_CHAR_DC1 = 17,  // Device Control 1
+    C_API_IOMANIP_CHAR_DC2 = 18,  // Device Control 2
+    C_API_IOMANIP_CHAR_DC3 = 19,  // Device Control 3
+    C_API_IOMANIP_CHAR_DC4 = 20,  // Device Control 4
+    C_API_IOMANIP_CHAR_NAK = 21,  // Negative Acknowledge
+    C_API_IOMANIP_CHAR_SYN = 22,  // Synchronous Idle
+    C_API_IOMANIP_CHAR_ETB = 23,  // End of Transmission Block
+    C_API_IOMANIP_CHAR_CAN = 24,  // Cancel
+    C_API_IOMANIP_CHAR_EM  = 25,  // End of Medium
+    C_API_IOMANIP_CHAR_SUB = 26,  // Substitute
+    C_API_IOMANIP_CHAR_ESC = 27,  // Escape
+    C_API_IOMANIP_CHAR_FS  = 28,  // File Separator
+    C_API_IOMANIP_CHAR_GS  = 29,  // Group Separator
+    C_API_IOMANIP_CHAR_RS  = 30,  // Record Separator
+    C_API_IOMANIP_CHAR_US  = 31,  // Unit Separator
+    C_API_IOMANIP_CHAR_DEL = 127  // Delete
+} utils_iomanip_char_t;</code></pre><h3 id="c-2">Énumérations · Color</h3><p><em>color (utils::iomanip::Color)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_iomanip_color {
+    C_API_IOMANIP_COLOR_BLACK = 30,
+    C_API_IOMANIP_COLOR_RED = 31,
+    C_API_IOMANIP_COLOR_GREEN = 32,
+    C_API_IOMANIP_COLOR_YELLOW = 33,
+    C_API_IOMANIP_COLOR_BLUE = 34,
+    C_API_IOMANIP_COLOR_MAGENTA = 35,
+    C_API_IOMANIP_COLOR_CYAN = 36,
+    C_API_IOMANIP_COLOR_WHITE = 37,
+    C_API_IOMANIP_COLOR_BRIGHT_BLACK = 90,
+    C_API_IOMANIP_COLOR_BRIGHT_RED = 91,
+    C_API_IOMANIP_COLOR_BRIGHT_GREEN = 92,
+    C_API_IOMANIP_COLOR_BRIGHT_YELLOW = 93,
+    C_API_IOMANIP_COLOR_BRIGHT_BLUE = 94,
+    C_API_IOMANIP_COLOR_BRIGHT_MAGENTA = 95,
+    C_API_IOMANIP_COLOR_BRIGHT_CYAN = 96,
+    C_API_IOMANIP_COLOR_BRIGHT_WHITE = 97,
+    C_API_IOMANIP_COLOR_DEFAULT = 39
+} utils_iomanip_color_t;</code></pre><h3 id="c-3">Énumérations · Back color</h3><p><em>back color (utils::iomanip::BackColor)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_iomanip_back_color {
+    C_API_IOMANIP_BACK_COLOR_BLACK = 40,
+    C_API_IOMANIP_BACK_COLOR_RED = 41,
+    C_API_IOMANIP_BACK_COLOR_GREEN = 42,
+    C_API_IOMANIP_BACK_COLOR_YELLOW = 43,
+    C_API_IOMANIP_BACK_COLOR_BLUE = 44,
+    C_API_IOMANIP_BACK_COLOR_MAGENTA = 45,
+    C_API_IOMANIP_BACK_COLOR_CYAN = 46,
+    C_API_IOMANIP_BACK_COLOR_WHITE = 47,
+    C_API_IOMANIP_BACK_COLOR_BRIGHT_BLACK = 100,
+    C_API_IOMANIP_BACK_COLOR_BRIGHT_RED = 101,
+    C_API_IOMANIP_BACK_COLOR_BRIGHT_GREEN = 102,
+    C_API_IOMANIP_BACK_COLOR_BRIGHT_YELLOW = 103,
+    C_API_IOMANIP_BACK_COLOR_BRIGHT_BLUE = 104,
+    C_API_IOMANIP_BACK_COLOR_BRIGHT_MAGENTA = 105,
+    C_API_IOMANIP_BACK_COLOR_BRIGHT_CYAN = 106,
+    C_API_IOMANIP_BACK_COLOR_BRIGHT_WHITE = 107,
+    C_API_IOMANIP_BACK_COLOR_DEFAULT = 49
+} utils_iomanip_back_color_t;</code></pre><h3 id="c-4">Énumérations · Style</h3><p><em>style (utils::iomanip::Style)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_iomanip_style {
+    C_API_IOMANIP_STYLE_STRONG = 1,
+    C_API_IOMANIP_STYLE_DARK = 2,
+    C_API_IOMANIP_STYLE_ITALIC = 3,
+    C_API_IOMANIP_STYLE_UNDERLINED = 4,
+    C_API_IOMANIP_STYLE_FLASHING_SLOW = 5,
+    C_API_IOMANIP_STYLE_FLASHING_FAST = 6,
+    C_API_IOMANIP_STYLE_REVERSED = 7,
+    C_API_IOMANIP_STYLE_HIDE = 8,
+    C_API_IOMANIP_STYLE_BAR = 9,
+    C_API_IOMANIP_STYLE_MONOSPACE = 50,
+    C_API_IOMANIP_STYLE_FRAMED = 51,
+    C_API_IOMANIP_STYLE_ENCIRCLED = 52,
+    C_API_IOMANIP_STYLE_OVERLINED = 53,
+    C_API_IOMANIP_STYLE_EXPOSANT = 73,
+    C_API_IOMANIP_STYLE_INDICE = 74
+} utils_iomanip_style_t;</code></pre><h3 id="c-5">Énumérations · Reset style</h3><p><em>reset style (utils::iomanip::ResetStyle)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_iomanip_reset_style {
+    C_API_IOMANIP_RESET_STYLE_ALL = 0,
+    C_API_IOMANIP_RESET_STYLE_STRONG = 22,
+    C_API_IOMANIP_RESET_STYLE_DARK = 22,
+    C_API_IOMANIP_RESET_STYLE_ITALIC = 23,
+    C_API_IOMANIP_RESET_STYLE_UNDERLINED = 24,
+    C_API_IOMANIP_RESET_STYLE_FLASHING_FAST = 25,
+    C_API_IOMANIP_RESET_STYLE_FLASHING_SLOW = 25,
+    C_API_IOMANIP_RESET_STYLE_REVERSED = 27,
+    C_API_IOMANIP_RESET_STYLE_HIDE = 28,
+    C_API_IOMANIP_RESET_STYLE_BAR = 29,
+    C_API_IOMANIP_RESET_STYLE_FRAMED_ENCIRCLED = 54,
+    C_API_IOMANIP_RESET_STYLE_OVERLINED = 55,
+    C_API_IOMANIP_RESET_STYLE_UNDERLINE_COLOR = 59,
+    C_API_IOMANIP_RESET_STYLE_EXPOSANT_INDICE = 75
+} utils_iomanip_reset_style_t;</code></pre><h3 id="c-6">Énumérations · Mouse button</h3><p><em>mouse button (utils::iomanip::MouseButton)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_iomanip_mouse_button {
+    C_API_IOMANIP_MOUSE_BUTTON_LEFT = 0,
+    C_API_IOMANIP_MOUSE_BUTTON_RIGHT,
+    C_API_IOMANIP_MOUSE_BUTTON_MIDDLE,
+    C_API_IOMANIP_MOUSE_BUTTON_RELEASE,
+    C_API_IOMANIP_MOUSE_BUTTON_UNKNOWN
+} utils_iomanip_mouse_button_t;</code></pre><h3 id="c-7">Structures · Mouse event -&gt; "ESC[M" Cb Cx Cy</h3><p><em>mouse event -&gt; "ESC[M" Cb Cx Cy (utils::iomanip::MouseEvent)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_iomanip_mouse_event {
+    utils_iomanip_mouse_button_t button;
+    size_t x;
+    size_t y;
+} utils_iomanip_mouse_event_t;</code></pre><h3 id="c-8">Structures · Mouse event -&gt; "ESC[&lt;b;x;y(M|m)"</h3><p><em>mouse event -&gt; "ESC[&lt;b;x;y(M|m)" (utils::iomanip::AdvancedMouseEvent)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_iomanip_advanced_mouse_event {
+    utils_iomanip_mouse_button_t button;
+    size_t x;
+    size_t y;
+    bool pressed;
+} utils_iomanip_advanced_mouse_event_t;</code></pre><h3 id="c-9">Fonctions · Terminal</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">bool utils_iomanip_enable_ansi(void); // Windows: enable the virtual terminal mode of the console (ANSI sequences), Unix: nothing to do (true)</code></pre><h3 id="c-10">Fonctions · Reports</h3><p><em>reports (read on stdin, after the matching sequence), UTILS_OK / UTILS_KO</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_iomanip_read_cursor_position(int* row, int* col); // after utils_iomanip_get_pos (-1, -1 when nothing was read)
+int utils_iomanip_read_mouse_event(utils_iomanip_mouse_event_t* event); // after utils_iomanip_mouse_tracking_enable
+int utils_iomanip_read_advanced_mouse_event(utils_iomanip_advanced_mouse_event_t* event); // after utils_iomanip_mouse_adv_tracking_enable</code></pre><h3 id="c-11">Fonctions · Sequences without argument</h3><p><em>sequences without argument (static strings)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">// internal
+const char* utils_iomanip_esc(void);
+// reset
+const char* utils_iomanip_reset(void);
+const char* utils_iomanip_strong_reset(void);
+const char* utils_iomanip_dark_reset(void);
+const char* utils_iomanip_italic_reset(void);
+const char* utils_iomanip_underlined_reset(void);
+const char* utils_iomanip_flashing_fast_reset(void);
+const char* utils_iomanip_flashing_slow_reset(void);
+const char* utils_iomanip_reversed_reset(void);
+const char* utils_iomanip_hide_reset(void);
+const char* utils_iomanip_bar_reset(void);
+const char* utils_iomanip_framed_encircled_reset(void);
+const char* utils_iomanip_overlined_reset(void);
+const char* utils_iomanip_underline_color_reset(void);
+const char* utils_iomanip_exposant_indice_reset(void);
+// style
+const char* utils_iomanip_strong(void);
+const char* utils_iomanip_dark(void);
+const char* utils_iomanip_italic(void);
+const char* utils_iomanip_underlined(void);
+const char* utils_iomanip_flashing_fast(void);
+const char* utils_iomanip_flashing_slow(void);
+const char* utils_iomanip_reversed(void);
+const char* utils_iomanip_hide(void);
+const char* utils_iomanip_bar(void);
+const char* utils_iomanip_monospace(void);
+const char* utils_iomanip_framed(void); // Rarely supported
+const char* utils_iomanip_encircled(void); // Rarely supported
+const char* utils_iomanip_overlined(void);
+const char* utils_iomanip_exposant(void); // Rarely supported
+const char* utils_iomanip_indice(void); // Rarely supported
+// cursor
+const char* utils_iomanip_load_cur(void);
+const char* utils_iomanip_save_cur(void);
+// erase
+const char* utils_iomanip_screen_end(void);
+const char* utils_iomanip_screen_start(void);
+const char* utils_iomanip_screen(void);
+const char* utils_iomanip_scrollback_buffer(void); // Can delete the term history
+const char* utils_iomanip_line_end(void);
+const char* utils_iomanip_line_start(void);
+const char* utils_iomanip_line(void);
+// private modes
+const char* utils_iomanip_inverted_color_enable(void);
+const char* utils_iomanip_inverted_color_disable(void);
+const char* utils_iomanip_wrapping_enable(void);
+const char* utils_iomanip_wrapping_disable(void);
+const char* utils_iomanip_show_cur(void);
+const char* utils_iomanip_hide_cur(void);
+const char* utils_iomanip_save_screen(void);
+const char* utils_iomanip_load_screen(void);
+// reports
+const char* utils_iomanip_get_pos(void); // Reports cursor position as "ESC[row;colR" (utils_iomanip_read_cursor_position)
+const char* utils_iomanip_mouse_tracking_enable(void);
+const char* utils_iomanip_mouse_tracking_disable(void);
+const char* utils_iomanip_mouse_move_tracking_enable(void);
+const char* utils_iomanip_mouse_move_tracking_disable(void);
+const char* utils_iomanip_mouse_adv_tracking_enable(void); // Reports "ESC[&lt;b;x;y(M|m)" (utils_iomanip_read_advanced_mouse_event)
+const char* utils_iomanip_mouse_adv_tracking_disable(void);
+const char* utils_iomanip_report_focus_enable(void); // Focus in: "ESC[I" | Focus out: "ESC[O"
+const char* utils_iomanip_report_focus_disabled(void);
+const char* utils_iomanip_report_past_enable(void); // Reports for pasted data: "ESC[200~{data}ESC[201~"
+const char* utils_iomanip_report_past_disable(void);</code></pre><h3 id="c-12">Fonctions · Sequences with arguments</h3><p><em>sequences with arguments (valid until the next call of the same function in the thread, NULL on error) &amp; _r (copied in buf, truncated &amp; always '\0' terminated, returns the full length like snprintf, 0 on error)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">// internal
+const char* utils_iomanip_csi(const char* code); // ESC[ + code
+size_t utils_iomanip_csi_r(const char* code, char* buf, size_t size);
+// special
+const char* utils_iomanip_hyperlink(const char* display, const char* link);
+size_t utils_iomanip_hyperlink_r(const char* display, const char* link, char* buf, size_t size);
+const char* utils_iomanip_file_hyperlink(const char* display, const char* path);
+size_t utils_iomanip_file_hyperlink_r(const char* display, const char* path, char* buf, size_t size);
+// style
+const char* utils_iomanip_set_style(utils_iomanip_style_t style);
+size_t utils_iomanip_set_style_r(utils_iomanip_style_t style, char* buf, size_t size);
+const char* utils_iomanip_set_styles(const utils_iomanip_style_t* styles, size_t count); // every style in one sequence (utils::iomanip::set_style({...}))
+size_t utils_iomanip_set_styles_r(const utils_iomanip_style_t* styles, size_t count, char* buf, size_t size);
+const char* utils_iomanip_reset_style(utils_iomanip_reset_style_t style);
+size_t utils_iomanip_reset_style_r(utils_iomanip_reset_style_t style, char* buf, size_t size);
+const char* utils_iomanip_reset_styles(const utils_iomanip_reset_style_t* styles, size_t count); // every reset in one sequence (utils::iomanip::reset_style({...}))
+size_t utils_iomanip_reset_styles_r(const utils_iomanip_reset_style_t* styles, size_t count, char* buf, size_t size);
+// color
+const char* utils_iomanip_color(utils_iomanip_color_t color);
+size_t utils_iomanip_color_r(utils_iomanip_color_t color, char* buf, size_t size);
+const char* utils_iomanip_back_color(utils_iomanip_back_color_t color);
+size_t utils_iomanip_back_color_r(utils_iomanip_back_color_t color, char* buf, size_t size);
+const char* utils_iomanip_color_id(uint8_t id); // 256 colors
+size_t utils_iomanip_color_id_r(uint8_t id, char* buf, size_t size);
+const char* utils_iomanip_back_color_id(uint8_t id);
+size_t utils_iomanip_back_color_id_r(uint8_t id, char* buf, size_t size);
+const char* utils_iomanip_underline_color_id(uint8_t id);
+size_t utils_iomanip_underline_color_id_r(uint8_t id, char* buf, size_t size);
+const char* utils_iomanip_color_rgb(uint8_t r, uint8_t g, uint8_t b);
+size_t utils_iomanip_color_rgb_r(uint8_t r, uint8_t g, uint8_t b, char* buf, size_t size);
+const char* utils_iomanip_back_color_rgb(uint8_t r, uint8_t g, uint8_t b);
+size_t utils_iomanip_back_color_rgb_r(uint8_t r, uint8_t g, uint8_t b, char* buf, size_t size);
+const char* utils_iomanip_underline_color_rgb(uint8_t r, uint8_t g, uint8_t b);
+size_t utils_iomanip_underline_color_rgb_r(uint8_t r, uint8_t g, uint8_t b, char* buf, size_t size);
+// cursor
+const char* utils_iomanip_up(size_t n);
+size_t utils_iomanip_up_r(size_t n, char* buf, size_t size);
+const char* utils_iomanip_down(size_t n);
+size_t utils_iomanip_down_r(size_t n, char* buf, size_t size);
+const char* utils_iomanip_right(size_t n);
+size_t utils_iomanip_right_r(size_t n, char* buf, size_t size);
+const char* utils_iomanip_left(size_t n);
+size_t utils_iomanip_left_r(size_t n, char* buf, size_t size);
+const char* utils_iomanip_next_line(size_t n);
+size_t utils_iomanip_next_line_r(size_t n, char* buf, size_t size);
+const char* utils_iomanip_previous_line(size_t n);
+size_t utils_iomanip_previous_line_r(size_t n, char* buf, size_t size);
+const char* utils_iomanip_column(size_t col);
+size_t utils_iomanip_column_r(size_t col, char* buf, size_t size);
+const char* utils_iomanip_pos(size_t row, size_t col);
+size_t utils_iomanip_pos_r(size_t row, size_t col, char* buf, size_t size);
+const char* utils_iomanip_scroll_up(size_t n);
+size_t utils_iomanip_scroll_up_r(size_t n, char* buf, size_t size);
+const char* utils_iomanip_scroll_down(size_t n);
+size_t utils_iomanip_scroll_down_r(size_t n, char* buf, size_t size);</code></pre></div></section><nav class="pager"><a href="type.html"><span data-i18n>Previous</span><span data-lang="en">Type</span><span data-lang="fr">Type</span></a><a class="next" href="smanip.html"><span data-i18n>Next</span><span data-lang="en">SManip</span><span data-lang="fr">SManip</span></a></nav></main>
+</div>
+<footer class="site">libutils v5.0.0 · 23d2be3 · docs</footer>
+<script src="site.js"></script>
+<script src="search-index.js" defer></script>
+</body>
+</html>

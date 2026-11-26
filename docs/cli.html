@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="en" data-storage-key="libutils-docs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cli - libutils</title>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n>Skip to the content</a>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" id="menuBtn" aria-label="Open the navigation" data-i18n-aria-label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v5.0.0</span></a>
+  <nav class="tabs" aria-label="Pages" hidden></nav>
+  <span class="spacer"></span>
+  <div class="top-actions">
+  <div class="lang-switch" role="group" aria-label="Language" data-i18n-aria-label>
+    <button type="button" data-set-lang="en" class="on">EN</button>
+    <button type="button" data-set-lang="fr">FR</button>
+  </div>
+  <span class="divider" aria-hidden="true"></span><div class="sbox small"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" autocomplete="off" aria-label="Search" data-i18n-aria-label placeholder="Search…" data-ph-fr="Rechercher…"><kbd class="hint" aria-hidden="true">/</kbd><ul class="results" hidden></ul></div>
+<a class="icon-btn" href="https://github.com/TsukiNi22/libutils" aria-label="GitHub repository" data-i18n-aria-label title="GitHub repository" data-i18n-title><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"/></svg></a>
+  <button class="theme-switch" type="button" id="themeToggle" role="switch" aria-checked="false" aria-label="Toggle theme" data-i18n-aria-label title="Toggle theme" data-i18n-title>
+    <span class="stars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="knob" aria-hidden="true">
+      <svg class="sun" viewBox="0 0 24 24" fill="#ffffff"><circle cx="12" cy="12" r="5.2"/><g stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"><path d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6M4.8 4.8l1.8 1.8M17.4 17.4l1.8 1.8M4.8 19.2l1.8-1.8M17.4 6.6l1.8-1.8"/></g></svg>
+      <svg class="moon" viewBox="0 0 24 24"><path d="M15.6 4.2a8 8 0 1 0 4.2 11.6A7 7 0 0 1 15.6 4.2z" fill="#f6c343"/></svg>
+    </span>
+  </button>
+  </div>
+</header>
+<div class="layout" id="top">
+<aside class="sidebar" id="sidebar"><p data-i18n>On this page</p><a href="#flags">1. <span data-lang="en">Flags</span><span data-lang="fr">Flags</span></a><a href="#commands">2. <span data-lang="en">Commands</span><span data-lang="fr">Commandes</span></a><a href="#start-stop">3. <span data-lang="en">Start and stop</span><span data-lang="fr">Démarrage et arrêt</span></a><a href="#hooks">4. <span data-lang="en">Hooks</span><span data-lang="fr">Hooks</span></a><a href="#middlewares">5. <span data-lang="en">Middlewares</span><span data-lang="fr">Middlewares</span></a><a href="#exit-codes">6. <span data-lang="en">Exit codes</span><span data-lang="fr">Codes de sortie</span></a><a href="#example">7. <span data-lang="en">Example</span><span data-lang="fr">Exemple</span></a><a href="#in-c">8. <span data-lang="en">In C</span><span data-lang="fr">En C</span></a><a href="#cpp-api">9. <span data-lang="en">C++ API</span><span data-lang="fr">API C++</span></a><a href="#c-api">10. <span data-lang="en">C API</span><span data-lang="fr">API C</span></a><hr><div class="grp"><span data-lang="en">User guide</span><span data-lang="fr">Guide utilisateur</span></div><a href="installation.html"><span data-lang="en">Installation</span><span data-lang="fr">Installation</span></a><a href="usage.html"><span data-lang="en">Link and include</span><span data-lang="fr">Lier et inclure</span></a><a href="custom-exceptions.html"><span data-lang="en">Custom exception codes</span><span data-lang="fr">Codes d&#x27;exception personnalisés</span></a><a href="warnings.html"><span data-lang="en">Warnings</span><span data-lang="fr">Avertissements</span></a><a href="c-api.html"><span data-lang="en">Use libutils from C</span><span data-lang="fr">Utiliser libutils depuis C</span></a><a href="windows.html"><span data-lang="en">Windows</span><span data-lang="fr">Windows</span></a><a href="development.html"><span data-lang="en">Build, tests and hooks</span><span data-lang="fr">Build, tests et hooks</span></a><div class="grp"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></div><a href="overview.html"><span data-lang="en">Architecture</span><span data-lang="fr">Architecture</span></a><a href="errors.html"><span data-lang="en">Errors</span><span data-lang="fr">Erreurs</span></a><a href="c-api-design.html"><span data-lang="en">The C API design</span><span data-lang="fr">Conception de l&#x27;API C</span></a><a href="network-ipc.html"><span data-lang="en">Communication</span><span data-lang="fr">Communication</span></a><a href="platforms.html"><span data-lang="en">Platforms</span><span data-lang="fr">Plateformes</span></a><div class="grp"><span data-lang="en">Reference</span><span data-lang="fr">Référence</span></div><a href="exception.html"><span data-lang="en">Exceptions</span><span data-lang="fr">Exceptions</span></a><a href="verbose.html"><span data-lang="en">Verbose</span><span data-lang="fr">Verbose</span></a><a href="pool.html"><span data-lang="en">Pool</span><span data-lang="fr">Pool</span></a><a href="cli.html" class="cur" aria-current="page"><span data-lang="en">Cli</span><span data-lang="fr">Cli</span></a><a href="arguments.html"><span data-lang="en">Arguments</span><span data-lang="fr">Arguments</span></a><a href="network.html"><span data-lang="en">Network</span><span data-lang="fr">Network</span></a><a href="math.html"><span data-lang="en">Math</span><span data-lang="fr">Math</span></a><a href="concepts.html"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></a><a href="encapsulation.html"><span data-lang="en">Encapsulation</span><span data-lang="fr">Encapsulation</span></a><a href="system.html"><span data-lang="en">System</span><span data-lang="fr">System</span></a><a href="type.html"><span data-lang="en">Type</span><span data-lang="fr">Type</span></a><a href="iomanip.html"><span data-lang="en">IOManip</span><span data-lang="fr">IOManip</span></a><a href="smanip.html"><span data-lang="en">SManip</span><span data-lang="fr">SManip</span></a><a href="algorithms.html"><span data-lang="en">Algorithms</span><span data-lang="fr">Algorithms</span></a><a href="security.html"><span data-lang="en">Security</span><span data-lang="fr">Security</span></a><a href="platform.html"><span data-lang="en">Platform</span><span data-lang="fr">Platform</span></a><a href="attribute.html"><span data-lang="en">Attribute</span><span data-lang="fr">Attribute</span></a><div class="grp"><span data-lang="en">Resources</span><span data-lang="fr">Ressources</span></div><a href="changelog.html"><span data-lang="en">Changelog</span><span data-lang="fr">Historique</span></a><a href="ci-cd.html"><span data-lang="en">CI / CD</span><span data-lang="fr">CI / CD</span></a><a href="licenses.html"><span data-lang="en">Licenses</span><span data-lang="fr">Licences</span></a><a href="project-graph.html"><span data-lang="en">Project graph</span><span data-lang="fr">Graphe du projet</span></a><a href="faq.html"><span data-lang="en">FAQ</span><span data-lang="fr">FAQ</span></a><a href="glossary.html"><span data-lang="en">Glossary</span><span data-lang="fr">Glossaire</span></a></aside><main id="main" tabindex="-1"><header><div class="page-eyebrow"><span data-lang="en">Reference</span><span data-lang="fr">Référence</span></div><h1><span data-lang="en">Cli</span><span data-lang="fr">Cli</span></h1><p class="lead"><span data-lang="en">A customizable interactive command line: commands, prompt, history, arrows, hints, auto completion, logic operators, in the current thread or in a thread.</span><span data-lang="fr">Une ligne de commande interactive personnalisable : commandes, prompt, historique, flèches, suggestions, auto-complétion, opérateurs logiques, dans le thread courant ou dans un thread.</span></p><div class="page-meta"><span><span data-i18n>Updated</span> 2026-11-26</span></div></header><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Define, Group, Namespace, Headers"><table><thead><tr><th scope="col" style="min-width:11ch">Define</th><th scope="col" style="min-width:13ch">Group</th><th scope="col" style="min-width:14ch">Namespace</th><th scope="col" style="min-width:24ch">Headers</th></tr></thead><tbody><tr><td><code>_Cli</code></td><td><code>_Handling</code></td><td><code>utils::cli</code></td><td><code>utils/cli/Cli.hpp</code>, <code>utils/cli/Flags.hpp</code></td></tr></tbody></table></div><p>A customizable interactive command line: commands, prompt, history, arrows, hints, auto completion, logic operators, run in the current thread or in a thread. Line wrapping is not handled.</p></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Define, Groupe, Espace de noms, En-têtes"><table><thead><tr><th scope="col" style="min-width:11ch">Define</th><th scope="col" style="min-width:13ch">Groupe</th><th scope="col" style="min-width:20ch">Espace de noms</th><th scope="col" style="min-width:24ch">En-têtes</th></tr></thead><tbody><tr><td><code>_Cli</code></td><td><code>_Handling</code></td><td><code>utils::cli</code></td><td><code>utils/cli/Cli.hpp</code>, <code>utils/cli/Flags.hpp</code></td></tr></tbody></table></div><p>Une ligne de commande interactive personnalisable : commandes, prompt, historique, flèches, suggestions, auto-complétion, opérateurs logiques, exécutée dans le thread courant ou dans un thread. Le retour à la ligne automatique n'est pas géré.</p></div><section id="flags"><h2>1. <span data-lang="en">Flags</span><span data-lang="fr">Flags</span></h2><div data-lang="en"><p><code>utils::cli::Flag</code> values are combined with <code>|</code> and set with <code>setFlags</code>, <code>addFlags</code>, <code>subFlags</code>, <code>resetFlags</code> (back to <code>flags::DEFAULT</code>).</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Flag, Effect"><table><thead><tr><th scope="col" style="min-width:20ch">Flag</th><th scope="col" style="min-width:32ch">Effect</th></tr></thead><tbody><tr><td><code>DEBUG</code></td><td>Verbose for the internal actions (nothing for now)</td></tr><tr><td><code>NOECHO</code></td><td>Don't echo the input</td></tr><tr><td><code>CATCH</code></td><td>Catch the exceptions of the commands (code <code>130</code>) instead of letting them go up</td></tr><tr><td><code>EMPTY_INPUT</code></td><td>Ignore the empty inputs (default: error <code>127</code>)</td></tr><tr><td><code>TRIM</code></td><td>Trim the input</td></tr><tr><td><code>PARSED</code></td><td>Split the input and call the parsed commands (<code>std::vector&lt;std::string&gt;</code>, default: raw <code>std::string</code>)</td></tr><tr><td><code>PROMPT</code></td><td>Display the prompt (only on a tty)</td></tr><tr><td><code>LOGIC</code></td><td>Enable <code>&amp;&amp;</code>, <code>||</code> and <code>;</code> between commands (bash semantics)</td></tr><tr><td><code>ARROW</code></td><td>Left / right arrows in the input</td></tr><tr><td><code>HISTORY</code></td><td>History with the up / down arrows</td></tr><tr><td><code>PERSISTENT</code></td><td>Keep the history between sessions (<code>~/.utils-cli_history</code>, 10 000 lines max)</td></tr><tr><td><code>HINT</code></td><td>Display a hint when a command fails</td></tr><tr><td><code>AUTO_COMPLETION</code></td><td>Complete the first command with <kbd>Tab</kbd></td></tr><tr><td><code>MANUAL</code></td><td>Handle only <code>call</code> inputs per <code>start</code> (see <a href="#start-stop">Start and stop</a>)</td></tr><tr><td><code>THREAD</code></td><td>Run in a thread, <code>start</code> returns it</td></tr><tr><td><code>DETACHED</code></td><td>Detach the thread (<code>start</code> returns nothing, wait with <code>join()</code>)</td></tr><tr><td><code>NO_TTY</code></td><td>Allow the usage without a tty (default: <code>CliTTY</code> error)</td></tr></tbody></table></div><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Preset (utils::cli::flags::), Content"><table><thead><tr><th scope="col" style="min-width:29ch">Preset (<code>utils::cli::flags::</code>)</th><th scope="col" style="min-width:21ch">Content</th></tr></thead><tbody><tr><td><code>DUMB</code></td><td>nothing</td></tr><tr><td><code>DEFAULT</code></td><td><code>CATCH</code>, <code>EMPTY_INPUT</code>, <code>TRIM</code>, <code>PROMPT</code>, <code>ARROW</code></td></tr><tr><td><code>TERM1</code></td><td><code>DEFAULT</code> + <code>PARSED</code>, <code>LOGIC</code>, <code>HISTORY</code></td></tr><tr><td><code>TERM2</code></td><td><code>TERM1</code> + <code>HINT</code>, <code>AUTO_COMPLETION</code></td></tr><tr><td><code>TERM3</code></td><td><code>TERM2</code> + <code>THREAD</code></td></tr><tr><td><code>LOG</code></td><td><code>TERM3</code> + <code>DETACHED</code>, <code>NO_TTY</code></td></tr><tr><td><code>DEV</code></td><td><code>TERM2</code> + <code>DEBUG</code></td></tr><tr><td><code>MULTI_THREADING</code></td><td><code>THREAD</code>, <code>DETACHED</code></td></tr><tr><td><code>ALL</code></td><td>every flag except <code>PERSISTENT</code> and <code>NO_TTY</code></td></tr></tbody></table></div></div><div data-lang="fr"><p>Les valeurs de <code>utils::cli::Flag</code> se combinent avec <code>|</code> et se règlent avec <code>setFlags</code>, <code>addFlags</code>, <code>subFlags</code>, <code>resetFlags</code> (retour à <code>flags::DEFAULT</code>).</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Flag, Effet"><table><thead><tr><th scope="col" style="min-width:20ch">Flag</th><th scope="col" style="min-width:32ch">Effet</th></tr></thead><tbody><tr><td><code>DEBUG</code></td><td>Verbose pour les actions internes (rien pour l'instant)</td></tr><tr><td><code>NOECHO</code></td><td>N'affiche pas l'écho de la saisie</td></tr><tr><td><code>CATCH</code></td><td>Attrape les exceptions des commandes (code <code>130</code>) au lieu de les laisser remonter</td></tr><tr><td><code>EMPTY_INPUT</code></td><td>Ignore les saisies vides (par défaut : erreur <code>127</code>)</td></tr><tr><td><code>TRIM</code></td><td>Retire les espaces autour de la saisie</td></tr><tr><td><code>PARSED</code></td><td>Découpe la saisie et appelle les commandes parsées (<code>std::vector&lt;std::string&gt;</code>, par défaut : <code>std::string</code> brute)</td></tr><tr><td><code>PROMPT</code></td><td>Affiche le prompt (seulement sur un tty)</td></tr><tr><td><code>LOGIC</code></td><td>Active <code>&amp;&amp;</code>, <code>||</code> et <code>;</code> entre les commandes (sémantique de bash)</td></tr><tr><td><code>ARROW</code></td><td>Flèches gauche / droite dans la saisie</td></tr><tr><td><code>HISTORY</code></td><td>Historique avec les flèches haut / bas</td></tr><tr><td><code>PERSISTENT</code></td><td>Garde l'historique entre les sessions (<code>~/.utils-cli_history</code>, 10 000 lignes max)</td></tr><tr><td><code>HINT</code></td><td>Affiche une suggestion quand une commande échoue</td></tr><tr><td><code>AUTO_COMPLETION</code></td><td>Complète la première commande avec <kbd>Tab</kbd></td></tr><tr><td><code>MANUAL</code></td><td>Ne traite que <code>call</code> saisies par <code>start</code> (voir <a href="#start-stop">Démarrage et arrêt</a>)</td></tr><tr><td><code>THREAD</code></td><td>S'exécute dans un thread, <code>start</code> le renvoie</td></tr><tr><td><code>DETACHED</code></td><td>Détache le thread (<code>start</code> ne renvoie rien, attendre avec <code>join()</code>)</td></tr><tr><td><code>NO_TTY</code></td><td>Autorise l'utilisation sans tty (par défaut : erreur <code>CliTTY</code>)</td></tr></tbody></table></div><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Preset (utils::cli::flags::), Contenu"><table><thead><tr><th scope="col" style="min-width:29ch">Preset (<code>utils::cli::flags::</code>)</th><th scope="col" style="min-width:21ch">Contenu</th></tr></thead><tbody><tr><td><code>DUMB</code></td><td>rien</td></tr><tr><td><code>DEFAULT</code></td><td><code>CATCH</code>, <code>EMPTY_INPUT</code>, <code>TRIM</code>, <code>PROMPT</code>, <code>ARROW</code></td></tr><tr><td><code>TERM1</code></td><td><code>DEFAULT</code> + <code>PARSED</code>, <code>LOGIC</code>, <code>HISTORY</code></td></tr><tr><td><code>TERM2</code></td><td><code>TERM1</code> + <code>HINT</code>, <code>AUTO_COMPLETION</code></td></tr><tr><td><code>TERM3</code></td><td><code>TERM2</code> + <code>THREAD</code></td></tr><tr><td><code>LOG</code></td><td><code>TERM3</code> + <code>DETACHED</code>, <code>NO_TTY</code></td></tr><tr><td><code>DEV</code></td><td><code>TERM2</code> + <code>DEBUG</code></td></tr><tr><td><code>MULTI_THREADING</code></td><td><code>THREAD</code>, <code>DETACHED</code></td></tr><tr><td><code>ALL</code></td><td>tous les flags sauf <code>PERSISTENT</code> et <code>NO_TTY</code></td></tr></tbody></table></div></div></section><section id="commands"><h2>2. <span data-lang="en">Commands</span><span data-lang="fr">Commandes</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Kind, Signature, Used when"><table><thead><tr><th scope="col" style="min-width:9ch">Kind</th><th scope="col" style="min-width:42ch">Signature</th><th scope="col" style="min-width:22ch">Used when</th></tr></thead><tbody><tr><td>raw</td><td><code>std::function&lt;void(const Cli&amp;, const std::string&amp; input)&gt;</code></td><td><code>PARSED</code> off</td></tr><tr><td>parsed</td><td><code>std::tuple&lt;std::function&lt;void(const Cli&amp;, const std::vector&lt;std::string&gt;&amp; args)&gt;, std::int16_t min, std::int16_t max&gt;</code></td><td><code>PARSED</code> on, <code>args[0]</code> is the command, <code>min</code> / <code>max</code> count the other arguments (<code>-1</code> = no limit)</td></tr></tbody></table></div><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:29ch">Method</th><th scope="col" style="min-width:23ch">Description</th></tr></thead><tbody><tr><td><code>setCommand&lt;force&gt;(name, command)</code> / <code>setCommands&lt;force&gt;(map)</code></td><td>Add commands, <code>force = true</code> to override an existing one</td></tr><tr><td><code>delCommand(name)</code> / <code>delCommands(names)</code></td><td>Remove commands</td></tr><tr><td><code>clearCommands()</code></td><td>Remove every command</td></tr><tr><td><code>resetCommands()</code></td><td>Back to the built-in commands only</td></tr></tbody></table></div><p>Built-in commands: <code>help</code> (list of the commands), <code>exit</code> / <code>quit</code> / <code>bye</code> (stop the cli), <code>?</code> (last code and its meaning).</p></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Genre, Signature, Utilisée quand"><table><thead><tr><th scope="col" style="min-width:9ch">Genre</th><th scope="col" style="min-width:42ch">Signature</th><th scope="col" style="min-width:23ch">Utilisée quand</th></tr></thead><tbody><tr><td>brute</td><td><code>std::function&lt;void(const Cli&amp;, const std::string&amp; input)&gt;</code></td><td><code>PARSED</code> désactivé</td></tr><tr><td>parsée</td><td><code>std::tuple&lt;std::function&lt;void(const Cli&amp;, const std::vector&lt;std::string&gt;&amp; args)&gt;, std::int16_t min, std::int16_t max&gt;</code></td><td><code>PARSED</code> activé, <code>args[0]</code> est la commande, <code>min</code> / <code>max</code> comptent les autres arguments (<code>-1</code> = sans limite)</td></tr></tbody></table></div><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:29ch">Méthode</th><th scope="col" style="min-width:20ch">Description</th></tr></thead><tbody><tr><td><code>setCommand&lt;force&gt;(name, command)</code> / <code>setCommands&lt;force&gt;(map)</code></td><td>Ajoute des commandes, <code>force = true</code> pour écraser une commande existante</td></tr><tr><td><code>delCommand(name)</code> / <code>delCommands(names)</code></td><td>Supprime des commandes</td></tr><tr><td><code>clearCommands()</code></td><td>Supprime toutes les commandes</td></tr><tr><td><code>resetCommands()</code></td><td>Revient aux seules commandes intégrées</td></tr></tbody></table></div><p>Commandes intégrées : <code>help</code> (liste des commandes), <code>exit</code> / <code>quit</code> / <code>bye</code> (arrête la cli), <code>?</code> (dernier code et sa signification).</p></div></section><section id="start-stop"><h2>3. <span data-lang="en">Start and stop</span><span data-lang="fr">Démarrage et arrêt</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:31ch">Method</th><th scope="col" style="min-width:21ch">Description</th></tr></thead><tbody><tr><td><code>start(call = 1, failsafe = false)</code></td><td>Run the cli; returns the thread with <code>THREAD</code> (not <code>DETACHED</code>), else <code>std::nullopt</code></td></tr><tr><td><code>start(input, ...)</code> / <code>start(inputs, ...)</code></td><td>Same, executing the given inputs first</td></tr><tr><td><code>interrupt()</code></td><td>Stop after the current input (like <kbd>Ctrl</kbd>+<kbd>C</kbd> when the constructor gets <code>sig = true</code>)</td></tr><tr><td><code>kill()</code></td><td>Stop, can't be started again</td></tr><tr><td><code>join()</code></td><td>Wait until the cli stops (detached thread)</td></tr><tr><td><code>isRunning()</code>, <code>wasInterrupted()</code>, <code>wasKilled()</code>, <code>wasStopped()</code></td><td>State</td></tr><tr><td><code>getCode()</code> / <code>strcode(code)</code></td><td>Last code and its text</td></tr><tr><td><code>getHistory()</code></td><td>History of the inputs</td></tr><tr><td><code>setInputDelimitor(c)</code></td><td>End of input character (default <code>'\n'</code>)</td></tr></tbody></table></div><div class="callout"><p><code>Cli(true)</code> catches <kbd>Ctrl</kbd>+<kbd>C</kbd> / <kbd>Ctrl</kbd>+<kbd>Z</kbd> (the previous handlers are restored by the destructor). The terminal is put in raw mode while the cli runs, only when stdin is a tty.</p></div><div class="callout"><p>Windows: the console is set through <code>utils::platform::tcgetattr</code> / <code>tcsetattr</code> (no line input, no echo, VT input and output); <kbd>Ctrl</kbd>+<kbd>Z</kbd> is a char (no <code>SIGTSTP</code>), the history is in <code>%USERPROFILE%</code> when <code>HOME</code> is not set.</p></div></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:31ch">Méthode</th><th scope="col" style="min-width:22ch">Description</th></tr></thead><tbody><tr><td><code>start(call = 1, failsafe = false)</code></td><td>Lance la cli ; renvoie le thread avec <code>THREAD</code> (sans <code>DETACHED</code>), sinon <code>std::nullopt</code></td></tr><tr><td><code>start(input, ...)</code> / <code>start(inputs, ...)</code></td><td>Pareil, en exécutant d'abord les saisies données</td></tr><tr><td><code>interrupt()</code></td><td>S'arrête après la saisie en cours (comme <kbd>Ctrl</kbd>+<kbd>C</kbd> quand le constructeur reçoit <code>sig = true</code>)</td></tr><tr><td><code>kill()</code></td><td>S'arrête, ne peut plus être relancée</td></tr><tr><td><code>join()</code></td><td>Attend l'arrêt de la cli (thread détaché)</td></tr><tr><td><code>isRunning()</code>, <code>wasInterrupted()</code>, <code>wasKilled()</code>, <code>wasStopped()</code></td><td>État</td></tr><tr><td><code>getCode()</code> / <code>strcode(code)</code></td><td>Dernier code et son texte</td></tr><tr><td><code>getHistory()</code></td><td>Historique des saisies</td></tr><tr><td><code>setInputDelimitor(c)</code></td><td>Caractère de fin de saisie (par défaut <code>'\n'</code>)</td></tr></tbody></table></div><div class="callout"><p><code>Cli(true)</code> attrape <kbd>Ctrl</kbd>+<kbd>C</kbd> / <kbd>Ctrl</kbd>+<kbd>Z</kbd> (les handlers précédents sont restaurés par le destructeur). Le terminal passe en mode raw pendant que la cli tourne, seulement quand stdin est un tty.</p></div><div class="callout"><p>Windows : la console est réglée via <code>utils::platform::tcgetattr</code> / <code>tcsetattr</code> (pas de saisie par ligne, pas d'écho, entrée et sortie VT) ; <kbd>Ctrl</kbd>+<kbd>Z</kbd> est un caractère (pas de <code>SIGTSTP</code>), l'historique est dans <code>%USERPROFILE%</code> quand <code>HOME</code> n'est pas défini.</p></div></div></section><section id="hooks"><h2>4. <span data-lang="en">Hooks</span><span data-lang="fr">Hooks</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Hook, Setter / reset, Default"><table><thead><tr><th scope="col" style="min-width:23ch">Hook</th><th scope="col" style="min-width:20ch">Setter / reset</th><th scope="col" style="min-width:23ch">Default</th></tr></thead><tbody><tr><td>prompt <code>void(const Cli&amp;, std::uint8_t code)</code></td><td><code>setPromptHook</code> / <code>resetPromptHook</code></td><td><code>defaultPromptHook</code>: prints <code>&gt; </code></td></tr><tr><td>parser <code>ParsedData(const std::string&amp;, bool trim, bool logic, bool parse)</code></td><td><code>setParserHook</code> / <code>resetParserHook</code></td><td><code>defaultParserHook</code>: quotes, escapes, <code>&amp;&amp;</code> / <code>||</code> / <code>;</code></td></tr><tr><td>getc <code>bool(char&amp; c)</code></td><td><code>setGetCHook</code> / <code>resetGetCHook</code></td><td><code>defaultGetCHook</code>: reads stdin (returns <code>false</code> when nothing was read)</td></tr></tbody></table></div><p><code>resetHooks()</code> resets the 3 hooks.</p></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Hook, Définir / réinitialiser, Défaut"><table><thead><tr><th scope="col" style="min-width:23ch">Hook</th><th scope="col" style="min-width:20ch">Définir / réinitialiser</th><th scope="col" style="min-width:22ch">Défaut</th></tr></thead><tbody><tr><td>prompt <code>void(const Cli&amp;, std::uint8_t code)</code></td><td><code>setPromptHook</code> / <code>resetPromptHook</code></td><td><code>defaultPromptHook</code> : affiche <code>&gt; </code></td></tr><tr><td>parser <code>ParsedData(const std::string&amp;, bool trim, bool logic, bool parse)</code></td><td><code>setParserHook</code> / <code>resetParserHook</code></td><td><code>defaultParserHook</code> : guillemets, échappements, <code>&amp;&amp;</code> / <code>||</code> / <code>;</code></td></tr><tr><td>getc <code>bool(char&amp; c)</code></td><td><code>setGetCHook</code> / <code>resetGetCHook</code></td><td><code>defaultGetCHook</code> : lit stdin (renvoie <code>false</code> quand rien n'a été lu)</td></tr></tbody></table></div><p><code>resetHooks()</code> réinitialise les 3 hooks.</p></div></section><section id="middlewares"><h2>5. <span data-lang="en">Middlewares</span><span data-lang="fr">Middlewares</span></h2><div data-lang="en"><p>Public <a href="pool.html#middleware">middleware</a> members, reset with <code>resetMiddlewares()</code>:</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Member, before / after arguments, Called"><table><thead><tr><th scope="col" style="min-width:23ch">Member</th><th scope="col" style="min-width:22ch"><code>before</code> / <code>after</code> arguments</th><th scope="col" style="min-width:23ch">Called</th></tr></thead><tbody><tr><td><code>cliMiddlewares</code></td><td>- / -</td><td>start / end of the cli</td></tr><tr><td><code>errorMiddlewares</code></td><td>code / code</td><td>when an error code is set</td></tr><tr><td><code>promptMiddlewares</code></td><td>- / -</td><td>around the prompt</td></tr><tr><td><code>inputMiddlewares</code></td><td>- / <code>char</code></td><td>after each key (only <code>after</code>)</td></tr><tr><td><code>parserMiddlewares</code></td><td>input / parsed data</td><td>around the parser</td></tr><tr><td><code>execMiddlewares</code></td><td>parsed data / parsed data</td><td>around the execution</td></tr><tr><td><code>commandMiddlewares</code></td><td>input / input</td><td>around each command</td></tr></tbody></table></div></div><div data-lang="fr"><p>Membres publics de type <a href="pool.html#middleware">middleware</a>, réinitialisés avec <code>resetMiddlewares()</code> :</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Membre, Arguments de before / after, Appelés"><table><thead><tr><th scope="col" style="min-width:23ch">Membre</th><th scope="col" style="min-width:20ch">Arguments de <code>before</code> / <code>after</code></th><th scope="col" style="min-width:19ch">Appelés</th></tr></thead><tbody><tr><td><code>cliMiddlewares</code></td><td>- / -</td><td>début / fin de la cli</td></tr><tr><td><code>errorMiddlewares</code></td><td>code / code</td><td>quand un code d'erreur est défini</td></tr><tr><td><code>promptMiddlewares</code></td><td>- / -</td><td>autour du prompt</td></tr><tr><td><code>inputMiddlewares</code></td><td>- / <code>char</code></td><td>après chaque touche (seulement <code>after</code>)</td></tr><tr><td><code>parserMiddlewares</code></td><td>saisie / données parsées</td><td>autour du parser</td></tr><tr><td><code>execMiddlewares</code></td><td>données parsées / données parsées</td><td>autour de l'exécution</td></tr><tr><td><code>commandMiddlewares</code></td><td>saisie / saisie</td><td>autour de chaque commande</td></tr></tbody></table></div></div></section><section id="exit-codes"><h2>6. <span data-lang="en">Exit codes</span><span data-lang="fr">Codes de sortie</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Code, Meaning"><table><thead><tr><th scope="col" style="min-width:8ch">Code</th><th scope="col" style="min-width:23ch">Meaning</th></tr></thead><tbody><tr><td><code>0</code></td><td>OK</td></tr><tr><td><code>1</code></td><td>Internal error</td></tr><tr><td><code>2</code></td><td>Hook internal error or missing</td></tr><tr><td><code>3</code></td><td>Middleware internal error</td></tr><tr><td><code>124</code></td><td>Not enough arguments</td></tr><tr><td><code>125</code></td><td>Too many arguments</td></tr><tr><td><code>126</code></td><td>Unclosed escape sequence</td></tr><tr><td><code>127</code></td><td>Empty input</td></tr><tr><td><code>128</code></td><td>Unknown command</td></tr><tr><td><code>129</code></td><td>Command not implemented</td></tr><tr><td><code>130</code></td><td>Callback exception</td></tr><tr><td><code>255</code></td><td>Undefined error</td></tr></tbody></table></div></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Code, Signification"><table><thead><tr><th scope="col" style="min-width:8ch">Code</th><th scope="col" style="min-width:21ch">Signification</th></tr></thead><tbody><tr><td><code>0</code></td><td>OK</td></tr><tr><td><code>1</code></td><td>Erreur interne</td></tr><tr><td><code>2</code></td><td>Erreur interne d'un hook ou hook manquant</td></tr><tr><td><code>3</code></td><td>Erreur interne d'un middleware</td></tr><tr><td><code>124</code></td><td>Pas assez d'arguments</td></tr><tr><td><code>125</code></td><td>Trop d'arguments</td></tr><tr><td><code>126</code></td><td>Séquence d'échappement non fermée</td></tr><tr><td><code>127</code></td><td>Saisie vide</td></tr><tr><td><code>128</code></td><td>Commande inconnue</td></tr><tr><td><code>129</code></td><td>Commande non implémentée</td></tr><tr><td><code>130</code></td><td>Exception dans un callback</td></tr><tr><td><code>255</code></td><td>Erreur non définie</td></tr></tbody></table></div></div></section><section id="example"><h2>7. <span data-lang="en">Example</span><span data-lang="fr">Exemple</span></h2><div data-lang="en"><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Cli
+#include &lt;utils/utils.hpp&gt;
+
+int main(void)
+{
+    utils::cli::Cli cli(true); // catch ctrl-c &amp; ctrl-z
+    cli.setFlags(utils::cli::flags::TERM2);
+    cli.setCommand("add", std::make_tuple(
+        std::function&lt;void(const utils::cli::Cli&amp;, const std::vector&lt;std::string&gt;&amp;)&gt;(
+            [](const utils::cli::Cli&amp;, const std::vector&lt;std::string&gt;&amp; args) {
+                std::cout &lt;&lt; std::stoi(args[1]) + std::stoi(args[2]) &lt;&lt; std::endl;
+            }),
+        std::int16_t{2}, std::int16_t{2} // exactly 2 arguments
+    ));
+    (void)cli.start();
+    return cli.getCode();
+}</code></pre></div><div data-lang="fr"><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Cli
+#include &lt;utils/utils.hpp&gt;
+
+int main(void)
+{
+    utils::cli::Cli cli(true); // catch ctrl-c &amp; ctrl-z
+    cli.setFlags(utils::cli::flags::TERM2);
+    cli.setCommand("add", std::make_tuple(
+        std::function&lt;void(const utils::cli::Cli&amp;, const std::vector&lt;std::string&gt;&amp;)&gt;(
+            [](const utils::cli::Cli&amp;, const std::vector&lt;std::string&gt;&amp; args) {
+                std::cout &lt;&lt; std::stoi(args[1]) + std::stoi(args[2]) &lt;&lt; std::endl;
+            }),
+        std::int16_t{2}, std::int16_t{2} // exactly 2 arguments
+    ));
+    (void)cli.start();
+    return cli.getCode();
+}</code></pre></div></section><section id="in-c"><h2>8. <span data-lang="en">In C</span><span data-lang="fr">En C</span></h2><div data-lang="en"><p>Every call of <code>Cli</code> goes through the opaque handle <code>utils_cli_t*</code> (<code>utils_cli_create(sig)</code> / <code>utils_cli_destroy</code>). The thread of <code>THREAD</code> is kept in the handle: wait for it with <code>utils_cli_join</code>.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: C++, C"><table><thead><tr><th scope="col" style="min-width:28ch">C++</th><th scope="col" style="min-width:46ch">C</th></tr></thead><tbody><tr><td><code>Cli(sig)</code></td><td><code>utils_cli_create(sig)</code> (<code>NULL</code> on error) / <code>utils_cli_destroy(cli)</code> (kills and joins a running cli)</td></tr><tr><td><code>setFlags(flags::TERM2)</code></td><td><code>utils_cli_set_flags(cli, C_API_CLI_FLAGS_TERM2)</code> (<code>C_API_CLI_FLAG_*</code> combined with <code>|</code>)</td></tr><tr><td>parsed command</td><td><code>utils_cli_set_parsed_command(cli, name, fn, min, max, data, force)</code>, <code>fn(cli, argc, argv, data)</code> with <code>argv[0]</code> = the command</td></tr><tr><td>raw command</td><td><code>utils_cli_set_raw_command(cli, name, fn, data, force)</code></td></tr><tr><td><code>start(inputs, call)</code></td><td><code>utils_cli_start(cli, inputs, count, call)</code></td></tr><tr><td>hooks, middlewares</td><td><code>utils_cli_set_*_hook</code>, <code>utils_cli_&lt;name&gt;_middlewares_add_before</code> / <code>_add_after</code> / <code>_clear</code></td></tr><tr><td><code>strcode(code)</code>, <code>getHistory()</code></td><td><code>utils_cli_strcode</code> / <code>utils_cli_strcode_r</code>, <code>utils_cli_history_get</code> / <code>_r</code>, <code>utils_cli_history_size</code></td></tr><tr><td><code>ParsedData</code></td><td><code>utils_cli_parsed_t*</code> (<code>utils_cli_parsed_*</code>)</td></tr></tbody></table></div><p>A callback returns <code>UTILS_OK</code>, <code>UTILS_KO</code> (with <code>utils_fail(code, info)</code> for the message) or <code>C_API_CLI_EXIT</code> to stop the cli like the <code>exit</code> command.</p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define _Cli
+#include &lt;utils.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+static int add(const utils_cli_t* cli, size_t argc, const char* const* argv, void* data)
+{
+    (void)cli;
+    (void)argc;
+    (void)data;
+    printf("%ld\n", strtol(argv[1], NULL, 10) + strtol(argv[2], NULL, 10));
+    return UTILS_OK;
+}
+
+int main(void)
+{
+    utils_cli_t* cli = utils_cli_create(true);   // catch ctrl-c &amp; ctrl-z
+    int code = 1;
+
+    if (!cli)
+        return 1;
+    utils_cli_set_flags(cli, C_API_CLI_FLAGS_TERM2);
+    if (utils_cli_set_parsed_command(cli, "add", add, 2, 2, NULL, false) == UTILS_OK
+        &amp;&amp; utils_cli_start(cli, NULL, 0, 1) == UTILS_OK)
+        code = utils_cli_get_code(cli);
+    else
+        fprintf(stderr, "%s\n", utils_exception_format());
+    utils_cli_destroy(cli);
+    return code;
+}</code></pre></div><div data-lang="fr"><p>Chaque appel de <code>Cli</code> passe par le handle opaque <code>utils_cli_t*</code> (<code>utils_cli_create(sig)</code> / <code>utils_cli_destroy</code>). Le thread de <code>THREAD</code> est gardé dans le handle : attendez-le avec <code>utils_cli_join</code>.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: C++, C"><table><thead><tr><th scope="col" style="min-width:28ch">C++</th><th scope="col" style="min-width:46ch">C</th></tr></thead><tbody><tr><td><code>Cli(sig)</code></td><td><code>utils_cli_create(sig)</code> (<code>NULL</code> en cas d'erreur) / <code>utils_cli_destroy(cli)</code> (tue et attend une cli en cours)</td></tr><tr><td><code>setFlags(flags::TERM2)</code></td><td><code>utils_cli_set_flags(cli, C_API_CLI_FLAGS_TERM2)</code> (<code>C_API_CLI_FLAG_*</code> combinés avec <code>|</code>)</td></tr><tr><td>commande parsée</td><td><code>utils_cli_set_parsed_command(cli, name, fn, min, max, data, force)</code>, <code>fn(cli, argc, argv, data)</code> avec <code>argv[0]</code> = la commande</td></tr><tr><td>commande brute</td><td><code>utils_cli_set_raw_command(cli, name, fn, data, force)</code></td></tr><tr><td><code>start(inputs, call)</code></td><td><code>utils_cli_start(cli, inputs, count, call)</code></td></tr><tr><td>hooks, middlewares</td><td><code>utils_cli_set_*_hook</code>, <code>utils_cli_&lt;name&gt;_middlewares_add_before</code> / <code>_add_after</code> / <code>_clear</code></td></tr><tr><td><code>strcode(code)</code>, <code>getHistory()</code></td><td><code>utils_cli_strcode</code> / <code>utils_cli_strcode_r</code>, <code>utils_cli_history_get</code> / <code>_r</code>, <code>utils_cli_history_size</code></td></tr><tr><td><code>ParsedData</code></td><td><code>utils_cli_parsed_t*</code> (<code>utils_cli_parsed_*</code>)</td></tr></tbody></table></div><p>Un callback renvoie <code>UTILS_OK</code>, <code>UTILS_KO</code> (avec <code>utils_fail(code, info)</code> pour le message) ou <code>C_API_CLI_EXIT</code> pour arrêter la cli comme la commande <code>exit</code>.</p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define _Cli
+#include &lt;utils.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+static int add(const utils_cli_t* cli, size_t argc, const char* const* argv, void* data)
+{
+    (void)cli;
+    (void)argc;
+    (void)data;
+    printf("%ld\n", strtol(argv[1], NULL, 10) + strtol(argv[2], NULL, 10));
+    return UTILS_OK;
+}
+
+int main(void)
+{
+    utils_cli_t* cli = utils_cli_create(true);   // catch ctrl-c &amp; ctrl-z
+    int code = 1;
+
+    if (!cli)
+        return 1;
+    utils_cli_set_flags(cli, C_API_CLI_FLAGS_TERM2);
+    if (utils_cli_set_parsed_command(cli, "add", add, 2, 2, NULL, false) == UTILS_OK
+        &amp;&amp; utils_cli_start(cli, NULL, 0, 1) == UTILS_OK)
+        code = utils_cli_get_code(cli);
+    else
+        fprintf(stderr, "%s\n", utils_exception_format());
+    utils_cli_destroy(cli);
+    return code;
+}</code></pre></div></section><section id="cpp-api"><h2>9. <span data-lang="en">C++ API</span><span data-lang="fr">API C++</span></h2><div data-lang="en"><p>Read from the headers of <code>include/utils/cli/</code> (public part only, the trailing comments of the code kept). Include <code>&lt;utils/utils.hpp&gt;</code> with the define of the section, never these headers one by one.</p><h3 id="h-cli-cli-hpp"><code>utils/cli/Cli.hpp</code></h3><p>Cli class used for a customizable command line interface</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define HISTORY_FILE ".utils-cli_history"
+#define HISTORY_LIMITS 10000
+
+// namespace utils::cli
+using ParsedData = std::vector&lt; std::vector&lt; std::string &gt; &gt;;
+void defaultPromptHook(const utils::cli::Cli&amp; cli, std::uint8_t code);
+utils::cli::ParsedData defaultParserHook(const std::string&amp; input, const bool trim, const bool logic, const bool parse);
+bool defaultGetCHook(char&amp; c);
+class Cli: private utils::security::observer::Observer&lt;"Cli"&gt; {
+    utils::pool::Middlewares&lt;void, void&gt; cliMiddlewares; // When the cli start &amp; end
+    utils::pool::Middlewares&lt;std::uint8_t, std::uint8_t&gt; errorMiddlewares; // When an error is triggered
+    utils::pool::Middlewares&lt;void, void&gt; promptMiddlewares; // When the prompt is displayed
+    utils::pool::Middlewares&lt;void, char&gt; inputMiddlewares; // When a key is pressed (only after is used)
+    utils::pool::Middlewares&lt;const std::string&amp;, const utils::cli::ParsedData&amp;&gt; parserMiddlewares; // When the parser is called
+    utils::pool::Middlewares&lt;const utils::cli::ParsedData&amp;, const utils::cli::ParsedData&amp;&gt; execMiddlewares; // When the parsed data is executed
+    utils::pool::Middlewares&lt;const std::string&amp;, const std::string&amp;&gt; commandMiddlewares; // When a command is executed
+    void join(void) const noexcept; // Yield until the cli stop running
+    std::optional&lt;std::thread&gt; start(const std::size_t call = 1, const bool failsafe = false);
+    std::optional&lt;std::thread&gt; start(const std::string&amp; input, const std::size_t call = 1, const bool failsafe = false); // Execute an input on start
+    std::optional&lt;std::thread&gt; start(const std::vector&lt;std::string&gt;&amp; inputs, const std::size_t call = 1, const bool failsafe = false); // Execute multiple input on start
+    void resetCommands(void);
+    void clearCommands(void);
+    void delCommand(const std::string&amp; command);
+    void delCommands(const std::vector&lt;std::string&gt;&amp; commands);
+    void resetHooks(void); // Reset all hooks
+    void resetMiddlewares(void); // Reset all middlewares
+    std::string strcode(std::uint8_t code) const;
+    void setInputDelimitor(const char c);
+    void interrupt(void);
+    void kill(void);
+    bool isRunning(void) const;
+    bool wasInterrupted(void) const;
+    bool wasKilled(void) const;
+    bool wasStopped(void) const;
+    void resetFlags(void);
+    void subFlags(std::uint32_t flags);
+    void addFlags(std::uint32_t flags);
+    void setFlags(std::uint32_t flags);
+    template&lt;bool force = false&gt; void setCommand(const std::string&amp; command, const std::tuple&lt;std::function&lt;void(const utils::cli::Cli&amp;, const std::vector&lt;std::string&gt;&amp;)&gt;, std::int16_t, std::int16_t&gt;&amp; tup);
+    template&lt;bool force = false&gt; void setCommand(const std::string&amp; command, const std::function&lt;void(const utils::cli::Cli&amp;, const std::string&amp;)&gt;&amp; fn);
+    template&lt;bool force = false&gt; void setCommands(const std::unordered_map&lt;std::string, std::tuple&lt;std::function&lt;void(const utils::cli::Cli&amp;, const std::vector&lt;std::string&gt;&amp;)&gt;, std::int16_t, std::int16_t&gt;&gt;&amp; commands);
+    template&lt;bool force = false&gt; void setCommands(const std::unordered_map&lt;std::string, std::function&lt;void(const utils::cli::Cli&amp;, const std::string&amp;)&gt;&gt;&amp; commands);
+    void resetPromptHook(void);
+    void resetParserHook(void);
+    void resetGetCHook(void);
+    void setPromptHook(const std::function&lt;void(const utils::cli::Cli&amp;, std::uint8_t)&gt;&amp; hook); // Called to print the prompt
+    void setParserHook(const std::function&lt;utils::cli::ParsedData(const std::string&amp;, bool, bool, bool)&gt;&amp; hook); // Called to parse the input
+    void setGetCHook(const std::function&lt;bool(char&amp;)&gt;&amp; hook); // Called to get a char of the input
+    std::uint8_t getCode(void) const;
+    std::uint32_t getFlags(void) const;
+    char getInputDelimitor(void) const;
+    std::vector&lt;std::string&gt; getHistory(void) const;
+    Cli(const bool sig = false); // Enable/Disable catch of ctrl-c &amp; ctrl-z signal
+    ~Cli();
+};</code></pre><h3 id="h-cli-flags-hpp"><code>utils/cli/Flags.hpp</code></h3><p>Definition of the flags used to customize the cli</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::cli
+enum Flag {DEBUG, NOECHO, CATCH, EMPTY_INPUT, TRIM, PARSED, PROMPT, LOGIC, ARROW, HISTORY, PERSISTENT, HINT, AUTO_COMPLETION, MANUAL, THREAD, DETACHED, NO_TTY}
+// namespace utils::cli::flags
+constexpr std::uint32_t ALL = DEBUG | CATCH | NOECHO | TRIM | EMPTY_INPUT | PARSED | PROMPT | LOGIC | ARROW | HISTORY | HINT | AUTO_COMPLETION | MANUAL | THREAD | DETACHED;
+constexpr std::uint32_t DEFAULT = CATCH | EMPTY_INPUT | TRIM | PROMPT | ARROW;
+constexpr std::uint32_t DUMB = 0;
+constexpr std::uint32_t TERM1 = CATCH | EMPTY_INPUT | TRIM | PARSED | PROMPT | LOGIC | ARROW | HISTORY;
+constexpr std::uint32_t TERM2 = TERM1 | HINT | AUTO_COMPLETION;
+constexpr std::uint32_t TERM3 = TERM2 | THREAD;
+constexpr std::uint32_t LOG = TERM3 | DETACHED | NO_TTY;
+constexpr std::uint32_t DEV = TERM2 | DEBUG;
+constexpr std::uint32_t MULTI_THREADING = THREAD | DETACHED;</code></pre></div><div data-lang="fr"><p>Lu dans les en-têtes de <code>include/utils/cli/</code> (partie publique seulement, avec les commentaires du code). Inclure <code>&lt;utils/utils.hpp&gt;</code> avec le define de la section, jamais ces en-têtes un par un.</p><h3 id="h-cli-cli-hpp"><code>utils/cli/Cli.hpp</code></h3><p>Cli class used for a customizable command line interface</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define HISTORY_FILE ".utils-cli_history"
+#define HISTORY_LIMITS 10000
+
+// namespace utils::cli
+using ParsedData = std::vector&lt; std::vector&lt; std::string &gt; &gt;;
+void defaultPromptHook(const utils::cli::Cli&amp; cli, std::uint8_t code);
+utils::cli::ParsedData defaultParserHook(const std::string&amp; input, const bool trim, const bool logic, const bool parse);
+bool defaultGetCHook(char&amp; c);
+class Cli: private utils::security::observer::Observer&lt;"Cli"&gt; {
+    utils::pool::Middlewares&lt;void, void&gt; cliMiddlewares; // When the cli start &amp; end
+    utils::pool::Middlewares&lt;std::uint8_t, std::uint8_t&gt; errorMiddlewares; // When an error is triggered
+    utils::pool::Middlewares&lt;void, void&gt; promptMiddlewares; // When the prompt is displayed
+    utils::pool::Middlewares&lt;void, char&gt; inputMiddlewares; // When a key is pressed (only after is used)
+    utils::pool::Middlewares&lt;const std::string&amp;, const utils::cli::ParsedData&amp;&gt; parserMiddlewares; // When the parser is called
+    utils::pool::Middlewares&lt;const utils::cli::ParsedData&amp;, const utils::cli::ParsedData&amp;&gt; execMiddlewares; // When the parsed data is executed
+    utils::pool::Middlewares&lt;const std::string&amp;, const std::string&amp;&gt; commandMiddlewares; // When a command is executed
+    void join(void) const noexcept; // Yield until the cli stop running
+    std::optional&lt;std::thread&gt; start(const std::size_t call = 1, const bool failsafe = false);
+    std::optional&lt;std::thread&gt; start(const std::string&amp; input, const std::size_t call = 1, const bool failsafe = false); // Execute an input on start
+    std::optional&lt;std::thread&gt; start(const std::vector&lt;std::string&gt;&amp; inputs, const std::size_t call = 1, const bool failsafe = false); // Execute multiple input on start
+    void resetCommands(void);
+    void clearCommands(void);
+    void delCommand(const std::string&amp; command);
+    void delCommands(const std::vector&lt;std::string&gt;&amp; commands);
+    void resetHooks(void); // Reset all hooks
+    void resetMiddlewares(void); // Reset all middlewares
+    std::string strcode(std::uint8_t code) const;
+    void setInputDelimitor(const char c);
+    void interrupt(void);
+    void kill(void);
+    bool isRunning(void) const;
+    bool wasInterrupted(void) const;
+    bool wasKilled(void) const;
+    bool wasStopped(void) const;
+    void resetFlags(void);
+    void subFlags(std::uint32_t flags);
+    void addFlags(std::uint32_t flags);
+    void setFlags(std::uint32_t flags);
+    template&lt;bool force = false&gt; void setCommand(const std::string&amp; command, const std::tuple&lt;std::function&lt;void(const utils::cli::Cli&amp;, const std::vector&lt;std::string&gt;&amp;)&gt;, std::int16_t, std::int16_t&gt;&amp; tup);
+    template&lt;bool force = false&gt; void setCommand(const std::string&amp; command, const std::function&lt;void(const utils::cli::Cli&amp;, const std::string&amp;)&gt;&amp; fn);
+    template&lt;bool force = false&gt; void setCommands(const std::unordered_map&lt;std::string, std::tuple&lt;std::function&lt;void(const utils::cli::Cli&amp;, const std::vector&lt;std::string&gt;&amp;)&gt;, std::int16_t, std::int16_t&gt;&gt;&amp; commands);
+    template&lt;bool force = false&gt; void setCommands(const std::unordered_map&lt;std::string, std::function&lt;void(const utils::cli::Cli&amp;, const std::string&amp;)&gt;&gt;&amp; commands);
+    void resetPromptHook(void);
+    void resetParserHook(void);
+    void resetGetCHook(void);
+    void setPromptHook(const std::function&lt;void(const utils::cli::Cli&amp;, std::uint8_t)&gt;&amp; hook); // Called to print the prompt
+    void setParserHook(const std::function&lt;utils::cli::ParsedData(const std::string&amp;, bool, bool, bool)&gt;&amp; hook); // Called to parse the input
+    void setGetCHook(const std::function&lt;bool(char&amp;)&gt;&amp; hook); // Called to get a char of the input
+    std::uint8_t getCode(void) const;
+    std::uint32_t getFlags(void) const;
+    char getInputDelimitor(void) const;
+    std::vector&lt;std::string&gt; getHistory(void) const;
+    Cli(const bool sig = false); // Enable/Disable catch of ctrl-c &amp; ctrl-z signal
+    ~Cli();
+};</code></pre><h3 id="h-cli-flags-hpp"><code>utils/cli/Flags.hpp</code></h3><p>Definition of the flags used to customize the cli</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::cli
+enum Flag {DEBUG, NOECHO, CATCH, EMPTY_INPUT, TRIM, PARSED, PROMPT, LOGIC, ARROW, HISTORY, PERSISTENT, HINT, AUTO_COMPLETION, MANUAL, THREAD, DETACHED, NO_TTY}
+// namespace utils::cli::flags
+constexpr std::uint32_t ALL = DEBUG | CATCH | NOECHO | TRIM | EMPTY_INPUT | PARSED | PROMPT | LOGIC | ARROW | HISTORY | HINT | AUTO_COMPLETION | MANUAL | THREAD | DETACHED;
+constexpr std::uint32_t DEFAULT = CATCH | EMPTY_INPUT | TRIM | PROMPT | ARROW;
+constexpr std::uint32_t DUMB = 0;
+constexpr std::uint32_t TERM1 = CATCH | EMPTY_INPUT | TRIM | PARSED | PROMPT | LOGIC | ARROW | HISTORY;
+constexpr std::uint32_t TERM2 = TERM1 | HINT | AUTO_COMPLETION;
+constexpr std::uint32_t TERM3 = TERM2 | THREAD;
+constexpr std::uint32_t LOG = TERM3 | DETACHED | NO_TTY;
+constexpr std::uint32_t DEV = TERM2 | DEBUG;
+constexpr std::uint32_t MULTI_THREADING = THREAD | DETACHED;</code></pre></div></section><section id="c-api"><h2>10. <span data-lang="en">C API</span><span data-lang="fr">API C</span></h2><div data-lang="en"><p>Read from <code>include/utils/cli/CApi.h</code>, included by <code>&lt;utils.h&gt;</code> with the define of the section. Every function that can fail returns <code>UTILS_OK</code> / <code>UTILS_KO</code> (or <code>NULL</code> / <code>0</code>) and fills <code>utils_exception</code> (see <a href="c-api.html#errors">the C API guide</a>).</p><h3 id="c-1">Defines · Callbacks return</h3><p><em>callbacks return (with UTILS_OK / UTILS_KO)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_CLI_EXIT 1     // stop the cli (utils::exception::NoneException(Exit), like the exit command)
+#define C_API_CLI_NO_INPUT 2 // getc hook only: no char available yet (called again)</code></pre><h3 id="c-2">Defines · Commands arguments limit</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_CLI_NO_LIMIT -1 // no min / max number of arguments</code></pre><h3 id="c-3">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_cli utils_cli_t; // utils::cli::Cli (+ its thread)
+typedef struct utils_cli_parsed utils_cli_parsed_t; // utils::cli::ParsedData</code></pre><h3 id="c-4">Types · Commands</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef int (*utils_cli_parsed_command_t)(const utils_cli_t* cli, size_t argc, const char* const* argv, void* data); // argv[0] = the command
+typedef int (*utils_cli_raw_command_t)(const utils_cli_t* cli, const char* input, void* data);</code></pre><h3 id="c-5">Types · Hooks</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef int (*utils_cli_prompt_hook_t)(const utils_cli_t* cli, uint8_t code, void* data); // print the prompt
+typedef int (*utils_cli_parser_hook_t)(const char* input, bool trim, bool logic, bool parse, utils_cli_parsed_t* out, void* data); // fill out (empty at the call)
+typedef int (*utils_cli_getc_hook_t)(char* c, void* data); // UTILS_OK: *c read ('\0' = EOF), C_API_CLI_NO_INPUT: nothing yet</code></pre><h3 id="c-6">Types · Middlewares</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef int (*utils_cli_middleware_t)(void* data);
+typedef int (*utils_cli_middleware_code_t)(uint8_t code, void* data);
+typedef int (*utils_cli_middleware_char_t)(char c, void* data);
+typedef int (*utils_cli_middleware_str_t)(const char* str, void* data);
+typedef int (*utils_cli_middleware_parsed_t)(const utils_cli_parsed_t* parsed, void* data);</code></pre><h3 id="c-7">Enums · Flags</h3><p><em>flags (utils::cli::Flag), a combination is given as uint32_t</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_cli_flag {
+    C_API_CLI_FLAG_DEBUG           = 1 &lt;&lt; 0, // Active verbose for internal action (Nothing for now)
+    C_API_CLI_FLAG_NOECHO          = 1 &lt;&lt; 1, // Disable echo of the input
+    C_API_CLI_FLAG_CATCH           = 1 &lt;&lt; 2, // Enable error catching on execution
+    C_API_CLI_FLAG_EMPTY_INPUT     = 1 &lt;&lt; 3, // Ignore empty input (default: error)
+    C_API_CLI_FLAG_TRIM            = 1 &lt;&lt; 4, // Enable trim on input
+    C_API_CLI_FLAG_PARSED          = 1 &lt;&lt; 5, // Active parser for the input and call the parsed commands (default: raw)
+    C_API_CLI_FLAG_PROMPT          = 1 &lt;&lt; 6, // Active the prompt
+    C_API_CLI_FLAG_LOGIC           = 1 &lt;&lt; 7, // Enable logic with '&amp;&amp;', '||' and ';'
+    C_API_CLI_FLAG_ARROW           = 1 &lt;&lt; 8, // Activate left, right
+    C_API_CLI_FLAG_HISTORY         = 1 &lt;&lt; 9, // Activate history, up and down arrow
+    C_API_CLI_FLAG_PERSISTENT      = 1 &lt;&lt; 10, // Allow persistent memory between session (history, ...)
+    C_API_CLI_FLAG_HINT            = 1 &lt;&lt; 11, // Display hint when a command fail
+    C_API_CLI_FLAG_AUTO_COMPLETION = 1 &lt;&lt; 12, // Active auto completion with `\t` (only work on the first command for now)
+    C_API_CLI_FLAG_MANUAL          = 1 &lt;&lt; 13, // Enable manual call for each new input handling
+    C_API_CLI_FLAG_THREAD          = 1 &lt;&lt; 14, // Run in a thread (kept in the handle, see utils_cli_join)
+    C_API_CLI_FLAG_DETACHED        = 1 &lt;&lt; 15, // Detach the thread execution
+    C_API_CLI_FLAG_NO_TTY          = 1 &lt;&lt; 16 // Allow usage even without tty
+} utils_cli_flag_t;</code></pre><h3 id="c-8">Enums · Flags preset</h3><p><em>flags preset (utils::cli::flags::*)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_cli_flags {
+    C_API_CLI_FLAGS_ALL             = C_API_CLI_FLAG_DEBUG | C_API_CLI_FLAG_CATCH | C_API_CLI_FLAG_NOECHO | C_API_CLI_FLAG_TRIM | C_API_CLI_FLAG_EMPTY_INPUT | C_API_CLI_FLAG_PARSED | C_API_CLI_FLAG_PROMPT | C_API_CLI_FLAG_LOGIC | C_API_CLI_FLAG_ARROW | C_API_CLI_FLAG_HISTORY | C_API_CLI_FLAG_HINT | C_API_CLI_FLAG_AUTO_COMPLETION | C_API_CLI_FLAG_MANUAL | C_API_CLI_FLAG_THREAD | C_API_CLI_FLAG_DETACHED,
+    C_API_CLI_FLAGS_DEFAULT         = C_API_CLI_FLAG_CATCH | C_API_CLI_FLAG_EMPTY_INPUT | C_API_CLI_FLAG_TRIM | C_API_CLI_FLAG_PROMPT | C_API_CLI_FLAG_ARROW,
+    C_API_CLI_FLAGS_DUMB            = 0,
+    C_API_CLI_FLAGS_TERM1           = C_API_CLI_FLAG_CATCH | C_API_CLI_FLAG_EMPTY_INPUT | C_API_CLI_FLAG_TRIM | C_API_CLI_FLAG_PARSED | C_API_CLI_FLAG_PROMPT | C_API_CLI_FLAG_LOGIC | C_API_CLI_FLAG_ARROW | C_API_CLI_FLAG_HISTORY,
+    C_API_CLI_FLAGS_TERM2           = C_API_CLI_FLAGS_TERM1 | C_API_CLI_FLAG_HINT | C_API_CLI_FLAG_AUTO_COMPLETION,
+    C_API_CLI_FLAGS_TERM3           = C_API_CLI_FLAGS_TERM2 | C_API_CLI_FLAG_THREAD,
+    C_API_CLI_FLAGS_LOG             = C_API_CLI_FLAGS_TERM3 | C_API_CLI_FLAG_DETACHED | C_API_CLI_FLAG_NO_TTY,
+    C_API_CLI_FLAGS_DEV             = C_API_CLI_FLAGS_TERM2 | C_API_CLI_FLAG_DEBUG,
+    C_API_CLI_FLAGS_MULTI_THREADING = C_API_CLI_FLAG_THREAD | C_API_CLI_FLAG_DETACHED
+} utils_cli_flags_t;</code></pre><h3 id="c-9">Structures · Entries for utils_cli_set_parsed_commands</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_cli_parsed_command_entry {
+    const char* name;
+    utils_cli_parsed_command_t fn;
+    int16_t min; // C_API_CLI_NO_LIMIT: no minimum of arguments
+    int16_t max; // C_API_CLI_NO_LIMIT: no maximum of arguments
+    void* data; // given back to fn
+} utils_cli_parsed_command_entry_t;</code></pre><h3 id="c-10">Structures · Entries for utils_cli_set_raw_commands</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_cli_raw_command_entry {
+    const char* name;
+    utils_cli_raw_command_t fn;
+    void* data; // given back to fn
+} utils_cli_raw_command_entry_t;</code></pre><h3 id="c-11">Functions · Handle</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_cli_t* utils_cli_create(bool sig); // NULL on error, sig: catch of ctrl-c &amp; ctrl-z
+void utils_cli_destroy(utils_cli_t* cli); // kill &amp; join a running cli</code></pre><h3 id="c-12">Functions · Run</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_cli_start(utils_cli_t* cli, const char* const* inputs, size_t count, size_t call); // inputs executed on start (NULL / 0: none)
+void utils_cli_join(utils_cli_t* cli); // join the thread kept in the handle (THREAD) or wait the end of the cli
+void utils_cli_interrupt(utils_cli_t* cli);
+void utils_cli_kill(utils_cli_t* cli); // can't be undone</code></pre><h3 id="c-13">Functions · Status</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">bool utils_cli_is_running(const utils_cli_t* cli);
+bool utils_cli_was_interrupted(const utils_cli_t* cli);
+bool utils_cli_was_killed(const utils_cli_t* cli);
+bool utils_cli_was_stopped(const utils_cli_t* cli);</code></pre><h3 id="c-14">Functions · Flags</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">void utils_cli_reset_flags(utils_cli_t* cli);
+void utils_cli_sub_flags(utils_cli_t* cli, uint32_t flags);
+void utils_cli_add_flags(utils_cli_t* cli, uint32_t flags);
+void utils_cli_set_flags(utils_cli_t* cli, uint32_t flags);</code></pre><h3 id="c-15">Functions · Commands</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_cli_set_parsed_command(utils_cli_t* cli, const char* name, utils_cli_parsed_command_t fn, int16_t min, int16_t max, void* data, bool force); // force: override an existing one
+int utils_cli_set_raw_command(utils_cli_t* cli, const char* name, utils_cli_raw_command_t fn, void* data, bool force);
+int utils_cli_set_parsed_commands(utils_cli_t* cli, const utils_cli_parsed_command_entry_t* commands, size_t count, bool force);
+int utils_cli_set_raw_commands(utils_cli_t* cli, const utils_cli_raw_command_entry_t* commands, size_t count, bool force);
+int utils_cli_del_command(utils_cli_t* cli, const char* name);
+int utils_cli_del_commands(utils_cli_t* cli, const char* const* names, size_t count);
+int utils_cli_reset_commands(utils_cli_t* cli); // default commands (exit, ...)
+int utils_cli_clear_commands(utils_cli_t* cli);</code></pre><h3 id="c-16">Functions · Hooks</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_cli_reset_hooks(utils_cli_t* cli);
+int utils_cli_reset_prompt_hook(utils_cli_t* cli);
+int utils_cli_reset_parser_hook(utils_cli_t* cli);
+int utils_cli_reset_getc_hook(utils_cli_t* cli);
+int utils_cli_set_prompt_hook(utils_cli_t* cli, utils_cli_prompt_hook_t hook, void* data);
+int utils_cli_set_parser_hook(utils_cli_t* cli, utils_cli_parser_hook_t hook, void* data);
+int utils_cli_set_getc_hook(utils_cli_t* cli, utils_cli_getc_hook_t hook, void* data);</code></pre><h3 id="c-17">Functions · Default hooks</h3><p><em>default hooks (same signature as the hooks, data unused)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_cli_default_prompt_hook(const utils_cli_t* cli, uint8_t code, void* data);
+int utils_cli_default_parser_hook(const char* input, bool trim, bool logic, bool parse, utils_cli_parsed_t* out, void* data);
+int utils_cli_default_getc_hook(char* c, void* data);</code></pre><h3 id="c-18">Functions · Middlewares</h3><p><em>middlewares (before / after of each step, called in the order of addition)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_cli_reset_middlewares(utils_cli_t* cli);
+int utils_cli_cli_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_t fn, void* data); // When the cli start &amp; end
+int utils_cli_cli_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_t fn, void* data);
+int utils_cli_cli_middlewares_clear(utils_cli_t* cli);
+int utils_cli_error_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_code_t fn, void* data); // When an error is triggered
+int utils_cli_error_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_code_t fn, void* data);
+int utils_cli_error_middlewares_clear(utils_cli_t* cli);
+int utils_cli_prompt_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_t fn, void* data); // When the prompt is displayed
+int utils_cli_prompt_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_t fn, void* data);
+int utils_cli_prompt_middlewares_clear(utils_cli_t* cli);
+int utils_cli_input_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_t fn, void* data); // When a key is pressed
+int utils_cli_input_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_char_t fn, void* data);
+int utils_cli_input_middlewares_clear(utils_cli_t* cli);
+int utils_cli_parser_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_str_t fn, void* data); // When the parser is called
+int utils_cli_parser_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_parsed_t fn, void* data);
+int utils_cli_parser_middlewares_clear(utils_cli_t* cli);
+int utils_cli_exec_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_parsed_t fn, void* data); // When the parsed data is executed
+int utils_cli_exec_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_parsed_t fn, void* data);
+int utils_cli_exec_middlewares_clear(utils_cli_t* cli);
+int utils_cli_command_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_str_t fn, void* data); // When a command is executed
+int utils_cli_command_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_str_t fn, void* data);
+int utils_cli_command_middlewares_clear(utils_cli_t* cli);</code></pre><h3 id="c-19">Functions · Setter / getter</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">void utils_cli_set_input_delimitor(utils_cli_t* cli, char c);
+char utils_cli_get_input_delimitor(const utils_cli_t* cli);
+uint8_t utils_cli_get_code(const utils_cli_t* cli);
+uint32_t utils_cli_get_flags(const utils_cli_t* cli);</code></pre><h3 id="c-20">Functions · Strings</h3><p><em>strings: the pointer is valid until the next call of the same function in the thread (NULL on error)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">const char* utils_cli_strcode(const utils_cli_t* cli, uint8_t code);
+const char* utils_cli_history_get(const utils_cli_t* cli, size_t i);
+size_t utils_cli_history_size(const utils_cli_t* cli);</code></pre><h3 id="c-21">Functions · Strings</h3><p><em>strings (_r): copied in buf (truncated, always '\0' terminated), returns the full length like snprintf (0 on error)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">size_t utils_cli_strcode_r(const utils_cli_t* cli, uint8_t code, char* buf, size_t size);
+size_t utils_cli_history_get_r(const utils_cli_t* cli, size_t i, char* buf, size_t size);</code></pre><h3 id="c-22">Functions · Parsed data</h3><p><em>parsed data (one group per command, PARSED: &lt;command&gt; &lt;command&gt; [args...] &lt;separator&gt;, raw: &lt;command&gt; &lt;input&gt; &lt;separator&gt;, separator: "&amp;&amp;", "||", ";" or "")</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_cli_parsed_t* utils_cli_parsed_create(void); // NULL on error
+void utils_cli_parsed_destroy(utils_cli_parsed_t* parsed);
+int utils_cli_parsed_clear(utils_cli_parsed_t* parsed);
+int utils_cli_parsed_add_group(utils_cli_parsed_t* parsed); // new command
+int utils_cli_parsed_add_arg(utils_cli_parsed_t* parsed, const char* arg); // to the last group
+size_t utils_cli_parsed_groups(const utils_cli_parsed_t* parsed);
+size_t utils_cli_parsed_size(const utils_cli_parsed_t* parsed, size_t group);
+const char* utils_cli_parsed_get(const utils_cli_parsed_t* parsed, size_t group, size_t i); // valid until parsed is changed (NULL on error)</code></pre></div><div data-lang="fr"><p>Lu dans <code>include/utils/cli/CApi.h</code>, inclus par <code>&lt;utils.h&gt;</code> avec le define de la section. Chaque fonction qui peut échouer renvoie <code>UTILS_OK</code> / <code>UTILS_KO</code> (ou <code>NULL</code> / <code>0</code>) et remplit <code>utils_exception</code> (voir <a href="c-api.html#errors">le guide de l'API C</a>).</p><h3 id="c-1">Defines · Callbacks return</h3><p><em>callbacks return (with UTILS_OK / UTILS_KO)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_CLI_EXIT 1     // stop the cli (utils::exception::NoneException(Exit), like the exit command)
+#define C_API_CLI_NO_INPUT 2 // getc hook only: no char available yet (called again)</code></pre><h3 id="c-2">Defines · Commands arguments limit</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_CLI_NO_LIMIT -1 // no min / max number of arguments</code></pre><h3 id="c-3">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_cli utils_cli_t; // utils::cli::Cli (+ its thread)
+typedef struct utils_cli_parsed utils_cli_parsed_t; // utils::cli::ParsedData</code></pre><h3 id="c-4">Types · Commands</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef int (*utils_cli_parsed_command_t)(const utils_cli_t* cli, size_t argc, const char* const* argv, void* data); // argv[0] = the command
+typedef int (*utils_cli_raw_command_t)(const utils_cli_t* cli, const char* input, void* data);</code></pre><h3 id="c-5">Types · Hooks</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef int (*utils_cli_prompt_hook_t)(const utils_cli_t* cli, uint8_t code, void* data); // print the prompt
+typedef int (*utils_cli_parser_hook_t)(const char* input, bool trim, bool logic, bool parse, utils_cli_parsed_t* out, void* data); // fill out (empty at the call)
+typedef int (*utils_cli_getc_hook_t)(char* c, void* data); // UTILS_OK: *c read ('\0' = EOF), C_API_CLI_NO_INPUT: nothing yet</code></pre><h3 id="c-6">Types · Middlewares</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef int (*utils_cli_middleware_t)(void* data);
+typedef int (*utils_cli_middleware_code_t)(uint8_t code, void* data);
+typedef int (*utils_cli_middleware_char_t)(char c, void* data);
+typedef int (*utils_cli_middleware_str_t)(const char* str, void* data);
+typedef int (*utils_cli_middleware_parsed_t)(const utils_cli_parsed_t* parsed, void* data);</code></pre><h3 id="c-7">Énumérations · Flags</h3><p><em>flags (utils::cli::Flag), a combination is given as uint32_t</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_cli_flag {
+    C_API_CLI_FLAG_DEBUG           = 1 &lt;&lt; 0, // Active verbose for internal action (Nothing for now)
+    C_API_CLI_FLAG_NOECHO          = 1 &lt;&lt; 1, // Disable echo of the input
+    C_API_CLI_FLAG_CATCH           = 1 &lt;&lt; 2, // Enable error catching on execution
+    C_API_CLI_FLAG_EMPTY_INPUT     = 1 &lt;&lt; 3, // Ignore empty input (default: error)
+    C_API_CLI_FLAG_TRIM            = 1 &lt;&lt; 4, // Enable trim on input
+    C_API_CLI_FLAG_PARSED          = 1 &lt;&lt; 5, // Active parser for the input and call the parsed commands (default: raw)
+    C_API_CLI_FLAG_PROMPT          = 1 &lt;&lt; 6, // Active the prompt
+    C_API_CLI_FLAG_LOGIC           = 1 &lt;&lt; 7, // Enable logic with '&amp;&amp;', '||' and ';'
+    C_API_CLI_FLAG_ARROW           = 1 &lt;&lt; 8, // Activate left, right
+    C_API_CLI_FLAG_HISTORY         = 1 &lt;&lt; 9, // Activate history, up and down arrow
+    C_API_CLI_FLAG_PERSISTENT      = 1 &lt;&lt; 10, // Allow persistent memory between session (history, ...)
+    C_API_CLI_FLAG_HINT            = 1 &lt;&lt; 11, // Display hint when a command fail
+    C_API_CLI_FLAG_AUTO_COMPLETION = 1 &lt;&lt; 12, // Active auto completion with `\t` (only work on the first command for now)
+    C_API_CLI_FLAG_MANUAL          = 1 &lt;&lt; 13, // Enable manual call for each new input handling
+    C_API_CLI_FLAG_THREAD          = 1 &lt;&lt; 14, // Run in a thread (kept in the handle, see utils_cli_join)
+    C_API_CLI_FLAG_DETACHED        = 1 &lt;&lt; 15, // Detach the thread execution
+    C_API_CLI_FLAG_NO_TTY          = 1 &lt;&lt; 16 // Allow usage even without tty
+} utils_cli_flag_t;</code></pre><h3 id="c-8">Énumérations · Flags preset</h3><p><em>flags preset (utils::cli::flags::*)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_cli_flags {
+    C_API_CLI_FLAGS_ALL             = C_API_CLI_FLAG_DEBUG | C_API_CLI_FLAG_CATCH | C_API_CLI_FLAG_NOECHO | C_API_CLI_FLAG_TRIM | C_API_CLI_FLAG_EMPTY_INPUT | C_API_CLI_FLAG_PARSED | C_API_CLI_FLAG_PROMPT | C_API_CLI_FLAG_LOGIC | C_API_CLI_FLAG_ARROW | C_API_CLI_FLAG_HISTORY | C_API_CLI_FLAG_HINT | C_API_CLI_FLAG_AUTO_COMPLETION | C_API_CLI_FLAG_MANUAL | C_API_CLI_FLAG_THREAD | C_API_CLI_FLAG_DETACHED,
+    C_API_CLI_FLAGS_DEFAULT         = C_API_CLI_FLAG_CATCH | C_API_CLI_FLAG_EMPTY_INPUT | C_API_CLI_FLAG_TRIM | C_API_CLI_FLAG_PROMPT | C_API_CLI_FLAG_ARROW,
+    C_API_CLI_FLAGS_DUMB            = 0,
+    C_API_CLI_FLAGS_TERM1           = C_API_CLI_FLAG_CATCH | C_API_CLI_FLAG_EMPTY_INPUT | C_API_CLI_FLAG_TRIM | C_API_CLI_FLAG_PARSED | C_API_CLI_FLAG_PROMPT | C_API_CLI_FLAG_LOGIC | C_API_CLI_FLAG_ARROW | C_API_CLI_FLAG_HISTORY,
+    C_API_CLI_FLAGS_TERM2           = C_API_CLI_FLAGS_TERM1 | C_API_CLI_FLAG_HINT | C_API_CLI_FLAG_AUTO_COMPLETION,
+    C_API_CLI_FLAGS_TERM3           = C_API_CLI_FLAGS_TERM2 | C_API_CLI_FLAG_THREAD,
+    C_API_CLI_FLAGS_LOG             = C_API_CLI_FLAGS_TERM3 | C_API_CLI_FLAG_DETACHED | C_API_CLI_FLAG_NO_TTY,
+    C_API_CLI_FLAGS_DEV             = C_API_CLI_FLAGS_TERM2 | C_API_CLI_FLAG_DEBUG,
+    C_API_CLI_FLAGS_MULTI_THREADING = C_API_CLI_FLAG_THREAD | C_API_CLI_FLAG_DETACHED
+} utils_cli_flags_t;</code></pre><h3 id="c-9">Structures · Entries for utils_cli_set_parsed_commands</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_cli_parsed_command_entry {
+    const char* name;
+    utils_cli_parsed_command_t fn;
+    int16_t min; // C_API_CLI_NO_LIMIT: no minimum of arguments
+    int16_t max; // C_API_CLI_NO_LIMIT: no maximum of arguments
+    void* data; // given back to fn
+} utils_cli_parsed_command_entry_t;</code></pre><h3 id="c-10">Structures · Entries for utils_cli_set_raw_commands</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_cli_raw_command_entry {
+    const char* name;
+    utils_cli_raw_command_t fn;
+    void* data; // given back to fn
+} utils_cli_raw_command_entry_t;</code></pre><h3 id="c-11">Fonctions · Handle</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_cli_t* utils_cli_create(bool sig); // NULL on error, sig: catch of ctrl-c &amp; ctrl-z
+void utils_cli_destroy(utils_cli_t* cli); // kill &amp; join a running cli</code></pre><h3 id="c-12">Fonctions · Run</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_cli_start(utils_cli_t* cli, const char* const* inputs, size_t count, size_t call); // inputs executed on start (NULL / 0: none)
+void utils_cli_join(utils_cli_t* cli); // join the thread kept in the handle (THREAD) or wait the end of the cli
+void utils_cli_interrupt(utils_cli_t* cli);
+void utils_cli_kill(utils_cli_t* cli); // can't be undone</code></pre><h3 id="c-13">Fonctions · Status</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">bool utils_cli_is_running(const utils_cli_t* cli);
+bool utils_cli_was_interrupted(const utils_cli_t* cli);
+bool utils_cli_was_killed(const utils_cli_t* cli);
+bool utils_cli_was_stopped(const utils_cli_t* cli);</code></pre><h3 id="c-14">Fonctions · Flags</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">void utils_cli_reset_flags(utils_cli_t* cli);
+void utils_cli_sub_flags(utils_cli_t* cli, uint32_t flags);
+void utils_cli_add_flags(utils_cli_t* cli, uint32_t flags);
+void utils_cli_set_flags(utils_cli_t* cli, uint32_t flags);</code></pre><h3 id="c-15">Fonctions · Commands</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_cli_set_parsed_command(utils_cli_t* cli, const char* name, utils_cli_parsed_command_t fn, int16_t min, int16_t max, void* data, bool force); // force: override an existing one
+int utils_cli_set_raw_command(utils_cli_t* cli, const char* name, utils_cli_raw_command_t fn, void* data, bool force);
+int utils_cli_set_parsed_commands(utils_cli_t* cli, const utils_cli_parsed_command_entry_t* commands, size_t count, bool force);
+int utils_cli_set_raw_commands(utils_cli_t* cli, const utils_cli_raw_command_entry_t* commands, size_t count, bool force);
+int utils_cli_del_command(utils_cli_t* cli, const char* name);
+int utils_cli_del_commands(utils_cli_t* cli, const char* const* names, size_t count);
+int utils_cli_reset_commands(utils_cli_t* cli); // default commands (exit, ...)
+int utils_cli_clear_commands(utils_cli_t* cli);</code></pre><h3 id="c-16">Fonctions · Hooks</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_cli_reset_hooks(utils_cli_t* cli);
+int utils_cli_reset_prompt_hook(utils_cli_t* cli);
+int utils_cli_reset_parser_hook(utils_cli_t* cli);
+int utils_cli_reset_getc_hook(utils_cli_t* cli);
+int utils_cli_set_prompt_hook(utils_cli_t* cli, utils_cli_prompt_hook_t hook, void* data);
+int utils_cli_set_parser_hook(utils_cli_t* cli, utils_cli_parser_hook_t hook, void* data);
+int utils_cli_set_getc_hook(utils_cli_t* cli, utils_cli_getc_hook_t hook, void* data);</code></pre><h3 id="c-17">Fonctions · Default hooks</h3><p><em>default hooks (same signature as the hooks, data unused)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_cli_default_prompt_hook(const utils_cli_t* cli, uint8_t code, void* data);
+int utils_cli_default_parser_hook(const char* input, bool trim, bool logic, bool parse, utils_cli_parsed_t* out, void* data);
+int utils_cli_default_getc_hook(char* c, void* data);</code></pre><h3 id="c-18">Fonctions · Middlewares</h3><p><em>middlewares (before / after of each step, called in the order of addition)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_cli_reset_middlewares(utils_cli_t* cli);
+int utils_cli_cli_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_t fn, void* data); // When the cli start &amp; end
+int utils_cli_cli_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_t fn, void* data);
+int utils_cli_cli_middlewares_clear(utils_cli_t* cli);
+int utils_cli_error_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_code_t fn, void* data); // When an error is triggered
+int utils_cli_error_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_code_t fn, void* data);
+int utils_cli_error_middlewares_clear(utils_cli_t* cli);
+int utils_cli_prompt_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_t fn, void* data); // When the prompt is displayed
+int utils_cli_prompt_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_t fn, void* data);
+int utils_cli_prompt_middlewares_clear(utils_cli_t* cli);
+int utils_cli_input_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_t fn, void* data); // When a key is pressed
+int utils_cli_input_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_char_t fn, void* data);
+int utils_cli_input_middlewares_clear(utils_cli_t* cli);
+int utils_cli_parser_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_str_t fn, void* data); // When the parser is called
+int utils_cli_parser_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_parsed_t fn, void* data);
+int utils_cli_parser_middlewares_clear(utils_cli_t* cli);
+int utils_cli_exec_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_parsed_t fn, void* data); // When the parsed data is executed
+int utils_cli_exec_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_parsed_t fn, void* data);
+int utils_cli_exec_middlewares_clear(utils_cli_t* cli);
+int utils_cli_command_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_str_t fn, void* data); // When a command is executed
+int utils_cli_command_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_str_t fn, void* data);
+int utils_cli_command_middlewares_clear(utils_cli_t* cli);</code></pre><h3 id="c-19">Fonctions · Setter / getter</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">void utils_cli_set_input_delimitor(utils_cli_t* cli, char c);
+char utils_cli_get_input_delimitor(const utils_cli_t* cli);
+uint8_t utils_cli_get_code(const utils_cli_t* cli);
+uint32_t utils_cli_get_flags(const utils_cli_t* cli);</code></pre><h3 id="c-20">Fonctions · Strings</h3><p><em>strings: the pointer is valid until the next call of the same function in the thread (NULL on error)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">const char* utils_cli_strcode(const utils_cli_t* cli, uint8_t code);
+const char* utils_cli_history_get(const utils_cli_t* cli, size_t i);
+size_t utils_cli_history_size(const utils_cli_t* cli);</code></pre><h3 id="c-21">Fonctions · Strings</h3><p><em>strings (_r): copied in buf (truncated, always '\0' terminated), returns the full length like snprintf (0 on error)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">size_t utils_cli_strcode_r(const utils_cli_t* cli, uint8_t code, char* buf, size_t size);
+size_t utils_cli_history_get_r(const utils_cli_t* cli, size_t i, char* buf, size_t size);</code></pre><h3 id="c-22">Fonctions · Parsed data</h3><p><em>parsed data (one group per command, PARSED: &lt;command&gt; &lt;command&gt; [args...] &lt;separator&gt;, raw: &lt;command&gt; &lt;input&gt; &lt;separator&gt;, separator: "&amp;&amp;", "||", ";" or "")</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_cli_parsed_t* utils_cli_parsed_create(void); // NULL on error
+void utils_cli_parsed_destroy(utils_cli_parsed_t* parsed);
+int utils_cli_parsed_clear(utils_cli_parsed_t* parsed);
+int utils_cli_parsed_add_group(utils_cli_parsed_t* parsed); // new command
+int utils_cli_parsed_add_arg(utils_cli_parsed_t* parsed, const char* arg); // to the last group
+size_t utils_cli_parsed_groups(const utils_cli_parsed_t* parsed);
+size_t utils_cli_parsed_size(const utils_cli_parsed_t* parsed, size_t group);
+const char* utils_cli_parsed_get(const utils_cli_parsed_t* parsed, size_t group, size_t i); // valid until parsed is changed (NULL on error)</code></pre></div></section><nav class="pager"><a href="pool.html"><span data-i18n>Previous</span><span data-lang="en">Pool</span><span data-lang="fr">Pool</span></a><a class="next" href="arguments.html"><span data-i18n>Next</span><span data-lang="en">Arguments</span><span data-lang="fr">Arguments</span></a></nav></main>
+</div>
+<footer class="site">libutils v5.0.0 · 23d2be3 · docs</footer>
+<script src="site.js"></script>
+<script src="search-index.js" defer></script>
+</body>
+</html>

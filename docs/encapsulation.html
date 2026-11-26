@@ -1,0 +1,665 @@
+<!doctype html>
+<html lang="en" data-storage-key="libutils-docs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Encapsulation - libutils</title>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n>Skip to the content</a>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" id="menuBtn" aria-label="Open the navigation" data-i18n-aria-label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v5.0.0</span></a>
+  <nav class="tabs" aria-label="Pages" hidden></nav>
+  <span class="spacer"></span>
+  <div class="top-actions">
+  <div class="lang-switch" role="group" aria-label="Language" data-i18n-aria-label>
+    <button type="button" data-set-lang="en" class="on">EN</button>
+    <button type="button" data-set-lang="fr">FR</button>
+  </div>
+  <span class="divider" aria-hidden="true"></span><div class="sbox small"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" autocomplete="off" aria-label="Search" data-i18n-aria-label placeholder="Search…" data-ph-fr="Rechercher…"><kbd class="hint" aria-hidden="true">/</kbd><ul class="results" hidden></ul></div>
+<a class="icon-btn" href="https://github.com/TsukiNi22/libutils" aria-label="GitHub repository" data-i18n-aria-label title="GitHub repository" data-i18n-title><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"/></svg></a>
+  <button class="theme-switch" type="button" id="themeToggle" role="switch" aria-checked="false" aria-label="Toggle theme" data-i18n-aria-label title="Toggle theme" data-i18n-title>
+    <span class="stars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="knob" aria-hidden="true">
+      <svg class="sun" viewBox="0 0 24 24" fill="#ffffff"><circle cx="12" cy="12" r="5.2"/><g stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"><path d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6M4.8 4.8l1.8 1.8M17.4 17.4l1.8 1.8M4.8 19.2l1.8-1.8M17.4 6.6l1.8-1.8"/></g></svg>
+      <svg class="moon" viewBox="0 0 24 24"><path d="M15.6 4.2a8 8 0 1 0 4.2 11.6A7 7 0 0 1 15.6 4.2z" fill="#f6c343"/></svg>
+    </span>
+  </button>
+  </div>
+</header>
+<div class="layout" id="top">
+<aside class="sidebar" id="sidebar"><p data-i18n>On this page</p><a href="#pipe-dup">1. <span data-lang="en">Pipe and Dup</span><span data-lang="fr">Pipe et Dup</span></a><a href="#process">2. <span data-lang="en">Process</span><span data-lang="fr">Process</span></a><a href="#poll">3. <span data-lang="en">Poll</span><span data-lang="fr">Poll</span></a><a href="#shared-object">4. <span data-lang="en">SharedObject</span><span data-lang="fr">SharedObject</span></a><a href="#shared-memory">5. <span data-lang="en">SharedMemory</span><span data-lang="fr">SharedMemory</span></a><a href="#errors">6. <span data-lang="en">Errors</span><span data-lang="fr">Erreurs</span></a><a href="#in-c">7. <span data-lang="en">In C</span><span data-lang="fr">En C</span></a><a href="#cpp-api">8. <span data-lang="en">C++ API</span><span data-lang="fr">API C++</span></a><a href="#c-api">9. <span data-lang="en">C API</span><span data-lang="fr">API C</span></a><hr><div class="grp"><span data-lang="en">User guide</span><span data-lang="fr">Guide utilisateur</span></div><a href="installation.html"><span data-lang="en">Installation</span><span data-lang="fr">Installation</span></a><a href="usage.html"><span data-lang="en">Link and include</span><span data-lang="fr">Lier et inclure</span></a><a href="custom-exceptions.html"><span data-lang="en">Custom exception codes</span><span data-lang="fr">Codes d&#x27;exception personnalisés</span></a><a href="warnings.html"><span data-lang="en">Warnings</span><span data-lang="fr">Avertissements</span></a><a href="c-api.html"><span data-lang="en">Use libutils from C</span><span data-lang="fr">Utiliser libutils depuis C</span></a><a href="windows.html"><span data-lang="en">Windows</span><span data-lang="fr">Windows</span></a><a href="development.html"><span data-lang="en">Build, tests and hooks</span><span data-lang="fr">Build, tests et hooks</span></a><div class="grp"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></div><a href="overview.html"><span data-lang="en">Architecture</span><span data-lang="fr">Architecture</span></a><a href="errors.html"><span data-lang="en">Errors</span><span data-lang="fr">Erreurs</span></a><a href="c-api-design.html"><span data-lang="en">The C API design</span><span data-lang="fr">Conception de l&#x27;API C</span></a><a href="network-ipc.html"><span data-lang="en">Communication</span><span data-lang="fr">Communication</span></a><a href="platforms.html"><span data-lang="en">Platforms</span><span data-lang="fr">Plateformes</span></a><div class="grp"><span data-lang="en">Reference</span><span data-lang="fr">Référence</span></div><a href="exception.html"><span data-lang="en">Exceptions</span><span data-lang="fr">Exceptions</span></a><a href="verbose.html"><span data-lang="en">Verbose</span><span data-lang="fr">Verbose</span></a><a href="pool.html"><span data-lang="en">Pool</span><span data-lang="fr">Pool</span></a><a href="cli.html"><span data-lang="en">Cli</span><span data-lang="fr">Cli</span></a><a href="arguments.html"><span data-lang="en">Arguments</span><span data-lang="fr">Arguments</span></a><a href="network.html"><span data-lang="en">Network</span><span data-lang="fr">Network</span></a><a href="math.html"><span data-lang="en">Math</span><span data-lang="fr">Math</span></a><a href="concepts.html"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></a><a href="encapsulation.html" class="cur" aria-current="page"><span data-lang="en">Encapsulation</span><span data-lang="fr">Encapsulation</span></a><a href="system.html"><span data-lang="en">System</span><span data-lang="fr">System</span></a><a href="type.html"><span data-lang="en">Type</span><span data-lang="fr">Type</span></a><a href="iomanip.html"><span data-lang="en">IOManip</span><span data-lang="fr">IOManip</span></a><a href="smanip.html"><span data-lang="en">SManip</span><span data-lang="fr">SManip</span></a><a href="algorithms.html"><span data-lang="en">Algorithms</span><span data-lang="fr">Algorithms</span></a><a href="security.html"><span data-lang="en">Security</span><span data-lang="fr">Security</span></a><a href="platform.html"><span data-lang="en">Platform</span><span data-lang="fr">Platform</span></a><a href="attribute.html"><span data-lang="en">Attribute</span><span data-lang="fr">Attribute</span></a><div class="grp"><span data-lang="en">Resources</span><span data-lang="fr">Ressources</span></div><a href="changelog.html"><span data-lang="en">Changelog</span><span data-lang="fr">Historique</span></a><a href="ci-cd.html"><span data-lang="en">CI / CD</span><span data-lang="fr">CI / CD</span></a><a href="licenses.html"><span data-lang="en">Licenses</span><span data-lang="fr">Licences</span></a><a href="project-graph.html"><span data-lang="en">Project graph</span><span data-lang="fr">Graphe du projet</span></a><a href="faq.html"><span data-lang="en">FAQ</span><span data-lang="fr">FAQ</span></a><a href="glossary.html"><span data-lang="en">Glossary</span><span data-lang="fr">Glossaire</span></a></aside><main id="main" tabindex="-1"><header><div class="page-eyebrow"><span data-lang="en">Reference</span><span data-lang="fr">Référence</span></div><h1><span data-lang="en">Encapsulation</span><span data-lang="fr">Encapsulation</span></h1><p class="lead"><span data-lang="en">RAII wrappers of the system tools: Pipe, Dup, Process, Poll (epoll), SharedObject (.so / .dll) and SharedMemory (messages between processes).</span><span data-lang="fr">Wrappers RAII des outils système : Pipe, Dup, Process, Poll (epoll), SharedObject (.so / .dll) et SharedMemory (messages entre processus).</span></p><div class="page-meta"><span><span data-i18n>Updated</span> 2026-11-26</span></div></header><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Define, Group, Namespace, Headers"><table><thead><tr><th scope="col" style="min-width:19ch">Define</th><th scope="col" style="min-width:10ch">Group</th><th scope="col" style="min-width:25ch">Namespace</th><th scope="col" style="min-width:25ch">Headers</th></tr></thead><tbody><tr><td><code>_Encapsulation</code></td><td><code>_Tools</code></td><td><code>utils::encapsulation</code></td><td><code>utils/encapsulation/</code></td></tr></tbody></table></div><p>RAII wrappers around the system tools (through <a href="platform.html">Platform</a>, same API on Unix and Windows): the fds are closed by the destructors, every error is an exception with the <code>errno</code> message as info. The shared memory is explained in <a href="network-ipc.html#shared-memory">Communication</a>.</p></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Define, Groupe, Espace de noms, En-têtes"><table><thead><tr><th scope="col" style="min-width:19ch">Define</th><th scope="col" style="min-width:11ch">Groupe</th><th scope="col" style="min-width:25ch">Espace de noms</th><th scope="col" style="min-width:25ch">En-têtes</th></tr></thead><tbody><tr><td><code>_Encapsulation</code></td><td><code>_Tools</code></td><td><code>utils::encapsulation</code></td><td><code>utils/encapsulation/</code></td></tr></tbody></table></div><p>Wrappers RAII autour des outils système (via <a href="platform.html">Platform</a>, même API sous Unix et Windows) : les fd sont fermés par les destructeurs, chaque erreur est une exception avec le message de <code>errno</code> en info. La mémoire partagée est expliquée dans <a href="network-ipc.html#shared-memory">Communication</a>.</p></div><section id="pipe-dup"><h2>1. <span data-lang="en">Pipe and Dup</span><span data-lang="fr">Pipe et Dup</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Pipe, Description"><table><thead><tr><th scope="col" style="min-width:27ch"><code>Pipe</code></th><th scope="col" style="min-width:19ch">Description</th></tr></thead><tbody><tr><td><code>Pipe(read = -1, write = -1)</code> / <code>Pipe(fds)</code></td><td>Wrap existing fds (or none)</td></tr><tr><td><code>trigger()</code></td><td>Create the pipe (<code>Pipe</code> error if already open)</td></tr><tr><td><code>getRead()</code>, <code>getWrite()</code></td><td>fds (<code>-1</code> = closed), both with <code>getFds()</code></td></tr><tr><td><code>closeRead()</code>, <code>closeWrite()</code>, <code>close()</code></td><td>Close one side / both</td></tr><tr><td><code>clear()</code></td><td>Forget the fds without closing them</td></tr></tbody></table></div><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Dup, Description"><table><thead><tr><th scope="col" style="min-width:30ch"><code>Dup</code></th><th scope="col" style="min-width:22ch">Description</th></tr></thead><tbody><tr><td><code>Dup(origin = -1, clone = -1)</code></td><td><code>origin</code> will be duplicated on <code>clone</code></td></tr><tr><td><code>trigger()</code></td><td><code>dup(origin)</code> when <code>clone == -1</code>, else <code>dup2(origin, clone)</code> (<code>Dup</code> error when <code>origin</code> is closed)</td></tr><tr><td><code>getOrigin()</code>, <code>getClone()</code>, <code>setOrigin(fd)</code>, <code>setClone(fd)</code></td><td>Access</td></tr><tr><td><code>closeOrigin()</code>, <code>closeClone()</code>, <code>close()</code>, <code>clear()</code></td><td>Close / forget</td></tr></tbody></table></div><p>Both are movable, not copyable.</p></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Pipe, Description"><table><thead><tr><th scope="col" style="min-width:27ch"><code>Pipe</code></th><th scope="col" style="min-width:19ch">Description</th></tr></thead><tbody><tr><td><code>Pipe(read = -1, write = -1)</code> / <code>Pipe(fds)</code></td><td>Enveloppe des fd existants (ou aucun)</td></tr><tr><td><code>trigger()</code></td><td>Crée le pipe (erreur <code>Pipe</code> s'il est déjà ouvert)</td></tr><tr><td><code>getRead()</code>, <code>getWrite()</code></td><td>fd (<code>-1</code> = fermé), les deux avec <code>getFds()</code></td></tr><tr><td><code>closeRead()</code>, <code>closeWrite()</code>, <code>close()</code></td><td>Ferme un côté / les deux</td></tr><tr><td><code>clear()</code></td><td>Oublie les fd sans les fermer</td></tr></tbody></table></div><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Dup, Description"><table><thead><tr><th scope="col" style="min-width:30ch"><code>Dup</code></th><th scope="col" style="min-width:23ch">Description</th></tr></thead><tbody><tr><td><code>Dup(origin = -1, clone = -1)</code></td><td><code>origin</code> sera dupliqué sur <code>clone</code></td></tr><tr><td><code>trigger()</code></td><td><code>dup(origin)</code> quand <code>clone == -1</code>, sinon <code>dup2(origin, clone)</code> (erreur <code>Dup</code> quand <code>origin</code> est fermé)</td></tr><tr><td><code>getOrigin()</code>, <code>getClone()</code>, <code>setOrigin(fd)</code>, <code>setClone(fd)</code></td><td>Accès</td></tr><tr><td><code>closeOrigin()</code>, <code>closeClone()</code>, <code>close()</code>, <code>clear()</code></td><td>Fermeture / oubli</td></tr></tbody></table></div><p>Les deux sont déplaçables, pas copiables.</p></div></section><section id="process"><h2>2. <span data-lang="en">Process</span><span data-lang="fr">Process</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:30ch">Method</th><th scope="col" style="min-width:28ch">Description</th></tr></thead><tbody><tr><td><code>pipe(read, write)</code> / <code>pipe(Pipe&amp;)</code> / <code>pipe(std::vector&lt;Pipe&gt;&amp;)</code></td><td>Pipes created (<code>trigger</code>) by the next <code>spawn</code></td></tr><tr><td><code>dup(origin, clone = -1)</code> / <code>dup(Dup&amp;)</code> / <code>dup(std::vector&lt;Dup&gt;&amp;)</code></td><td>Dups applied in the child (ex: redirect its stdout)</td></tr><tr><td><code>spawn()</code></td><td><code>fork</code>: returns <code>0</code> in the child, the pid in the parent (Windows: <code>FatalException</code> <code>UndefinedCall</code>)</td></tr><tr><td><code>spawn(path, args)</code></td><td><code>fork</code> + <code>execvp(path, args)</code> in the child, returns the pid (exit code <code>127</code> when the exec or a dup fails); Windows: <code>CreateProcess</code>, searched in the <code>PATH</code></td></tr><tr><td><code>replace(path, args)</code></td><td><code>execvp</code> in the current process (never returns: exec or <code>_exit(127)</code>); Windows: CRT <code>_execvp</code></td></tr><tr><td><code>wait()</code></td><td><code>waitpid</code>, returns a <code>Status{unknown, exited, code, sig}</code> (Windows: exit code, <code>sig</code> always <code>0</code>)</td></tr><tr><td><code>kill()</code></td><td><code>SIGKILL</code> then wait (Windows: <code>TerminateProcess</code>, exit code <code>137</code>)</td></tr><tr><td><code>is()</code></td><td>Is the child alive</td></tr><tr><td><code>isChild()</code>, <code>isParent()</code>, <code>getPid()</code></td><td>State</td></tr><tr><td><code>getPipes()</code>, <code>getDups()</code>, <code>clear()</code></td><td>Access / close the pipes and dups</td></tr></tbody></table></div><div class="callout"><p>The destructor of the parent kills a running child. The dups are checked before the <code>fork</code>: an invalid one throws <code>Dup</code> in the caller.</p></div><div class="callout"><p><strong>Important.</strong> Windows has no <code>fork</code>: <code>spawn()</code> raises a <code>FatalException</code> (<code>UndefinedCall</code>, the program aborts), and only the fds <code>0</code>, <code>1</code>, <code>2</code> of the child can be redirected by <code>dup</code> (another <code>clone</code> → same <code>FatalException</code> at <code>spawn</code>). Only the redirected standard handles are given to the child, so the other pipes don't leak and EOF stays reachable.</p></div><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Encapsulation
+#include &lt;utils/utils.hpp&gt;
+
+utils::encapsulation::Pipe pipe;
+pipe.trigger();
+utils::encapsulation::Process process;
+process.dup(pipe.getWrite(), STDOUT_FILENO); // child: stdout -&gt; pipe
+(void)process.spawn("echo", {"hello"});
+pipe.closeWrite();
+// read pipe.getRead() -&gt; "hello\n"
+utils::encapsulation::Status status = process.wait(); // status.exited, status.code == 0</code></pre></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:30ch">Méthode</th><th scope="col" style="min-width:28ch">Description</th></tr></thead><tbody><tr><td><code>pipe(read, write)</code> / <code>pipe(Pipe&amp;)</code> / <code>pipe(std::vector&lt;Pipe&gt;&amp;)</code></td><td>Pipes créés (<code>trigger</code>) par le prochain <code>spawn</code></td></tr><tr><td><code>dup(origin, clone = -1)</code> / <code>dup(Dup&amp;)</code> / <code>dup(std::vector&lt;Dup&gt;&amp;)</code></td><td>Dups appliqués dans l'enfant (ex : rediriger son stdout)</td></tr><tr><td><code>spawn()</code></td><td><code>fork</code> : renvoie <code>0</code> dans l'enfant, le pid dans le parent (Windows : <code>FatalException</code> <code>UndefinedCall</code>)</td></tr><tr><td><code>spawn(path, args)</code></td><td><code>fork</code> + <code>execvp(path, args)</code> dans l'enfant, renvoie le pid (code de sortie <code>127</code> quand l'exec ou un dup échoue) ; Windows : <code>CreateProcess</code>, cherché dans le <code>PATH</code></td></tr><tr><td><code>replace(path, args)</code></td><td><code>execvp</code> dans le processus courant (ne retourne jamais : exec ou <code>_exit(127)</code>) ; Windows : <code>_execvp</code> de la CRT</td></tr><tr><td><code>wait()</code></td><td><code>waitpid</code>, renvoie un <code>Status{unknown, exited, code, sig}</code> (Windows : code de sortie, <code>sig</code> toujours à <code>0</code>)</td></tr><tr><td><code>kill()</code></td><td><code>SIGKILL</code> puis attente (Windows : <code>TerminateProcess</code>, code de sortie <code>137</code>)</td></tr><tr><td><code>is()</code></td><td>L'enfant est-il vivant</td></tr><tr><td><code>isChild()</code>, <code>isParent()</code>, <code>getPid()</code></td><td>État</td></tr><tr><td><code>getPipes()</code>, <code>getDups()</code>, <code>clear()</code></td><td>Accès / fermeture des pipes et des dups</td></tr></tbody></table></div><div class="callout"><p>Le destructeur du parent tue un enfant en cours d'exécution. Les dups sont vérifiés avant le <code>fork</code> : un dup invalide lance <code>Dup</code> dans l'appelant.</p></div><div class="callout"><p><strong>Important.</strong> Windows n'a pas de <code>fork</code> : <code>spawn()</code> lève une <code>FatalException</code> (<code>UndefinedCall</code>, le programme s'interrompt), et seuls les fd <code>0</code>, <code>1</code>, <code>2</code> de l'enfant peuvent être redirigés par <code>dup</code> (un autre <code>clone</code> → même <code>FatalException</code> au <code>spawn</code>). Seuls les handles standard redirigés sont donnés à l'enfant : les autres pipes ne fuient pas et l'EOF reste atteignable.</p></div><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Encapsulation
+#include &lt;utils/utils.hpp&gt;
+
+utils::encapsulation::Pipe pipe;
+pipe.trigger();
+utils::encapsulation::Process process;
+process.dup(pipe.getWrite(), STDOUT_FILENO); // child: stdout -&gt; pipe
+(void)process.spawn("echo", {"hello"});
+pipe.closeWrite();
+// read pipe.getRead() -&gt; "hello\n"
+utils::encapsulation::Status status = process.wait(); // status.exited, status.code == 0</code></pre></div></section><section id="poll"><h2>3. <span data-lang="en">Poll</span><span data-lang="fr">Poll</span></h2><div data-lang="en"><p>Wrapper of <code>epoll</code> (<a href="platform.html#windows-behavior">Platform</a>: emulated over <code>WSAPoll</code> on Windows, sockets only, level triggered).</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:21ch">Method</th><th scope="col" style="min-width:19ch">Description</th></tr></thead><tbody><tr><td><code>Poll(flags = EPOLL_CLOEXEC)</code> / <code>init(flags)</code></td><td>Create the epoll</td></tr><tr><td><code>link(fd, events, data = nullptr)</code></td><td>Watch a fd (<code>EPOLLIN</code>...)</td></tr><tr><td><code>edit(fd, events, data)</code></td><td>Change the watched events</td></tr><tr><td><code>unlink(fd)</code></td><td>Stop watching (ignored for a closed fd)</td></tr><tr><td><code>wait(delay = -1, limits = 0)</code></td><td>Wait for events (<code>delay</code> in ms, <code>-1</code> = forever), returns the <code>epoll_event</code>s</td></tr><tr><td><code>size()</code>, <code>contains(fd)</code>, <code>getFd()</code>, <code>close()</code></td><td>State</td></tr></tbody></table></div></div><div data-lang="fr"><p>Wrapper d'<code>epoll</code> (<a href="platform.html#windows-behavior">Platform</a> : émulé par-dessus <code>WSAPoll</code> sous Windows, sockets seulement, en mode level-triggered).</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:21ch">Méthode</th><th scope="col" style="min-width:19ch">Description</th></tr></thead><tbody><tr><td><code>Poll(flags = EPOLL_CLOEXEC)</code> / <code>init(flags)</code></td><td>Crée l'epoll</td></tr><tr><td><code>link(fd, events, data = nullptr)</code></td><td>Surveille un fd (<code>EPOLLIN</code>...)</td></tr><tr><td><code>edit(fd, events, data)</code></td><td>Change les événements surveillés</td></tr><tr><td><code>unlink(fd)</code></td><td>Arrête la surveillance (ignoré pour un fd fermé)</td></tr><tr><td><code>wait(delay = -1, limits = 0)</code></td><td>Attend des événements (<code>delay</code> en ms, <code>-1</code> = sans fin), renvoie les <code>epoll_event</code></td></tr><tr><td><code>size()</code>, <code>contains(fd)</code>, <code>getFd()</code>, <code>close()</code></td><td>État</td></tr></tbody></table></div></div></section><section id="shared-object"><h2>4. <span data-lang="en">SharedObject</span><span data-lang="fr">SharedObject</span></h2><div data-lang="en"><p>Load a shared library (<code>.so</code>, <code>.dll</code> on Windows) and its functions.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:27ch">Method</th><th scope="col" style="min-width:19ch">Description</th></tr></thead><tbody><tr><td><code>SharedObject(path)</code></td><td><code>dlopen</code> (<code>Dlopen</code> error), <code>LoadLibrary</code> on Windows</td></tr><tr><td><code>loadFunction&lt;T&gt;(name)</code></td><td><code>dlsym</code>, cast to the function pointer type <code>T</code> (<code>Dlsym</code> error)</td></tr><tr><td><code>isLoaded()</code>, <code>path()</code>, <code>get()</code></td><td>State, path, raw handle</td></tr></tbody></table></div><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">using StrlenFn = std::size_t (*)(const char*);
+utils::encapsulation::SharedObject libc("libc.so.6");
+StrlenFn fn = libc.loadFunction&lt;StrlenFn&gt;("strlen");</code></pre></div><div data-lang="fr"><p>Charge une bibliothèque partagée (<code>.so</code>, <code>.dll</code> sous Windows) et ses fonctions.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:27ch">Méthode</th><th scope="col" style="min-width:20ch">Description</th></tr></thead><tbody><tr><td><code>SharedObject(path)</code></td><td><code>dlopen</code> (erreur <code>Dlopen</code>), <code>LoadLibrary</code> sous Windows</td></tr><tr><td><code>loadFunction&lt;T&gt;(name)</code></td><td><code>dlsym</code>, converti vers le type de pointeur de fonction <code>T</code> (erreur <code>Dlsym</code>)</td></tr><tr><td><code>isLoaded()</code>, <code>path()</code>, <code>get()</code></td><td>État, chemin, handle brut</td></tr></tbody></table></div><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">using StrlenFn = std::size_t (*)(const char*);
+utils::encapsulation::SharedObject libc("libc.so.6");
+StrlenFn fn = libc.loadFunction&lt;StrlenFn&gt;("strlen");</code></pre></div></section><section id="shared-memory"><h2>5. <span data-lang="en">SharedMemory</span><span data-lang="fr">SharedMemory</span></h2><div data-lang="en"><p>Message passing between processes through a POSIX shared memory divided in <strong>slots</strong> (<code>queue</code> slots of <code>size</code> bytes). Each instance has an <strong>ownership</strong> (default: its pid) used to address the messages; a reader thread copies the messages for this instance into a local storage.</p><div class="callout"><p>Windows: a file mapping (<code>Local\utils-shm-&lt;name&gt;</code>) and a named event instead of the futex (the readers are woken within 10 ms); the memory is destroyed with its last handle (no persistence like <code>/dev/shm</code>).</p></div><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:28ch">Method</th><th scope="col" style="min-width:45ch">Description</th></tr></thead><tbody><tr><td><code>SharedMemory(ownership = getpid())</code></td><td>Instance with its ownership (<code>pid_t</code>)</td></tr><tr><td><code>init&lt;true, policy&gt;(name, size, queue)</code></td><td><strong>Create</strong> the shared memory (<code>policy</code>: slot layout, see below)</td></tr><tr><td><code>init(name)</code></td><td><strong>Open</strong> an existing one (the size and queue are read from it)</td></tr><tr><td><code>send(bytes, target, lastSending, lastTransmission, failsafe)</code></td><td>Send a message, returns its <code>Id</code> (<code>failsafe = true</code> waits for a free slot instead of <code>OutOfMemory</code>)</td></tr><tr><td><code>send(bytes, id, target, ...)</code></td><td>Answer on an existing <code>Id</code> (conversation)</td></tr><tr><td><code>readable(filter = All)</code> / <code>readable(id)</code></td><td>Something to read</td></tr><tr><td><code>read(filter = All)</code></td><td><code>std::optional&lt;std::unordered_map&lt;Id, std::vector&lt;std::vector&lt;std::byte&gt;&gt;&gt;&gt;</code>, removed from the storage</td></tr><tr><td><code>read(id)</code></td><td>The messages of one <code>Id</code></td></tr><tr><td><code>join(last = false)</code> / <code>join(id, last)</code></td><td>Wait for a message (or for a <code>last</code> one), returns when the memory is closed</td></tr><tr><td><code>close()</code></td><td>Stop the reader thread, unmap (also done by the destructor)</td></tr><tr><td><code>ownership()</code> / <code>ownership(pid)</code></td><td>Get / set the ownership</td></tr></tbody></table></div><div class="callout warn"><p><strong>Warning.</strong> <code>SharedMemory(std::uint16_t ownership)</code> is a migration (<code>_migration(6, 0, 0)</code>): it will be removed around <code>v6.0.0</code>, use the <code>pid_t</code> constructor.</p></div><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Type, Description"><table><thead><tr><th scope="col" style="min-width:22ch">Type</th><th scope="col" style="min-width:26ch">Description</th></tr></thead><tbody><tr><td><code>Target(limit, ownership)</code></td><td>To one reader (<code>ownership</code>), read <code>limit</code> times</td></tr><tr><td><code>Target(limit)</code></td><td>Global: to every reader, <code>limit</code> readers (<code>0</code> = every connected reader except the sender)</td></tr><tr><td><code>Id{id, ownership}</code></td><td>Conversation id (<code>0</code> = no conversation)</td></tr><tr><td><code>ReadFilter</code></td><td><code>All</code>, <code>ZeroOnly</code> (id <code>0</code>), <code>NonZeroOnly</code>, <code>LastOnly</code> (messages sent with <code>lastSending</code> / <code>lastTransmission</code>)</td></tr><tr><td><code>LayoutPolicy</code></td><td><code>Compact</code> (1 writer), <code>CompactSemiAligned</code>, <code>Interleaved</code>, <code>InterleavedAligned</code> (many writers at the same time, one cache line per slot)</td></tr></tbody></table></div><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// process A
+utils::encapsulation::SharedMemory server(pid_t{1001});
+server.init&lt;true&gt;("/my-shm", 64, 4);                        // 4 slots of 64 bytes
+utils::encapsulation::shm::Id id = server.send(bytes, utils::encapsulation::shm::Target(1, pid_t{1002}));
+
+// process B
+utils::encapsulation::SharedMemory client(pid_t{1002});
+client.init("/my-shm");
+client.join();
+auto messages = client.read();                               // id -&gt; payloads</code></pre></div><div data-lang="fr"><p>Passage de messages entre processus via une mémoire partagée POSIX divisée en <strong>slots</strong> (<code>queue</code> slots de <code>size</code> octets). Chaque instance a une <strong>ownership</strong> (par défaut : son pid) qui sert à adresser les messages ; un thread lecteur copie les messages destinés à cette instance dans un stockage local.</p><div class="callout"><p>Windows : un file mapping (<code>Local\utils-shm-&lt;name&gt;</code>) et un événement nommé à la place du futex (les lecteurs sont réveillés en moins de 10 ms) ; la mémoire est détruite avec son dernier handle (pas de persistance comme avec <code>/dev/shm</code>).</p></div><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:28ch">Méthode</th><th scope="col" style="min-width:45ch">Description</th></tr></thead><tbody><tr><td><code>SharedMemory(ownership = getpid())</code></td><td>Instance avec son ownership (<code>pid_t</code>)</td></tr><tr><td><code>init&lt;true, policy&gt;(name, size, queue)</code></td><td><strong>Crée</strong> la mémoire partagée (<code>policy</code> : disposition des slots, voir plus bas)</td></tr><tr><td><code>init(name)</code></td><td><strong>Ouvre</strong> une mémoire existante (la taille et la queue y sont lues)</td></tr><tr><td><code>send(bytes, target, lastSending, lastTransmission, failsafe)</code></td><td>Envoie un message, renvoie son <code>Id</code> (<code>failsafe = true</code> attend un slot libre au lieu de <code>OutOfMemory</code>)</td></tr><tr><td><code>send(bytes, id, target, ...)</code></td><td>Répond sur un <code>Id</code> existant (conversation)</td></tr><tr><td><code>readable(filter = All)</code> / <code>readable(id)</code></td><td>Quelque chose à lire</td></tr><tr><td><code>read(filter = All)</code></td><td><code>std::optional&lt;std::unordered_map&lt;Id, std::vector&lt;std::vector&lt;std::byte&gt;&gt;&gt;&gt;</code>, retiré du stockage</td></tr><tr><td><code>read(id)</code></td><td>Les messages d'un <code>Id</code></td></tr><tr><td><code>join(last = false)</code> / <code>join(id, last)</code></td><td>Attend un message (ou un message <code>last</code>), retourne quand la mémoire est fermée</td></tr><tr><td><code>close()</code></td><td>Arrête le thread lecteur, supprime le mapping (aussi fait par le destructeur)</td></tr><tr><td><code>ownership()</code> / <code>ownership(pid)</code></td><td>Lit / définit l'ownership</td></tr></tbody></table></div><div class="callout warn"><p><strong>Attention.</strong> <code>SharedMemory(std::uint16_t ownership)</code> est une migration (<code>_migration(6, 0, 0)</code>) : il sera supprimé vers <code>v6.0.0</code>, utilisez le constructeur <code>pid_t</code>.</p></div><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Type, Description"><table><thead><tr><th scope="col" style="min-width:22ch">Type</th><th scope="col" style="min-width:27ch">Description</th></tr></thead><tbody><tr><td><code>Target(limit, ownership)</code></td><td>Vers un lecteur (<code>ownership</code>), lu <code>limit</code> fois</td></tr><tr><td><code>Target(limit)</code></td><td>Global : vers tous les lecteurs, <code>limit</code> lecteurs (<code>0</code> = tous les lecteurs connectés sauf l'émetteur)</td></tr><tr><td><code>Id{id, ownership}</code></td><td>Id de conversation (<code>0</code> = pas de conversation)</td></tr><tr><td><code>ReadFilter</code></td><td><code>All</code>, <code>ZeroOnly</code> (id <code>0</code>), <code>NonZeroOnly</code>, <code>LastOnly</code> (messages envoyés avec <code>lastSending</code> / <code>lastTransmission</code>)</td></tr><tr><td><code>LayoutPolicy</code></td><td><code>Compact</code> (1 écrivain), <code>CompactSemiAligned</code>, <code>Interleaved</code>, <code>InterleavedAligned</code> (plusieurs écrivains en même temps, une ligne de cache par slot)</td></tr></tbody></table></div><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// process A
+utils::encapsulation::SharedMemory server(pid_t{1001});
+server.init&lt;true&gt;("/my-shm", 64, 4);                        // 4 slots of 64 bytes
+utils::encapsulation::shm::Id id = server.send(bytes, utils::encapsulation::shm::Target(1, pid_t{1002}));
+
+// process B
+utils::encapsulation::SharedMemory client(pid_t{1002});
+client.init("/my-shm");
+client.join();
+auto messages = client.read();                               // id -&gt; payloads</code></pre></div></section><section id="errors"><h2>6. <span data-lang="en">Errors</span><span data-lang="fr">Erreurs</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Code, When"><table><thead><tr><th scope="col" style="min-width:22ch">Code</th><th scope="col" style="min-width:21ch">When</th></tr></thead><tbody><tr><td><code>Pipe</code>, <code>Dup</code>, <code>Fork</code>, <code>Waitpid</code>, <code>Kill</code>, <code>Process</code></td><td><code>Pipe</code> / <code>Dup</code> / <code>Process</code> failures</td></tr><tr><td><code>UndefinedCall</code></td><td>Windows: <code>Process::spawn()</code> or a <code>dup</code> on a fd other than <code>0</code>, <code>1</code>, <code>2</code> (<code>FatalException</code>)</td></tr><tr><td><code>EPoll</code></td><td><code>epoll</code> failures (Windows: a non socket fd, <code>EPOLLET</code>)</td></tr><tr><td><code>Dlopen</code>, <code>Dlsym</code>, <code>Dlclose</code></td><td><code>SharedObject</code></td></tr><tr><td><code>ShmOpen</code>, <code>Ftruncate</code>, <code>Fstat</code>, <code>Mmap</code>, <code>OutOfMemory</code>, <code>OutOfBounds</code>, <code>InvalidArgument</code>, <code>InvalidId</code></td><td><code>SharedMemory</code> (no free slot, message bigger than a slot, empty size...)</td></tr></tbody></table></div></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Code, Quand"><table><thead><tr><th scope="col" style="min-width:22ch">Code</th><th scope="col" style="min-width:21ch">Quand</th></tr></thead><tbody><tr><td><code>Pipe</code>, <code>Dup</code>, <code>Fork</code>, <code>Waitpid</code>, <code>Kill</code>, <code>Process</code></td><td>Échecs de <code>Pipe</code> / <code>Dup</code> / <code>Process</code></td></tr><tr><td><code>UndefinedCall</code></td><td>Windows : <code>Process::spawn()</code> ou un <code>dup</code> sur un fd autre que <code>0</code>, <code>1</code>, <code>2</code> (<code>FatalException</code>)</td></tr><tr><td><code>EPoll</code></td><td>Échecs d'<code>epoll</code> (Windows : un fd qui n'est pas un socket, <code>EPOLLET</code>)</td></tr><tr><td><code>Dlopen</code>, <code>Dlsym</code>, <code>Dlclose</code></td><td><code>SharedObject</code></td></tr><tr><td><code>ShmOpen</code>, <code>Ftruncate</code>, <code>Fstat</code>, <code>Mmap</code>, <code>OutOfMemory</code>, <code>OutOfBounds</code>, <code>InvalidArgument</code>, <code>InvalidId</code></td><td><code>SharedMemory</code> (aucun slot libre, message plus gros qu'un slot, taille nulle...)</td></tr></tbody></table></div></div></section><section id="in-c"><h2>7. <span data-lang="en">In C</span><span data-lang="fr">En C</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: C++, C"><table><thead><tr><th scope="col" style="min-width:17ch">C++</th><th scope="col" style="min-width:44ch">C</th></tr></thead><tbody><tr><td><code>Pipe</code> / <code>Dup</code></td><td><code>utils_pipe_t*</code> / <code>utils_dup_t*</code> (<code>utils_pipe_create(read, write)</code>, <code>utils_pipe_trigger</code>...)</td></tr><tr><td><code>Process</code></td><td><code>utils_process_t*</code>: <code>utils_process_spawn</code> (fork), <code>utils_process_spawn_exec(process, path, args, count)</code>, <code>utils_process_wait(process, &amp;status)</code> (<code>utils_process_status_t</code>)</td></tr><tr><td><code>Poll</code></td><td><code>utils_poll_t*</code>: <code>utils_poll_link</code>, <code>utils_poll_wait(poll, delay, events, max)</code> into an array of <code>struct epoll_event</code></td></tr><tr><td><code>SharedObject</code></td><td><code>utils_shared_object_t*</code>: <code>utils_shared_object_load_function(so, name)</code> returns a <code>void*</code> to cast</td></tr><tr><td><code>SharedMemory</code></td><td><code>utils_shm_t*</code>: <code>utils_shm_init(shm, name, size, queue, create, layout, group_size, forced)</code>, the layout chosen at runtime (<code>C_API_SHM_LAYOUT_*</code>); <code>utils_shm_send(shm, bytes, size, &amp;target, ...)</code> with a <code>utils_shm_target_t</code>; <code>utils_shm_read</code> → <code>utils_shm_messages_t*</code></td></tr></tbody></table></div><p>In C the group size of <code>C_API_SHM_LAYOUT_COMPACT_SEMI_ALIGNED</code> is a power of 2 from 1 to 64.</p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define _POSIX_C_SOURCE 200809L // strict C on Unix: the POSIX structures (pid_t, struct sockaddr...)
+#define _Encapsulation
+#include &lt;utils.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+
+int main(void)
+{
+    utils_pipe_t* pipe = utils_pipe_create(-1, -1);
+    utils_process_t* process = utils_process_create();
+    utils_process_status_t status = {0};
+    const char* args[] = {"hello"};
+    char buf[16] = {0};
+
+    if (!pipe || !process || utils_pipe_trigger(pipe) != UTILS_OK)
+        return 1;
+    utils_process_dup(process, utils_pipe_get_write(pipe), STDOUT_FILENO); // child: stdout -&gt; pipe
+    if (utils_process_spawn_exec(process, "echo", args, 1) == -1)
+        return 1;
+    utils_pipe_close_write(pipe);
+    if (read(utils_pipe_get_read(pipe), buf, sizeof(buf) - 1) &gt; 0)
+        printf("child said: %s", buf);                                     // "hello\n"
+    utils_process_wait(process, &amp;status);                                  // status.exited, status.code == 0
+    utils_process_destroy(process);
+    utils_pipe_destroy(pipe);
+    return status.code;
+}</code></pre></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: C++, C"><table><thead><tr><th scope="col" style="min-width:17ch">C++</th><th scope="col" style="min-width:44ch">C</th></tr></thead><tbody><tr><td><code>Pipe</code> / <code>Dup</code></td><td><code>utils_pipe_t*</code> / <code>utils_dup_t*</code> (<code>utils_pipe_create(read, write)</code>, <code>utils_pipe_trigger</code>...)</td></tr><tr><td><code>Process</code></td><td><code>utils_process_t*</code> : <code>utils_process_spawn</code> (fork), <code>utils_process_spawn_exec(process, path, args, count)</code>, <code>utils_process_wait(process, &amp;status)</code> (<code>utils_process_status_t</code>)</td></tr><tr><td><code>Poll</code></td><td><code>utils_poll_t*</code> : <code>utils_poll_link</code>, <code>utils_poll_wait(poll, delay, events, max)</code> dans un tableau de <code>struct epoll_event</code></td></tr><tr><td><code>SharedObject</code></td><td><code>utils_shared_object_t*</code> : <code>utils_shared_object_load_function(so, name)</code> renvoie un <code>void*</code> à convertir</td></tr><tr><td><code>SharedMemory</code></td><td><code>utils_shm_t*</code> : <code>utils_shm_init(shm, name, size, queue, create, layout, group_size, forced)</code>, la disposition étant choisie à l'exécution (<code>C_API_SHM_LAYOUT_*</code>) ; <code>utils_shm_send(shm, bytes, size, &amp;target, ...)</code> avec un <code>utils_shm_target_t</code> ; <code>utils_shm_read</code> → <code>utils_shm_messages_t*</code></td></tr></tbody></table></div><p>En C, la taille de groupe de <code>C_API_SHM_LAYOUT_COMPACT_SEMI_ALIGNED</code> est une puissance de 2 entre 1 et 64.</p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define _POSIX_C_SOURCE 200809L // strict C on Unix: the POSIX structures (pid_t, struct sockaddr...)
+#define _Encapsulation
+#include &lt;utils.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+
+int main(void)
+{
+    utils_pipe_t* pipe = utils_pipe_create(-1, -1);
+    utils_process_t* process = utils_process_create();
+    utils_process_status_t status = {0};
+    const char* args[] = {"hello"};
+    char buf[16] = {0};
+
+    if (!pipe || !process || utils_pipe_trigger(pipe) != UTILS_OK)
+        return 1;
+    utils_process_dup(process, utils_pipe_get_write(pipe), STDOUT_FILENO); // child: stdout -&gt; pipe
+    if (utils_process_spawn_exec(process, "echo", args, 1) == -1)
+        return 1;
+    utils_pipe_close_write(pipe);
+    if (read(utils_pipe_get_read(pipe), buf, sizeof(buf) - 1) &gt; 0)
+        printf("child said: %s", buf);                                     // "hello\n"
+    utils_process_wait(process, &amp;status);                                  // status.exited, status.code == 0
+    utils_process_destroy(process);
+    utils_pipe_destroy(pipe);
+    return status.code;
+}</code></pre></div></section><section id="cpp-api"><h2>8. <span data-lang="en">C++ API</span><span data-lang="fr">API C++</span></h2><div data-lang="en"><p>Read from the headers of <code>include/utils/encapsulation/</code> (public part only, the trailing comments of the code kept). Include <code>&lt;utils/utils.hpp&gt;</code> with the define of the section, never these headers one by one.</p><h3 id="h-encapsulation-dup-hpp"><code>utils/encapsulation/Dup.hpp</code></h3><p>Basic encapsulation for pipe</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::encapsulation
+class Dup: private utils::security::observer::Observer&lt;"Dup"&gt; {
+    void trigger(void);
+    void closeOrigin(void) noexcept;
+    void closeClone(void) noexcept;
+    void close(void) noexcept;
+    void clear(void);
+    int getOrigin(void) const;
+    int getClone(void) const;
+    void setOrigin(const int fd = -1);
+    void setClone(const int fd = -1);
+    Dup&amp; operator=(Dup&amp;&amp; other);
+    Dup(const int origin = -1, const int clone = -1);
+    Dup(Dup&amp;&amp; other);
+    ~Dup() = default;
+};</code></pre><h3 id="h-encapsulation-pipe-hpp"><code>utils/encapsulation/Pipe.hpp</code></h3><p>Basic encapsulation for pipe</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::encapsulation
+class Pipe: private utils::security::observer::Observer&lt;"Pipe"&gt; {
+    void trigger(void);
+    void closeRead(void) noexcept;
+    void closeWrite(void) noexcept;
+    void close(void) noexcept;
+    void clear(void);
+    const std::array&lt;int, 2&gt;&amp; getFds(void) const;
+    int getRead(void) const;
+    int getWrite(void) const;
+    void setFds(const std::array&lt;int, 2&gt;&amp; fds);
+    void setRead(const int fd = -1);
+    void setWrite(const int fd = -1);
+    Pipe&amp; operator=(Pipe&amp;&amp; other);
+    Pipe(const int fds[2]);
+    Pipe(const std::array&lt;int, 2&gt;&amp; fds);
+    Pipe(const int read = -1, const int write = -1);
+    Pipe(Pipe&amp;&amp; other);
+    ~Pipe();
+};</code></pre><h3 id="h-encapsulation-poll-hpp"><code>utils/encapsulation/Poll.hpp</code></h3><p>Encapsulation of the epoll</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::encapsulation
+class Poll: private utils::security::observer::Observer&lt;"Poll"&gt; {
+    void init(int flags = EPOLL_CLOEXEC);
+    void close(void);
+    void link(int fd, std::uint32_t events, void* data = nullptr);
+    void edit(int fd, std::uint32_t events, void* data = nullptr) const;
+    void unlink(int fd);
+    std::vector&lt;struct epoll_event&gt; wait(int delay = -1, std::size_t limits = 0) const;
+    std::size_t size(void) const;
+    bool contains(int fd) const;
+    int getFd(void) const;
+    Poll&amp; operator=(Poll&amp;&amp; other);
+    Poll(int flags = EPOLL_CLOEXEC);
+    Poll(Poll&amp;&amp; other);
+    ~Poll();
+};</code></pre><h3 id="h-encapsulation-process-hpp"><code>utils/encapsulation/Process.hpp</code></h3><p>Process encapsulation class</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::encapsulation
+struct Status {
+    bool unknown = false;
+    bool exited = false;
+    int code = 0; // exited
+    int sig = 0; // killed
+};
+class Process: private utils::security::observer::Observer&lt;"Process"&gt; {
+    bool is(void) const;
+    pid_t spawn(void); // fork (Windows: FatalException UndefinedCall, no fork)
+    pid_t spawn(const std::string&amp; path, const std::vector&lt;std::string&gt;&amp; args); // execvp (Windows: CreateProcess, only the fds 0, 1 &amp; 2 can be dup)
+    _noreturn void replace(const std::string&amp; path, const std::vector&lt;std::string&gt;&amp; args); // execvp (Windows: _execvp) (never return: exec or _exit)
+    utils::encapsulation::Status wait(void); // waitpid (Windows: WaitForSingleObject, never killed by a signal)
+    void kill(void); // -s 9 (Windows: TerminateProcess)
+    void clear(void); // clear Pipe/Dup (close fd)
+    void pipe(const int read, const int write);
+    void dup(const int origin, const int clone = -1);
+    void pipe(utils::encapsulation::Pipe&amp; pipe);
+    void dup(utils::encapsulation::Dup&amp; dup);
+    void pipe(std::vector&lt;utils::encapsulation::Pipe&gt;&amp; pipes);
+    void dup(std::vector&lt;utils::encapsulation::Dup&gt;&amp; dups);
+    std::vector&lt;utils::encapsulation::Pipe&gt;&amp; getPipes(void);
+    std::vector&lt;utils::encapsulation::Dup&gt;&amp; getDups(void);
+    const std::vector&lt;utils::encapsulation::Pipe&gt;&amp; getPipes(void) const;
+    const std::vector&lt;utils::encapsulation::Dup&gt;&amp; getDups(void) const;
+    bool isChild(void) const;
+    bool isParent(void) const;
+    pid_t getPid(void) const;
+    Process&amp; operator=(Process&amp;&amp; other);
+    Process() = default;
+    Process(Process&amp;&amp; other): utils::security::observer::Observer&lt;"Process"&gt;(std::move(other)), _pipes;
+    ~Process(); // only the parent kill the child
+};</code></pre><h3 id="h-encapsulation-sharedmemory-hpp"><code>utils/encapsulation/SharedMemory.hpp</code></h3><p>Encapsulation for shared memory</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::encapsulation::shm
+struct ShmMetadata {
+    std::size_t size = 0;
+    std::size_t queue = 0;
+    std::atomic&lt;pid_t&gt; connected{0}; // number of connected
+    std::atomic&lt;std::uint32_t&gt; readable{1}; // (signal) awake the reader
+    std::atomic&lt;std::uint64_t&gt; sequence{0}; // last sequence number given to a request (0 = none)
+};
+struct Id {
+    std::size_t id = 0; // 0 == invalid/unset id
+    pid_t ownership = 0; // ownership of the id
+    bool operator==(const utils::encapsulation::shm::Id&amp; other) const;
+    std::strong_ordering operator&lt;=&gt;(const utils::encapsulation::shm::Id&amp;) const = default;
+    Id() = default;
+    Id(std::size_t id);
+    Id(std::size_t id, pid_t ownership);
+};
+struct Target {
+    pid_t sender = 0; // ownership of the sender
+    std::size_t limit = 0; // number of people who will read it (0 = every connected reader for a global request)
+    pid_t ownership = 0; // to only a specific reader
+    bool global = false; // to all reader
+    std::atomic&lt;std::size_t&gt; readed{0}; // number of time readed
+    Target() = default;
+    Target(const std::size_t limit);
+    Target(const std::size_t limit, const pid_t ownership);
+};
+struct ShmRequestMetadata {
+    std::atomic&lt;std::uint8_t&gt; flag{0}; // request flag | 0 = no data / readed, 1 = in writting/reading (unique), 2 = data / to read (shared), 3 = reset in process
+    std::atomic&lt;std::size_t&gt; reader{0}; // number of reader (if value need to be edited wait until reader == 1)
+    std::atomic&lt;std::size_t&gt; waiting{0}; // number of reader in waiting status (reset of data)
+    utils::encapsulation::shm::Id id;
+    utils::encapsulation::shm::Target target;
+    std::pair&lt;bool, bool&gt; last = {false, false}; // [last sending] only trigger the join | [last transmition] free the id on read if it's is ownership, otherwhise remove it from it's storage
+    std::size_t size = 0; // total size of the bytes to not read the whole 'slot' with garbage from before
+    std::uint64_t sequence = 0; // unique number of the request, used by a reader to not read twice the same request
+};
+struct Slot {
+    utils::encapsulation::shm::ShmRequestMetadata* metadata = nullptr;
+    std::byte* bytes = nullptr;
+    bool operator!(void) const;
+    Slot() = default;
+    Slot(utils::encapsulation::shm::ShmRequestMetadata* metadata, std::byte* bytes);
+};
+enum class ReadFilter {All, ZeroOnly, NonZeroOnly, LastOnly}
+enum class LayoutPolicy {Compact, CompactSemiAligned, Interleaved, InterleavedAligned}
+constexpr std::size_t align_up(const std::size_t size, const std::size_t alignment);
+constexpr std::size_t interleaved_stride(const std::size_t size);
+std::size_t align_ceil(const std::size_t size);
+// namespace std
+template&lt;&gt; struct hash&lt;utils::encapsulation::shm::Id&gt; {
+    std::size_t operator()(const utils::encapsulation::shm::Id&amp; id) const;
+};
+// namespace utils::encapsulation
+class SharedMemory: private utils::security::observer::Observer&lt;"SharedMemory"&gt; {
+    void close(void);
+    void send(const std::vector&lt;std::byte&gt;&amp; bytes, const utils::encapsulation::shm::Id&amp; id, const utils::encapsulation::shm::Target&amp; target, bool lastSending = false, bool lastTransmission = false, bool failsafe = false); // force an id for the request
+    utils::encapsulation::shm::Id send(const std::vector&lt;std::byte&gt;&amp; bytes, const utils::encapsulation::shm::Target&amp; target, bool lastSending = false, bool lastTransmission = false, bool failsafe = false); // allocate an id for this request
+    std::optional&lt;std::unordered_map&lt;utils::encapsulation::shm::Id, std::vector&lt;std::vector&lt;std::byte&gt;&gt;&gt;&gt; read(const utils::encapsulation::shm::ReadFilter filter = utils::encapsulation::shm::ReadFilter::All);
+    std::optional&lt;std::vector&lt;std::vector&lt;std::byte&gt;&gt;&gt; read(const utils::encapsulation::shm::Id&amp; id);
+    bool readable(const utils::encapsulation::shm::ReadFilter filter = utils::encapsulation::shm::ReadFilter::All) const;
+    void join(bool last = false) const; // wait for anything to be readed (or any last to be readed)
+    void join(const utils::encapsulation::shm::Id&amp; id, bool last = false) const; // for a specifc id to be readed (wait until the last awnser or just any)
+    void ownership(pid_t ownership);
+    pid_t ownership(void) const;
+    template&lt;bool create = false, utils::encapsulation::shm::LayoutPolicy policy = utils::encapsulation::shm::LayoutPolicy::Compact, std::size_t groupSize = 2, bool forced = false&gt; void init(const std::string&amp; name, std::size_t size = 1, std::size_t queue = 1); // size/queue ignored in 'client' mode | size is only for a single section, real size: sizeof(IdHandler lock) + (size + sizeof(metadata)) * queue
+    void trigger(void); // auto in normal case
+    void send(const std::vector&lt;std::byte&gt;&amp; bytes, std::size_t id, const utils::encapsulation::shm::Target&amp; target, bool lastSending = false, bool lastTransmission = false, bool failsafe = false); // own id
+    bool readable(const utils::encapsulation::shm::Id&amp; id) const;
+    [deprecated ~v6.0.0] SharedMemory(std::uint16_t ownership);
+    SharedMemory(pid_t ownership = utils::platform::getpid());
+    ~SharedMemory();
+};</code></pre><h3 id="h-encapsulation-sharedobject-hpp"><code>utils/encapsulation/SharedObject.hpp</code></h3><p>Definition of the encapsulation for shared object (.so)</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::encapsulation
+class SharedObject: private utils::security::observer::Observer&lt;"SharedObject"&gt; {
+    bool isLoaded(void) const;
+    std::string_view path(void) const;
+    void* get(void) const;
+    template&lt;typename T&gt; T loadFunction(const std::string&amp; name);
+    SharedObject&amp; operator=(SharedObject&amp;&amp; other);
+    SharedObject(const std::string&amp; path);
+    SharedObject(SharedObject&amp;&amp; other);
+    ~SharedObject() noexcept;
+};</code></pre></div><div data-lang="fr"><p>Lu dans les en-têtes de <code>include/utils/encapsulation/</code> (partie publique seulement, avec les commentaires du code). Inclure <code>&lt;utils/utils.hpp&gt;</code> avec le define de la section, jamais ces en-têtes un par un.</p><h3 id="h-encapsulation-dup-hpp"><code>utils/encapsulation/Dup.hpp</code></h3><p>Basic encapsulation for pipe</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::encapsulation
+class Dup: private utils::security::observer::Observer&lt;"Dup"&gt; {
+    void trigger(void);
+    void closeOrigin(void) noexcept;
+    void closeClone(void) noexcept;
+    void close(void) noexcept;
+    void clear(void);
+    int getOrigin(void) const;
+    int getClone(void) const;
+    void setOrigin(const int fd = -1);
+    void setClone(const int fd = -1);
+    Dup&amp; operator=(Dup&amp;&amp; other);
+    Dup(const int origin = -1, const int clone = -1);
+    Dup(Dup&amp;&amp; other);
+    ~Dup() = default;
+};</code></pre><h3 id="h-encapsulation-pipe-hpp"><code>utils/encapsulation/Pipe.hpp</code></h3><p>Basic encapsulation for pipe</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::encapsulation
+class Pipe: private utils::security::observer::Observer&lt;"Pipe"&gt; {
+    void trigger(void);
+    void closeRead(void) noexcept;
+    void closeWrite(void) noexcept;
+    void close(void) noexcept;
+    void clear(void);
+    const std::array&lt;int, 2&gt;&amp; getFds(void) const;
+    int getRead(void) const;
+    int getWrite(void) const;
+    void setFds(const std::array&lt;int, 2&gt;&amp; fds);
+    void setRead(const int fd = -1);
+    void setWrite(const int fd = -1);
+    Pipe&amp; operator=(Pipe&amp;&amp; other);
+    Pipe(const int fds[2]);
+    Pipe(const std::array&lt;int, 2&gt;&amp; fds);
+    Pipe(const int read = -1, const int write = -1);
+    Pipe(Pipe&amp;&amp; other);
+    ~Pipe();
+};</code></pre><h3 id="h-encapsulation-poll-hpp"><code>utils/encapsulation/Poll.hpp</code></h3><p>Encapsulation of the epoll</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::encapsulation
+class Poll: private utils::security::observer::Observer&lt;"Poll"&gt; {
+    void init(int flags = EPOLL_CLOEXEC);
+    void close(void);
+    void link(int fd, std::uint32_t events, void* data = nullptr);
+    void edit(int fd, std::uint32_t events, void* data = nullptr) const;
+    void unlink(int fd);
+    std::vector&lt;struct epoll_event&gt; wait(int delay = -1, std::size_t limits = 0) const;
+    std::size_t size(void) const;
+    bool contains(int fd) const;
+    int getFd(void) const;
+    Poll&amp; operator=(Poll&amp;&amp; other);
+    Poll(int flags = EPOLL_CLOEXEC);
+    Poll(Poll&amp;&amp; other);
+    ~Poll();
+};</code></pre><h3 id="h-encapsulation-process-hpp"><code>utils/encapsulation/Process.hpp</code></h3><p>Process encapsulation class</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::encapsulation
+struct Status {
+    bool unknown = false;
+    bool exited = false;
+    int code = 0; // exited
+    int sig = 0; // killed
+};
+class Process: private utils::security::observer::Observer&lt;"Process"&gt; {
+    bool is(void) const;
+    pid_t spawn(void); // fork (Windows: FatalException UndefinedCall, no fork)
+    pid_t spawn(const std::string&amp; path, const std::vector&lt;std::string&gt;&amp; args); // execvp (Windows: CreateProcess, only the fds 0, 1 &amp; 2 can be dup)
+    _noreturn void replace(const std::string&amp; path, const std::vector&lt;std::string&gt;&amp; args); // execvp (Windows: _execvp) (never return: exec or _exit)
+    utils::encapsulation::Status wait(void); // waitpid (Windows: WaitForSingleObject, never killed by a signal)
+    void kill(void); // -s 9 (Windows: TerminateProcess)
+    void clear(void); // clear Pipe/Dup (close fd)
+    void pipe(const int read, const int write);
+    void dup(const int origin, const int clone = -1);
+    void pipe(utils::encapsulation::Pipe&amp; pipe);
+    void dup(utils::encapsulation::Dup&amp; dup);
+    void pipe(std::vector&lt;utils::encapsulation::Pipe&gt;&amp; pipes);
+    void dup(std::vector&lt;utils::encapsulation::Dup&gt;&amp; dups);
+    std::vector&lt;utils::encapsulation::Pipe&gt;&amp; getPipes(void);
+    std::vector&lt;utils::encapsulation::Dup&gt;&amp; getDups(void);
+    const std::vector&lt;utils::encapsulation::Pipe&gt;&amp; getPipes(void) const;
+    const std::vector&lt;utils::encapsulation::Dup&gt;&amp; getDups(void) const;
+    bool isChild(void) const;
+    bool isParent(void) const;
+    pid_t getPid(void) const;
+    Process&amp; operator=(Process&amp;&amp; other);
+    Process() = default;
+    Process(Process&amp;&amp; other): utils::security::observer::Observer&lt;"Process"&gt;(std::move(other)), _pipes;
+    ~Process(); // only the parent kill the child
+};</code></pre><h3 id="h-encapsulation-sharedmemory-hpp"><code>utils/encapsulation/SharedMemory.hpp</code></h3><p>Encapsulation for shared memory</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::encapsulation::shm
+struct ShmMetadata {
+    std::size_t size = 0;
+    std::size_t queue = 0;
+    std::atomic&lt;pid_t&gt; connected{0}; // number of connected
+    std::atomic&lt;std::uint32_t&gt; readable{1}; // (signal) awake the reader
+    std::atomic&lt;std::uint64_t&gt; sequence{0}; // last sequence number given to a request (0 = none)
+};
+struct Id {
+    std::size_t id = 0; // 0 == invalid/unset id
+    pid_t ownership = 0; // ownership of the id
+    bool operator==(const utils::encapsulation::shm::Id&amp; other) const;
+    std::strong_ordering operator&lt;=&gt;(const utils::encapsulation::shm::Id&amp;) const = default;
+    Id() = default;
+    Id(std::size_t id);
+    Id(std::size_t id, pid_t ownership);
+};
+struct Target {
+    pid_t sender = 0; // ownership of the sender
+    std::size_t limit = 0; // number of people who will read it (0 = every connected reader for a global request)
+    pid_t ownership = 0; // to only a specific reader
+    bool global = false; // to all reader
+    std::atomic&lt;std::size_t&gt; readed{0}; // number of time readed
+    Target() = default;
+    Target(const std::size_t limit);
+    Target(const std::size_t limit, const pid_t ownership);
+};
+struct ShmRequestMetadata {
+    std::atomic&lt;std::uint8_t&gt; flag{0}; // request flag | 0 = no data / readed, 1 = in writting/reading (unique), 2 = data / to read (shared), 3 = reset in process
+    std::atomic&lt;std::size_t&gt; reader{0}; // number of reader (if value need to be edited wait until reader == 1)
+    std::atomic&lt;std::size_t&gt; waiting{0}; // number of reader in waiting status (reset of data)
+    utils::encapsulation::shm::Id id;
+    utils::encapsulation::shm::Target target;
+    std::pair&lt;bool, bool&gt; last = {false, false}; // [last sending] only trigger the join | [last transmition] free the id on read if it's is ownership, otherwhise remove it from it's storage
+    std::size_t size = 0; // total size of the bytes to not read the whole 'slot' with garbage from before
+    std::uint64_t sequence = 0; // unique number of the request, used by a reader to not read twice the same request
+};
+struct Slot {
+    utils::encapsulation::shm::ShmRequestMetadata* metadata = nullptr;
+    std::byte* bytes = nullptr;
+    bool operator!(void) const;
+    Slot() = default;
+    Slot(utils::encapsulation::shm::ShmRequestMetadata* metadata, std::byte* bytes);
+};
+enum class ReadFilter {All, ZeroOnly, NonZeroOnly, LastOnly}
+enum class LayoutPolicy {Compact, CompactSemiAligned, Interleaved, InterleavedAligned}
+constexpr std::size_t align_up(const std::size_t size, const std::size_t alignment);
+constexpr std::size_t interleaved_stride(const std::size_t size);
+std::size_t align_ceil(const std::size_t size);
+// namespace std
+template&lt;&gt; struct hash&lt;utils::encapsulation::shm::Id&gt; {
+    std::size_t operator()(const utils::encapsulation::shm::Id&amp; id) const;
+};
+// namespace utils::encapsulation
+class SharedMemory: private utils::security::observer::Observer&lt;"SharedMemory"&gt; {
+    void close(void);
+    void send(const std::vector&lt;std::byte&gt;&amp; bytes, const utils::encapsulation::shm::Id&amp; id, const utils::encapsulation::shm::Target&amp; target, bool lastSending = false, bool lastTransmission = false, bool failsafe = false); // force an id for the request
+    utils::encapsulation::shm::Id send(const std::vector&lt;std::byte&gt;&amp; bytes, const utils::encapsulation::shm::Target&amp; target, bool lastSending = false, bool lastTransmission = false, bool failsafe = false); // allocate an id for this request
+    std::optional&lt;std::unordered_map&lt;utils::encapsulation::shm::Id, std::vector&lt;std::vector&lt;std::byte&gt;&gt;&gt;&gt; read(const utils::encapsulation::shm::ReadFilter filter = utils::encapsulation::shm::ReadFilter::All);
+    std::optional&lt;std::vector&lt;std::vector&lt;std::byte&gt;&gt;&gt; read(const utils::encapsulation::shm::Id&amp; id);
+    bool readable(const utils::encapsulation::shm::ReadFilter filter = utils::encapsulation::shm::ReadFilter::All) const;
+    void join(bool last = false) const; // wait for anything to be readed (or any last to be readed)
+    void join(const utils::encapsulation::shm::Id&amp; id, bool last = false) const; // for a specifc id to be readed (wait until the last awnser or just any)
+    void ownership(pid_t ownership);
+    pid_t ownership(void) const;
+    template&lt;bool create = false, utils::encapsulation::shm::LayoutPolicy policy = utils::encapsulation::shm::LayoutPolicy::Compact, std::size_t groupSize = 2, bool forced = false&gt; void init(const std::string&amp; name, std::size_t size = 1, std::size_t queue = 1); // size/queue ignored in 'client' mode | size is only for a single section, real size: sizeof(IdHandler lock) + (size + sizeof(metadata)) * queue
+    void trigger(void); // auto in normal case
+    void send(const std::vector&lt;std::byte&gt;&amp; bytes, std::size_t id, const utils::encapsulation::shm::Target&amp; target, bool lastSending = false, bool lastTransmission = false, bool failsafe = false); // own id
+    bool readable(const utils::encapsulation::shm::Id&amp; id) const;
+    [deprecated ~v6.0.0] SharedMemory(std::uint16_t ownership);
+    SharedMemory(pid_t ownership = utils::platform::getpid());
+    ~SharedMemory();
+};</code></pre><h3 id="h-encapsulation-sharedobject-hpp"><code>utils/encapsulation/SharedObject.hpp</code></h3><p>Definition of the encapsulation for shared object (.so)</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::encapsulation
+class SharedObject: private utils::security::observer::Observer&lt;"SharedObject"&gt; {
+    bool isLoaded(void) const;
+    std::string_view path(void) const;
+    void* get(void) const;
+    template&lt;typename T&gt; T loadFunction(const std::string&amp; name);
+    SharedObject&amp; operator=(SharedObject&amp;&amp; other);
+    SharedObject(const std::string&amp; path);
+    SharedObject(SharedObject&amp;&amp; other);
+    ~SharedObject() noexcept;
+};</code></pre></div></section><section id="c-api"><h2>9. <span data-lang="en">C API</span><span data-lang="fr">API C</span></h2><div data-lang="en"><p>Read from <code>include/utils/encapsulation/CApi.h</code>, included by <code>&lt;utils.h&gt;</code> with the define of the section. Every function that can fail returns <code>UTILS_OK</code> / <code>UTILS_KO</code> (or <code>NULL</code> / <code>0</code>) and fills <code>utils_exception</code> (see <a href="c-api.html#errors">the C API guide</a>).</p><h3 id="c-1">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_dup utils_dup_t; // utils::encapsulation::Dup
+typedef struct utils_pipe utils_pipe_t; // utils::encapsulation::Pipe
+typedef struct utils_poll utils_poll_t; // utils::encapsulation::Poll
+typedef struct utils_process utils_process_t; // utils::encapsulation::Process
+typedef struct utils_shared_object utils_shared_object_t; // utils::encapsulation::SharedObject
+typedef struct utils_shm utils_shm_t; // utils::encapsulation::SharedMemory
+typedef struct utils_shm_messages utils_shm_messages_t; // messages read from a shared memory (id -&gt; payloads)</code></pre><h3 id="c-2">Enums · Filter of a read</h3><p><em>filter of a read (utils::encapsulation::shm::ReadFilter)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_shm_read_filter {
+    C_API_SHM_READ_ALL = 0,
+    C_API_SHM_READ_ZERO_ONLY,
+    C_API_SHM_READ_NON_ZERO_ONLY,
+    C_API_SHM_READ_LAST_ONLY
+} utils_shm_read_filter_t;</code></pre><h3 id="c-3">Enums · Layout of the memory</h3><p><em>layout of the memory (utils::encapsulation::shm::LayoutPolicy)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_shm_layout {
+    C_API_SHM_LAYOUT_COMPACT = 0, // (meta,meta,...)(byte,byte,...): 1 writer, N readers
+    C_API_SHM_LAYOUT_COMPACT_SEMI_ALIGNED, // idem + alignement per groups: some writers, some at the same time
+    C_API_SHM_LAYOUT_INTERLEAVED, // (meta,byte,meta,byte,...): N writers moderated, payload &gt;= cache-line (advise)
+    C_API_SHM_LAYOUT_INTERLEAVED_ALIGNED // idem + aligned per slot: N writers, many at the same time
+} utils_shm_layout_t;</code></pre><h3 id="c-4">Structures · Status of a waited process</h3><p><em>status of a waited process (utils::encapsulation::Status)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_process_status {
+    bool unknown;
+    bool exited;
+    int code; // exited
+    int sig; // killed
+} utils_process_status_t;</code></pre><h3 id="c-5">Structures · Id of a request of a shared memory</h3><p><em>id of a request of a shared memory (utils::encapsulation::shm::Id)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_shm_id {
+    size_t id; // 0: invalid / unset
+    pid_t ownership;
+} utils_shm_id_t;</code></pre><h3 id="c-6">Structures · Target of a request of a shared memory</h3><p><em>target of a request of a shared memory (utils::encapsulation::shm::Target)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_shm_target {
+    pid_t sender; // ownership of the sender
+    size_t limit; // number of readers (0: every connected reader for a global request)
+    pid_t ownership; // to only a specific reader
+    bool global; // to every reader
+} utils_shm_target_t;</code></pre><h3 id="c-7">Functions · Dup</h3><p><em>dup (trigger: dup2 of origin on clone, a new clone when it's -1)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_dup_t* utils_dup_create(int origin, int clone); // NULL on error
+void utils_dup_destroy(utils_dup_t* dup); // NULL: nothing (the fds are not closed)
+int utils_dup_trigger(utils_dup_t* dup);
+int utils_dup_close_origin(utils_dup_t* dup);
+int utils_dup_close_clone(utils_dup_t* dup);
+int utils_dup_close(utils_dup_t* dup);
+int utils_dup_clear(utils_dup_t* dup); // forget the fds (not closed)
+int utils_dup_get_origin(const utils_dup_t* dup); // -1 on error
+int utils_dup_get_clone(const utils_dup_t* dup); // -1 on error
+int utils_dup_set_origin(utils_dup_t* dup, int fd);
+int utils_dup_set_clone(utils_dup_t* dup, int fd);</code></pre><h3 id="c-8">Functions · Pipe</h3><p><em>pipe (trigger: create the pipe, both fds must be closed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_pipe_t* utils_pipe_create(int read, int write); // NULL on error
+void utils_pipe_destroy(utils_pipe_t* pipe); // NULL: nothing (closes the fds)
+int utils_pipe_trigger(utils_pipe_t* pipe);
+int utils_pipe_close_read(utils_pipe_t* pipe);
+int utils_pipe_close_write(utils_pipe_t* pipe);
+int utils_pipe_close(utils_pipe_t* pipe);
+int utils_pipe_clear(utils_pipe_t* pipe); // forget the fds (not closed)
+int utils_pipe_get_read(const utils_pipe_t* pipe); // -1 on error
+int utils_pipe_get_write(const utils_pipe_t* pipe); // -1 on error
+int utils_pipe_set_read(utils_pipe_t* pipe, int fd);
+int utils_pipe_set_write(utils_pipe_t* pipe, int fd);</code></pre><h3 id="c-9">Functions · Poll</h3><p><em>poll (epoll)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_poll_t* utils_poll_create(int flags); // EPOLL_CLOEXEC by default in c++, NULL on error
+void utils_poll_destroy(utils_poll_t* poll); // NULL: nothing (closes it)
+int utils_poll_init(utils_poll_t* poll, int flags);
+int utils_poll_close(utils_poll_t* poll);
+int utils_poll_link(utils_poll_t* poll, int fd, uint32_t events, void* data); // data: NULL = the fd in the event
+int utils_poll_edit(const utils_poll_t* poll, int fd, uint32_t events, void* data);
+int utils_poll_unlink(utils_poll_t* poll, int fd);
+size_t utils_poll_wait(const utils_poll_t* poll, int delay, struct epoll_event* events, size_t max); // events filled (max at most), returns their number (0: timeout or error, see utils_exception.exception)
+size_t utils_poll_size(const utils_poll_t* poll);
+bool utils_poll_contains(const utils_poll_t* poll, int fd);
+int utils_poll_get_fd(const utils_poll_t* poll); // -1 on error</code></pre><h3 id="c-10">Functions · Process</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_process_t* utils_process_create(void); // NULL on error
+void utils_process_destroy(utils_process_t* process); // NULL: nothing (the parent kills the child)
+bool utils_process_is(const utils_process_t* process); // the child is running
+pid_t utils_process_spawn(utils_process_t* process); // fork (Windows: error, no fork), -1 on error
+pid_t utils_process_spawn_exec(utils_process_t* process, const char* path, const char* const* args, size_t count); // execvp (argv[0] = path, args after it), -1 on error
+_noreturn void utils_process_replace(utils_process_t* process, const char* path, const char* const* args, size_t count); // execvp in this process (never return: exec or _exit(127))
+int utils_process_wait(utils_process_t* process, utils_process_status_t* status); // waitpid
+int utils_process_kill(utils_process_t* process); // -s 9
+int utils_process_clear(utils_process_t* process); // clear the pipes / dups (fds closed)
+int utils_process_pipe(utils_process_t* process, int read, int write);
+int utils_process_dup(utils_process_t* process, int origin, int clone);
+int utils_process_add_pipe(utils_process_t* process, utils_pipe_t* pipe); // the fds are moved in the process (pipe cleared)
+int utils_process_add_dup(utils_process_t* process, utils_dup_t* dup); // the fds are moved in the process (dup cleared)
+size_t utils_process_pipes_count(const utils_process_t* process);
+size_t utils_process_dups_count(const utils_process_t* process);
+int utils_process_get_pipe(const utils_process_t* process, size_t i, int* read, int* write);
+int utils_process_get_dup(const utils_process_t* process, size_t i, int* origin, int* clone);
+bool utils_process_is_child(const utils_process_t* process);
+bool utils_process_is_parent(const utils_process_t* process);
+pid_t utils_process_get_pid(const utils_process_t* process); // -1: not spawned or error</code></pre><h3 id="c-11">Functions · Shared object</h3><p><em>shared object (dlopen)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_shared_object_t* utils_shared_object_create(const char* path); // loaded (RTLD_NOW), NULL on error
+void utils_shared_object_destroy(utils_shared_object_t* so); // NULL: nothing (dlclose)
+bool utils_shared_object_is_loaded(const utils_shared_object_t* so);
+const char* utils_shared_object_path(const utils_shared_object_t* so); // valid while so lives (NULL on error)
+void* utils_shared_object_get(const utils_shared_object_t* so); // handle of dlopen (NULL on error)
+void* utils_shared_object_load_function(utils_shared_object_t* so, const char* name); // cast it in the function type (NULL on error)</code></pre><h3 id="c-12">Functions · Shared memory</h3><p><em>shared memory (create: the 'server' (size of a slot &amp; queue), else a 'client' that opens it, group_size: power of 2 from 1 to 64, only for COMPACT_SEMI_ALIGNED)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_shm_t* utils_shm_create(pid_t ownership); // NULL on error
+utils_shm_t* utils_shm_create_default(void); // ownership: getpid(), NULL on error
+void utils_shm_destroy(utils_shm_t* shm); // NULL: nothing (closes it)
+int utils_shm_init(utils_shm_t* shm, const char* name, size_t size, size_t queue, bool create, utils_shm_layout_t layout, size_t group_size, bool forced);
+int utils_shm_close(utils_shm_t* shm);
+pid_t utils_shm_get_ownership(const utils_shm_t* shm); // -1 on error
+int utils_shm_set_ownership(utils_shm_t* shm, pid_t ownership);
+int utils_shm_send(utils_shm_t* shm, const void* bytes, size_t size, const utils_shm_target_t* target, bool last_sending, bool last_transmission, bool failsafe, utils_shm_id_t* id); // a new id for the request (id: optional)
+int utils_shm_send_id(utils_shm_t* shm, const void* bytes, size_t size, utils_shm_id_t id, const utils_shm_target_t* target, bool last_sending, bool last_transmission, bool failsafe); // force an id
+int utils_shm_send_own_id(utils_shm_t* shm, const void* bytes, size_t size, size_t id, const utils_shm_target_t* target, bool last_sending, bool last_transmission, bool failsafe); // id of this ownership
+int utils_shm_trigger(utils_shm_t* shm); // read now (automatic in the normal case)
+bool utils_shm_readable(const utils_shm_t* shm, utils_shm_read_filter_t filter);
+bool utils_shm_readable_id(const utils_shm_t* shm, utils_shm_id_t id);
+int utils_shm_join(const utils_shm_t* shm, bool last); // wait for anything to be read (or any last)
+int utils_shm_join_id(const utils_shm_t* shm, utils_shm_id_t id, bool last); // wait for a specific id
+utils_shm_messages_t* utils_shm_read(utils_shm_t* shm, utils_shm_read_filter_t filter); // NULL: nothing read (utils_exception.exception false) or error
+utils_shm_messages_t* utils_shm_read_id(utils_shm_t* shm, utils_shm_id_t id); // NULL: nothing read (utils_exception.exception false) or error</code></pre><h3 id="c-13">Functions · Messages read</h3><p><em>messages read (ids in any order, payloads of an id in the order of the reception)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">void utils_shm_messages_destroy(utils_shm_messages_t* messages); // NULL: nothing
+size_t utils_shm_messages_count(const utils_shm_messages_t* messages); // number of ids
+int utils_shm_messages_id(const utils_shm_messages_t* messages, size_t i, utils_shm_id_t* id);
+size_t utils_shm_messages_size(const utils_shm_messages_t* messages, size_t i); // number of payloads of the id i
+const void* utils_shm_messages_get(const utils_shm_messages_t* messages, size_t i, size_t j, size_t* size); // payload j of the id i, valid while messages lives (NULL on error)</code></pre></div><div data-lang="fr"><p>Lu dans <code>include/utils/encapsulation/CApi.h</code>, inclus par <code>&lt;utils.h&gt;</code> avec le define de la section. Chaque fonction qui peut échouer renvoie <code>UTILS_OK</code> / <code>UTILS_KO</code> (ou <code>NULL</code> / <code>0</code>) et remplit <code>utils_exception</code> (voir <a href="c-api.html#errors">le guide de l'API C</a>).</p><h3 id="c-1">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_dup utils_dup_t; // utils::encapsulation::Dup
+typedef struct utils_pipe utils_pipe_t; // utils::encapsulation::Pipe
+typedef struct utils_poll utils_poll_t; // utils::encapsulation::Poll
+typedef struct utils_process utils_process_t; // utils::encapsulation::Process
+typedef struct utils_shared_object utils_shared_object_t; // utils::encapsulation::SharedObject
+typedef struct utils_shm utils_shm_t; // utils::encapsulation::SharedMemory
+typedef struct utils_shm_messages utils_shm_messages_t; // messages read from a shared memory (id -&gt; payloads)</code></pre><h3 id="c-2">Énumérations · Filter of a read</h3><p><em>filter of a read (utils::encapsulation::shm::ReadFilter)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_shm_read_filter {
+    C_API_SHM_READ_ALL = 0,
+    C_API_SHM_READ_ZERO_ONLY,
+    C_API_SHM_READ_NON_ZERO_ONLY,
+    C_API_SHM_READ_LAST_ONLY
+} utils_shm_read_filter_t;</code></pre><h3 id="c-3">Énumérations · Layout of the memory</h3><p><em>layout of the memory (utils::encapsulation::shm::LayoutPolicy)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_shm_layout {
+    C_API_SHM_LAYOUT_COMPACT = 0, // (meta,meta,...)(byte,byte,...): 1 writer, N readers
+    C_API_SHM_LAYOUT_COMPACT_SEMI_ALIGNED, // idem + alignement per groups: some writers, some at the same time
+    C_API_SHM_LAYOUT_INTERLEAVED, // (meta,byte,meta,byte,...): N writers moderated, payload &gt;= cache-line (advise)
+    C_API_SHM_LAYOUT_INTERLEAVED_ALIGNED // idem + aligned per slot: N writers, many at the same time
+} utils_shm_layout_t;</code></pre><h3 id="c-4">Structures · Status of a waited process</h3><p><em>status of a waited process (utils::encapsulation::Status)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_process_status {
+    bool unknown;
+    bool exited;
+    int code; // exited
+    int sig; // killed
+} utils_process_status_t;</code></pre><h3 id="c-5">Structures · Id of a request of a shared memory</h3><p><em>id of a request of a shared memory (utils::encapsulation::shm::Id)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_shm_id {
+    size_t id; // 0: invalid / unset
+    pid_t ownership;
+} utils_shm_id_t;</code></pre><h3 id="c-6">Structures · Target of a request of a shared memory</h3><p><em>target of a request of a shared memory (utils::encapsulation::shm::Target)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_shm_target {
+    pid_t sender; // ownership of the sender
+    size_t limit; // number of readers (0: every connected reader for a global request)
+    pid_t ownership; // to only a specific reader
+    bool global; // to every reader
+} utils_shm_target_t;</code></pre><h3 id="c-7">Fonctions · Dup</h3><p><em>dup (trigger: dup2 of origin on clone, a new clone when it's -1)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_dup_t* utils_dup_create(int origin, int clone); // NULL on error
+void utils_dup_destroy(utils_dup_t* dup); // NULL: nothing (the fds are not closed)
+int utils_dup_trigger(utils_dup_t* dup);
+int utils_dup_close_origin(utils_dup_t* dup);
+int utils_dup_close_clone(utils_dup_t* dup);
+int utils_dup_close(utils_dup_t* dup);
+int utils_dup_clear(utils_dup_t* dup); // forget the fds (not closed)
+int utils_dup_get_origin(const utils_dup_t* dup); // -1 on error
+int utils_dup_get_clone(const utils_dup_t* dup); // -1 on error
+int utils_dup_set_origin(utils_dup_t* dup, int fd);
+int utils_dup_set_clone(utils_dup_t* dup, int fd);</code></pre><h3 id="c-8">Fonctions · Pipe</h3><p><em>pipe (trigger: create the pipe, both fds must be closed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_pipe_t* utils_pipe_create(int read, int write); // NULL on error
+void utils_pipe_destroy(utils_pipe_t* pipe); // NULL: nothing (closes the fds)
+int utils_pipe_trigger(utils_pipe_t* pipe);
+int utils_pipe_close_read(utils_pipe_t* pipe);
+int utils_pipe_close_write(utils_pipe_t* pipe);
+int utils_pipe_close(utils_pipe_t* pipe);
+int utils_pipe_clear(utils_pipe_t* pipe); // forget the fds (not closed)
+int utils_pipe_get_read(const utils_pipe_t* pipe); // -1 on error
+int utils_pipe_get_write(const utils_pipe_t* pipe); // -1 on error
+int utils_pipe_set_read(utils_pipe_t* pipe, int fd);
+int utils_pipe_set_write(utils_pipe_t* pipe, int fd);</code></pre><h3 id="c-9">Fonctions · Poll</h3><p><em>poll (epoll)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_poll_t* utils_poll_create(int flags); // EPOLL_CLOEXEC by default in c++, NULL on error
+void utils_poll_destroy(utils_poll_t* poll); // NULL: nothing (closes it)
+int utils_poll_init(utils_poll_t* poll, int flags);
+int utils_poll_close(utils_poll_t* poll);
+int utils_poll_link(utils_poll_t* poll, int fd, uint32_t events, void* data); // data: NULL = the fd in the event
+int utils_poll_edit(const utils_poll_t* poll, int fd, uint32_t events, void* data);
+int utils_poll_unlink(utils_poll_t* poll, int fd);
+size_t utils_poll_wait(const utils_poll_t* poll, int delay, struct epoll_event* events, size_t max); // events filled (max at most), returns their number (0: timeout or error, see utils_exception.exception)
+size_t utils_poll_size(const utils_poll_t* poll);
+bool utils_poll_contains(const utils_poll_t* poll, int fd);
+int utils_poll_get_fd(const utils_poll_t* poll); // -1 on error</code></pre><h3 id="c-10">Fonctions · Process</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_process_t* utils_process_create(void); // NULL on error
+void utils_process_destroy(utils_process_t* process); // NULL: nothing (the parent kills the child)
+bool utils_process_is(const utils_process_t* process); // the child is running
+pid_t utils_process_spawn(utils_process_t* process); // fork (Windows: error, no fork), -1 on error
+pid_t utils_process_spawn_exec(utils_process_t* process, const char* path, const char* const* args, size_t count); // execvp (argv[0] = path, args after it), -1 on error
+_noreturn void utils_process_replace(utils_process_t* process, const char* path, const char* const* args, size_t count); // execvp in this process (never return: exec or _exit(127))
+int utils_process_wait(utils_process_t* process, utils_process_status_t* status); // waitpid
+int utils_process_kill(utils_process_t* process); // -s 9
+int utils_process_clear(utils_process_t* process); // clear the pipes / dups (fds closed)
+int utils_process_pipe(utils_process_t* process, int read, int write);
+int utils_process_dup(utils_process_t* process, int origin, int clone);
+int utils_process_add_pipe(utils_process_t* process, utils_pipe_t* pipe); // the fds are moved in the process (pipe cleared)
+int utils_process_add_dup(utils_process_t* process, utils_dup_t* dup); // the fds are moved in the process (dup cleared)
+size_t utils_process_pipes_count(const utils_process_t* process);
+size_t utils_process_dups_count(const utils_process_t* process);
+int utils_process_get_pipe(const utils_process_t* process, size_t i, int* read, int* write);
+int utils_process_get_dup(const utils_process_t* process, size_t i, int* origin, int* clone);
+bool utils_process_is_child(const utils_process_t* process);
+bool utils_process_is_parent(const utils_process_t* process);
+pid_t utils_process_get_pid(const utils_process_t* process); // -1: not spawned or error</code></pre><h3 id="c-11">Fonctions · Shared object</h3><p><em>shared object (dlopen)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_shared_object_t* utils_shared_object_create(const char* path); // loaded (RTLD_NOW), NULL on error
+void utils_shared_object_destroy(utils_shared_object_t* so); // NULL: nothing (dlclose)
+bool utils_shared_object_is_loaded(const utils_shared_object_t* so);
+const char* utils_shared_object_path(const utils_shared_object_t* so); // valid while so lives (NULL on error)
+void* utils_shared_object_get(const utils_shared_object_t* so); // handle of dlopen (NULL on error)
+void* utils_shared_object_load_function(utils_shared_object_t* so, const char* name); // cast it in the function type (NULL on error)</code></pre><h3 id="c-12">Fonctions · Shared memory</h3><p><em>shared memory (create: the 'server' (size of a slot &amp; queue), else a 'client' that opens it, group_size: power of 2 from 1 to 64, only for COMPACT_SEMI_ALIGNED)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_shm_t* utils_shm_create(pid_t ownership); // NULL on error
+utils_shm_t* utils_shm_create_default(void); // ownership: getpid(), NULL on error
+void utils_shm_destroy(utils_shm_t* shm); // NULL: nothing (closes it)
+int utils_shm_init(utils_shm_t* shm, const char* name, size_t size, size_t queue, bool create, utils_shm_layout_t layout, size_t group_size, bool forced);
+int utils_shm_close(utils_shm_t* shm);
+pid_t utils_shm_get_ownership(const utils_shm_t* shm); // -1 on error
+int utils_shm_set_ownership(utils_shm_t* shm, pid_t ownership);
+int utils_shm_send(utils_shm_t* shm, const void* bytes, size_t size, const utils_shm_target_t* target, bool last_sending, bool last_transmission, bool failsafe, utils_shm_id_t* id); // a new id for the request (id: optional)
+int utils_shm_send_id(utils_shm_t* shm, const void* bytes, size_t size, utils_shm_id_t id, const utils_shm_target_t* target, bool last_sending, bool last_transmission, bool failsafe); // force an id
+int utils_shm_send_own_id(utils_shm_t* shm, const void* bytes, size_t size, size_t id, const utils_shm_target_t* target, bool last_sending, bool last_transmission, bool failsafe); // id of this ownership
+int utils_shm_trigger(utils_shm_t* shm); // read now (automatic in the normal case)
+bool utils_shm_readable(const utils_shm_t* shm, utils_shm_read_filter_t filter);
+bool utils_shm_readable_id(const utils_shm_t* shm, utils_shm_id_t id);
+int utils_shm_join(const utils_shm_t* shm, bool last); // wait for anything to be read (or any last)
+int utils_shm_join_id(const utils_shm_t* shm, utils_shm_id_t id, bool last); // wait for a specific id
+utils_shm_messages_t* utils_shm_read(utils_shm_t* shm, utils_shm_read_filter_t filter); // NULL: nothing read (utils_exception.exception false) or error
+utils_shm_messages_t* utils_shm_read_id(utils_shm_t* shm, utils_shm_id_t id); // NULL: nothing read (utils_exception.exception false) or error</code></pre><h3 id="c-13">Fonctions · Messages read</h3><p><em>messages read (ids in any order, payloads of an id in the order of the reception)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">void utils_shm_messages_destroy(utils_shm_messages_t* messages); // NULL: nothing
+size_t utils_shm_messages_count(const utils_shm_messages_t* messages); // number of ids
+int utils_shm_messages_id(const utils_shm_messages_t* messages, size_t i, utils_shm_id_t* id);
+size_t utils_shm_messages_size(const utils_shm_messages_t* messages, size_t i); // number of payloads of the id i
+const void* utils_shm_messages_get(const utils_shm_messages_t* messages, size_t i, size_t j, size_t* size); // payload j of the id i, valid while messages lives (NULL on error)</code></pre></div></section><nav class="pager"><a href="concepts.html"><span data-i18n>Previous</span><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></a><a class="next" href="system.html"><span data-i18n>Next</span><span data-lang="en">System</span><span data-lang="fr">System</span></a></nav></main>
+</div>
+<footer class="site">libutils v5.0.0 · 23d2be3 · docs</footer>
+<script src="site.js"></script>
+<script src="search-index.js" defer></script>
+</body>
+</html>

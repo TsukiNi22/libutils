@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en" data-storage-key="libutils-docs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pool - libutils</title>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n>Skip to the content</a>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" id="menuBtn" aria-label="Open the navigation" data-i18n-aria-label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v5.0.0</span></a>
+  <nav class="tabs" aria-label="Pages" hidden></nav>
+  <span class="spacer"></span>
+  <div class="top-actions">
+  <div class="lang-switch" role="group" aria-label="Language" data-i18n-aria-label>
+    <button type="button" data-set-lang="en" class="on">EN</button>
+    <button type="button" data-set-lang="fr">FR</button>
+  </div>
+  <span class="divider" aria-hidden="true"></span><div class="sbox small"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" autocomplete="off" aria-label="Search" data-i18n-aria-label placeholder="Search…" data-ph-fr="Rechercher…"><kbd class="hint" aria-hidden="true">/</kbd><ul class="results" hidden></ul></div>
+<a class="icon-btn" href="https://github.com/TsukiNi22/libutils" aria-label="GitHub repository" data-i18n-aria-label title="GitHub repository" data-i18n-title><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"/></svg></a>
+  <button class="theme-switch" type="button" id="themeToggle" role="switch" aria-checked="false" aria-label="Toggle theme" data-i18n-aria-label title="Toggle theme" data-i18n-title>
+    <span class="stars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="knob" aria-hidden="true">
+      <svg class="sun" viewBox="0 0 24 24" fill="#ffffff"><circle cx="12" cy="12" r="5.2"/><g stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"><path d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6M4.8 4.8l1.8 1.8M17.4 17.4l1.8 1.8M4.8 19.2l1.8-1.8M17.4 6.6l1.8-1.8"/></g></svg>
+      <svg class="moon" viewBox="0 0 24 24"><path d="M15.6 4.2a8 8 0 1 0 4.2 11.6A7 7 0 0 1 15.6 4.2z" fill="#f6c343"/></svg>
+    </span>
+  </button>
+  </div>
+</header>
+<div class="layout" id="top">
+<aside class="sidebar" id="sidebar"><p data-i18n>On this page</p><a href="#cluster">1. <span data-lang="en">Cluster</span><span data-lang="fr">Cluster</span></a><a href="#middleware">2. <span data-lang="en">Middleware</span><span data-lang="fr">Middleware</span></a><a href="#in-c">3. <span data-lang="en">In C</span><span data-lang="fr">En C</span></a><a href="#cpp-api">4. <span data-lang="en">C++ API</span><span data-lang="fr">API C++</span></a><a href="#c-api">5. <span data-lang="en">C API</span><span data-lang="fr">API C</span></a><hr><div class="grp"><span data-lang="en">User guide</span><span data-lang="fr">Guide utilisateur</span></div><a href="installation.html"><span data-lang="en">Installation</span><span data-lang="fr">Installation</span></a><a href="usage.html"><span data-lang="en">Link and include</span><span data-lang="fr">Lier et inclure</span></a><a href="custom-exceptions.html"><span data-lang="en">Custom exception codes</span><span data-lang="fr">Codes d&#x27;exception personnalisés</span></a><a href="warnings.html"><span data-lang="en">Warnings</span><span data-lang="fr">Avertissements</span></a><a href="c-api.html"><span data-lang="en">Use libutils from C</span><span data-lang="fr">Utiliser libutils depuis C</span></a><a href="windows.html"><span data-lang="en">Windows</span><span data-lang="fr">Windows</span></a><a href="development.html"><span data-lang="en">Build, tests and hooks</span><span data-lang="fr">Build, tests et hooks</span></a><div class="grp"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></div><a href="overview.html"><span data-lang="en">Architecture</span><span data-lang="fr">Architecture</span></a><a href="errors.html"><span data-lang="en">Errors</span><span data-lang="fr">Erreurs</span></a><a href="c-api-design.html"><span data-lang="en">The C API design</span><span data-lang="fr">Conception de l&#x27;API C</span></a><a href="network-ipc.html"><span data-lang="en">Communication</span><span data-lang="fr">Communication</span></a><a href="platforms.html"><span data-lang="en">Platforms</span><span data-lang="fr">Plateformes</span></a><div class="grp"><span data-lang="en">Reference</span><span data-lang="fr">Référence</span></div><a href="exception.html"><span data-lang="en">Exceptions</span><span data-lang="fr">Exceptions</span></a><a href="verbose.html"><span data-lang="en">Verbose</span><span data-lang="fr">Verbose</span></a><a href="pool.html" class="cur" aria-current="page"><span data-lang="en">Pool</span><span data-lang="fr">Pool</span></a><a href="cli.html"><span data-lang="en">Cli</span><span data-lang="fr">Cli</span></a><a href="arguments.html"><span data-lang="en">Arguments</span><span data-lang="fr">Arguments</span></a><a href="network.html"><span data-lang="en">Network</span><span data-lang="fr">Network</span></a><a href="math.html"><span data-lang="en">Math</span><span data-lang="fr">Math</span></a><a href="concepts.html"><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></a><a href="encapsulation.html"><span data-lang="en">Encapsulation</span><span data-lang="fr">Encapsulation</span></a><a href="system.html"><span data-lang="en">System</span><span data-lang="fr">System</span></a><a href="type.html"><span data-lang="en">Type</span><span data-lang="fr">Type</span></a><a href="iomanip.html"><span data-lang="en">IOManip</span><span data-lang="fr">IOManip</span></a><a href="smanip.html"><span data-lang="en">SManip</span><span data-lang="fr">SManip</span></a><a href="algorithms.html"><span data-lang="en">Algorithms</span><span data-lang="fr">Algorithms</span></a><a href="security.html"><span data-lang="en">Security</span><span data-lang="fr">Security</span></a><a href="platform.html"><span data-lang="en">Platform</span><span data-lang="fr">Platform</span></a><a href="attribute.html"><span data-lang="en">Attribute</span><span data-lang="fr">Attribute</span></a><div class="grp"><span data-lang="en">Resources</span><span data-lang="fr">Ressources</span></div><a href="changelog.html"><span data-lang="en">Changelog</span><span data-lang="fr">Historique</span></a><a href="ci-cd.html"><span data-lang="en">CI / CD</span><span data-lang="fr">CI / CD</span></a><a href="licenses.html"><span data-lang="en">Licenses</span><span data-lang="fr">Licences</span></a><a href="project-graph.html"><span data-lang="en">Project graph</span><span data-lang="fr">Graphe du projet</span></a><a href="faq.html"><span data-lang="en">FAQ</span><span data-lang="fr">FAQ</span></a><a href="glossary.html"><span data-lang="en">Glossary</span><span data-lang="fr">Glossaire</span></a></aside><main id="main" tabindex="-1"><header><div class="page-eyebrow"><span data-lang="en">Reference</span><span data-lang="fr">Référence</span></div><h1><span data-lang="en">Pool</span><span data-lang="fr">Pool</span></h1><p class="lead"><span data-lang="en">Groups of entities: a Cluster of objects of the same type, and the Middlewares chains called before and after an action.</span><span data-lang="fr">Groupes d&#x27;entités : un Cluster d&#x27;objets du même type, et les chaînes Middlewares appelées avant et après une action.</span></p><div class="page-meta"><span><span data-i18n>Updated</span> 2026-11-26</span></div></header><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Define, Group, Namespace, Headers"><table><thead><tr><th scope="col" style="min-width:17ch">Define</th><th scope="col" style="min-width:13ch">Group</th><th scope="col" style="min-width:16ch">Namespace</th><th scope="col" style="min-width:20ch">Headers</th></tr></thead><tbody><tr><td><code>_Pool</code></td><td><code>_Handling</code></td><td><code>utils::pool</code></td><td><code>utils/pool/</code></td></tr><tr><td><code>_Middleware</code> (from <code>_Pool</code>)</td><td><code>_Pool</code></td><td><code>utils::pool</code></td><td><code>utils/pool/middleware/Middlewares.hpp</code></td></tr></tbody></table></div><p>Handling of groups of entities: a <code>Cluster</code> of objects of the same type, and the <code>Middlewares</code> chains.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Name, Header, Description"><table><thead><tr><th scope="col" style="min-width:22ch">Name</th><th scope="col" style="min-width:28ch">Header</th><th scope="col" style="min-width:20ch">Description</th></tr></thead><tbody><tr><td><code>Cluster&lt;T&gt;</code></td><td><code>utils/pool/Cluster.hpp</code></td><td>Group of objects of the same type, built, used and destroyed together</td></tr><tr><td><code>Middlewares&lt;T, U&gt;</code></td><td><code>utils/pool/middleware/Middlewares.hpp</code></td><td>Chains of functions called before / after an action</td></tr></tbody></table></div></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Define, Groupe, Namespace, Headers"><table><thead><tr><th scope="col" style="min-width:19ch">Define</th><th scope="col" style="min-width:13ch">Groupe</th><th scope="col" style="min-width:16ch">Namespace</th><th scope="col" style="min-width:20ch">Headers</th></tr></thead><tbody><tr><td><code>_Pool</code></td><td><code>_Handling</code></td><td><code>utils::pool</code></td><td><code>utils/pool/</code></td></tr><tr><td><code>_Middleware</code> (depuis <code>_Pool</code>)</td><td><code>_Pool</code></td><td><code>utils::pool</code></td><td><code>utils/pool/middleware/Middlewares.hpp</code></td></tr></tbody></table></div><p>Gestion de groupes d'entités : un <code>Cluster</code> d'objets du même type, et les chaînes <code>Middlewares</code>.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Nom, Header, Description"><table><thead><tr><th scope="col" style="min-width:22ch">Nom</th><th scope="col" style="min-width:28ch">Header</th><th scope="col" style="min-width:20ch">Description</th></tr></thead><tbody><tr><td><code>Cluster&lt;T&gt;</code></td><td><code>utils/pool/Cluster.hpp</code></td><td>Groupe d'objets du même type, construits, utilisés et détruits ensemble</td></tr><tr><td><code>Middlewares&lt;T, U&gt;</code></td><td><code>utils/pool/middleware/Middlewares.hpp</code></td><td>Chaînes de fonctions appelées avant / après une action</td></tr></tbody></table></div></div><section id="cluster"><h2>1. <span data-lang="en">Cluster</span><span data-lang="fr">Cluster</span></h2><div data-lang="en"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:35ch">Method</th><th scope="col" style="min-width:33ch">Description</th></tr></thead><tbody><tr><td><code>spawn(args...)</code></td><td>Build one element from the arguments (<code>T</code> must be constructible from them)</td></tr><tr><td><code>spawn(std::size_t n, args...)</code></td><td>Build <code>n</code> elements, each one from a copy of the arguments</td></tr><tr><td><code>apply(std::function&lt;void(T&amp;)&gt; fn)</code></td><td>Call <code>fn</code> on every element, in the creation order</td></tr><tr><td><code>size()</code></td><td>Number of elements</td></tr><tr><td><code>kill()</code></td><td>Destroy every element</td></tr><tr><td><code>kill(std::size_t n)</code></td><td>Destroy the <code>n</code> last elements, <code>ErrorException(OutOfBounds)</code> if <code>n &gt; size()</code></td></tr></tbody></table></div><div class="callout"><p>A <code>Cluster</code> can be moved, not copied.</p></div><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Pool
+#include &lt;utils/utils.hpp&gt;
+
+utils::pool::Cluster&lt;std::string&gt; cluster;
+cluster.spawn(std::size_t{3}, "worker");      // 3 x "worker"
+cluster.spawn("leader");                       // 1 more
+cluster.apply([](std::string&amp; name) {name += "!";});
+cluster.kill(1);                               // removes "leader!"</code></pre></div><div data-lang="fr"><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:35ch">Méthode</th><th scope="col" style="min-width:33ch">Description</th></tr></thead><tbody><tr><td><code>spawn(args...)</code></td><td>Construit un élément à partir des arguments (<code>T</code> doit être constructible à partir d'eux)</td></tr><tr><td><code>spawn(std::size_t n, args...)</code></td><td>Construit <code>n</code> éléments, chacun à partir d'une copie des arguments</td></tr><tr><td><code>apply(std::function&lt;void(T&amp;)&gt; fn)</code></td><td>Appelle <code>fn</code> sur chaque élément, dans l'ordre de création</td></tr><tr><td><code>size()</code></td><td>Nombre d'éléments</td></tr><tr><td><code>kill()</code></td><td>Détruit chaque élément</td></tr><tr><td><code>kill(std::size_t n)</code></td><td>Détruit les <code>n</code> derniers éléments, <code>ErrorException(OutOfBounds)</code> si <code>n &gt; size()</code></td></tr></tbody></table></div><div class="callout"><p>Un <code>Cluster</code> peut être déplacé, pas copié.</p></div><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Pool
+#include &lt;utils/utils.hpp&gt;
+
+utils::pool::Cluster&lt;std::string&gt; cluster;
+cluster.spawn(std::size_t{3}, "worker");      // 3 x "worker"
+cluster.spawn("leader");                       // 1 more
+cluster.apply([](std::string&amp; name) {name += "!";});
+cluster.kill(1);                               // removes "leader!"</code></pre></div></section><section id="middleware"><h2>2. <span data-lang="en">Middleware</span><span data-lang="fr">Middleware</span></h2><div data-lang="en"><p>A <code>Middlewares&lt;T, U&gt;</code> stores two chains of functions: the <code>before</code> ones, called with a <code>T</code>, and the <code>after</code> ones, called with a <code>U</code> (<code>void</code> = no argument). The <a href="cli.html#middlewares">Cli</a> uses them (<code>cliMiddlewares</code>, <code>inputMiddlewares</code>, <code>promptMiddlewares</code>...) to hook code around its actions.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Type, before called with, after called with"><table><thead><tr><th scope="col" style="min-width:25ch">Type</th><th scope="col" style="min-width:25ch"><code>before</code> called with</th><th scope="col" style="min-width:24ch"><code>after</code> called with</th></tr></thead><tbody><tr><td><code>Middlewares&lt;T, U&gt;</code></td><td><code>T</code></td><td><code>U</code></td></tr><tr><td><code>Middlewares&lt;T, void&gt;</code></td><td><code>T</code></td><td>nothing</td></tr><tr><td><code>Middlewares&lt;void, U&gt;</code></td><td>nothing</td><td><code>U</code></td></tr><tr><td><code>Middlewares&lt;void, void&gt;</code></td><td>nothing</td><td>nothing</td></tr></tbody></table></div><p><code>utils::pool::Middleware&lt;T&gt;</code> is <code>std::function&lt;void(T)&gt;</code> (<code>std::function&lt;void(void)&gt;</code> for <code>void</code>).</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Method, Description"><table><thead><tr><th scope="col" style="min-width:33ch">Method</th><th scope="col" style="min-width:19ch">Description</th></tr></thead><tbody><tr><td><code>addBefore(middleware)</code> / <code>addBefore(std::vector&lt;...&gt;)</code></td><td>Append one or several functions to the <code>before</code> chain</td></tr><tr><td><code>addAfter(middleware)</code> / <code>addAfter(std::vector&lt;...&gt;)</code></td><td>Append one or several functions to the <code>after</code> chain</td></tr><tr><td><code>callBefore(arg)</code> / <code>callAfter(arg)</code></td><td>Call the chain in the adding order (no argument for <code>void</code>)</td></tr><tr><td><code>clear()</code></td><td>Remove every middleware</td></tr></tbody></table></div><div class="callout"><p>The chains are called on a snapshot, without the internal lock: a middleware can add / remove middlewares, the change applies to the next call.</p></div><div class="callout warn"><p><strong>Warning.</strong> A middleware throwing a <code>std::exception</code> is reported as <code>ErrorException(MiddlewareCall)</code> with the original message as info.</p></div><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Middleware
+#include &lt;utils/utils.hpp&gt;
+
+utils::pool::Middlewares&lt;const std::string&amp;, int&gt; m;
+m.addBefore([](const std::string&amp; cmd) {std::cout &lt;&lt; "&gt; " &lt;&lt; cmd &lt;&lt; std::endl;});
+m.addAfter([](int code) {std::cout &lt;&lt; "exit code " &lt;&lt; code &lt;&lt; std::endl;});
+
+m.callBefore("build");
+m.callAfter(0);</code></pre></div><div data-lang="fr"><p>Un <code>Middlewares&lt;T, U&gt;</code> stocke deux chaînes de fonctions : celles <code>before</code>, appelées avec un <code>T</code>, et celles <code>after</code>, appelées avec un <code>U</code> (<code>void</code> = pas d'argument). Le <a href="cli.html#middlewares">Cli</a> les utilise (<code>cliMiddlewares</code>, <code>inputMiddlewares</code>, <code>promptMiddlewares</code>...) pour accrocher du code autour de ses actions.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Type, before appelé avec, after appelé avec"><table><thead><tr><th scope="col" style="min-width:25ch">Type</th><th scope="col" style="min-width:25ch"><code>before</code> appelé avec</th><th scope="col" style="min-width:24ch"><code>after</code> appelé avec</th></tr></thead><tbody><tr><td><code>Middlewares&lt;T, U&gt;</code></td><td><code>T</code></td><td><code>U</code></td></tr><tr><td><code>Middlewares&lt;T, void&gt;</code></td><td><code>T</code></td><td>rien</td></tr><tr><td><code>Middlewares&lt;void, U&gt;</code></td><td>rien</td><td><code>U</code></td></tr><tr><td><code>Middlewares&lt;void, void&gt;</code></td><td>rien</td><td>rien</td></tr></tbody></table></div><p><code>utils::pool::Middleware&lt;T&gt;</code> est <code>std::function&lt;void(T)&gt;</code> (<code>std::function&lt;void(void)&gt;</code> pour <code>void</code>).</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: Méthode, Description"><table><thead><tr><th scope="col" style="min-width:33ch">Méthode</th><th scope="col" style="min-width:20ch">Description</th></tr></thead><tbody><tr><td><code>addBefore(middleware)</code> / <code>addBefore(std::vector&lt;...&gt;)</code></td><td>Ajoute une ou plusieurs fonctions à la chaîne <code>before</code></td></tr><tr><td><code>addAfter(middleware)</code> / <code>addAfter(std::vector&lt;...&gt;)</code></td><td>Ajoute une ou plusieurs fonctions à la chaîne <code>after</code></td></tr><tr><td><code>callBefore(arg)</code> / <code>callAfter(arg)</code></td><td>Appelle la chaîne dans l'ordre d'ajout (pas d'argument pour <code>void</code>)</td></tr><tr><td><code>clear()</code></td><td>Retire chaque middleware</td></tr></tbody></table></div><div class="callout"><p>Les chaînes sont appelées sur un instantané, sans le verrou interne : un middleware peut ajouter / retirer des middlewares, le changement s'applique à l'appel suivant.</p></div><div class="callout warn"><p><strong>Attention.</strong> Un middleware qui lève une <code>std::exception</code> est signalé comme <code>ErrorException(MiddlewareCall)</code> avec le message d'origine en info.</p></div><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define _Middleware
+#include &lt;utils/utils.hpp&gt;
+
+utils::pool::Middlewares&lt;const std::string&amp;, int&gt; m;
+m.addBefore([](const std::string&amp; cmd) {std::cout &lt;&lt; "&gt; " &lt;&lt; cmd &lt;&lt; std::endl;});
+m.addAfter([](int code) {std::cout &lt;&lt; "exit code " &lt;&lt; code &lt;&lt; std::endl;});
+
+m.callBefore("build");
+m.callAfter(0);</code></pre></div></section><section id="in-c"><h2>3. <span data-lang="en">In C</span><span data-lang="fr">En C</span></h2><div data-lang="en"><p>A template becomes one set of functions per fixed type (<code>&lt;name&gt;</code> = <code>i8</code> ... <code>u64</code>, <code>size</code>, <code>f32</code>, <code>f64</code>, <code>f128</code>, see <a href="c-api-design.html#fixed-types">the fixed types</a>), plus a generic version in bytes (data + size).</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: C++, C"><table><thead><tr><th scope="col" style="min-width:24ch">C++</th><th scope="col" style="min-width:34ch">C</th></tr></thead><tbody><tr><td><code>Cluster&lt;T&gt;</code> (numeric <code>T</code>)</td><td><code>utils_cluster_&lt;name&gt;_t*</code>: <code>utils_cluster_&lt;name&gt;_create</code>, <code>_spawn(cluster, n, value)</code>, <code>_apply(cluster, fn, data)</code>, <code>_kill</code>, <code>_kill_n</code>, <code>_size</code></td></tr><tr><td><code>Cluster</code> of any data</td><td><code>utils_cluster_t*</code> (bytes: <code>utils_cluster_spawn(cluster, n, &amp;value, sizeof(value))</code>)</td></tr><tr><td><code>Middlewares&lt;void, void&gt;</code></td><td><code>utils_middlewares_t*</code></td></tr><tr><td><code>Middlewares&lt;T, T&gt;</code> (<code>T</code> a fixed type or <code>str</code>)</td><td><code>utils_middlewares_&lt;name&gt;_t*</code></td></tr><tr><td><code>Middlewares</code> of any data</td><td><code>utils_middlewares_bytes_t*</code></td></tr></tbody></table></div><p>The callbacks return <code>UTILS_OK</code>, or <code>UTILS_KO</code> / <code>utils_fail(code, info)</code> to stop the chain: the call then fails with <code>MiddlewareCall</code> and the info of the callback. Middlewares with a different type before and after are not generated.</p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define _Pool
+#include &lt;utils.h&gt;
+#include &lt;stdio.h&gt;
+
+static int twice(int32_t* element, void* data)
+{
+    (void)data;
+    *element *= 2;
+    return UTILS_OK;
+}
+
+static int log_before(const char* cmd, void* data)
+{
+    (void)data;
+    printf("&gt; %s\n", cmd);
+    return UTILS_OK;
+}
+
+int main(void)
+{
+    utils_cluster_i32_t* cluster = utils_cluster_i32_create();
+    utils_middlewares_str_t* m = utils_middlewares_str_create();
+
+    if (!cluster || !m)
+        return 1;
+    utils_cluster_i32_spawn(cluster, 3, 21);            // 3 x 21
+    utils_cluster_i32_apply(cluster, twice, NULL);      // 3 x 42
+    utils_middlewares_str_add_before(m, log_before, NULL);
+    utils_middlewares_str_call_before(m, "build");      // "&gt; build"
+    printf("%zu elements\n", utils_cluster_i32_size(cluster));
+    utils_middlewares_str_destroy(m);
+    utils_cluster_i32_destroy(cluster);
+    return 0;
+}</code></pre></div><div data-lang="fr"><p>Un template devient un ensemble de fonctions par type fixe (<code>&lt;name&gt;</code> = <code>i8</code> ... <code>u64</code>, <code>size</code>, <code>f32</code>, <code>f64</code>, <code>f128</code>, voir <a href="c-api-design.html#fixed-types">les types fixes</a>), plus une version générique en octets (données + taille).</p><div class="table-wrap" tabindex="0" role="region" aria-label="Table: C++, C"><table><thead><tr><th scope="col" style="min-width:22ch">C++</th><th scope="col" style="min-width:34ch">C</th></tr></thead><tbody><tr><td><code>Cluster&lt;T&gt;</code> (<code>T</code> numérique)</td><td><code>utils_cluster_&lt;name&gt;_t*</code> : <code>utils_cluster_&lt;name&gt;_create</code>, <code>_spawn(cluster, n, value)</code>, <code>_apply(cluster, fn, data)</code>, <code>_kill</code>, <code>_kill_n</code>, <code>_size</code></td></tr><tr><td><code>Cluster</code> de données quelconques</td><td><code>utils_cluster_t*</code> (octets : <code>utils_cluster_spawn(cluster, n, &amp;value, sizeof(value))</code>)</td></tr><tr><td><code>Middlewares&lt;void, void&gt;</code></td><td><code>utils_middlewares_t*</code></td></tr><tr><td><code>Middlewares&lt;T, T&gt;</code> (<code>T</code> un type fixe ou <code>str</code>)</td><td><code>utils_middlewares_&lt;name&gt;_t*</code></td></tr><tr><td><code>Middlewares</code> de données quelconques</td><td><code>utils_middlewares_bytes_t*</code></td></tr></tbody></table></div><p>Les callbacks renvoient <code>UTILS_OK</code>, ou <code>UTILS_KO</code> / <code>utils_fail(code, info)</code> pour arrêter la chaîne : l'appel échoue alors avec <code>MiddlewareCall</code> et l'info du callback. Les middlewares avec un type différent avant et après ne sont pas générés.</p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define _Pool
+#include &lt;utils.h&gt;
+#include &lt;stdio.h&gt;
+
+static int twice(int32_t* element, void* data)
+{
+    (void)data;
+    *element *= 2;
+    return UTILS_OK;
+}
+
+static int log_before(const char* cmd, void* data)
+{
+    (void)data;
+    printf("&gt; %s\n", cmd);
+    return UTILS_OK;
+}
+
+int main(void)
+{
+    utils_cluster_i32_t* cluster = utils_cluster_i32_create();
+    utils_middlewares_str_t* m = utils_middlewares_str_create();
+
+    if (!cluster || !m)
+        return 1;
+    utils_cluster_i32_spawn(cluster, 3, 21);            // 3 x 21
+    utils_cluster_i32_apply(cluster, twice, NULL);      // 3 x 42
+    utils_middlewares_str_add_before(m, log_before, NULL);
+    utils_middlewares_str_call_before(m, "build");      // "&gt; build"
+    printf("%zu elements\n", utils_cluster_i32_size(cluster));
+    utils_middlewares_str_destroy(m);
+    utils_cluster_i32_destroy(cluster);
+    return 0;
+}</code></pre></div></section><section id="cpp-api"><h2>4. <span data-lang="en">C++ API</span><span data-lang="fr">API C++</span></h2><div data-lang="en"><p>Read from the headers of <code>include/utils/pool/</code> (public part only, the trailing comments of the code kept). Include <code>&lt;utils/utils.hpp&gt;</code> with the define of the section, never these headers one by one.</p><h3 id="h-pool-cluster-hpp"><code>utils/pool/Cluster.hpp</code></h3><p>Cluster class definition</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::pool
+template&lt;typename T&gt; class Cluster: private utils::security::observer::Observer&lt;"Cluster"&gt; {
+    std::size_t size(void) const;
+    void apply(std::function&lt;void(T&amp;)&gt; fn);
+    template&lt;typename... Args&gt; requires std::constructible_from&lt;T, Args&amp;&amp;...&gt; void spawn(Args&amp;&amp;... args);
+    template&lt;typename... Args&gt; void spawn(std::size_t n, Args&amp;&amp;... args); // spawn n
+    void kill(void); // kill all
+    void kill(std::size_t n); // kill n last
+    Cluster&amp; operator=(Cluster&amp;&amp; other) = default;
+    Cluster() = default;
+    Cluster(Cluster&amp;&amp; other) = default;
+    ~Cluster() = default;
+};</code></pre><h3 id="h-pool-middleware-middlewarestype-hpp"><code>utils/pool/middleware/MiddlewaresType.hpp</code></h3><p>Declaration of the Middleware type for void &amp; non void function</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::pool
+template&lt;typename T&gt; struct MiddlewareType {
+    using type = std::function&lt;void(T)&gt;;
+};
+template&lt;&gt; struct MiddlewareType&lt;void&gt; {
+    using type = std::function&lt;void(void)&gt;;
+};</code></pre><h3 id="h-pool-middleware-middlewares-t-t-hpp"><code>utils/pool/middleware/Middlewares_t-t.hpp</code></h3><p>Declaration of the Middlewares&lt;T, U&gt;</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::pool
+template&lt;typename T, typename U&gt; class Middlewares: private utils::security::observer::Observer&lt;"Middlewares"&gt; {
+    std::vector&lt;utils::pool::Middleware&lt;T&gt;&gt; before;
+    std::vector&lt;utils::pool::Middleware&lt;U&gt;&gt; after;
+    void clear(void);
+    void addBefore(const utils::pool::Middleware&lt;T&gt;&amp; toAdd);
+    void addBefore(const std::vector&lt;utils::pool::Middleware&lt;T&gt;&gt;&amp; toAdds);
+    void addAfter(const utils::pool::Middleware&lt;U&gt;&amp; toAdd);
+    void addAfter(const std::vector&lt;utils::pool::Middleware&lt;U&gt;&gt;&amp; toAdds);
+    void callBefore(T arg) const;
+    void callAfter(U arg) const;
+    Middlewares&amp; operator=(const Middlewares&amp; other);
+    Middlewares&amp; operator=(Middlewares&amp;&amp; other);
+    Middlewares() = default;
+    Middlewares(const Middlewares&amp; other);
+    Middlewares(Middlewares&amp;&amp; other);
+    ~Middlewares() = default;
+};</code></pre><h3 id="h-pool-middleware-middlewares-t-void-hpp"><code>utils/pool/middleware/Middlewares_t-void.hpp</code></h3><p>Declaration of the Middlewares&lt;T, void&gt;</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::pool
+template&lt;typename T&gt; class Middlewares&lt;T, void&gt;: private utils::security::observer::Observer&lt;"Middlewares"&gt; {
+    std::vector&lt;utils::pool::Middleware&lt;T&gt;&gt; before;
+    std::vector&lt;utils::pool::Middleware&lt;void&gt;&gt; after;
+    void clear(void);
+    void addBefore(const utils::pool::Middleware&lt;T&gt;&amp; toAdd);
+    void addBefore(const std::vector&lt;utils::pool::Middleware&lt;T&gt;&gt;&amp; toAdds);
+    void addAfter(const utils::pool::Middleware&lt;void&gt;&amp; toAdd);
+    void addAfter(const std::vector&lt;utils::pool::Middleware&lt;void&gt;&gt;&amp; toAdds);
+    void callBefore(T arg) const;
+    void callAfter(void) const;
+    Middlewares&amp; operator=(const Middlewares&amp; other);
+    Middlewares&amp; operator=(Middlewares&amp;&amp; other);
+    Middlewares() = default;
+    Middlewares(const Middlewares&amp; other);
+    Middlewares(Middlewares&amp;&amp; other);
+    ~Middlewares() = default;
+};</code></pre><h3 id="h-pool-middleware-middlewares-void-t-hpp"><code>utils/pool/middleware/Middlewares_void-t.hpp</code></h3><p>Declaration of the Middlewares&lt;void, T&gt;</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::pool
+template&lt;typename U&gt; class Middlewares&lt;void, U&gt;: private utils::security::observer::Observer&lt;"Middlewares"&gt; {
+    std::vector&lt;utils::pool::Middleware&lt;void&gt;&gt; before;
+    std::vector&lt;utils::pool::Middleware&lt;U&gt;&gt; after;
+    void clear(void);
+    void addBefore(const utils::pool::Middleware&lt;void&gt;&amp; toAdd);
+    void addBefore(const std::vector&lt;utils::pool::Middleware&lt;void&gt;&gt;&amp; toAdds);
+    void addAfter(const utils::pool::Middleware&lt;U&gt;&amp; toAdd);
+    void addAfter(const std::vector&lt;utils::pool::Middleware&lt;U&gt;&gt;&amp; toAdds);
+    void callBefore(void) const;
+    void callAfter(U arg) const;
+    Middlewares&amp; operator=(const Middlewares&amp; other);
+    Middlewares&amp; operator=(Middlewares&amp;&amp; other);
+    Middlewares() = default;
+    Middlewares(const Middlewares&amp; other);
+    Middlewares(Middlewares&amp;&amp; other);
+    ~Middlewares() = default;
+};</code></pre><h3 id="h-pool-middleware-middlewares-void-void-hpp"><code>utils/pool/middleware/Middlewares_void-void.hpp</code></h3><p>Declaration of the Middlewares&lt;void, void&gt;</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::pool
+template&lt;&gt; class Middlewares&lt;void, void&gt;: private utils::security::observer::Observer&lt;"Middlewares"&gt; {
+    std::vector&lt;utils::pool::Middleware&lt;void&gt;&gt; before;
+    std::vector&lt;utils::pool::Middleware&lt;void&gt;&gt; after;
+    void clear(void);
+    void addBefore(const utils::pool::Middleware&lt;void&gt;&amp; toAdd);
+    void addBefore(const std::vector&lt;utils::pool::Middleware&lt;void&gt;&gt;&amp; toAdds);
+    void addAfter(const utils::pool::Middleware&lt;void&gt;&amp; toAdd);
+    void addAfter(const std::vector&lt;utils::pool::Middleware&lt;void&gt;&gt;&amp; toAdds);
+    void callBefore(void) const;
+    void callAfter(void) const;
+    Middlewares&amp; operator=(const Middlewares&amp; other);
+    Middlewares&amp; operator=(Middlewares&amp;&amp; other);
+    Middlewares() = default;
+    Middlewares(const Middlewares&amp; other);
+    Middlewares(Middlewares&amp;&amp; other);
+    ~Middlewares() = default;
+};</code></pre></div><div data-lang="fr"><p>Lu dans les en-têtes de <code>include/utils/pool/</code> (partie publique seulement, avec les commentaires du code). Inclure <code>&lt;utils/utils.hpp&gt;</code> avec le define de la section, jamais ces en-têtes un par un.</p><h3 id="h-pool-cluster-hpp"><code>utils/pool/Cluster.hpp</code></h3><p>Cluster class definition</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::pool
+template&lt;typename T&gt; class Cluster: private utils::security::observer::Observer&lt;"Cluster"&gt; {
+    std::size_t size(void) const;
+    void apply(std::function&lt;void(T&amp;)&gt; fn);
+    template&lt;typename... Args&gt; requires std::constructible_from&lt;T, Args&amp;&amp;...&gt; void spawn(Args&amp;&amp;... args);
+    template&lt;typename... Args&gt; void spawn(std::size_t n, Args&amp;&amp;... args); // spawn n
+    void kill(void); // kill all
+    void kill(std::size_t n); // kill n last
+    Cluster&amp; operator=(Cluster&amp;&amp; other) = default;
+    Cluster() = default;
+    Cluster(Cluster&amp;&amp; other) = default;
+    ~Cluster() = default;
+};</code></pre><h3 id="h-pool-middleware-middlewarestype-hpp"><code>utils/pool/middleware/MiddlewaresType.hpp</code></h3><p>Declaration of the Middleware type for void &amp; non void function</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::pool
+template&lt;typename T&gt; struct MiddlewareType {
+    using type = std::function&lt;void(T)&gt;;
+};
+template&lt;&gt; struct MiddlewareType&lt;void&gt; {
+    using type = std::function&lt;void(void)&gt;;
+};</code></pre><h3 id="h-pool-middleware-middlewares-t-t-hpp"><code>utils/pool/middleware/Middlewares_t-t.hpp</code></h3><p>Declaration of the Middlewares&lt;T, U&gt;</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::pool
+template&lt;typename T, typename U&gt; class Middlewares: private utils::security::observer::Observer&lt;"Middlewares"&gt; {
+    std::vector&lt;utils::pool::Middleware&lt;T&gt;&gt; before;
+    std::vector&lt;utils::pool::Middleware&lt;U&gt;&gt; after;
+    void clear(void);
+    void addBefore(const utils::pool::Middleware&lt;T&gt;&amp; toAdd);
+    void addBefore(const std::vector&lt;utils::pool::Middleware&lt;T&gt;&gt;&amp; toAdds);
+    void addAfter(const utils::pool::Middleware&lt;U&gt;&amp; toAdd);
+    void addAfter(const std::vector&lt;utils::pool::Middleware&lt;U&gt;&gt;&amp; toAdds);
+    void callBefore(T arg) const;
+    void callAfter(U arg) const;
+    Middlewares&amp; operator=(const Middlewares&amp; other);
+    Middlewares&amp; operator=(Middlewares&amp;&amp; other);
+    Middlewares() = default;
+    Middlewares(const Middlewares&amp; other);
+    Middlewares(Middlewares&amp;&amp; other);
+    ~Middlewares() = default;
+};</code></pre><h3 id="h-pool-middleware-middlewares-t-void-hpp"><code>utils/pool/middleware/Middlewares_t-void.hpp</code></h3><p>Declaration of the Middlewares&lt;T, void&gt;</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::pool
+template&lt;typename T&gt; class Middlewares&lt;T, void&gt;: private utils::security::observer::Observer&lt;"Middlewares"&gt; {
+    std::vector&lt;utils::pool::Middleware&lt;T&gt;&gt; before;
+    std::vector&lt;utils::pool::Middleware&lt;void&gt;&gt; after;
+    void clear(void);
+    void addBefore(const utils::pool::Middleware&lt;T&gt;&amp; toAdd);
+    void addBefore(const std::vector&lt;utils::pool::Middleware&lt;T&gt;&gt;&amp; toAdds);
+    void addAfter(const utils::pool::Middleware&lt;void&gt;&amp; toAdd);
+    void addAfter(const std::vector&lt;utils::pool::Middleware&lt;void&gt;&gt;&amp; toAdds);
+    void callBefore(T arg) const;
+    void callAfter(void) const;
+    Middlewares&amp; operator=(const Middlewares&amp; other);
+    Middlewares&amp; operator=(Middlewares&amp;&amp; other);
+    Middlewares() = default;
+    Middlewares(const Middlewares&amp; other);
+    Middlewares(Middlewares&amp;&amp; other);
+    ~Middlewares() = default;
+};</code></pre><h3 id="h-pool-middleware-middlewares-void-t-hpp"><code>utils/pool/middleware/Middlewares_void-t.hpp</code></h3><p>Declaration of the Middlewares&lt;void, T&gt;</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::pool
+template&lt;typename U&gt; class Middlewares&lt;void, U&gt;: private utils::security::observer::Observer&lt;"Middlewares"&gt; {
+    std::vector&lt;utils::pool::Middleware&lt;void&gt;&gt; before;
+    std::vector&lt;utils::pool::Middleware&lt;U&gt;&gt; after;
+    void clear(void);
+    void addBefore(const utils::pool::Middleware&lt;void&gt;&amp; toAdd);
+    void addBefore(const std::vector&lt;utils::pool::Middleware&lt;void&gt;&gt;&amp; toAdds);
+    void addAfter(const utils::pool::Middleware&lt;U&gt;&amp; toAdd);
+    void addAfter(const std::vector&lt;utils::pool::Middleware&lt;U&gt;&gt;&amp; toAdds);
+    void callBefore(void) const;
+    void callAfter(U arg) const;
+    Middlewares&amp; operator=(const Middlewares&amp; other);
+    Middlewares&amp; operator=(Middlewares&amp;&amp; other);
+    Middlewares() = default;
+    Middlewares(const Middlewares&amp; other);
+    Middlewares(Middlewares&amp;&amp; other);
+    ~Middlewares() = default;
+};</code></pre><h3 id="h-pool-middleware-middlewares-void-void-hpp"><code>utils/pool/middleware/Middlewares_void-void.hpp</code></h3><p>Declaration of the Middlewares&lt;void, void&gt;</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::pool
+template&lt;&gt; class Middlewares&lt;void, void&gt;: private utils::security::observer::Observer&lt;"Middlewares"&gt; {
+    std::vector&lt;utils::pool::Middleware&lt;void&gt;&gt; before;
+    std::vector&lt;utils::pool::Middleware&lt;void&gt;&gt; after;
+    void clear(void);
+    void addBefore(const utils::pool::Middleware&lt;void&gt;&amp; toAdd);
+    void addBefore(const std::vector&lt;utils::pool::Middleware&lt;void&gt;&gt;&amp; toAdds);
+    void addAfter(const utils::pool::Middleware&lt;void&gt;&amp; toAdd);
+    void addAfter(const std::vector&lt;utils::pool::Middleware&lt;void&gt;&gt;&amp; toAdds);
+    void callBefore(void) const;
+    void callAfter(void) const;
+    Middlewares&amp; operator=(const Middlewares&amp; other);
+    Middlewares&amp; operator=(Middlewares&amp;&amp; other);
+    Middlewares() = default;
+    Middlewares(const Middlewares&amp; other);
+    Middlewares(Middlewares&amp;&amp; other);
+    ~Middlewares() = default;
+};</code></pre></div></section><section id="c-api"><h2>5. <span data-lang="en">C API</span><span data-lang="fr">API C</span></h2><div data-lang="en"><p>Read from <code>include/utils/pool/CApi.h</code>, included by <code>&lt;utils.h&gt;</code> with the define of the section. Every function that can fail returns <code>UTILS_OK</code> / <code>UTILS_KO</code> (or <code>NULL</code> / <code>0</code>) and fills <code>utils_exception</code> (see <a href="c-api.html#errors">the C API guide</a>).</p><h3 id="c-1">Macros · Cluster of a fixed type</h3><p><em>cluster of a fixed type (utils::pool::Cluster&lt;type&gt;, the elements can be changed in apply)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_CLUSTER_DECL(name, ctype) \
+    typedef struct utils_cluster_##name utils_cluster_##name##_t; \
+    typedef int (*utils_cluster_##name##_fn_t)(ctype* element, void* data); \
+    utils_cluster_##name##_t* utils_cluster_##name##_create(void); /* NULL on error */ \
+    void utils_cluster_##name##_destroy(utils_cluster_##name##_t* cluster); /* NULL: nothing */ \
+    int utils_cluster_##name##_spawn(utils_cluster_##name##_t* cluster, size_t n, ctype value); /* n new elements set to value */ \
+    int utils_cluster_##name##_kill(utils_cluster_##name##_t* cluster); /* every element */ \
+    int utils_cluster_##name##_kill_n(utils_cluster_##name##_t* cluster, size_t n); /* the n last ones */ \
+    size_t utils_cluster_##name##_size(const utils_cluster_##name##_t* cluster); \
+    int utils_cluster_##name##_apply(utils_cluster_##name##_t* cluster, utils_cluster_##name##_fn_t fn, void* data); /* fn on each element (stops at the first error) */</code></pre><h3 id="c-2">Macros · Middlewares of a fixed type</h3><p><em>middlewares of a fixed type (utils::pool::Middlewares&lt;type, type&gt;, called in the order of addition)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_MIDDLEWARES_DECL(name, ctype) \
+    typedef struct utils_middlewares_##name utils_middlewares_##name##_t; \
+    typedef int (*utils_middleware_##name##_t)(ctype arg, void* data); \
+    utils_middlewares_##name##_t* utils_middlewares_##name##_create(void); /* NULL on error */ \
+    void utils_middlewares_##name##_destroy(utils_middlewares_##name##_t* middlewares); /* NULL: nothing */ \
+    int utils_middlewares_##name##_clear(utils_middlewares_##name##_t* middlewares); \
+    int utils_middlewares_##name##_add_before(utils_middlewares_##name##_t* middlewares, utils_middleware_##name##_t fn, void* data); \
+    int utils_middlewares_##name##_add_after(utils_middlewares_##name##_t* middlewares, utils_middleware_##name##_t fn, void* data); \
+    int utils_middlewares_##name##_call_before(const utils_middlewares_##name##_t* middlewares, ctype arg); /* error: MiddlewareCall with the info of the callback */ \
+    int utils_middlewares_##name##_call_after(const utils_middlewares_##name##_t* middlewares, ctype arg); \
+    size_t utils_middlewares_##name##_before_count(const utils_middlewares_##name##_t* middlewares); \
+    size_t utils_middlewares_##name##_after_count(const utils_middlewares_##name##_t* middlewares);</code></pre><h3 id="c-3">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_cluster utils_cluster_t; // utils::pool::Cluster of bytes (an element = data + size)
+typedef struct utils_middlewares utils_middlewares_t; // utils::pool::Middlewares&lt;void, void&gt;
+typedef struct utils_middlewares_bytes utils_middlewares_bytes_t; // utils::pool::Middlewares of bytes (an argument = data + size)</code></pre><h3 id="c-4">Types · Callbacks</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef int (*utils_cluster_fn_t)(void* element, size_t size, void* data); // the bytes of the element can be changed (not its size)
+typedef int (*utils_middleware_t)(void* data);
+typedef int (*utils_middleware_bytes_t)(const void* arg, size_t size, void* data);</code></pre><h3 id="c-5">Functions · Cluster of bytes</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_cluster_t* utils_cluster_create(void); // NULL on error
+void utils_cluster_destroy(utils_cluster_t* cluster); // NULL: nothing
+int utils_cluster_spawn(utils_cluster_t* cluster, size_t n, const void* value, size_t size); // n new elements: a copy of value (size bytes)
+int utils_cluster_kill(utils_cluster_t* cluster); // every element
+int utils_cluster_kill_n(utils_cluster_t* cluster, size_t n); // the n last ones
+size_t utils_cluster_size(const utils_cluster_t* cluster);
+int utils_cluster_apply(utils_cluster_t* cluster, utils_cluster_fn_t fn, void* data); // fn on each element (stops at the first error)</code></pre><h3 id="c-6">Functions · Clusters of the fixed types</h3><p><em>clusters of the fixed types (bool: no c++ cluster, std::vector&lt;bool&gt; can't give a bool&amp;)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_NUMERIC_TYPES(C_API_CLUSTER_DECL)
+C_API_CLUSTER_DECL(char, char)</code></pre><h3 id="c-7">Functions · Middlewares without argument</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_middlewares_t* utils_middlewares_create(void); // NULL on error
+void utils_middlewares_destroy(utils_middlewares_t* middlewares); // NULL: nothing
+int utils_middlewares_clear(utils_middlewares_t* middlewares);
+int utils_middlewares_add_before(utils_middlewares_t* middlewares, utils_middleware_t fn, void* data);
+int utils_middlewares_add_after(utils_middlewares_t* middlewares, utils_middleware_t fn, void* data);
+int utils_middlewares_call_before(const utils_middlewares_t* middlewares); // error: MiddlewareCall with the info of the callback
+int utils_middlewares_call_after(const utils_middlewares_t* middlewares);
+size_t utils_middlewares_before_count(const utils_middlewares_t* middlewares);
+size_t utils_middlewares_after_count(const utils_middlewares_t* middlewares);</code></pre><h3 id="c-8">Functions · Middlewares of bytes</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_middlewares_bytes_t* utils_middlewares_bytes_create(void); // NULL on error
+void utils_middlewares_bytes_destroy(utils_middlewares_bytes_t* middlewares); // NULL: nothing
+int utils_middlewares_bytes_clear(utils_middlewares_bytes_t* middlewares);
+int utils_middlewares_bytes_add_before(utils_middlewares_bytes_t* middlewares, utils_middleware_bytes_t fn, void* data);
+int utils_middlewares_bytes_add_after(utils_middlewares_bytes_t* middlewares, utils_middleware_bytes_t fn, void* data);
+int utils_middlewares_bytes_call_before(const utils_middlewares_bytes_t* middlewares, const void* arg, size_t size);
+int utils_middlewares_bytes_call_after(const utils_middlewares_bytes_t* middlewares, const void* arg, size_t size);
+size_t utils_middlewares_bytes_before_count(const utils_middlewares_bytes_t* middlewares);
+size_t utils_middlewares_bytes_after_count(const utils_middlewares_bytes_t* middlewares);</code></pre><h3 id="c-9">Functions · Middlewares of the fixed types</h3><p><em>middlewares of the fixed types (the same type before &amp; after, str: const char*)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_TYPES(C_API_MIDDLEWARES_DECL)</code></pre></div><div data-lang="fr"><p>Lu dans <code>include/utils/pool/CApi.h</code>, inclus par <code>&lt;utils.h&gt;</code> avec le define de la section. Chaque fonction qui peut échouer renvoie <code>UTILS_OK</code> / <code>UTILS_KO</code> (ou <code>NULL</code> / <code>0</code>) et remplit <code>utils_exception</code> (voir <a href="c-api.html#errors">le guide de l'API C</a>).</p><h3 id="c-1">Macros · Cluster of a fixed type</h3><p><em>cluster of a fixed type (utils::pool::Cluster&lt;type&gt;, the elements can be changed in apply)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_CLUSTER_DECL(name, ctype) \
+    typedef struct utils_cluster_##name utils_cluster_##name##_t; \
+    typedef int (*utils_cluster_##name##_fn_t)(ctype* element, void* data); \
+    utils_cluster_##name##_t* utils_cluster_##name##_create(void); /* NULL on error */ \
+    void utils_cluster_##name##_destroy(utils_cluster_##name##_t* cluster); /* NULL: nothing */ \
+    int utils_cluster_##name##_spawn(utils_cluster_##name##_t* cluster, size_t n, ctype value); /* n new elements set to value */ \
+    int utils_cluster_##name##_kill(utils_cluster_##name##_t* cluster); /* every element */ \
+    int utils_cluster_##name##_kill_n(utils_cluster_##name##_t* cluster, size_t n); /* the n last ones */ \
+    size_t utils_cluster_##name##_size(const utils_cluster_##name##_t* cluster); \
+    int utils_cluster_##name##_apply(utils_cluster_##name##_t* cluster, utils_cluster_##name##_fn_t fn, void* data); /* fn on each element (stops at the first error) */</code></pre><h3 id="c-2">Macros · Middlewares of a fixed type</h3><p><em>middlewares of a fixed type (utils::pool::Middlewares&lt;type, type&gt;, called in the order of addition)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_MIDDLEWARES_DECL(name, ctype) \
+    typedef struct utils_middlewares_##name utils_middlewares_##name##_t; \
+    typedef int (*utils_middleware_##name##_t)(ctype arg, void* data); \
+    utils_middlewares_##name##_t* utils_middlewares_##name##_create(void); /* NULL on error */ \
+    void utils_middlewares_##name##_destroy(utils_middlewares_##name##_t* middlewares); /* NULL: nothing */ \
+    int utils_middlewares_##name##_clear(utils_middlewares_##name##_t* middlewares); \
+    int utils_middlewares_##name##_add_before(utils_middlewares_##name##_t* middlewares, utils_middleware_##name##_t fn, void* data); \
+    int utils_middlewares_##name##_add_after(utils_middlewares_##name##_t* middlewares, utils_middleware_##name##_t fn, void* data); \
+    int utils_middlewares_##name##_call_before(const utils_middlewares_##name##_t* middlewares, ctype arg); /* error: MiddlewareCall with the info of the callback */ \
+    int utils_middlewares_##name##_call_after(const utils_middlewares_##name##_t* middlewares, ctype arg); \
+    size_t utils_middlewares_##name##_before_count(const utils_middlewares_##name##_t* middlewares); \
+    size_t utils_middlewares_##name##_after_count(const utils_middlewares_##name##_t* middlewares);</code></pre><h3 id="c-3">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_cluster utils_cluster_t; // utils::pool::Cluster of bytes (an element = data + size)
+typedef struct utils_middlewares utils_middlewares_t; // utils::pool::Middlewares&lt;void, void&gt;
+typedef struct utils_middlewares_bytes utils_middlewares_bytes_t; // utils::pool::Middlewares of bytes (an argument = data + size)</code></pre><h3 id="c-4">Types · Callbacks</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef int (*utils_cluster_fn_t)(void* element, size_t size, void* data); // the bytes of the element can be changed (not its size)
+typedef int (*utils_middleware_t)(void* data);
+typedef int (*utils_middleware_bytes_t)(const void* arg, size_t size, void* data);</code></pre><h3 id="c-5">Fonctions · Cluster of bytes</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_cluster_t* utils_cluster_create(void); // NULL on error
+void utils_cluster_destroy(utils_cluster_t* cluster); // NULL: nothing
+int utils_cluster_spawn(utils_cluster_t* cluster, size_t n, const void* value, size_t size); // n new elements: a copy of value (size bytes)
+int utils_cluster_kill(utils_cluster_t* cluster); // every element
+int utils_cluster_kill_n(utils_cluster_t* cluster, size_t n); // the n last ones
+size_t utils_cluster_size(const utils_cluster_t* cluster);
+int utils_cluster_apply(utils_cluster_t* cluster, utils_cluster_fn_t fn, void* data); // fn on each element (stops at the first error)</code></pre><h3 id="c-6">Fonctions · Clusters of the fixed types</h3><p><em>clusters of the fixed types (bool: no c++ cluster, std::vector&lt;bool&gt; can't give a bool&amp;)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_NUMERIC_TYPES(C_API_CLUSTER_DECL)
+C_API_CLUSTER_DECL(char, char)</code></pre><h3 id="c-7">Fonctions · Middlewares without argument</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_middlewares_t* utils_middlewares_create(void); // NULL on error
+void utils_middlewares_destroy(utils_middlewares_t* middlewares); // NULL: nothing
+int utils_middlewares_clear(utils_middlewares_t* middlewares);
+int utils_middlewares_add_before(utils_middlewares_t* middlewares, utils_middleware_t fn, void* data);
+int utils_middlewares_add_after(utils_middlewares_t* middlewares, utils_middleware_t fn, void* data);
+int utils_middlewares_call_before(const utils_middlewares_t* middlewares); // error: MiddlewareCall with the info of the callback
+int utils_middlewares_call_after(const utils_middlewares_t* middlewares);
+size_t utils_middlewares_before_count(const utils_middlewares_t* middlewares);
+size_t utils_middlewares_after_count(const utils_middlewares_t* middlewares);</code></pre><h3 id="c-8">Fonctions · Middlewares of bytes</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_middlewares_bytes_t* utils_middlewares_bytes_create(void); // NULL on error
+void utils_middlewares_bytes_destroy(utils_middlewares_bytes_t* middlewares); // NULL: nothing
+int utils_middlewares_bytes_clear(utils_middlewares_bytes_t* middlewares);
+int utils_middlewares_bytes_add_before(utils_middlewares_bytes_t* middlewares, utils_middleware_bytes_t fn, void* data);
+int utils_middlewares_bytes_add_after(utils_middlewares_bytes_t* middlewares, utils_middleware_bytes_t fn, void* data);
+int utils_middlewares_bytes_call_before(const utils_middlewares_bytes_t* middlewares, const void* arg, size_t size);
+int utils_middlewares_bytes_call_after(const utils_middlewares_bytes_t* middlewares, const void* arg, size_t size);
+size_t utils_middlewares_bytes_before_count(const utils_middlewares_bytes_t* middlewares);
+size_t utils_middlewares_bytes_after_count(const utils_middlewares_bytes_t* middlewares);</code></pre><h3 id="c-9">Fonctions · Middlewares of the fixed types</h3><p><em>middlewares of the fixed types (the same type before &amp; after, str: const char*)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_TYPES(C_API_MIDDLEWARES_DECL)</code></pre></div></section><nav class="pager"><a href="verbose.html"><span data-i18n>Previous</span><span data-lang="en">Verbose</span><span data-lang="fr">Verbose</span></a><a class="next" href="cli.html"><span data-i18n>Next</span><span data-lang="en">Cli</span><span data-lang="fr">Cli</span></a></nav></main>
+</div>
+<footer class="site">libutils v5.0.0 · 23d2be3 · docs</footer>
+<script src="site.js"></script>
+<script src="search-index.js" defer></script>
+</body>
+</html>
