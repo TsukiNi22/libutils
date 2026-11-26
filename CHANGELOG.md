@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [pre-release] (empty)
 
-## [v5.0.0] - <none>
+## [v5.0.0] - 2026-11-26
 ### Changed
 - `utils/attribute/Attribute.hpp` is now a redirection: `c++.hpp` for C++ (versions `c++11` / `c++14` / `c++17` / `c++20` / `c++23`, forced with `FORCED_CXX_STANDARD`), `c.h` for C (versions `c99` / `c11` / `c23`, forced with `FORCED_C_STANDARD`), `fallback.hpp` (empty macros) without a GNU compiler
 - The macros of the attributes are grouped by purpose (visibility, lifetime, inlining, optimisation, branch prediction, diagnostics, binary layout, memory) and use the `[[gnu::...]]` syntax from C++11 / C23
@@ -72,7 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New attributes: `_export` / `_import` (symbols of the shared library, `dllexport` / `dllimport` on Windows), `_cleanup`, `_always_inline`, `_flatten`, `_const`, `_pure`, `_unreachable`, `_format`, `_sentinel`, `_malloc`, `_returns_nonnull`
 - `docs/site/build.sh`: build of the documentation site (`--check`: links, accessibility, style and search checks)
 
-## [v4.3.1-pre] - 2026-10-19 (unofficial)
+## [v4.3.1-pre] - 2026-10-19
 ### Fixed
 - `make_shared_gpu` / `make_unique_gpu` didn't build with clang (explicit constructor of the smart pointers in a copy-initialization)
 
