@@ -185,12 +185,18 @@ static void test_type(void)
 
 static void test_encapsulation(void)
 {
-    const char* args[] = {"-c", "exit 4"};
+    #ifdef _WIN32
+        const char* shell = "cmd.exe"; // no /bin/sh on Windows
+        const char* args[] = {"/c", "exit", "4"};
+    #else
+        const char* shell = "/bin/sh";
+        const char* args[] = {"-c", "exit 4"};
+    #endif
     utils_process_t* process = utils_process_create();
     utils_process_status_t status;
 
     CHECK(process != NULL);
-    CHECK(utils_process_spawn_exec(process, "/bin/sh", args, 2) > 0);
+    CHECK(utils_process_spawn_exec(process, shell, args, sizeof(args) / sizeof(*args)) > 0);
     CHECK(utils_process_wait(process, &status) == UTILS_OK && status.exited && status.code == 4);
     utils_process_destroy(process);
 }

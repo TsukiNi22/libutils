@@ -17,6 +17,7 @@ File Description:
 \**************************************************************/
 
 #include "utils/verbose/CApi.h"
+#include "tools/TempDir.hpp"
 #include "utils.hpp"
 #include <gtest/gtest.h>
 #include <cstdint>
@@ -106,7 +107,8 @@ TEST_F(VerboseCApiTest, LogErrors)
 
 TEST_F(VerboseCApiTest, LogToAFile)
 {
-    FILE* file = std::tmpfile();
+    tests::tools::TempDir dir; // std::tmpfile fails on Windows (file in the root of the drive)
+    FILE* file = std::fopen((dir / "log.txt").string().c_str(), "w+");
     char buf[64] = {};
 
     ASSERT_NE(file, nullptr);
