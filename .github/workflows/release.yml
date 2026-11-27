@@ -1,0 +1,95 @@
+name: Release - GitHub (CD)
+
+on:
+  workflow_dispatch: # Triggered by Dispatch (CI/CD) on a tag vX.Y.Z / vX.Y.Z-pre, once the packages are built (attached to the release)
+
+permissions:
+  contents: write
+  actions: read # packages (artifacts) of the Build - Packages run of the tag
+
+jobs:
+  release:
+    runs-on: ${{ vars.RUNNER }}
+    defaults:
+      run:
+        shell: bash
+
+    container:
+      image: ghcr.io/tsukini22/git:latest # git / wget, gh installed below only if missing
+
+    steps:
+      - name: Check the ref
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_REF_TYPE" != "tag" ]; then
+            echo "::error title=Release::only a tag can be released (ref: $GITHUB_REF_NAME)"
+            exit 1
+          fi
+          echo "✓ tag $GITHUB_REF_NAME"
+
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - name: Release notes (section of the tag in CHANGELOG.md)
+        run: |
+          set -euo pipefail
+          # CHANGELOG sections: '## vX.Y.Z - YYYY-MM-DD' (stable) / '## [vX.Y.Z-pre] - YYYY-MM-DD' (pre-release)
+          # A pre-release tag (vX.Y.Z-<suffix>) without its own section takes the '## [pre-release]' one
+          section() { # $1 = name of the section, brackets optional
+            awk -v name="$1" '
+              BEGIN {gsub(/\./, "\\.", name)}
+              $0 ~ "^## \\[?" name "\\]?( |$)" {found = 1; next}
+              found && /^## / {exit}
+              found {print}
+            ' CHANGELOG.md
+          }
+          has_notes() { grep -q '[^[:space:]]' notes.md; }
+
+          section "$GITHUB_REF_NAME" > notes.md
+          source="$GITHUB_REF_NAME"
+          case "$GITHUB_REF_NAME" in
+            *-*)
+              if ! has_notes; then
+                section "pre-release" > notes.md
+                source="pre-release"
+              fi
+              ;;
+          esac
+          if ! has_notes; then
+            case "$GITHUB_REF_NAME" in
+              *-*) expected="'## [$GITHUB_REF_NAME] - <date>' or a non empty '## [pre-release]'" ;;
+              *) expected="'## $GITHUB_REF_NAME - <date>'" ;;
+            esac
+            echo "::error title=Release notes,file=CHANGELOG.md::no section $expected in CHANGELOG.md"
+            exit 1
+          fi
+          echo "✓ notes of $GITHUB_REF_NAME ok (section [$source])"
+
+      - name: Packages of the tag (artifacts of Build - Packages)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          command -v gh > /dev/null || dnf install -y gh
+          mkdir -p packages
+          # Last successful build of this tag (dispatched on the tag: the branch of the run is the tag name)
+          RUN_ID="$(gh run list --workflow build-packages.yml --branch "$GITHUB_REF_NAME" --status success --limit 1 --json databaseId --jq '.[0].databaseId // empty')"
+          if [ -z "$RUN_ID" ] || ! gh run download "$RUN_ID" --pattern 'compiled-packages*' --dir packages; then
+            echo "::warning title=Release assets::no packages found for $GITHUB_REF_NAME (artifacts kept 1 day): release created without assets"
+          fi
+          echo "✓ $(find packages -type f | wc -l) package(s) to attach (run: ${RUN_ID:-none})"
+
+      - name: Create the GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          command -v gh > /dev/null || dnf install -y gh
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          prerelease=()
+          case "$GITHUB_REF_NAME" in *-*) prerelease=(--prerelease) ;; esac
+          mapfile -t assets < <(find packages -type f \( -name '*.rpm' -o -name '*.deb' -o -name '*.pkg.tar.zst' \) | sort)
+          gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes-file notes.md "${prerelease[@]}" "${assets[@]}"

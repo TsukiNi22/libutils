@@ -113,6 +113,25 @@ jobs:
           client_payload: '{"stable": "${{ needs.dispatch.outputs.stable }}"}'
 
   notify-release:
+    # GitHub release of a tag (notes = section of the CHANGELOG), once its packages are published
+    needs: [dispatch, notify-build-packages]
+    if: github.ref_type == 'tag' && needs.dispatch.outputs.ignore == 'false' && needs.notify-build-packages.result == 'success'
+
+    runs-on: ${{ vars.RUNNER }}
+
+    steps:
+      - name: Trigger release.yml (workflow_dispatch) and wait
+        uses: convictional/trigger-workflow-and-wait@v1.6.5
+        with:
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          workflow_file_name: release.yml
+          ref: ${{ github.ref_name }}
+          wait_interval: 4
+          propagate_failure: true
+
+  notify-docker-image:
     needs: [dispatch, notify-unit-tests, notify-build-packages]
     if: always() && needs.dispatch.outputs.ignore == 'false' && needs.notify-unit-tests.result == 'success' && (needs.dispatch.outputs.build == 'true' || needs.dispatch.outputs.release == 'true') && (needs.notify-build-packages.result == 'success' || needs.notify-build-packages.result == 'skipped')
 
