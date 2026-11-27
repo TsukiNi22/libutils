@@ -10,7 +10,7 @@
 <a class="skip-link" href="#main" data-i18n>Skip to the content</a>
 <header class="topbar">
   <button class="icon-btn menu-btn" type="button" id="menuBtn" aria-label="Open the navigation" data-i18n-aria-label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
-  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v5.0.0</span></a>
+  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v5.1.0-pre</span></a>
   <nav class="tabs" aria-label="Pages" hidden></nav>
   <span class="spacer"></span>
   <div class="top-actions">
@@ -427,70 +427,70 @@ template&lt;utils::smanip::FixedString instance&gt; class UnsafeObserver: public
 };</code></pre></div></section><section id="c-api"><h2>8. <span data-lang="en">C API</span><span data-lang="fr">API C</span></h2><div data-lang="en"><p>Read from <code>include/utils/security/CApi.h</code>, included by <code>&lt;utils.h&gt;</code> with the define of the section. Every function that can fail returns <code>UTILS_OK</code> / <code>UTILS_KO</code> (or <code>NULL</code> / <code>0</code>) and fills <code>utils_exception</code> (see <a href="c-api.html#errors">the C API guide</a>).</p><h3 id="c-1">Defines · Path of the common RSA key</h3><p><em>path of the common RSA key (utils/security/encryption/CommonRSAKey.hpp): common (private) | common.pub (public)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_SECURITY_DEFAULT_COMMON_RSA_PATH "~/.ssh/common"</code></pre><h3 id="c-2">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_aes_key utils_aes_key_t; // utils::security::encryption::AESKey
 typedef struct utils_aes_data utils_aes_data_t; // utils::security::encryption::KeyAES (key, iv, tag)
 typedef struct utils_rsa_key utils_rsa_key_t; // utils::security::encryption::CommonRSAKey (an RSAKey that can load the common key)
-typedef struct utils_observer utils_observer_t; // instance of the C side linked to the notifiers (memory leak report)</code></pre><h3 id="c-3">Functions · AES key</h3><p><em>AES key (encrypt: the key &amp; iv of data are used, its tag is set, decrypt: key, iv &amp; tag are used)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_aes_key_t* utils_aes_key_create(void); // NULL on error
-void utils_aes_key_destroy(utils_aes_key_t* key); // NULL: nothing
-int utils_aes_key_random_bytes(const utils_aes_key_t* key, uint16_t size, utils_string_t* out); // out replaced
-int utils_aes_key_encrypt(const utils_aes_key_t* key, const char* in, size_t size, utils_aes_data_t* data, utils_string_t* out); // out replaced
-int utils_aes_key_decrypt(const utils_aes_key_t* key, const char* in, size_t size, utils_aes_data_t* data, utils_string_t* out); // out replaced
-bool utils_aes_key_has_generate_overload(const utils_aes_key_t* key);
-bool utils_aes_key_has_set_overload(const utils_aes_key_t* key);
-bool utils_aes_key_has_get_overload(const utils_aes_key_t* key);</code></pre><h3 id="c-4">Functions · AES data</h3><p><em>AES data (bytes: given back valid until data is changed, size: optional)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_aes_data_t* utils_aes_data_create(void); // NULL on error
-void utils_aes_data_destroy(utils_aes_data_t* data); // NULL: nothing
-int utils_aes_data_set_key(utils_aes_data_t* data, const char* bytes, size_t size); // 32 bytes (AES-256)
-int utils_aes_data_set_iv(utils_aes_data_t* data, const char* bytes, size_t size);
-int utils_aes_data_set_tag(utils_aes_data_t* data, const char* bytes, size_t size);
-const char* utils_aes_data_get_key(const utils_aes_data_t* data, size_t* size); // NULL on error
-const char* utils_aes_data_get_iv(const utils_aes_data_t* data, size_t* size); // NULL on error
-const char* utils_aes_data_get_tag(const utils_aes_data_t* data, size_t* size); // NULL on error</code></pre><h3 id="c-5">Functions · RSA key</h3><p><em>RSA key (keys in PEM, strings given back valid until the key is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_rsa_key_t* utils_rsa_key_create(void); // NULL on error
-utils_rsa_key_t* utils_rsa_key_create_common(const char* path); // the common key loaded (path: NULL = C_API_SECURITY_DEFAULT_COMMON_RSA_PATH), NULL on error
-void utils_rsa_key_destroy(utils_rsa_key_t* key); // NULL: nothing
-int utils_rsa_key_load_common(utils_rsa_key_t* key, const char* path); // path: NULL = C_API_SECURITY_DEFAULT_COMMON_RSA_PATH
-int utils_rsa_key_generate(utils_rsa_key_t* key);
-int utils_rsa_key_set(utils_rsa_key_t* key, const char* private_key, const char* public_key); // NULL: ""
-const char* utils_rsa_key_get_private(const utils_rsa_key_t* key); // NULL on error
-const char* utils_rsa_key_get_public(const utils_rsa_key_t* key); // NULL on error
-int utils_rsa_key_random_bytes(const utils_rsa_key_t* key, uint16_t size, utils_string_t* out); // out replaced
-int utils_rsa_key_encrypt(const utils_rsa_key_t* key, const char* in, size_t size, utils_string_t* out); // with the public key, out replaced
-int utils_rsa_key_decrypt(const utils_rsa_key_t* key, const char* in, size_t size, utils_string_t* out); // with the private key, out replaced
-bool utils_rsa_key_has_generate_overload(const utils_rsa_key_t* key);
-bool utils_rsa_key_has_set_overload(const utils_rsa_key_t* key);
-bool utils_rsa_key_has_get_overload(const utils_rsa_key_t* key);</code></pre><h3 id="c-6">Functions · Observers</h3><p><em>observers (an observer not destroyed is reported as a leak by the memory leak notifier, safe_mode: thread safe)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_observer_t* utils_observer_create(const char* instance, bool safe_mode); // linked to the notifiers, NULL on error
-void utils_observer_destroy(utils_observer_t* observer); // NULL: nothing (unlinked)
-int utils_observer_trigger(void); // force every notifier to check its status now (memory leak: report the instances still linked)</code></pre></div><div data-lang="fr"><p>Lu dans <code>include/utils/security/CApi.h</code>, inclus par <code>&lt;utils.h&gt;</code> avec le define de la section. Chaque fonction qui peut échouer renvoie <code>UTILS_OK</code> / <code>UTILS_KO</code> (ou <code>NULL</code> / <code>0</code>) et remplit <code>utils_exception</code> (voir <a href="c-api.html#errors">le guide de l'API C</a>).</p><h3 id="c-1">Defines · Path of the common RSA key</h3><p><em>path of the common RSA key (utils/security/encryption/CommonRSAKey.hpp): common (private) | common.pub (public)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_SECURITY_DEFAULT_COMMON_RSA_PATH "~/.ssh/common"</code></pre><h3 id="c-2">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_aes_key utils_aes_key_t; // utils::security::encryption::AESKey
+typedef struct utils_observer utils_observer_t; // instance of the C side linked to the notifiers (memory leak report)</code></pre><h3 id="c-3">Functions · AES key</h3><p><em>AES key (encrypt: the key &amp; iv of data are used, its tag is set, decrypt: key, iv &amp; tag are used)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow utils_aes_key_t* utils_aes_key_create(void); // NULL on error
+_nothrow void utils_aes_key_destroy(utils_aes_key_t* key); // NULL: nothing
+_nodiscard _nothrow int utils_aes_key_random_bytes(const utils_aes_key_t* key, uint16_t size, utils_string_t* out); // out replaced
+_nodiscard _nothrow _read_only(2, 3) int utils_aes_key_encrypt(const utils_aes_key_t* key, const char* in, size_t size, utils_aes_data_t* data, utils_string_t* out); // out replaced
+_nodiscard _nothrow _read_only(2, 3) int utils_aes_key_decrypt(const utils_aes_key_t* key, const char* in, size_t size, utils_aes_data_t* data, utils_string_t* out); // out replaced
+_nodiscard _nothrow bool utils_aes_key_has_generate_overload(const utils_aes_key_t* key);
+_nodiscard _nothrow bool utils_aes_key_has_set_overload(const utils_aes_key_t* key);
+_nodiscard _nothrow bool utils_aes_key_has_get_overload(const utils_aes_key_t* key);</code></pre><h3 id="c-4">Functions · AES data</h3><p><em>AES data (bytes: given back valid until data is changed, size: optional)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow utils_aes_data_t* utils_aes_data_create(void); // NULL on error
+_nothrow void utils_aes_data_destroy(utils_aes_data_t* data); // NULL: nothing
+_nodiscard _nothrow _read_only(2, 3) int utils_aes_data_set_key(utils_aes_data_t* data, const char* bytes, size_t size); // 32 bytes (AES-256)
+_nodiscard _nothrow _read_only(2, 3) int utils_aes_data_set_iv(utils_aes_data_t* data, const char* bytes, size_t size);
+_nodiscard _nothrow _read_only(2, 3) int utils_aes_data_set_tag(utils_aes_data_t* data, const char* bytes, size_t size);
+_nodiscard _nothrow const char* utils_aes_data_get_key(const utils_aes_data_t* data, size_t* size); // NULL on error
+_nodiscard _nothrow const char* utils_aes_data_get_iv(const utils_aes_data_t* data, size_t* size); // NULL on error
+_nodiscard _nothrow const char* utils_aes_data_get_tag(const utils_aes_data_t* data, size_t* size); // NULL on error</code></pre><h3 id="c-5">Functions · RSA key</h3><p><em>RSA key (keys in PEM, strings given back valid until the key is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow utils_rsa_key_t* utils_rsa_key_create(void); // NULL on error
+_nodiscard _nothrow _null_terminated_string_arg(1) utils_rsa_key_t* utils_rsa_key_create_common(const char* path); // the common key loaded (path: NULL = C_API_SECURITY_DEFAULT_COMMON_RSA_PATH), NULL on error
+_nothrow void utils_rsa_key_destroy(utils_rsa_key_t* key); // NULL: nothing
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_rsa_key_load_common(utils_rsa_key_t* key, const char* path); // path: NULL = C_API_SECURITY_DEFAULT_COMMON_RSA_PATH
+_nodiscard _nothrow int utils_rsa_key_generate(utils_rsa_key_t* key);
+_nodiscard _nothrow _null_terminated_string_arg(2) _null_terminated_string_arg(3) int utils_rsa_key_set(utils_rsa_key_t* key, const char* private_key, const char* public_key); // NULL: ""
+_nodiscard _nothrow const char* utils_rsa_key_get_private(const utils_rsa_key_t* key); // NULL on error
+_nodiscard _nothrow const char* utils_rsa_key_get_public(const utils_rsa_key_t* key); // NULL on error
+_nodiscard _nothrow int utils_rsa_key_random_bytes(const utils_rsa_key_t* key, uint16_t size, utils_string_t* out); // out replaced
+_nodiscard _nothrow _read_only(2, 3) int utils_rsa_key_encrypt(const utils_rsa_key_t* key, const char* in, size_t size, utils_string_t* out); // with the public key, out replaced
+_nodiscard _nothrow _read_only(2, 3) int utils_rsa_key_decrypt(const utils_rsa_key_t* key, const char* in, size_t size, utils_string_t* out); // with the private key, out replaced
+_nodiscard _nothrow bool utils_rsa_key_has_generate_overload(const utils_rsa_key_t* key);
+_nodiscard _nothrow bool utils_rsa_key_has_set_overload(const utils_rsa_key_t* key);
+_nodiscard _nothrow bool utils_rsa_key_has_get_overload(const utils_rsa_key_t* key);</code></pre><h3 id="c-6">Functions · Observers</h3><p><em>observers (an observer not destroyed is reported as a leak by the memory leak notifier, safe_mode: thread safe)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow _null_terminated_string_arg(1) utils_observer_t* utils_observer_create(const char* instance, bool safe_mode); // linked to the notifiers, NULL on error
+_nothrow void utils_observer_destroy(utils_observer_t* observer); // NULL: nothing (unlinked)
+_nodiscard _nothrow int utils_observer_trigger(void); // force every notifier to check its status now (memory leak: report the instances still linked)</code></pre></div><div data-lang="fr"><p>Lu dans <code>include/utils/security/CApi.h</code>, inclus par <code>&lt;utils.h&gt;</code> avec le define de la section. Chaque fonction qui peut échouer renvoie <code>UTILS_OK</code> / <code>UTILS_KO</code> (ou <code>NULL</code> / <code>0</code>) et remplit <code>utils_exception</code> (voir <a href="c-api.html#errors">le guide de l'API C</a>).</p><h3 id="c-1">Defines · Path of the common RSA key</h3><p><em>path of the common RSA key (utils/security/encryption/CommonRSAKey.hpp): common (private) | common.pub (public)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_SECURITY_DEFAULT_COMMON_RSA_PATH "~/.ssh/common"</code></pre><h3 id="c-2">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_aes_key utils_aes_key_t; // utils::security::encryption::AESKey
 typedef struct utils_aes_data utils_aes_data_t; // utils::security::encryption::KeyAES (key, iv, tag)
 typedef struct utils_rsa_key utils_rsa_key_t; // utils::security::encryption::CommonRSAKey (an RSAKey that can load the common key)
-typedef struct utils_observer utils_observer_t; // instance of the C side linked to the notifiers (memory leak report)</code></pre><h3 id="c-3">Fonctions · AES key</h3><p><em>AES key (encrypt: the key &amp; iv of data are used, its tag is set, decrypt: key, iv &amp; tag are used)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_aes_key_t* utils_aes_key_create(void); // NULL on error
-void utils_aes_key_destroy(utils_aes_key_t* key); // NULL: nothing
-int utils_aes_key_random_bytes(const utils_aes_key_t* key, uint16_t size, utils_string_t* out); // out replaced
-int utils_aes_key_encrypt(const utils_aes_key_t* key, const char* in, size_t size, utils_aes_data_t* data, utils_string_t* out); // out replaced
-int utils_aes_key_decrypt(const utils_aes_key_t* key, const char* in, size_t size, utils_aes_data_t* data, utils_string_t* out); // out replaced
-bool utils_aes_key_has_generate_overload(const utils_aes_key_t* key);
-bool utils_aes_key_has_set_overload(const utils_aes_key_t* key);
-bool utils_aes_key_has_get_overload(const utils_aes_key_t* key);</code></pre><h3 id="c-4">Fonctions · AES data</h3><p><em>AES data (bytes: given back valid until data is changed, size: optional)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_aes_data_t* utils_aes_data_create(void); // NULL on error
-void utils_aes_data_destroy(utils_aes_data_t* data); // NULL: nothing
-int utils_aes_data_set_key(utils_aes_data_t* data, const char* bytes, size_t size); // 32 bytes (AES-256)
-int utils_aes_data_set_iv(utils_aes_data_t* data, const char* bytes, size_t size);
-int utils_aes_data_set_tag(utils_aes_data_t* data, const char* bytes, size_t size);
-const char* utils_aes_data_get_key(const utils_aes_data_t* data, size_t* size); // NULL on error
-const char* utils_aes_data_get_iv(const utils_aes_data_t* data, size_t* size); // NULL on error
-const char* utils_aes_data_get_tag(const utils_aes_data_t* data, size_t* size); // NULL on error</code></pre><h3 id="c-5">Fonctions · RSA key</h3><p><em>RSA key (keys in PEM, strings given back valid until the key is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_rsa_key_t* utils_rsa_key_create(void); // NULL on error
-utils_rsa_key_t* utils_rsa_key_create_common(const char* path); // the common key loaded (path: NULL = C_API_SECURITY_DEFAULT_COMMON_RSA_PATH), NULL on error
-void utils_rsa_key_destroy(utils_rsa_key_t* key); // NULL: nothing
-int utils_rsa_key_load_common(utils_rsa_key_t* key, const char* path); // path: NULL = C_API_SECURITY_DEFAULT_COMMON_RSA_PATH
-int utils_rsa_key_generate(utils_rsa_key_t* key);
-int utils_rsa_key_set(utils_rsa_key_t* key, const char* private_key, const char* public_key); // NULL: ""
-const char* utils_rsa_key_get_private(const utils_rsa_key_t* key); // NULL on error
-const char* utils_rsa_key_get_public(const utils_rsa_key_t* key); // NULL on error
-int utils_rsa_key_random_bytes(const utils_rsa_key_t* key, uint16_t size, utils_string_t* out); // out replaced
-int utils_rsa_key_encrypt(const utils_rsa_key_t* key, const char* in, size_t size, utils_string_t* out); // with the public key, out replaced
-int utils_rsa_key_decrypt(const utils_rsa_key_t* key, const char* in, size_t size, utils_string_t* out); // with the private key, out replaced
-bool utils_rsa_key_has_generate_overload(const utils_rsa_key_t* key);
-bool utils_rsa_key_has_set_overload(const utils_rsa_key_t* key);
-bool utils_rsa_key_has_get_overload(const utils_rsa_key_t* key);</code></pre><h3 id="c-6">Fonctions · Observers</h3><p><em>observers (an observer not destroyed is reported as a leak by the memory leak notifier, safe_mode: thread safe)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_observer_t* utils_observer_create(const char* instance, bool safe_mode); // linked to the notifiers, NULL on error
-void utils_observer_destroy(utils_observer_t* observer); // NULL: nothing (unlinked)
-int utils_observer_trigger(void); // force every notifier to check its status now (memory leak: report the instances still linked)</code></pre></div></section><nav class="pager"><a href="algorithms.html"><span data-i18n>Previous</span><span data-lang="en">Algorithms</span><span data-lang="fr">Algorithms</span></a><a class="next" href="platform.html"><span data-i18n>Next</span><span data-lang="en">Platform</span><span data-lang="fr">Platform</span></a></nav></main>
+typedef struct utils_observer utils_observer_t; // instance of the C side linked to the notifiers (memory leak report)</code></pre><h3 id="c-3">Fonctions · AES key</h3><p><em>AES key (encrypt: the key &amp; iv of data are used, its tag is set, decrypt: key, iv &amp; tag are used)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow utils_aes_key_t* utils_aes_key_create(void); // NULL on error
+_nothrow void utils_aes_key_destroy(utils_aes_key_t* key); // NULL: nothing
+_nodiscard _nothrow int utils_aes_key_random_bytes(const utils_aes_key_t* key, uint16_t size, utils_string_t* out); // out replaced
+_nodiscard _nothrow _read_only(2, 3) int utils_aes_key_encrypt(const utils_aes_key_t* key, const char* in, size_t size, utils_aes_data_t* data, utils_string_t* out); // out replaced
+_nodiscard _nothrow _read_only(2, 3) int utils_aes_key_decrypt(const utils_aes_key_t* key, const char* in, size_t size, utils_aes_data_t* data, utils_string_t* out); // out replaced
+_nodiscard _nothrow bool utils_aes_key_has_generate_overload(const utils_aes_key_t* key);
+_nodiscard _nothrow bool utils_aes_key_has_set_overload(const utils_aes_key_t* key);
+_nodiscard _nothrow bool utils_aes_key_has_get_overload(const utils_aes_key_t* key);</code></pre><h3 id="c-4">Fonctions · AES data</h3><p><em>AES data (bytes: given back valid until data is changed, size: optional)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow utils_aes_data_t* utils_aes_data_create(void); // NULL on error
+_nothrow void utils_aes_data_destroy(utils_aes_data_t* data); // NULL: nothing
+_nodiscard _nothrow _read_only(2, 3) int utils_aes_data_set_key(utils_aes_data_t* data, const char* bytes, size_t size); // 32 bytes (AES-256)
+_nodiscard _nothrow _read_only(2, 3) int utils_aes_data_set_iv(utils_aes_data_t* data, const char* bytes, size_t size);
+_nodiscard _nothrow _read_only(2, 3) int utils_aes_data_set_tag(utils_aes_data_t* data, const char* bytes, size_t size);
+_nodiscard _nothrow const char* utils_aes_data_get_key(const utils_aes_data_t* data, size_t* size); // NULL on error
+_nodiscard _nothrow const char* utils_aes_data_get_iv(const utils_aes_data_t* data, size_t* size); // NULL on error
+_nodiscard _nothrow const char* utils_aes_data_get_tag(const utils_aes_data_t* data, size_t* size); // NULL on error</code></pre><h3 id="c-5">Fonctions · RSA key</h3><p><em>RSA key (keys in PEM, strings given back valid until the key is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow utils_rsa_key_t* utils_rsa_key_create(void); // NULL on error
+_nodiscard _nothrow _null_terminated_string_arg(1) utils_rsa_key_t* utils_rsa_key_create_common(const char* path); // the common key loaded (path: NULL = C_API_SECURITY_DEFAULT_COMMON_RSA_PATH), NULL on error
+_nothrow void utils_rsa_key_destroy(utils_rsa_key_t* key); // NULL: nothing
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_rsa_key_load_common(utils_rsa_key_t* key, const char* path); // path: NULL = C_API_SECURITY_DEFAULT_COMMON_RSA_PATH
+_nodiscard _nothrow int utils_rsa_key_generate(utils_rsa_key_t* key);
+_nodiscard _nothrow _null_terminated_string_arg(2) _null_terminated_string_arg(3) int utils_rsa_key_set(utils_rsa_key_t* key, const char* private_key, const char* public_key); // NULL: ""
+_nodiscard _nothrow const char* utils_rsa_key_get_private(const utils_rsa_key_t* key); // NULL on error
+_nodiscard _nothrow const char* utils_rsa_key_get_public(const utils_rsa_key_t* key); // NULL on error
+_nodiscard _nothrow int utils_rsa_key_random_bytes(const utils_rsa_key_t* key, uint16_t size, utils_string_t* out); // out replaced
+_nodiscard _nothrow _read_only(2, 3) int utils_rsa_key_encrypt(const utils_rsa_key_t* key, const char* in, size_t size, utils_string_t* out); // with the public key, out replaced
+_nodiscard _nothrow _read_only(2, 3) int utils_rsa_key_decrypt(const utils_rsa_key_t* key, const char* in, size_t size, utils_string_t* out); // with the private key, out replaced
+_nodiscard _nothrow bool utils_rsa_key_has_generate_overload(const utils_rsa_key_t* key);
+_nodiscard _nothrow bool utils_rsa_key_has_set_overload(const utils_rsa_key_t* key);
+_nodiscard _nothrow bool utils_rsa_key_has_get_overload(const utils_rsa_key_t* key);</code></pre><h3 id="c-6">Fonctions · Observers</h3><p><em>observers (an observer not destroyed is reported as a leak by the memory leak notifier, safe_mode: thread safe)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow _null_terminated_string_arg(1) utils_observer_t* utils_observer_create(const char* instance, bool safe_mode); // linked to the notifiers, NULL on error
+_nothrow void utils_observer_destroy(utils_observer_t* observer); // NULL: nothing (unlinked)
+_nodiscard _nothrow int utils_observer_trigger(void); // force every notifier to check its status now (memory leak: report the instances still linked)</code></pre></div></section><nav class="pager"><a href="algorithms.html"><span data-i18n>Previous</span><span data-lang="en">Algorithms</span><span data-lang="fr">Algorithms</span></a><a class="next" href="platform.html"><span data-i18n>Next</span><span data-lang="en">Platform</span><span data-lang="fr">Platform</span></a></nav></main>
 </div>
-<footer class="site">libutils v5.0.0 · 23d2be3 · docs</footer>
+<footer class="site">libutils v5.1.0-pre · 780c01d · docs</footer>
 <script src="site.js"></script>
 <script src="search-index.js" defer></script>
 </body>

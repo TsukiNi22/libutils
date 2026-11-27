@@ -10,7 +10,7 @@
 <a class="skip-link" href="#main" data-i18n>Skip to the content</a>
 <header class="topbar">
   <button class="icon-btn menu-btn" type="button" id="menuBtn" aria-label="Open the navigation" data-i18n-aria-label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
-  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v5.0.0</span></a>
+  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v5.1.0-pre</span></a>
   <nav class="tabs" aria-label="Pages" hidden></nav>
   <span class="spacer"></span>
   <div class="top-actions">
@@ -177,11 +177,11 @@ class ArgParser: private utils::security::observer::Observer&lt;"ArgParser"&gt; 
     void disableHelp(void);
     void setBinary(const std::string&amp; binary);
     void setDescription(const std::string&amp; description);
-    const std::string&amp; getBinary(void) const;
-    const std::string&amp; getDescription(void) const;
-    const std::unordered_map&lt;std::string, utils::arguments::Usage&gt;&amp; getUsages(void) const;
-    const std::unordered_map&lt;std::string, utils::arguments::Option&gt;&amp; getOptions(void) const;
-    const std::unordered_map&lt;std::string, utils::arguments::Flag&gt;&amp; getFlags(void) const;
+    const std::string&amp; getBinary(void) const _lifetimebound;
+    const std::string&amp; getDescription(void) const _lifetimebound;
+    const std::unordered_map&lt;std::string, utils::arguments::Usage&gt;&amp; getUsages(void) const _lifetimebound;
+    const std::unordered_map&lt;std::string, utils::arguments::Option&gt;&amp; getOptions(void) const _lifetimebound;
+    const std::unordered_map&lt;std::string, utils::arguments::Flag&gt;&amp; getFlags(void) const _lifetimebound;
     ArgParser(const std::string&amp; binary = "[None]", const std::string&amp; description = "...");
     ~ArgParser() = default;
 };</code></pre><h3 id="h-arguments-argparsertype-hpp"><code>utils/arguments/ArgParserType.hpp</code></h3><p>Declaration of the ArgParser type for void &amp; non void function</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::arguments
@@ -294,11 +294,11 @@ class ArgParser: private utils::security::observer::Observer&lt;"ArgParser"&gt; 
     void disableHelp(void);
     void setBinary(const std::string&amp; binary);
     void setDescription(const std::string&amp; description);
-    const std::string&amp; getBinary(void) const;
-    const std::string&amp; getDescription(void) const;
-    const std::unordered_map&lt;std::string, utils::arguments::Usage&gt;&amp; getUsages(void) const;
-    const std::unordered_map&lt;std::string, utils::arguments::Option&gt;&amp; getOptions(void) const;
-    const std::unordered_map&lt;std::string, utils::arguments::Flag&gt;&amp; getFlags(void) const;
+    const std::string&amp; getBinary(void) const _lifetimebound;
+    const std::string&amp; getDescription(void) const _lifetimebound;
+    const std::unordered_map&lt;std::string, utils::arguments::Usage&gt;&amp; getUsages(void) const _lifetimebound;
+    const std::unordered_map&lt;std::string, utils::arguments::Option&gt;&amp; getOptions(void) const _lifetimebound;
+    const std::unordered_map&lt;std::string, utils::arguments::Flag&gt;&amp; getFlags(void) const _lifetimebound;
     ArgParser(const std::string&amp; binary = "[None]", const std::string&amp; description = "...");
     ~ArgParser() = default;
 };</code></pre><h3 id="h-arguments-argparsertype-hpp"><code>utils/arguments/ArgParserType.hpp</code></h3><p>Declaration of the ArgParser type for void &amp; non void function</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::arguments
@@ -379,10 +379,10 @@ using float32_t = float;
 using float64_t = double;
 using float128_t = long double;
 enum class CastType: std::size_t {None, Byte, Bool, Int8, Int16, Int32, Int64, UInt8, UInt16, UInt32, UInt64, Float16, Float32, Float64, Float128, Char8, Char16, Char32, U8String, U16String, U32String, WChar, WString, Path}</code></pre></div></section><section id="c-api"><h2>6. <span data-lang="en">C API</span><span data-lang="fr">API C</span></h2><div data-lang="en"><p>Read from <code>include/utils/arguments/CApi.h</code>, included by <code>&lt;utils.h&gt;</code> with the define of the section. Every function that can fail returns <code>UTILS_OK</code> / <code>UTILS_KO</code> (or <code>NULL</code> / <code>0</code>) and fills <code>utils_exception</code> (see <a href="c-api.html#errors">the C API guide</a>).</p><h3 id="c-1">Macros · Settings of the fixed types</h3><p><em>settings of the fixed types (str: const char* copied in a std::string, given back valid until the setting is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_SETTINGS_DECL(name, ctype) \
-    int utils_settings_add_##name(utils_settings_t* settings, const char* id, ctype value); /* an existing one is refused */ \
-    int utils_settings_set_##name(utils_settings_t* settings, const char* id, ctype value, bool force); /* force: override an existing one */ \
-    int utils_settings_get_##name(const utils_settings_t* settings, const char* id, ctype* value); /* UTILS_KO: unknown id or another type */ \
-    bool utils_settings_is_##name(const utils_settings_t* settings, const char* id);</code></pre><h3 id="c-2">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_argparser utils_argparser_t; // utils::arguments::ArgParser
+    _nodiscard _nothrow _null_terminated_string_arg(2) int utils_settings_add_##name(utils_settings_t* settings, const char* id, ctype value); /* an existing one is refused */ \
+    _nodiscard _nothrow _null_terminated_string_arg(2) int utils_settings_set_##name(utils_settings_t* settings, const char* id, ctype value, bool force); /* force: override an existing one */ \
+    _nodiscard _nothrow _null_terminated_string_arg(2) int utils_settings_get_##name(const utils_settings_t* settings, const char* id, ctype* value); /* UTILS_KO: unknown id or another type */ \
+    _nodiscard _nothrow _null_terminated_string_arg(2) bool utils_settings_is_##name(const utils_settings_t* settings, const char* id);</code></pre><h3 id="c-2">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_argparser utils_argparser_t; // utils::arguments::ArgParser
 typedef struct utils_argparser_result utils_argparser_result_t; // utils::arguments::ParsedUsages (return of the parsing)
 typedef struct utils_settings utils_settings_t; // utils::arguments::Settings</code></pre><h3 id="c-3">Types · Callbacks</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef int (*utils_argparser_check_t)(const char* option, void* data); // UTILS_OK: valid, UTILS_KO: the message is the info of utils_fail
 typedef int (*utils_argparser_help_hook_t)(const utils_argparser_t* parser, void* data); // display the help</code></pre><h3 id="c-4">Enums · Type of a setting</h3><p><em>type of a setting (utils::arguments::CastType)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_settings_cast {
@@ -408,81 +408,81 @@ C_API_SETTINGS_CAST_WSTRING,</code></pre><h3 id="c-11">Enums · Special</h3><pre
     bool mandatory;
     utils_argparser_check_t check; // NULL: no check
     void* data; // given to check
-} utils_argparser_flag_option_t;</code></pre><h3 id="c-14">Functions · Argparser</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_argparser_t* utils_argparser_create(const char* binary, const char* description); // NULL: "[None]" / "...", NULL on error
-void utils_argparser_destroy(utils_argparser_t* parser); // NULL: nothing
-int utils_argparser_help(const utils_argparser_t* parser); // display the help (help hook)</code></pre><h3 id="c-15">Functions · Parsing</h3><p><em>parsing (the first argument is ignored), the result: NULL on error (failsafe: no throw on invalid arguments, only the valid usages)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_argparser_result_t* utils_argparser_parse(const utils_argparser_t* parser, int argc, const char* const* argv, bool failsafe);</code></pre><h3 id="c-16">Functions · Setup</h3><p><em>setup (force: override an existing one, else refused)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_argparser_set_default_usage(utils_argparser_t* parser); // "default": every flag &amp; option
-int utils_argparser_set_usage(utils_argparser_t* parser, const char* id, const char* name, bool ordered, const char* const* ids, const bool* mandatory, size_t count, const char* description, bool force); // description: NULL = "[None]"
-int utils_argparser_set_option(utils_argparser_t* parser, const char* id, const char* name, utils_argparser_check_t check, void* data, const char* description, bool force); // check: NULL = no check
-int utils_argparser_set_flag(utils_argparser_t* parser, const char* id, const char* short_flag, const char* flag, const char* long_flag, const char* env, const utils_argparser_flag_option_t* options, size_t count, const char* description, bool unlimited, bool ignore_case, bool force); // NULL flag name: "" (not used)
-int utils_argparser_remove_usage(utils_argparser_t* parser, const char* id);
-int utils_argparser_remove_usages(utils_argparser_t* parser, const char* const* ids, size_t count);
-int utils_argparser_remove_option(utils_argparser_t* parser, const char* id);
-int utils_argparser_remove_options(utils_argparser_t* parser, const char* const* ids, size_t count);
-int utils_argparser_remove_flag(utils_argparser_t* parser, const char* id);
-int utils_argparser_remove_flags(utils_argparser_t* parser, const char* const* ids, size_t count);
-int utils_argparser_reset_usages(utils_argparser_t* parser);
-int utils_argparser_reset_options(utils_argparser_t* parser);
-int utils_argparser_reset_flags(utils_argparser_t* parser);</code></pre><h3 id="c-17">Functions · Hooks</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_argparser_set_help_hook(utils_argparser_t* parser, utils_argparser_help_hook_t hook, void* data);
-int utils_argparser_reset_help_hook(utils_argparser_t* parser);
-int utils_argparser_default_help_hook(const utils_argparser_t* parser);</code></pre><h3 id="c-18">Functions · Default checks</h3><p><em>default checks (usable as a check callback, data ignored)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_argparser_check_true(const char* option, void* data); // always valid
-int utils_argparser_check_bool(const char* option, void* data); // 0, 1, false, true
-int utils_argparser_check_int32(const char* option, void* data);
-int utils_argparser_check_sizet(const char* option, void* data);
-int utils_argparser_check_double(const char* option, void* data);
-int utils_argparser_check_file(const char* option, void* data); // readable file
-int utils_argparser_check_directory(const char* option, void* data); // readable directory
-int utils_argparser_check_writable(const char* option, void* data); // readable &amp; writable path</code></pre><h3 id="c-19">Functions · Setter / getter</h3><p><em>setter / getter (strings: valid until the parser is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_argparser_disable_help(utils_argparser_t* parser); // no default -h
-int utils_argparser_set_binary(utils_argparser_t* parser, const char* binary);
-int utils_argparser_set_description(utils_argparser_t* parser, const char* description);
-const char* utils_argparser_get_binary(const utils_argparser_t* parser);
-const char* utils_argparser_get_description(const utils_argparser_t* parser);</code></pre><h3 id="c-20">Functions · Usages / options / flags of the parser</h3><p><em>usages / options / flags of the parser (index: any order, valid until the parser is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">size_t utils_argparser_usages_count(const utils_argparser_t* parser);
-const char* utils_argparser_usage_id(const utils_argparser_t* parser, size_t i);
-int utils_argparser_get_usage(const utils_argparser_t* parser, const char* id, const char** name, bool* ordered, const char** description); // each output: optional
-size_t utils_argparser_usage_ids_count(const utils_argparser_t* parser, const char* id);
-int utils_argparser_usage_get_id(const utils_argparser_t* parser, const char* id, size_t i, const char** option_id, bool* mandatory);
-size_t utils_argparser_options_count(const utils_argparser_t* parser);
-const char* utils_argparser_option_id(const utils_argparser_t* parser, size_t i);
-int utils_argparser_get_option(const utils_argparser_t* parser, const char* id, const char** name, bool* exact, const char** description); // each output: optional
-size_t utils_argparser_flags_count(const utils_argparser_t* parser);
-const char* utils_argparser_flag_id(const utils_argparser_t* parser, size_t i);
-int utils_argparser_get_flag(const utils_argparser_t* parser, const char* id, const char** short_flag, const char** flag, const char** long_flag, const char** env, const char** description, bool* unlimited); // each output: optional
-size_t utils_argparser_flag_options_count(const utils_argparser_t* parser, const char* id);
-int utils_argparser_flag_get_option(const utils_argparser_t* parser, const char* id, size_t i, const char** name, bool* mandatory);</code></pre><h3 id="c-21">Functions · Result of the parsing</h3><p><em>result of the parsing (one usage = an id &amp; its arguments: an option or a flag with its values)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">void utils_argparser_result_destroy(utils_argparser_result_t* result); // NULL: nothing
-size_t utils_argparser_result_count(const utils_argparser_result_t* result); // number of usages
-const char* utils_argparser_result_usage(const utils_argparser_result_t* result, size_t i); // id of the usage i ("": nothing), NULL on error
-size_t utils_argparser_result_arguments_count(const utils_argparser_result_t* result, size_t i);
-const char* utils_argparser_result_argument_id(const utils_argparser_result_t* result, size_t i, size_t j); // NULL on error
-bool utils_argparser_result_argument_is_option(const utils_argparser_result_t* result, size_t i, size_t j); // option (true) or flag (false)
-size_t utils_argparser_result_values_count(const utils_argparser_result_t* result, size_t i, size_t j);
-const char* utils_argparser_result_value(const utils_argparser_result_t* result, size_t i, size_t j, size_t k); // NULL on error</code></pre><h3 id="c-22">Functions · Settings</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_settings_t* utils_settings_create(void); // NULL on error
-void utils_settings_destroy(utils_settings_t* settings); // NULL: nothing
-int utils_settings_auto_cast(utils_settings_t* settings, const char* id, const char* setting, bool force, utils_settings_cast_t* type); // type found &amp; stored (type: optional)
-int utils_settings_cast(utils_settings_t* settings, const char* id, const char* setting, utils_settings_cast_t type, bool force);
-int utils_settings_remove(utils_settings_t* settings, const char* id, bool failsafe); // failsafe: an unknown id is not an error
-int utils_settings_clear(utils_settings_t* settings);
-bool utils_settings_contains(const utils_settings_t* settings, const char* id);
-utils_settings_cast_t utils_settings_get_type(const utils_settings_t* settings, const char* id); // C_API_SETTINGS_CAST_OTHER: unknown id (error) or a type without cast</code></pre><h3 id="c-23">Functions · Settings of the fixed types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_TYPES(C_API_SETTINGS_DECL)</code></pre><h3 id="c-24">Functions · Settings of the types of the casts</h3><p><em>settings of the types of the casts (strings: valid until the setting is changed, size: optional)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_SETTINGS_DECL(byte, uint8_t) // std::byte
+} utils_argparser_flag_option_t;</code></pre><h3 id="c-14">Functions · Argparser</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow _null_terminated_string_arg(1) _null_terminated_string_arg(2) utils_argparser_t* utils_argparser_create(const char* binary, const char* description); // NULL: "[None]" / "...", NULL on error
+_nothrow void utils_argparser_destroy(utils_argparser_t* parser); // NULL: nothing
+_nodiscard _nothrow int utils_argparser_help(const utils_argparser_t* parser); // display the help (help hook)</code></pre><h3 id="c-15">Functions · Parsing</h3><p><em>parsing (the first argument is ignored), the result: NULL on error (failsafe: no throw on invalid arguments, only the valid usages)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow utils_argparser_result_t* utils_argparser_parse(const utils_argparser_t* parser, int argc, const char* const* argv, bool failsafe);</code></pre><h3 id="c-16">Functions · Setup</h3><p><em>setup (force: override an existing one, else refused)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow int utils_argparser_set_default_usage(utils_argparser_t* parser); // "default": every flag &amp; option
+_nodiscard _nothrow _null_terminated_string_arg(2) _null_terminated_string_arg(3) _read_only(6, 7) _null_terminated_string_arg(8) int utils_argparser_set_usage(utils_argparser_t* parser, const char* id, const char* name, bool ordered, const char* const* ids, const bool* mandatory, size_t count, const char* description, bool force); // description: NULL = "[None]"
+_nodiscard _nothrow _null_terminated_string_arg(2) _null_terminated_string_arg(3) _null_terminated_string_arg(6) int utils_argparser_set_option(utils_argparser_t* parser, const char* id, const char* name, utils_argparser_check_t check, void* data, const char* description, bool force); // check: NULL = no check
+_nodiscard _nothrow _null_terminated_string_arg(2) _null_terminated_string_arg(3) _null_terminated_string_arg(4) _null_terminated_string_arg(5) _null_terminated_string_arg(6) _null_terminated_string_arg(9) int utils_argparser_set_flag(utils_argparser_t* parser, const char* id, const char* short_flag, const char* flag, const char* long_flag, const char* env, const utils_argparser_flag_option_t* options, size_t count, const char* description, bool unlimited, bool ignore_case, bool force); // NULL flag name: "" (not used)
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_argparser_remove_usage(utils_argparser_t* parser, const char* id);
+_nodiscard _nothrow int utils_argparser_remove_usages(utils_argparser_t* parser, const char* const* ids, size_t count);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_argparser_remove_option(utils_argparser_t* parser, const char* id);
+_nodiscard _nothrow int utils_argparser_remove_options(utils_argparser_t* parser, const char* const* ids, size_t count);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_argparser_remove_flag(utils_argparser_t* parser, const char* id);
+_nodiscard _nothrow int utils_argparser_remove_flags(utils_argparser_t* parser, const char* const* ids, size_t count);
+_nodiscard _nothrow int utils_argparser_reset_usages(utils_argparser_t* parser);
+_nodiscard _nothrow int utils_argparser_reset_options(utils_argparser_t* parser);
+_nodiscard _nothrow int utils_argparser_reset_flags(utils_argparser_t* parser);</code></pre><h3 id="c-17">Functions · Hooks</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow int utils_argparser_set_help_hook(utils_argparser_t* parser, utils_argparser_help_hook_t hook, void* data);
+_nodiscard _nothrow int utils_argparser_reset_help_hook(utils_argparser_t* parser);
+_nodiscard _nothrow int utils_argparser_default_help_hook(const utils_argparser_t* parser);</code></pre><h3 id="c-18">Functions · Default checks</h3><p><em>default checks (usable as a check callback, data ignored)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow _null_terminated_string_arg(1) int utils_argparser_check_true(const char* option, void* data); // always valid
+_nodiscard _nothrow _null_terminated_string_arg(1) int utils_argparser_check_bool(const char* option, void* data); // 0, 1, false, true
+_nodiscard _nothrow _null_terminated_string_arg(1) int utils_argparser_check_int32(const char* option, void* data);
+_nodiscard _nothrow _null_terminated_string_arg(1) int utils_argparser_check_sizet(const char* option, void* data);
+_nodiscard _nothrow _null_terminated_string_arg(1) int utils_argparser_check_double(const char* option, void* data);
+_nodiscard _nothrow _null_terminated_string_arg(1) int utils_argparser_check_file(const char* option, void* data); // readable file
+_nodiscard _nothrow _null_terminated_string_arg(1) int utils_argparser_check_directory(const char* option, void* data); // readable directory
+_nodiscard _nothrow _null_terminated_string_arg(1) int utils_argparser_check_writable(const char* option, void* data); // readable &amp; writable path</code></pre><h3 id="c-19">Functions · Setter / getter</h3><p><em>setter / getter (strings: valid until the parser is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow int utils_argparser_disable_help(utils_argparser_t* parser); // no default -h
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_argparser_set_binary(utils_argparser_t* parser, const char* binary);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_argparser_set_description(utils_argparser_t* parser, const char* description);
+_nodiscard _nothrow const char* utils_argparser_get_binary(const utils_argparser_t* parser);
+_nodiscard _nothrow const char* utils_argparser_get_description(const utils_argparser_t* parser);</code></pre><h3 id="c-20">Functions · Usages / options / flags of the parser</h3><p><em>usages / options / flags of the parser (index: any order, valid until the parser is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow size_t utils_argparser_usages_count(const utils_argparser_t* parser);
+_nodiscard _nothrow const char* utils_argparser_usage_id(const utils_argparser_t* parser, size_t i);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_argparser_get_usage(const utils_argparser_t* parser, const char* id, const char** name, bool* ordered, const char** description); // each output: optional
+_nodiscard _nothrow _null_terminated_string_arg(2) size_t utils_argparser_usage_ids_count(const utils_argparser_t* parser, const char* id);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_argparser_usage_get_id(const utils_argparser_t* parser, const char* id, size_t i, const char** option_id, bool* mandatory);
+_nodiscard _nothrow size_t utils_argparser_options_count(const utils_argparser_t* parser);
+_nodiscard _nothrow const char* utils_argparser_option_id(const utils_argparser_t* parser, size_t i);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_argparser_get_option(const utils_argparser_t* parser, const char* id, const char** name, bool* exact, const char** description); // each output: optional
+_nodiscard _nothrow size_t utils_argparser_flags_count(const utils_argparser_t* parser);
+_nodiscard _nothrow const char* utils_argparser_flag_id(const utils_argparser_t* parser, size_t i);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_argparser_get_flag(const utils_argparser_t* parser, const char* id, const char** short_flag, const char** flag, const char** long_flag, const char** env, const char** description, bool* unlimited); // each output: optional
+_nodiscard _nothrow _null_terminated_string_arg(2) size_t utils_argparser_flag_options_count(const utils_argparser_t* parser, const char* id);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_argparser_flag_get_option(const utils_argparser_t* parser, const char* id, size_t i, const char** name, bool* mandatory);</code></pre><h3 id="c-21">Functions · Result of the parsing</h3><p><em>result of the parsing (one usage = an id &amp; its arguments: an option or a flag with its values)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nothrow void utils_argparser_result_destroy(utils_argparser_result_t* result); // NULL: nothing
+_nodiscard _nothrow size_t utils_argparser_result_count(const utils_argparser_result_t* result); // number of usages
+_nodiscard _nothrow const char* utils_argparser_result_usage(const utils_argparser_result_t* result, size_t i); // id of the usage i ("": nothing), NULL on error
+_nodiscard _nothrow size_t utils_argparser_result_arguments_count(const utils_argparser_result_t* result, size_t i);
+_nodiscard _nothrow const char* utils_argparser_result_argument_id(const utils_argparser_result_t* result, size_t i, size_t j); // NULL on error
+_nodiscard _nothrow bool utils_argparser_result_argument_is_option(const utils_argparser_result_t* result, size_t i, size_t j); // option (true) or flag (false)
+_nodiscard _nothrow size_t utils_argparser_result_values_count(const utils_argparser_result_t* result, size_t i, size_t j);
+_nodiscard _nothrow const char* utils_argparser_result_value(const utils_argparser_result_t* result, size_t i, size_t j, size_t k); // NULL on error</code></pre><h3 id="c-22">Functions · Settings</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow utils_settings_t* utils_settings_create(void); // NULL on error
+_nothrow void utils_settings_destroy(utils_settings_t* settings); // NULL: nothing
+_nodiscard _nothrow _null_terminated_string_arg(2) _null_terminated_string_arg(3) int utils_settings_auto_cast(utils_settings_t* settings, const char* id, const char* setting, bool force, utils_settings_cast_t* type); // type found &amp; stored (type: optional)
+_nodiscard _nothrow _null_terminated_string_arg(2) _null_terminated_string_arg(3) int utils_settings_cast(utils_settings_t* settings, const char* id, const char* setting, utils_settings_cast_t type, bool force);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_settings_remove(utils_settings_t* settings, const char* id, bool failsafe); // failsafe: an unknown id is not an error
+_nodiscard _nothrow int utils_settings_clear(utils_settings_t* settings);
+_nodiscard _nothrow _null_terminated_string_arg(2) bool utils_settings_contains(const utils_settings_t* settings, const char* id);
+_nodiscard _nothrow _null_terminated_string_arg(2) utils_settings_cast_t utils_settings_get_type(const utils_settings_t* settings, const char* id); // C_API_SETTINGS_CAST_OTHER: unknown id (error) or a type without cast</code></pre><h3 id="c-23">Functions · Settings of the fixed types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_TYPES(C_API_SETTINGS_DECL)</code></pre><h3 id="c-24">Functions · Settings of the types of the casts</h3><p><em>settings of the types of the casts (strings: valid until the setting is changed, size: optional)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_SETTINGS_DECL(byte, uint8_t) // std::byte
 C_API_SETTINGS_DECL(char8, uint8_t) // char8_t
 C_API_SETTINGS_DECL(char16, uint_least16_t) // char16_t
 C_API_SETTINGS_DECL(char32, uint_least32_t) // char32_t
 C_API_SETTINGS_DECL(wchar, wchar_t)
 C_API_SETTINGS_DECL(u8string, const char*) // std::u8string (utf-8)
 C_API_SETTINGS_DECL(path, const char*) // std::filesystem::path (the path given back: valid until the next utils_settings_get_path of the thread)
-int utils_settings_set_u16string(utils_settings_t* settings, const char* id, const uint_least16_t* str, size_t size, bool force); // std::u16string
-int utils_settings_get_u16string(const utils_settings_t* settings, const char* id, const uint_least16_t** str, size_t* size);
-bool utils_settings_is_u16string(const utils_settings_t* settings, const char* id);
-int utils_settings_set_u32string(utils_settings_t* settings, const char* id, const uint_least32_t* str, size_t size, bool force); // std::u32string
-int utils_settings_get_u32string(const utils_settings_t* settings, const char* id, const uint_least32_t** str, size_t* size);
-bool utils_settings_is_u32string(const utils_settings_t* settings, const char* id);
-int utils_settings_set_wstring(utils_settings_t* settings, const char* id, const wchar_t* str, size_t size, bool force); // std::wstring
-int utils_settings_get_wstring(const utils_settings_t* settings, const char* id, const wchar_t** str, size_t* size);
-bool utils_settings_is_wstring(const utils_settings_t* settings, const char* id);</code></pre><h3 id="c-25">Functions · Settings of bytes</h3><p><em>settings of bytes (generic: data + size, copied)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_settings_set_bytes(utils_settings_t* settings, const char* id, const void* data, size_t size, bool force);
-int utils_settings_get_bytes(const utils_settings_t* settings, const char* id, const void** data, size_t* size);
-bool utils_settings_is_bytes(const utils_settings_t* settings, const char* id);</code></pre></div><div data-lang="fr"><p>Lu dans <code>include/utils/arguments/CApi.h</code>, inclus par <code>&lt;utils.h&gt;</code> avec le define de la section. Chaque fonction qui peut échouer renvoie <code>UTILS_OK</code> / <code>UTILS_KO</code> (ou <code>NULL</code> / <code>0</code>) et remplit <code>utils_exception</code> (voir <a href="c-api.html#errors">le guide de l'API C</a>).</p><h3 id="c-1">Macros · Settings of the fixed types</h3><p><em>settings of the fixed types (str: const char* copied in a std::string, given back valid until the setting is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_SETTINGS_DECL(name, ctype) \
-    int utils_settings_add_##name(utils_settings_t* settings, const char* id, ctype value); /* an existing one is refused */ \
-    int utils_settings_set_##name(utils_settings_t* settings, const char* id, ctype value, bool force); /* force: override an existing one */ \
-    int utils_settings_get_##name(const utils_settings_t* settings, const char* id, ctype* value); /* UTILS_KO: unknown id or another type */ \
-    bool utils_settings_is_##name(const utils_settings_t* settings, const char* id);</code></pre><h3 id="c-2">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_argparser utils_argparser_t; // utils::arguments::ArgParser
+_nodiscard _nothrow _null_terminated_string_arg(2) _read_only(3, 4) int utils_settings_set_u16string(utils_settings_t* settings, const char* id, const uint_least16_t* str, size_t size, bool force); // std::u16string
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_settings_get_u16string(const utils_settings_t* settings, const char* id, const uint_least16_t** str, size_t* size);
+_nodiscard _nothrow _null_terminated_string_arg(2) bool utils_settings_is_u16string(const utils_settings_t* settings, const char* id);
+_nodiscard _nothrow _null_terminated_string_arg(2) _read_only(3, 4) int utils_settings_set_u32string(utils_settings_t* settings, const char* id, const uint_least32_t* str, size_t size, bool force); // std::u32string
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_settings_get_u32string(const utils_settings_t* settings, const char* id, const uint_least32_t** str, size_t* size);
+_nodiscard _nothrow _null_terminated_string_arg(2) bool utils_settings_is_u32string(const utils_settings_t* settings, const char* id);
+_nodiscard _nothrow _null_terminated_string_arg(2) _read_only(3, 4) int utils_settings_set_wstring(utils_settings_t* settings, const char* id, const wchar_t* str, size_t size, bool force); // std::wstring
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_settings_get_wstring(const utils_settings_t* settings, const char* id, const wchar_t** str, size_t* size);
+_nodiscard _nothrow _null_terminated_string_arg(2) bool utils_settings_is_wstring(const utils_settings_t* settings, const char* id);</code></pre><h3 id="c-25">Functions · Settings of bytes</h3><p><em>settings of bytes (generic: data + size, copied)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow _null_terminated_string_arg(2) _read_only(3, 4) int utils_settings_set_bytes(utils_settings_t* settings, const char* id, const void* data, size_t size, bool force);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_settings_get_bytes(const utils_settings_t* settings, const char* id, const void** data, size_t* size);
+_nodiscard _nothrow _null_terminated_string_arg(2) bool utils_settings_is_bytes(const utils_settings_t* settings, const char* id);</code></pre></div><div data-lang="fr"><p>Lu dans <code>include/utils/arguments/CApi.h</code>, inclus par <code>&lt;utils.h&gt;</code> avec le define de la section. Chaque fonction qui peut échouer renvoie <code>UTILS_OK</code> / <code>UTILS_KO</code> (ou <code>NULL</code> / <code>0</code>) et remplit <code>utils_exception</code> (voir <a href="c-api.html#errors">le guide de l'API C</a>).</p><h3 id="c-1">Macros · Settings of the fixed types</h3><p><em>settings of the fixed types (str: const char* copied in a std::string, given back valid until the setting is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#define C_API_SETTINGS_DECL(name, ctype) \
+    _nodiscard _nothrow _null_terminated_string_arg(2) int utils_settings_add_##name(utils_settings_t* settings, const char* id, ctype value); /* an existing one is refused */ \
+    _nodiscard _nothrow _null_terminated_string_arg(2) int utils_settings_set_##name(utils_settings_t* settings, const char* id, ctype value, bool force); /* force: override an existing one */ \
+    _nodiscard _nothrow _null_terminated_string_arg(2) int utils_settings_get_##name(const utils_settings_t* settings, const char* id, ctype* value); /* UTILS_KO: unknown id or another type */ \
+    _nodiscard _nothrow _null_terminated_string_arg(2) bool utils_settings_is_##name(const utils_settings_t* settings, const char* id);</code></pre><h3 id="c-2">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_argparser utils_argparser_t; // utils::arguments::ArgParser
 typedef struct utils_argparser_result utils_argparser_result_t; // utils::arguments::ParsedUsages (return of the parsing)
 typedef struct utils_settings utils_settings_t; // utils::arguments::Settings</code></pre><h3 id="c-3">Types · Callbacks</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef int (*utils_argparser_check_t)(const char* option, void* data); // UTILS_OK: valid, UTILS_KO: the message is the info of utils_fail
 typedef int (*utils_argparser_help_hook_t)(const utils_argparser_t* parser, void* data); // display the help</code></pre><h3 id="c-4">Énumérations · Type of a setting</h3><p><em>type of a setting (utils::arguments::CastType)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef enum utils_settings_cast {
@@ -508,79 +508,79 @@ C_API_SETTINGS_CAST_WSTRING,</code></pre><h3 id="c-11">Énumérations · Special
     bool mandatory;
     utils_argparser_check_t check; // NULL: no check
     void* data; // given to check
-} utils_argparser_flag_option_t;</code></pre><h3 id="c-14">Fonctions · Argparser</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_argparser_t* utils_argparser_create(const char* binary, const char* description); // NULL: "[None]" / "...", NULL on error
-void utils_argparser_destroy(utils_argparser_t* parser); // NULL: nothing
-int utils_argparser_help(const utils_argparser_t* parser); // display the help (help hook)</code></pre><h3 id="c-15">Fonctions · Parsing</h3><p><em>parsing (the first argument is ignored), the result: NULL on error (failsafe: no throw on invalid arguments, only the valid usages)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_argparser_result_t* utils_argparser_parse(const utils_argparser_t* parser, int argc, const char* const* argv, bool failsafe);</code></pre><h3 id="c-16">Fonctions · Setup</h3><p><em>setup (force: override an existing one, else refused)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_argparser_set_default_usage(utils_argparser_t* parser); // "default": every flag &amp; option
-int utils_argparser_set_usage(utils_argparser_t* parser, const char* id, const char* name, bool ordered, const char* const* ids, const bool* mandatory, size_t count, const char* description, bool force); // description: NULL = "[None]"
-int utils_argparser_set_option(utils_argparser_t* parser, const char* id, const char* name, utils_argparser_check_t check, void* data, const char* description, bool force); // check: NULL = no check
-int utils_argparser_set_flag(utils_argparser_t* parser, const char* id, const char* short_flag, const char* flag, const char* long_flag, const char* env, const utils_argparser_flag_option_t* options, size_t count, const char* description, bool unlimited, bool ignore_case, bool force); // NULL flag name: "" (not used)
-int utils_argparser_remove_usage(utils_argparser_t* parser, const char* id);
-int utils_argparser_remove_usages(utils_argparser_t* parser, const char* const* ids, size_t count);
-int utils_argparser_remove_option(utils_argparser_t* parser, const char* id);
-int utils_argparser_remove_options(utils_argparser_t* parser, const char* const* ids, size_t count);
-int utils_argparser_remove_flag(utils_argparser_t* parser, const char* id);
-int utils_argparser_remove_flags(utils_argparser_t* parser, const char* const* ids, size_t count);
-int utils_argparser_reset_usages(utils_argparser_t* parser);
-int utils_argparser_reset_options(utils_argparser_t* parser);
-int utils_argparser_reset_flags(utils_argparser_t* parser);</code></pre><h3 id="c-17">Fonctions · Hooks</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_argparser_set_help_hook(utils_argparser_t* parser, utils_argparser_help_hook_t hook, void* data);
-int utils_argparser_reset_help_hook(utils_argparser_t* parser);
-int utils_argparser_default_help_hook(const utils_argparser_t* parser);</code></pre><h3 id="c-18">Fonctions · Default checks</h3><p><em>default checks (usable as a check callback, data ignored)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_argparser_check_true(const char* option, void* data); // always valid
-int utils_argparser_check_bool(const char* option, void* data); // 0, 1, false, true
-int utils_argparser_check_int32(const char* option, void* data);
-int utils_argparser_check_sizet(const char* option, void* data);
-int utils_argparser_check_double(const char* option, void* data);
-int utils_argparser_check_file(const char* option, void* data); // readable file
-int utils_argparser_check_directory(const char* option, void* data); // readable directory
-int utils_argparser_check_writable(const char* option, void* data); // readable &amp; writable path</code></pre><h3 id="c-19">Fonctions · Setter / getter</h3><p><em>setter / getter (strings: valid until the parser is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_argparser_disable_help(utils_argparser_t* parser); // no default -h
-int utils_argparser_set_binary(utils_argparser_t* parser, const char* binary);
-int utils_argparser_set_description(utils_argparser_t* parser, const char* description);
-const char* utils_argparser_get_binary(const utils_argparser_t* parser);
-const char* utils_argparser_get_description(const utils_argparser_t* parser);</code></pre><h3 id="c-20">Fonctions · Usages / options / flags of the parser</h3><p><em>usages / options / flags of the parser (index: any order, valid until the parser is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">size_t utils_argparser_usages_count(const utils_argparser_t* parser);
-const char* utils_argparser_usage_id(const utils_argparser_t* parser, size_t i);
-int utils_argparser_get_usage(const utils_argparser_t* parser, const char* id, const char** name, bool* ordered, const char** description); // each output: optional
-size_t utils_argparser_usage_ids_count(const utils_argparser_t* parser, const char* id);
-int utils_argparser_usage_get_id(const utils_argparser_t* parser, const char* id, size_t i, const char** option_id, bool* mandatory);
-size_t utils_argparser_options_count(const utils_argparser_t* parser);
-const char* utils_argparser_option_id(const utils_argparser_t* parser, size_t i);
-int utils_argparser_get_option(const utils_argparser_t* parser, const char* id, const char** name, bool* exact, const char** description); // each output: optional
-size_t utils_argparser_flags_count(const utils_argparser_t* parser);
-const char* utils_argparser_flag_id(const utils_argparser_t* parser, size_t i);
-int utils_argparser_get_flag(const utils_argparser_t* parser, const char* id, const char** short_flag, const char** flag, const char** long_flag, const char** env, const char** description, bool* unlimited); // each output: optional
-size_t utils_argparser_flag_options_count(const utils_argparser_t* parser, const char* id);
-int utils_argparser_flag_get_option(const utils_argparser_t* parser, const char* id, size_t i, const char** name, bool* mandatory);</code></pre><h3 id="c-21">Fonctions · Result of the parsing</h3><p><em>result of the parsing (one usage = an id &amp; its arguments: an option or a flag with its values)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">void utils_argparser_result_destroy(utils_argparser_result_t* result); // NULL: nothing
-size_t utils_argparser_result_count(const utils_argparser_result_t* result); // number of usages
-const char* utils_argparser_result_usage(const utils_argparser_result_t* result, size_t i); // id of the usage i ("": nothing), NULL on error
-size_t utils_argparser_result_arguments_count(const utils_argparser_result_t* result, size_t i);
-const char* utils_argparser_result_argument_id(const utils_argparser_result_t* result, size_t i, size_t j); // NULL on error
-bool utils_argparser_result_argument_is_option(const utils_argparser_result_t* result, size_t i, size_t j); // option (true) or flag (false)
-size_t utils_argparser_result_values_count(const utils_argparser_result_t* result, size_t i, size_t j);
-const char* utils_argparser_result_value(const utils_argparser_result_t* result, size_t i, size_t j, size_t k); // NULL on error</code></pre><h3 id="c-22">Fonctions · Settings</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_settings_t* utils_settings_create(void); // NULL on error
-void utils_settings_destroy(utils_settings_t* settings); // NULL: nothing
-int utils_settings_auto_cast(utils_settings_t* settings, const char* id, const char* setting, bool force, utils_settings_cast_t* type); // type found &amp; stored (type: optional)
-int utils_settings_cast(utils_settings_t* settings, const char* id, const char* setting, utils_settings_cast_t type, bool force);
-int utils_settings_remove(utils_settings_t* settings, const char* id, bool failsafe); // failsafe: an unknown id is not an error
-int utils_settings_clear(utils_settings_t* settings);
-bool utils_settings_contains(const utils_settings_t* settings, const char* id);
-utils_settings_cast_t utils_settings_get_type(const utils_settings_t* settings, const char* id); // C_API_SETTINGS_CAST_OTHER: unknown id (error) or a type without cast</code></pre><h3 id="c-23">Fonctions · Settings of the fixed types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_TYPES(C_API_SETTINGS_DECL)</code></pre><h3 id="c-24">Fonctions · Settings of the types of the casts</h3><p><em>settings of the types of the casts (strings: valid until the setting is changed, size: optional)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_SETTINGS_DECL(byte, uint8_t) // std::byte
+} utils_argparser_flag_option_t;</code></pre><h3 id="c-14">Fonctions · Argparser</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow _null_terminated_string_arg(1) _null_terminated_string_arg(2) utils_argparser_t* utils_argparser_create(const char* binary, const char* description); // NULL: "[None]" / "...", NULL on error
+_nothrow void utils_argparser_destroy(utils_argparser_t* parser); // NULL: nothing
+_nodiscard _nothrow int utils_argparser_help(const utils_argparser_t* parser); // display the help (help hook)</code></pre><h3 id="c-15">Fonctions · Parsing</h3><p><em>parsing (the first argument is ignored), the result: NULL on error (failsafe: no throw on invalid arguments, only the valid usages)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow utils_argparser_result_t* utils_argparser_parse(const utils_argparser_t* parser, int argc, const char* const* argv, bool failsafe);</code></pre><h3 id="c-16">Fonctions · Setup</h3><p><em>setup (force: override an existing one, else refused)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow int utils_argparser_set_default_usage(utils_argparser_t* parser); // "default": every flag &amp; option
+_nodiscard _nothrow _null_terminated_string_arg(2) _null_terminated_string_arg(3) _read_only(6, 7) _null_terminated_string_arg(8) int utils_argparser_set_usage(utils_argparser_t* parser, const char* id, const char* name, bool ordered, const char* const* ids, const bool* mandatory, size_t count, const char* description, bool force); // description: NULL = "[None]"
+_nodiscard _nothrow _null_terminated_string_arg(2) _null_terminated_string_arg(3) _null_terminated_string_arg(6) int utils_argparser_set_option(utils_argparser_t* parser, const char* id, const char* name, utils_argparser_check_t check, void* data, const char* description, bool force); // check: NULL = no check
+_nodiscard _nothrow _null_terminated_string_arg(2) _null_terminated_string_arg(3) _null_terminated_string_arg(4) _null_terminated_string_arg(5) _null_terminated_string_arg(6) _null_terminated_string_arg(9) int utils_argparser_set_flag(utils_argparser_t* parser, const char* id, const char* short_flag, const char* flag, const char* long_flag, const char* env, const utils_argparser_flag_option_t* options, size_t count, const char* description, bool unlimited, bool ignore_case, bool force); // NULL flag name: "" (not used)
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_argparser_remove_usage(utils_argparser_t* parser, const char* id);
+_nodiscard _nothrow int utils_argparser_remove_usages(utils_argparser_t* parser, const char* const* ids, size_t count);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_argparser_remove_option(utils_argparser_t* parser, const char* id);
+_nodiscard _nothrow int utils_argparser_remove_options(utils_argparser_t* parser, const char* const* ids, size_t count);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_argparser_remove_flag(utils_argparser_t* parser, const char* id);
+_nodiscard _nothrow int utils_argparser_remove_flags(utils_argparser_t* parser, const char* const* ids, size_t count);
+_nodiscard _nothrow int utils_argparser_reset_usages(utils_argparser_t* parser);
+_nodiscard _nothrow int utils_argparser_reset_options(utils_argparser_t* parser);
+_nodiscard _nothrow int utils_argparser_reset_flags(utils_argparser_t* parser);</code></pre><h3 id="c-17">Fonctions · Hooks</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow int utils_argparser_set_help_hook(utils_argparser_t* parser, utils_argparser_help_hook_t hook, void* data);
+_nodiscard _nothrow int utils_argparser_reset_help_hook(utils_argparser_t* parser);
+_nodiscard _nothrow int utils_argparser_default_help_hook(const utils_argparser_t* parser);</code></pre><h3 id="c-18">Fonctions · Default checks</h3><p><em>default checks (usable as a check callback, data ignored)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow _null_terminated_string_arg(1) int utils_argparser_check_true(const char* option, void* data); // always valid
+_nodiscard _nothrow _null_terminated_string_arg(1) int utils_argparser_check_bool(const char* option, void* data); // 0, 1, false, true
+_nodiscard _nothrow _null_terminated_string_arg(1) int utils_argparser_check_int32(const char* option, void* data);
+_nodiscard _nothrow _null_terminated_string_arg(1) int utils_argparser_check_sizet(const char* option, void* data);
+_nodiscard _nothrow _null_terminated_string_arg(1) int utils_argparser_check_double(const char* option, void* data);
+_nodiscard _nothrow _null_terminated_string_arg(1) int utils_argparser_check_file(const char* option, void* data); // readable file
+_nodiscard _nothrow _null_terminated_string_arg(1) int utils_argparser_check_directory(const char* option, void* data); // readable directory
+_nodiscard _nothrow _null_terminated_string_arg(1) int utils_argparser_check_writable(const char* option, void* data); // readable &amp; writable path</code></pre><h3 id="c-19">Fonctions · Setter / getter</h3><p><em>setter / getter (strings: valid until the parser is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow int utils_argparser_disable_help(utils_argparser_t* parser); // no default -h
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_argparser_set_binary(utils_argparser_t* parser, const char* binary);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_argparser_set_description(utils_argparser_t* parser, const char* description);
+_nodiscard _nothrow const char* utils_argparser_get_binary(const utils_argparser_t* parser);
+_nodiscard _nothrow const char* utils_argparser_get_description(const utils_argparser_t* parser);</code></pre><h3 id="c-20">Fonctions · Usages / options / flags of the parser</h3><p><em>usages / options / flags of the parser (index: any order, valid until the parser is changed)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow size_t utils_argparser_usages_count(const utils_argparser_t* parser);
+_nodiscard _nothrow const char* utils_argparser_usage_id(const utils_argparser_t* parser, size_t i);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_argparser_get_usage(const utils_argparser_t* parser, const char* id, const char** name, bool* ordered, const char** description); // each output: optional
+_nodiscard _nothrow _null_terminated_string_arg(2) size_t utils_argparser_usage_ids_count(const utils_argparser_t* parser, const char* id);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_argparser_usage_get_id(const utils_argparser_t* parser, const char* id, size_t i, const char** option_id, bool* mandatory);
+_nodiscard _nothrow size_t utils_argparser_options_count(const utils_argparser_t* parser);
+_nodiscard _nothrow const char* utils_argparser_option_id(const utils_argparser_t* parser, size_t i);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_argparser_get_option(const utils_argparser_t* parser, const char* id, const char** name, bool* exact, const char** description); // each output: optional
+_nodiscard _nothrow size_t utils_argparser_flags_count(const utils_argparser_t* parser);
+_nodiscard _nothrow const char* utils_argparser_flag_id(const utils_argparser_t* parser, size_t i);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_argparser_get_flag(const utils_argparser_t* parser, const char* id, const char** short_flag, const char** flag, const char** long_flag, const char** env, const char** description, bool* unlimited); // each output: optional
+_nodiscard _nothrow _null_terminated_string_arg(2) size_t utils_argparser_flag_options_count(const utils_argparser_t* parser, const char* id);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_argparser_flag_get_option(const utils_argparser_t* parser, const char* id, size_t i, const char** name, bool* mandatory);</code></pre><h3 id="c-21">Fonctions · Result of the parsing</h3><p><em>result of the parsing (one usage = an id &amp; its arguments: an option or a flag with its values)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nothrow void utils_argparser_result_destroy(utils_argparser_result_t* result); // NULL: nothing
+_nodiscard _nothrow size_t utils_argparser_result_count(const utils_argparser_result_t* result); // number of usages
+_nodiscard _nothrow const char* utils_argparser_result_usage(const utils_argparser_result_t* result, size_t i); // id of the usage i ("": nothing), NULL on error
+_nodiscard _nothrow size_t utils_argparser_result_arguments_count(const utils_argparser_result_t* result, size_t i);
+_nodiscard _nothrow const char* utils_argparser_result_argument_id(const utils_argparser_result_t* result, size_t i, size_t j); // NULL on error
+_nodiscard _nothrow bool utils_argparser_result_argument_is_option(const utils_argparser_result_t* result, size_t i, size_t j); // option (true) or flag (false)
+_nodiscard _nothrow size_t utils_argparser_result_values_count(const utils_argparser_result_t* result, size_t i, size_t j);
+_nodiscard _nothrow const char* utils_argparser_result_value(const utils_argparser_result_t* result, size_t i, size_t j, size_t k); // NULL on error</code></pre><h3 id="c-22">Fonctions · Settings</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow utils_settings_t* utils_settings_create(void); // NULL on error
+_nothrow void utils_settings_destroy(utils_settings_t* settings); // NULL: nothing
+_nodiscard _nothrow _null_terminated_string_arg(2) _null_terminated_string_arg(3) int utils_settings_auto_cast(utils_settings_t* settings, const char* id, const char* setting, bool force, utils_settings_cast_t* type); // type found &amp; stored (type: optional)
+_nodiscard _nothrow _null_terminated_string_arg(2) _null_terminated_string_arg(3) int utils_settings_cast(utils_settings_t* settings, const char* id, const char* setting, utils_settings_cast_t type, bool force);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_settings_remove(utils_settings_t* settings, const char* id, bool failsafe); // failsafe: an unknown id is not an error
+_nodiscard _nothrow int utils_settings_clear(utils_settings_t* settings);
+_nodiscard _nothrow _null_terminated_string_arg(2) bool utils_settings_contains(const utils_settings_t* settings, const char* id);
+_nodiscard _nothrow _null_terminated_string_arg(2) utils_settings_cast_t utils_settings_get_type(const utils_settings_t* settings, const char* id); // C_API_SETTINGS_CAST_OTHER: unknown id (error) or a type without cast</code></pre><h3 id="c-23">Fonctions · Settings of the fixed types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_TYPES(C_API_SETTINGS_DECL)</code></pre><h3 id="c-24">Fonctions · Settings of the types of the casts</h3><p><em>settings of the types of the casts (strings: valid until the setting is changed, size: optional)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">C_API_SETTINGS_DECL(byte, uint8_t) // std::byte
 C_API_SETTINGS_DECL(char8, uint8_t) // char8_t
 C_API_SETTINGS_DECL(char16, uint_least16_t) // char16_t
 C_API_SETTINGS_DECL(char32, uint_least32_t) // char32_t
 C_API_SETTINGS_DECL(wchar, wchar_t)
 C_API_SETTINGS_DECL(u8string, const char*) // std::u8string (utf-8)
 C_API_SETTINGS_DECL(path, const char*) // std::filesystem::path (the path given back: valid until the next utils_settings_get_path of the thread)
-int utils_settings_set_u16string(utils_settings_t* settings, const char* id, const uint_least16_t* str, size_t size, bool force); // std::u16string
-int utils_settings_get_u16string(const utils_settings_t* settings, const char* id, const uint_least16_t** str, size_t* size);
-bool utils_settings_is_u16string(const utils_settings_t* settings, const char* id);
-int utils_settings_set_u32string(utils_settings_t* settings, const char* id, const uint_least32_t* str, size_t size, bool force); // std::u32string
-int utils_settings_get_u32string(const utils_settings_t* settings, const char* id, const uint_least32_t** str, size_t* size);
-bool utils_settings_is_u32string(const utils_settings_t* settings, const char* id);
-int utils_settings_set_wstring(utils_settings_t* settings, const char* id, const wchar_t* str, size_t size, bool force); // std::wstring
-int utils_settings_get_wstring(const utils_settings_t* settings, const char* id, const wchar_t** str, size_t* size);
-bool utils_settings_is_wstring(const utils_settings_t* settings, const char* id);</code></pre><h3 id="c-25">Fonctions · Settings of bytes</h3><p><em>settings of bytes (generic: data + size, copied)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_settings_set_bytes(utils_settings_t* settings, const char* id, const void* data, size_t size, bool force);
-int utils_settings_get_bytes(const utils_settings_t* settings, const char* id, const void** data, size_t* size);
-bool utils_settings_is_bytes(const utils_settings_t* settings, const char* id);</code></pre></div></section><nav class="pager"><a href="cli.html"><span data-i18n>Previous</span><span data-lang="en">Cli</span><span data-lang="fr">Cli</span></a><a class="next" href="network.html"><span data-i18n>Next</span><span data-lang="en">Network</span><span data-lang="fr">Network</span></a></nav></main>
+_nodiscard _nothrow _null_terminated_string_arg(2) _read_only(3, 4) int utils_settings_set_u16string(utils_settings_t* settings, const char* id, const uint_least16_t* str, size_t size, bool force); // std::u16string
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_settings_get_u16string(const utils_settings_t* settings, const char* id, const uint_least16_t** str, size_t* size);
+_nodiscard _nothrow _null_terminated_string_arg(2) bool utils_settings_is_u16string(const utils_settings_t* settings, const char* id);
+_nodiscard _nothrow _null_terminated_string_arg(2) _read_only(3, 4) int utils_settings_set_u32string(utils_settings_t* settings, const char* id, const uint_least32_t* str, size_t size, bool force); // std::u32string
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_settings_get_u32string(const utils_settings_t* settings, const char* id, const uint_least32_t** str, size_t* size);
+_nodiscard _nothrow _null_terminated_string_arg(2) bool utils_settings_is_u32string(const utils_settings_t* settings, const char* id);
+_nodiscard _nothrow _null_terminated_string_arg(2) _read_only(3, 4) int utils_settings_set_wstring(utils_settings_t* settings, const char* id, const wchar_t* str, size_t size, bool force); // std::wstring
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_settings_get_wstring(const utils_settings_t* settings, const char* id, const wchar_t** str, size_t* size);
+_nodiscard _nothrow _null_terminated_string_arg(2) bool utils_settings_is_wstring(const utils_settings_t* settings, const char* id);</code></pre><h3 id="c-25">Fonctions · Settings of bytes</h3><p><em>settings of bytes (generic: data + size, copied)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow _null_terminated_string_arg(2) _read_only(3, 4) int utils_settings_set_bytes(utils_settings_t* settings, const char* id, const void* data, size_t size, bool force);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_settings_get_bytes(const utils_settings_t* settings, const char* id, const void** data, size_t* size);
+_nodiscard _nothrow _null_terminated_string_arg(2) bool utils_settings_is_bytes(const utils_settings_t* settings, const char* id);</code></pre></div></section><nav class="pager"><a href="cli.html"><span data-i18n>Previous</span><span data-lang="en">Cli</span><span data-lang="fr">Cli</span></a><a class="next" href="network.html"><span data-i18n>Next</span><span data-lang="en">Network</span><span data-lang="fr">Network</span></a></nav></main>
 </div>
-<footer class="site">libutils v5.0.0 · 23d2be3 · docs</footer>
+<footer class="site">libutils v5.1.0-pre · 780c01d · docs</footer>
 <script src="site.js"></script>
 <script src="search-index.js" defer></script>
 </body>

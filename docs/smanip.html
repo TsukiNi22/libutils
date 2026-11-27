@@ -10,7 +10,7 @@
 <a class="skip-link" href="#main" data-i18n>Skip to the content</a>
 <header class="topbar">
   <button class="icon-btn menu-btn" type="button" id="menuBtn" aria-label="Open the navigation" data-i18n-aria-label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
-  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v5.0.0</span></a>
+  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v5.1.0-pre</span></a>
   <nav class="tabs" aria-label="Pages" hidden></nav>
   <span class="spacer"></span>
   <div class="top-actions">
@@ -241,66 +241,66 @@ template&lt;typename T&gt; class IParser: private utils::security::observer::Obs
 };</code></pre></div></section><section id="c-api"><h2>7. <span data-lang="en">C API</span><span data-lang="fr">API C</span></h2><div data-lang="en"><p>Read from <code>include/utils/manip/smanip/CApi.h</code>, included by <code>&lt;utils.h&gt;</code> with the define of the section. Every function that can fail returns <code>UTILS_OK</code> / <code>UTILS_KO</code> (or <code>NULL</code> / <code>0</code>) and fills <code>utils_exception</code> (see <a href="c-api.html#errors">the C API guide</a>).</p><h3 id="c-1">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_string utils_string_t; // std::string (bytes, can hold '\0')
 typedef struct utils_codec utils_codec_t; // utils::smanip::codec::ICodec (Base64Codec or a codec of the C side)
 typedef struct utils_eetp_content utils_eetp_content_t; // utils::smanip::parser::EETPContent
-typedef struct utils_eetp_parser utils_eetp_parser_t; // utils::smanip::parser::EETPParser</code></pre><h3 id="c-2">Types · Codec of the C side</h3><p><em>codec of the C side: fill out (empty at the call) from the size bytes of in</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef int (*utils_codec_fn_t)(const char* in, size_t size, utils_string_t* out, void* data);</code></pre><h3 id="c-3">Functions · Byte string</h3><p><em>byte string (data: valid until the string is changed, always '\0' terminated)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_string_t* utils_string_create(const char* data, size_t size); // NULL / 0: empty, NULL on error
-void utils_string_destroy(utils_string_t* str); // NULL: nothing
-int utils_string_set(utils_string_t* str, const char* data, size_t size);
-int utils_string_append(utils_string_t* str, const char* data, size_t size);
-int utils_string_clear(utils_string_t* str);
-const char* utils_string_data(const utils_string_t* str); // NULL on error
-size_t utils_string_size(const utils_string_t* str);
-size_t utils_string_copy_r(const utils_string_t* str, char* buf, size_t size); // copied in buf (truncated, always '\0' terminated), returns the full length like snprintf (0 on error)</code></pre><h3 id="c-4">Functions · Format</h3><p><em>format (utils::smanip::format: "&lt;strong|italic&gt;text&lt;&gt;" -&gt; ANSI styles)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">const char* utils_smanip_format(const char* str); // valid until the next call in the thread (NULL on error)
-size_t utils_smanip_format_r(const char* str, char* buf, size_t size); // copied in buf (truncated, always '\0' terminated), returns the full length like snprintf (0 on error)</code></pre><h3 id="c-5">Functions · Codec</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_codec_t* utils_codec_create_base64(void); // utils::smanip::codec::Base64Codec, NULL on error
-utils_codec_t* utils_codec_create(utils_codec_fn_t encode, utils_codec_fn_t decode, void* data); // codec of the C side, NULL on error
-void utils_codec_destroy(utils_codec_t* codec); // NULL: nothing
-int utils_codec_encode(const utils_codec_t* codec, const char* in, size_t size, utils_string_t* out); // out replaced
-int utils_codec_decode(const utils_codec_t* codec, const char* in, size_t size, utils_string_t* out); // out replaced</code></pre><h3 id="c-6">Functions · EETP content</h3><p><em>EETP content (&lt;type&gt; + data parts)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_eetp_content_t* utils_eetp_content_create(const char* type); // NULL on error
-void utils_eetp_content_destroy(utils_eetp_content_t* content); // NULL: nothing
-int utils_eetp_content_set_type(utils_eetp_content_t* content, const char* type);
-const char* utils_eetp_content_get_type(const utils_eetp_content_t* content); // valid until content is changed (NULL on error)
-int utils_eetp_content_add_data(utils_eetp_content_t* content, const char* data, size_t size);
-int utils_eetp_content_clear_data(utils_eetp_content_t* content);
-size_t utils_eetp_content_data_count(const utils_eetp_content_t* content);
-const char* utils_eetp_content_get_data(const utils_eetp_content_t* content, size_t i, size_t* size); // valid until content is changed, size: optional (NULL on error)</code></pre><h3 id="c-7">Functions · EETP parser</h3><p><em>EETP parser (the codec given is owned by the parser on success: destroyed with it, never destroy / use it after)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_eetp_parser_t* utils_eetp_parser_create(void); // Base64Codec, type size 1 (needs the common RSA key ~/.ssh/common), NULL on error
-utils_eetp_parser_t* utils_eetp_parser_create_with(utils_codec_t* codec, size_t type_size); // NULL on error (the codec is still owned by the caller)
-void utils_eetp_parser_destroy(utils_eetp_parser_t* parser); // NULL: nothing
-int utils_eetp_parser_set_codec(utils_eetp_parser_t* parser, utils_codec_t* codec);
-int utils_eetp_parser_set_type_size(utils_eetp_parser_t* parser, size_t type_size); // at least 1
-bool utils_eetp_parser_has_id_overload(const utils_eetp_parser_t* parser);
-bool utils_eetp_parser_has_no_id_overload(const utils_eetp_parser_t* parser);
-int utils_eetp_parser_format(utils_eetp_parser_t* parser, const char* id, const utils_eetp_content_t* content, utils_string_t* out); // out replaced
-int utils_eetp_parser_parse(utils_eetp_parser_t* parser, const char* id, const char* in, size_t size, utils_eetp_content_t* out); // out replaced</code></pre></div><div data-lang="fr"><p>Lu dans <code>include/utils/manip/smanip/CApi.h</code>, inclus par <code>&lt;utils.h&gt;</code> avec le define de la section. Chaque fonction qui peut échouer renvoie <code>UTILS_OK</code> / <code>UTILS_KO</code> (ou <code>NULL</code> / <code>0</code>) et remplit <code>utils_exception</code> (voir <a href="c-api.html#errors">le guide de l'API C</a>).</p><h3 id="c-1">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_string utils_string_t; // std::string (bytes, can hold '\0')
+typedef struct utils_eetp_parser utils_eetp_parser_t; // utils::smanip::parser::EETPParser</code></pre><h3 id="c-2">Types · Codec of the C side</h3><p><em>codec of the C side: fill out (empty at the call) from the size bytes of in</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef int (*utils_codec_fn_t)(const char* in, size_t size, utils_string_t* out, void* data);</code></pre><h3 id="c-3">Functions · Byte string</h3><p><em>byte string (data: valid until the string is changed, always '\0' terminated)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow _read_only(1, 2) utils_string_t* utils_string_create(const char* data, size_t size); // NULL / 0: empty, NULL on error
+_nothrow void utils_string_destroy(utils_string_t* str); // NULL: nothing
+_nodiscard _nothrow _read_only(2, 3) int utils_string_set(utils_string_t* str, const char* data, size_t size);
+_nodiscard _nothrow _read_only(2, 3) int utils_string_append(utils_string_t* str, const char* data, size_t size);
+_nodiscard _nothrow int utils_string_clear(utils_string_t* str);
+_nodiscard _nothrow const char* utils_string_data(const utils_string_t* str); // NULL on error
+_nodiscard _nothrow size_t utils_string_size(const utils_string_t* str);
+_nodiscard _nothrow _write_only(2, 3) size_t utils_string_copy_r(const utils_string_t* str, char* buf, size_t size); // copied in buf (truncated, always '\0' terminated), returns the full length like snprintf (0 on error)</code></pre><h3 id="c-4">Functions · Format</h3><p><em>format (utils::smanip::format: "&lt;strong|italic&gt;text&lt;&gt;" -&gt; ANSI styles)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow _null_terminated_string_arg(1) const char* utils_smanip_format(const char* str); // valid until the next call in the thread (NULL on error)
+_nodiscard _nothrow _null_terminated_string_arg(1) _write_only(2, 3) size_t utils_smanip_format_r(const char* str, char* buf, size_t size); // copied in buf (truncated, always '\0' terminated), returns the full length like snprintf (0 on error)</code></pre><h3 id="c-5">Functions · Codec</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow utils_codec_t* utils_codec_create_base64(void); // utils::smanip::codec::Base64Codec, NULL on error
+_nodiscard _nothrow utils_codec_t* utils_codec_create(utils_codec_fn_t encode, utils_codec_fn_t decode, void* data); // codec of the C side, NULL on error
+_nothrow void utils_codec_destroy(utils_codec_t* codec); // NULL: nothing
+_nodiscard _nothrow _read_only(2, 3) int utils_codec_encode(const utils_codec_t* codec, const char* in, size_t size, utils_string_t* out); // out replaced
+_nodiscard _nothrow _read_only(2, 3) int utils_codec_decode(const utils_codec_t* codec, const char* in, size_t size, utils_string_t* out); // out replaced</code></pre><h3 id="c-6">Functions · EETP content</h3><p><em>EETP content (&lt;type&gt; + data parts)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow _null_terminated_string_arg(1) utils_eetp_content_t* utils_eetp_content_create(const char* type); // NULL on error
+_nothrow void utils_eetp_content_destroy(utils_eetp_content_t* content); // NULL: nothing
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_eetp_content_set_type(utils_eetp_content_t* content, const char* type);
+_nodiscard _nothrow const char* utils_eetp_content_get_type(const utils_eetp_content_t* content); // valid until content is changed (NULL on error)
+_nodiscard _nothrow _read_only(2, 3) int utils_eetp_content_add_data(utils_eetp_content_t* content, const char* data, size_t size);
+_nodiscard _nothrow int utils_eetp_content_clear_data(utils_eetp_content_t* content);
+_nodiscard _nothrow size_t utils_eetp_content_data_count(const utils_eetp_content_t* content);
+_nodiscard _nothrow const char* utils_eetp_content_get_data(const utils_eetp_content_t* content, size_t i, size_t* size); // valid until content is changed, size: optional (NULL on error)</code></pre><h3 id="c-7">Functions · EETP parser</h3><p><em>EETP parser (the codec given is owned by the parser on success: destroyed with it, never destroy / use it after)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow utils_eetp_parser_t* utils_eetp_parser_create(void); // Base64Codec, type size 1 (needs the common RSA key ~/.ssh/common), NULL on error
+_nodiscard _nothrow utils_eetp_parser_t* utils_eetp_parser_create_with(utils_codec_t* codec, size_t type_size); // NULL on error (the codec is still owned by the caller)
+_nothrow void utils_eetp_parser_destroy(utils_eetp_parser_t* parser); // NULL: nothing
+_nodiscard _nothrow int utils_eetp_parser_set_codec(utils_eetp_parser_t* parser, utils_codec_t* codec);
+_nodiscard _nothrow int utils_eetp_parser_set_type_size(utils_eetp_parser_t* parser, size_t type_size); // at least 1
+_nodiscard _nothrow bool utils_eetp_parser_has_id_overload(const utils_eetp_parser_t* parser);
+_nodiscard _nothrow bool utils_eetp_parser_has_no_id_overload(const utils_eetp_parser_t* parser);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_eetp_parser_format(utils_eetp_parser_t* parser, const char* id, const utils_eetp_content_t* content, utils_string_t* out); // out replaced
+_nodiscard _nothrow _null_terminated_string_arg(2) _read_only(3, 4) int utils_eetp_parser_parse(utils_eetp_parser_t* parser, const char* id, const char* in, size_t size, utils_eetp_content_t* out); // out replaced</code></pre></div><div data-lang="fr"><p>Lu dans <code>include/utils/manip/smanip/CApi.h</code>, inclus par <code>&lt;utils.h&gt;</code> avec le define de la section. Chaque fonction qui peut échouer renvoie <code>UTILS_OK</code> / <code>UTILS_KO</code> (ou <code>NULL</code> / <code>0</code>) et remplit <code>utils_exception</code> (voir <a href="c-api.html#errors">le guide de l'API C</a>).</p><h3 id="c-1">Types · Opaque types</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_string utils_string_t; // std::string (bytes, can hold '\0')
 typedef struct utils_codec utils_codec_t; // utils::smanip::codec::ICodec (Base64Codec or a codec of the C side)
 typedef struct utils_eetp_content utils_eetp_content_t; // utils::smanip::parser::EETPContent
-typedef struct utils_eetp_parser utils_eetp_parser_t; // utils::smanip::parser::EETPParser</code></pre><h3 id="c-2">Types · Codec of the C side</h3><p><em>codec of the C side: fill out (empty at the call) from the size bytes of in</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef int (*utils_codec_fn_t)(const char* in, size_t size, utils_string_t* out, void* data);</code></pre><h3 id="c-3">Fonctions · Byte string</h3><p><em>byte string (data: valid until the string is changed, always '\0' terminated)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_string_t* utils_string_create(const char* data, size_t size); // NULL / 0: empty, NULL on error
-void utils_string_destroy(utils_string_t* str); // NULL: nothing
-int utils_string_set(utils_string_t* str, const char* data, size_t size);
-int utils_string_append(utils_string_t* str, const char* data, size_t size);
-int utils_string_clear(utils_string_t* str);
-const char* utils_string_data(const utils_string_t* str); // NULL on error
-size_t utils_string_size(const utils_string_t* str);
-size_t utils_string_copy_r(const utils_string_t* str, char* buf, size_t size); // copied in buf (truncated, always '\0' terminated), returns the full length like snprintf (0 on error)</code></pre><h3 id="c-4">Fonctions · Format</h3><p><em>format (utils::smanip::format: "&lt;strong|italic&gt;text&lt;&gt;" -&gt; ANSI styles)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">const char* utils_smanip_format(const char* str); // valid until the next call in the thread (NULL on error)
-size_t utils_smanip_format_r(const char* str, char* buf, size_t size); // copied in buf (truncated, always '\0' terminated), returns the full length like snprintf (0 on error)</code></pre><h3 id="c-5">Fonctions · Codec</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_codec_t* utils_codec_create_base64(void); // utils::smanip::codec::Base64Codec, NULL on error
-utils_codec_t* utils_codec_create(utils_codec_fn_t encode, utils_codec_fn_t decode, void* data); // codec of the C side, NULL on error
-void utils_codec_destroy(utils_codec_t* codec); // NULL: nothing
-int utils_codec_encode(const utils_codec_t* codec, const char* in, size_t size, utils_string_t* out); // out replaced
-int utils_codec_decode(const utils_codec_t* codec, const char* in, size_t size, utils_string_t* out); // out replaced</code></pre><h3 id="c-6">Fonctions · EETP content</h3><p><em>EETP content (&lt;type&gt; + data parts)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_eetp_content_t* utils_eetp_content_create(const char* type); // NULL on error
-void utils_eetp_content_destroy(utils_eetp_content_t* content); // NULL: nothing
-int utils_eetp_content_set_type(utils_eetp_content_t* content, const char* type);
-const char* utils_eetp_content_get_type(const utils_eetp_content_t* content); // valid until content is changed (NULL on error)
-int utils_eetp_content_add_data(utils_eetp_content_t* content, const char* data, size_t size);
-int utils_eetp_content_clear_data(utils_eetp_content_t* content);
-size_t utils_eetp_content_data_count(const utils_eetp_content_t* content);
-const char* utils_eetp_content_get_data(const utils_eetp_content_t* content, size_t i, size_t* size); // valid until content is changed, size: optional (NULL on error)</code></pre><h3 id="c-7">Fonctions · EETP parser</h3><p><em>EETP parser (the codec given is owned by the parser on success: destroyed with it, never destroy / use it after)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">utils_eetp_parser_t* utils_eetp_parser_create(void); // Base64Codec, type size 1 (needs the common RSA key ~/.ssh/common), NULL on error
-utils_eetp_parser_t* utils_eetp_parser_create_with(utils_codec_t* codec, size_t type_size); // NULL on error (the codec is still owned by the caller)
-void utils_eetp_parser_destroy(utils_eetp_parser_t* parser); // NULL: nothing
-int utils_eetp_parser_set_codec(utils_eetp_parser_t* parser, utils_codec_t* codec);
-int utils_eetp_parser_set_type_size(utils_eetp_parser_t* parser, size_t type_size); // at least 1
-bool utils_eetp_parser_has_id_overload(const utils_eetp_parser_t* parser);
-bool utils_eetp_parser_has_no_id_overload(const utils_eetp_parser_t* parser);
-int utils_eetp_parser_format(utils_eetp_parser_t* parser, const char* id, const utils_eetp_content_t* content, utils_string_t* out); // out replaced
-int utils_eetp_parser_parse(utils_eetp_parser_t* parser, const char* id, const char* in, size_t size, utils_eetp_content_t* out); // out replaced</code></pre></div></section><nav class="pager"><a href="iomanip.html"><span data-i18n>Previous</span><span data-lang="en">IOManip</span><span data-lang="fr">IOManip</span></a><a class="next" href="algorithms.html"><span data-i18n>Next</span><span data-lang="en">Algorithms</span><span data-lang="fr">Algorithms</span></a></nav></main>
+typedef struct utils_eetp_parser utils_eetp_parser_t; // utils::smanip::parser::EETPParser</code></pre><h3 id="c-2">Types · Codec of the C side</h3><p><em>codec of the C side: fill out (empty at the call) from the size bytes of in</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef int (*utils_codec_fn_t)(const char* in, size_t size, utils_string_t* out, void* data);</code></pre><h3 id="c-3">Fonctions · Byte string</h3><p><em>byte string (data: valid until the string is changed, always '\0' terminated)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow _read_only(1, 2) utils_string_t* utils_string_create(const char* data, size_t size); // NULL / 0: empty, NULL on error
+_nothrow void utils_string_destroy(utils_string_t* str); // NULL: nothing
+_nodiscard _nothrow _read_only(2, 3) int utils_string_set(utils_string_t* str, const char* data, size_t size);
+_nodiscard _nothrow _read_only(2, 3) int utils_string_append(utils_string_t* str, const char* data, size_t size);
+_nodiscard _nothrow int utils_string_clear(utils_string_t* str);
+_nodiscard _nothrow const char* utils_string_data(const utils_string_t* str); // NULL on error
+_nodiscard _nothrow size_t utils_string_size(const utils_string_t* str);
+_nodiscard _nothrow _write_only(2, 3) size_t utils_string_copy_r(const utils_string_t* str, char* buf, size_t size); // copied in buf (truncated, always '\0' terminated), returns the full length like snprintf (0 on error)</code></pre><h3 id="c-4">Fonctions · Format</h3><p><em>format (utils::smanip::format: "&lt;strong|italic&gt;text&lt;&gt;" -&gt; ANSI styles)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow _null_terminated_string_arg(1) const char* utils_smanip_format(const char* str); // valid until the next call in the thread (NULL on error)
+_nodiscard _nothrow _null_terminated_string_arg(1) _write_only(2, 3) size_t utils_smanip_format_r(const char* str, char* buf, size_t size); // copied in buf (truncated, always '\0' terminated), returns the full length like snprintf (0 on error)</code></pre><h3 id="c-5">Fonctions · Codec</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow utils_codec_t* utils_codec_create_base64(void); // utils::smanip::codec::Base64Codec, NULL on error
+_nodiscard _nothrow utils_codec_t* utils_codec_create(utils_codec_fn_t encode, utils_codec_fn_t decode, void* data); // codec of the C side, NULL on error
+_nothrow void utils_codec_destroy(utils_codec_t* codec); // NULL: nothing
+_nodiscard _nothrow _read_only(2, 3) int utils_codec_encode(const utils_codec_t* codec, const char* in, size_t size, utils_string_t* out); // out replaced
+_nodiscard _nothrow _read_only(2, 3) int utils_codec_decode(const utils_codec_t* codec, const char* in, size_t size, utils_string_t* out); // out replaced</code></pre><h3 id="c-6">Fonctions · EETP content</h3><p><em>EETP content (&lt;type&gt; + data parts)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow _null_terminated_string_arg(1) utils_eetp_content_t* utils_eetp_content_create(const char* type); // NULL on error
+_nothrow void utils_eetp_content_destroy(utils_eetp_content_t* content); // NULL: nothing
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_eetp_content_set_type(utils_eetp_content_t* content, const char* type);
+_nodiscard _nothrow const char* utils_eetp_content_get_type(const utils_eetp_content_t* content); // valid until content is changed (NULL on error)
+_nodiscard _nothrow _read_only(2, 3) int utils_eetp_content_add_data(utils_eetp_content_t* content, const char* data, size_t size);
+_nodiscard _nothrow int utils_eetp_content_clear_data(utils_eetp_content_t* content);
+_nodiscard _nothrow size_t utils_eetp_content_data_count(const utils_eetp_content_t* content);
+_nodiscard _nothrow const char* utils_eetp_content_get_data(const utils_eetp_content_t* content, size_t i, size_t* size); // valid until content is changed, size: optional (NULL on error)</code></pre><h3 id="c-7">Fonctions · EETP parser</h3><p><em>EETP parser (the codec given is owned by the parser on success: destroyed with it, never destroy / use it after)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow utils_eetp_parser_t* utils_eetp_parser_create(void); // Base64Codec, type size 1 (needs the common RSA key ~/.ssh/common), NULL on error
+_nodiscard _nothrow utils_eetp_parser_t* utils_eetp_parser_create_with(utils_codec_t* codec, size_t type_size); // NULL on error (the codec is still owned by the caller)
+_nothrow void utils_eetp_parser_destroy(utils_eetp_parser_t* parser); // NULL: nothing
+_nodiscard _nothrow int utils_eetp_parser_set_codec(utils_eetp_parser_t* parser, utils_codec_t* codec);
+_nodiscard _nothrow int utils_eetp_parser_set_type_size(utils_eetp_parser_t* parser, size_t type_size); // at least 1
+_nodiscard _nothrow bool utils_eetp_parser_has_id_overload(const utils_eetp_parser_t* parser);
+_nodiscard _nothrow bool utils_eetp_parser_has_no_id_overload(const utils_eetp_parser_t* parser);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_eetp_parser_format(utils_eetp_parser_t* parser, const char* id, const utils_eetp_content_t* content, utils_string_t* out); // out replaced
+_nodiscard _nothrow _null_terminated_string_arg(2) _read_only(3, 4) int utils_eetp_parser_parse(utils_eetp_parser_t* parser, const char* id, const char* in, size_t size, utils_eetp_content_t* out); // out replaced</code></pre></div></section><nav class="pager"><a href="iomanip.html"><span data-i18n>Previous</span><span data-lang="en">IOManip</span><span data-lang="fr">IOManip</span></a><a class="next" href="algorithms.html"><span data-i18n>Next</span><span data-lang="en">Algorithms</span><span data-lang="fr">Algorithms</span></a></nav></main>
 </div>
-<footer class="site">libutils v5.0.0 · 23d2be3 · docs</footer>
+<footer class="site">libutils v5.1.0-pre · 780c01d · docs</footer>
 <script src="site.js"></script>
 <script src="search-index.js" defer></script>
 </body>
