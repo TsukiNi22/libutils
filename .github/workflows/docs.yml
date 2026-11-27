@@ -1,0 +1,66 @@
+name: Docs - Pages (CD)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+
+permissions:
+  contents: write
+
+jobs:
+  sync-docs:
+    runs-on: ${{ vars.RUNNER }}
+    defaults:
+      run:
+        shell: bash
+
+    container:
+      image: ghcr.io/tsukini22/git:latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+          path: main
+
+      - name: Checkout libutils - gh-pages
+        uses: actions/checkout@v5
+        with:
+          ref: gh-pages
+          path: gh-pages
+          fetch-depth: 1
+
+      - name: Sync docs/ into gh-pages
+        run: |
+          set -euo pipefail
+          rm -rf gh-pages/docs
+          cp -r main/docs gh-pages/docs
+          rm -rf gh-pages/docs/site # sources of the site (docs/site/build.sh): the built pages only
+          touch gh-pages/.nojekyll
+          echo "✓ docs/ copied ($(find gh-pages/docs -type f | wc -l) files)"
+
+      - name: Commit and push
+        working-directory: gh-pages
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          if git diff --cached --quiet; then
+            echo "No changes to sync."
+            exit 0
+          fi
+          git commit -m "docs(pages): update the documentation (${{ github.sha }})"
+          # gh-pages can move meanwhile (docs, packages or manual push): rebase on it and retry
+          for attempt in 1 2 3 4 5; do
+            if git push origin gh-pages; then
+              exit 0
+            fi
+            echo "Push refused: rebase on the new gh-pages and retry ($attempt/5)..."
+            git pull --rebase origin gh-pages
+          done
+          echo "::error title=Push::gh-pages not pushed after 5 attempts"
+          exit 1
