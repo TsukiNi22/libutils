@@ -18,7 +18,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [pre-release] (empty)
+## [pre-release]
+### Changed
+- A push that only changes `docs/` no longer runs `Dispatch (CI/CD)` (`Docs - Pages (CD)` publishes it)
+- The ccache keys of the workflows include the exception configs (`cmake/config/exceptions/**/*.json`)
+
+### Fixed
+- The pure C tests of the C API didn't link in `Asan` mode (no AddressSanitizer runtime at the link)
+- The unit tests failed in `Asan` mode: the leaks made on purpose by the leak detection tests are suppressed (`tests/lsan.supp`), the GPU tests (drivers not instrumented) and `HybridMemory.RamOverflow` (a failed `operator new` aborts under Asan) are skipped
+- The error annotations `Missing binary` / `Missing library` of the workflows were malformed
+- The install hint of the pre-commit hook ran the `setup.sh` of ai-utils (xstyle is installed by its own `setup.sh`)
+
+### Added
+- `Lint (CI)`: `shellcheck`, `actionlint` and `xstyle` (a `major` issue fails) on every push of `main`
+- The unit tests also run with the AddressSanitizer in the CI
+- `Release - GitHub (CD)`: the GitHub release of a `v*` tag, its notes = the section of the tag in the `CHANGELOG.md`, the packages attached
+- `Docs - Pages (CD)`: the built documentation (`docs/` without `docs/site/`) copied on `gh-pages` at each push changing it
+- `Build - Packages (CI/CD)` refuses a tag whose version is not `project(... VERSION)` and retries the push on `gh-pages` (rebase, 5 attempts)
+- The `make` targets `debug`, `asan`, `optimized`, `tests`, `release`, `package` and `install`
 
 ## [v5.0.0] - 2026-11-26
 ### Changed
