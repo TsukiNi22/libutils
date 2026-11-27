@@ -251,13 +251,13 @@ docs/site/build.sh --check    # + links, accessibility, style and search checks
 ## Workflows/Release
 ### Workflows
 `Dispatch (CI/CD)` picks the jobs on each push to `main` or a `v*` tag; a commit with `[ignore]` skips the CI.
-The 4 workflows and the downstream notification: [`readme/workflows.md`](readme/workflows.md).
+The 7 workflows (lint, tests with ASan, packages, GitHub release, docs) and the downstream notification: [`readme/workflows.md`](readme/workflows.md).
 
 ### Pre-Release (unstable)
 - a tag `vX.Y.Z-<suffix>` (ex: `v5.0.1-pre`), or a commit with `[build]`
 
 ### Release (stable)
-- a tag `vX.Y.Z` only
+- a tag `vX.Y.Z` only: stable packages and the GitHub release (notes = its `CHANGELOG.md` section)
 
 ## License
 [MIT](LICENSE), except `include/utils/algorithms/`: [CC BY-NC-SA 4.0](include/utils/algorithms/LICENSE.md) (commercial use: ask the author).
