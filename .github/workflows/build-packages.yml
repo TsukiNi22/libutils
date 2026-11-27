@@ -34,6 +34,20 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Check the version of the tag
+        if: github.ref_type == 'tag'
+        run: |
+          set -euo pipefail
+          # A tag vX.Y.Z / vX.Y.Z-<suffix> publishes the packages of project(... VERSION X.Y.Z): both must match
+          VERSION="$(sed -nE 's/^project\(.*VERSION ([0-9]+(\.[0-9]+)*).*/\1/p' CMakeLists.txt | head -1)"
+          TAG="${GITHUB_REF_NAME#v}"
+          TAG="${TAG%%-*}"
+          if [ "$VERSION" != "$TAG" ]; then
+            echo "::error title=Version mismatch,file=CMakeLists.txt::tag $GITHUB_REF_NAME but project(... VERSION $VERSION) in the CMakeLists.txt: update the version, then move the tag"
+            exit 1
+          fi
+          echo "✓ tag $GITHUB_REF_NAME = project version $VERSION"
+
       - name: Cache ccache
         uses: actions/cache@v5
         with:
