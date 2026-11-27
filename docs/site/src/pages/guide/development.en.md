@@ -15,6 +15,7 @@ For working on libutils itself: the build types and targets, the tests and the p
 | `cmake -S . -B build -DCMAKE_BUILD_TYPE=Optimized\|Debug\|Asan` | `libutils.a` / `libutils_debug.a` / `libutils_asan.a` |
 | `cmake --build build --target release` | The 3 libraries |
 | `cmake --build build --target package_release` | Every RPM / DEB / Arch (`.pkg.tar.zst`, with `bsdtar`) package |
+| `make debug` / `asan` / `optimized` / `tests` / `release` / `package` / `install` | The same commands from the `Makefile` (build in `build/`, `make tests` = Debug + `ctest`) |
 | `-DCMAKE_TOOLCHAIN_FILE=...` | The Windows build with `cmake/toolchain/mingw-w64.cmake` ([Windows](page:windows)) |
 
 The exception codes of `cmake/config/exceptions/**/*.json` are turned into `generated_internal_exception_header.hpp` at the build, and `utils/version.hpp` / `utils/version.h` are written in `build/generated/`.
@@ -31,6 +32,7 @@ ctest --test-dir $BUILD_DIR --output-on-failure --timeout 30   # or ./unit_tests
 - GoogleTest, one file per module in `tests/` (the C API of a section in `tests/<section>/CApi.cpp`).
 - `tests/c/CApi.c` is a pure C program built in C11 and C23 (`c_api_c11`, `c_api_c23` in `build/tests/`), run by `ctest` (`CApi.C11`, `CApi.C23`).
 - The GPU libraries are loaded at runtime by `HybridMemory`: the backend tests are skipped without GPU.
+- In `Asan` mode (like the CI): the leaks made on purpose by the leak detection tests are suppressed (`tests/lsan.supp`), the GPU tests and `HybridMemory.RamOverflow` are skipped (the drivers are not instrumented, a failed `operator new` aborts instead of throwing).
 
 ## Pre-commit hook {#hook}
 

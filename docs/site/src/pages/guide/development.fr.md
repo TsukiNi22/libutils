@@ -13,6 +13,7 @@ Pour travailler sur libutils elle-même : les types de build et les cibles, les 
 | `cmake -S . -B build -DCMAKE_BUILD_TYPE=Optimized\|Debug\|Asan` | `libutils.a` / `libutils_debug.a` / `libutils_asan.a` |
 | `cmake --build build --target release` | Les 3 bibliothèques |
 | `cmake --build build --target package_release` | Tous les paquets RPM / DEB / Arch (`.pkg.tar.zst`, avec `bsdtar`) |
+| `make debug` / `asan` / `optimized` / `tests` / `release` / `package` / `install` | Les mêmes commandes depuis le `Makefile` (build dans `build/`, `make tests` = Debug + `ctest`) |
 | `-DCMAKE_TOOLCHAIN_FILE=...` | Le build Windows avec `cmake/toolchain/mingw-w64.cmake` ([Windows](page:windows)) |
 
 Les codes d'exception de `cmake/config/exceptions/**/*.json` sont transformés en `generated_internal_exception_header.hpp` au build, et `utils/version.hpp` / `utils/version.h` sont écrits dans `build/generated/`.
@@ -29,6 +30,7 @@ ctest --test-dir $BUILD_DIR --output-on-failure --timeout 30   # or ./unit_tests
 - GoogleTest, un fichier par module dans `tests/` (l'API C d'une section dans `tests/<section>/CApi.cpp`).
 - `tests/c/CApi.c` est un programme en C pur compilé en C11 et C23 (`c_api_c11`, `c_api_c23` dans `build/tests/`), lancé par `ctest` (`CApi.C11`, `CApi.C23`).
 - Les bibliothèques GPU sont chargées à l'exécution par `HybridMemory` : les tests des backends sont ignorés sans GPU.
+- En mode `Asan` (comme la CI) : les fuites volontaires des tests de détection de fuite sont supprimées (`tests/lsan.supp`), les tests GPU et `HybridMemory.RamOverflow` sont ignorés (les pilotes ne sont pas instrumentés, un `operator new` qui échoue avorte au lieu de lever une exception).
 
 ## Hook pre-commit {#hook}
 
