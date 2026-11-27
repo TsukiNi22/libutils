@@ -35,7 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - The pure C tests of the C API didn't link in `Asan` mode (no AddressSanitizer runtime at the link)
-- The unit tests failed in `Asan` mode: the leaks made on purpose by the leak detection tests are suppressed (`tests/lsan.supp`), the GPU tests (drivers not instrumented) and `HybridMemory.RamOverflow` (a failed `operator new` aborts under Asan) are skipped
+- The unit tests failed in `Asan` mode: the leaks made on purpose by the leak detection tests are not reported (`tests::tools::ScopedLeak` disables LeakSanitizer for them, a suppression file needs a symbolizer the CI image doesn't have), the GPU tests (drivers not instrumented) and `HybridMemory.RamOverflow` (a failed `operator new` aborts under Asan) are skipped
+- `utils_observer_create` leaked its handle when the instance was `NULL` (found by the Asan run)
 - The error annotations `Missing binary` / `Missing library` of the workflows were malformed
 - The install hint of the pre-commit hook ran the `setup.sh` of ai-utils (xstyle is installed by its own `setup.sh`)
 
