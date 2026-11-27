@@ -1,4 +1,0 @@
-# LeakSanitizer suppressions of the unit tests (Asan mode, set by tests/CMakeLists.txt)
-# The leak detection tests leak on purpose: the observers must report them
-leak:_DetectsLeak_Test::TestBody
-leak:SecurityCApiTest_ObserverOfTheCSideIsReported_Test::TestBody

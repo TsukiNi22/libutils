@@ -285,9 +285,10 @@ _cold _nothrow bool utils_rsa_key_has_get_overload(const utils_rsa_key_t* key)
 _cold _nothrow utils_observer_t* utils_observer_create(const char* instance, bool safe_mode)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_observer_t* {
+        const char* name = utils::exception::c_api::not_null(instance, "instance"); // before the new: a NULL instance leaked the handle
         utils_observer_t* observer = new utils_observer_t();
 
-        observer->instance = utils::exception::c_api::not_null(instance, "instance");
+        observer->instance = name;
         observer->safe = safe_mode;
         try {
             link(*observer);
