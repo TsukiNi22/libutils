@@ -1,0 +1,84 @@
+name: Lint (CI)
+
+on:
+  push:
+    branches: [main]
+
+env:
+  ACTIONLINT_VERSION: "1.7.7"
+
+jobs:
+  lint:
+    # A tool that cannot be installed is a warning (step skipped), an issue found is an error
+    if: "!contains(github.event.head_commit.message, '[ignore]')"
+
+    runs-on: ${{ vars.RUNNER }}
+    defaults:
+      run:
+        shell: bash
+
+    container:
+      image: ghcr.io/tsukini22/ci:latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - name: Shell scripts (shellcheck)
+        run: |
+          set -euo pipefail
+          command -v shellcheck > /dev/null || dnf install -y ShellCheck || true
+          if ! command -v shellcheck > /dev/null; then
+            echo "::warning title=shellcheck::shellcheck not installed: shell scripts not checked"
+            exit 0
+          fi
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          mapfile -t scripts < <(git ls-files '*.sh' '.githooks/*')
+          if [ "${#scripts[@]}" -eq 0 ]; then
+            echo "No shell script."
+            exit 0
+          fi
+          shellcheck -S warning "${scripts[@]}"
+          echo "✓ ${#scripts[@]} shell script(s) ok"
+
+      - name: Workflows (actionlint)
+        if: always()
+        run: |
+          set -euo pipefail
+          if ! command -v actionlint > /dev/null; then
+            curl -fsSL "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz" \
+              | tar -xz -C /usr/local/bin actionlint || true
+          fi
+          if ! command -v actionlint > /dev/null; then
+            echo "::warning title=actionlint::actionlint not installed: workflows not checked"
+            exit 0
+          fi
+          mapfile -t workflows < <(find .github/workflows gh-pages/.github/workflows -name "*.yml" 2> /dev/null | sort)
+          # Workflow syntax, expressions and action inputs only: the run scripts are not sent to shellcheck / pyflakes
+          actionlint -shellcheck= -pyflakes= "${workflows[@]}"
+          echo "✓ ${#workflows[@]} workflow(s) ok"
+
+      - name: Coding style (xstyle)
+        if: always()
+        run: |
+          set -euo pipefail
+          if ! command -v xstyle > /dev/null; then
+            # Package repository of xstyle (Fedora)
+            cat > /etc/yum.repos.d/xstyle.repo << 'EOF'
+          [xstyle]
+          name=xstyle
+          baseurl=https://tsukini22.github.io/xstyle/fedora/$releasever/$basearch
+          enabled=1
+          gpgcheck=1
+          gpgkey=https://tsukini22.github.io/xstyle/RPM-GPG-KEY-tsukini
+          EOF
+            dnf install -y xstyle || true
+          fi
+          if ! command -v xstyle > /dev/null; then
+            echo "::warning title=xstyle::xstyle not installed: coding style not checked"
+            exit 0
+          fi
+          # Same exclusions as the pre-commit hook (.githooks/pre-commit), refuses a major (or worse) issue
+          xstyle --no-color --r34 -r . -e build,_deps,third_party,include/utils/algorithms -F major
