@@ -198,7 +198,7 @@ _hot int utils::platform::epoll_wait(int epfd, struct epoll_event* events, int m
                             removed = true;
                         }
                     }
-                    if (!removed) {errno = EINVAL; return -1;}
+                    if (!removed) _unlikely {errno = EINVAL; return -1;}
                     continue;
                 }
             }

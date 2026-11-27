@@ -233,7 +233,7 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
         _cold void init(const std::string& name, std::size_t size = 1, std::size_t queue = 1) // size/queue ignored in 'client' mode | size is only for a single section, real size: sizeof(IdHandler lock) + (size + sizeof(metadata)) * queue
         {
             if constexpr (create && !forced) {
-                if (size == 0) throw utils::exception::ErrorException(utils::exception::InternalCode::InvalidArgument, "Why? Do you want to create a empty memory??? (required: size > 0)");
+                if (size == 0) _unlikely {throw utils::exception::ErrorException(utils::exception::InternalCode::InvalidArgument, "Why? Do you want to create a empty memory??? (required: size > 0)");}
             }
 
             // setup

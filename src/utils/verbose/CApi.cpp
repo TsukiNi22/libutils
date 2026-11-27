@@ -55,7 +55,7 @@ _hot _nodiscard static bool displayed(const utils_verbose_t level)
 }
 
 // printf of the C side in a std::string
-_cold _nodiscard static std::string vformat(const char* fmt, va_list args)
+_cold _nodiscard _format(printf, 1, 0) static std::string vformat(const char* fmt, va_list args)
 {
     va_list copy;
     int len = 0;

@@ -177,7 +177,7 @@ class Cli: private utils::security::observer::Observer<"Cli"> {
         {
             std::unique_lock lock(this->_commandsLock);
             if constexpr (!force) {
-                if (this->_parsedCommands.contains(command))
+                if (this->_parsedCommands.contains(command)) _unlikely
                     throw utils::exception::ErrorException(utils::exception::InternalCode::Override, std::string("This command is already defined (parsed): ") + command);
             }
             this->_parsedCommands[command] = tup;
@@ -187,7 +187,7 @@ class Cli: private utils::security::observer::Observer<"Cli"> {
         {
             std::unique_lock lock(this->_commandsLock);
             if constexpr (!force) {
-                if (this->_rawCommands.contains(command))
+                if (this->_rawCommands.contains(command)) _unlikely
                     throw utils::exception::ErrorException(utils::exception::InternalCode::Override, std::string("This command is already defined (raw): ") + command);
             }
             this->_rawCommands[command] = fn;
@@ -198,7 +198,7 @@ class Cli: private utils::security::observer::Observer<"Cli"> {
             std::unique_lock lock(this->_commandsLock);
             for (const auto &[command, tup]: commands) {
                 if constexpr (!force) {
-                    if (this->_parsedCommands.contains(command))
+                    if (this->_parsedCommands.contains(command)) _unlikely
                         throw utils::exception::ErrorException(utils::exception::InternalCode::Override, std::string("This command is already defined (parsed): ") + command);
                 }
                 this->_parsedCommands[command] = tup;
@@ -210,7 +210,7 @@ class Cli: private utils::security::observer::Observer<"Cli"> {
             std::unique_lock lock(this->_commandsLock);
             for (const auto &[command, fn]: commands) {
                 if constexpr (!force) {
-                    if (this->_rawCommands.contains(command))
+                    if (this->_rawCommands.contains(command)) _unlikely
                         throw utils::exception::ErrorException(utils::exception::InternalCode::Override, std::string("This command is already defined (raw): ") + command);
                 }
                 this->_rawCommands[command] = fn;

@@ -130,16 +130,16 @@ _cold _nodiscard utils::iomanip::MouseEvent utils::iomanip::read_mouse_event(voi
         else if (!header.empty()) header += c;
         if (header.size() > 3) header.clear();
     }
-    if (header != "\x1b[M")
+    if (header != "\x1b[M") _unlikely
         throw utils::exception::ErrorException(utils::exception::InternalCode::ANSIMouseEvent, header.empty() ? "No mouse sequence received" : "Invalid classic mouse format");
 
     // Get the 3 raw bytes: button, x, y
     unsigned char data[3] = {0, 0, 0};
     for (std::size_t i = 0; i < 3; ++i) {
-        if (!std::cin.get(c))
+        if (!std::cin.get(c)) _unlikely
             throw utils::exception::ErrorException(utils::exception::InternalCode::ANSIMouseEvent, "Mouse sequence too short");
         data[i] = static_cast<unsigned char>(c);
-        if (data[i] < 32)
+        if (data[i] < 32) _unlikely
             throw utils::exception::ErrorException(utils::exception::InternalCode::ANSIMouseEvent, "Invalid classic mouse value (each value is sent + 32)");
     }
     int cb = data[0] - 32;
@@ -174,11 +174,11 @@ _cold _nodiscard utils::iomanip::AdvancedMouseEvent utils::iomanip::read_advance
     }
 
     // Check the buffer
-    if (buffer.empty())
+    if (buffer.empty()) _unlikely
         throw utils::exception::ErrorException(utils::exception::InternalCode::ANSIMouseEvent, "No mouse sequence received");
-    if (buffer.size() < 8)
+    if (buffer.size() < 8) _unlikely
         throw utils::exception::ErrorException(utils::exception::InternalCode::ANSIMouseEvent, "Mouse sequence too short");
-    if (buffer.find("[<") == std::string::npos)
+    if (buffer.find("[<") == std::string::npos) _unlikely
         throw utils::exception::ErrorException(utils::exception::InternalCode::ANSIMouseEvent, "Invalid SGR mouse format");
 
     // Button status
@@ -194,13 +194,13 @@ _cold _nodiscard utils::iomanip::AdvancedMouseEvent utils::iomanip::read_advance
     // Get the different data
     int cb = 0;
     try {
-        if (!std::getline(ss, token, ';'))
+        if (!std::getline(ss, token, ';')) _unlikely
             throw std::runtime_error("Missing button field");
         cb = std::stoi(token);
-        if (!std::getline(ss, token, ';'))
+        if (!std::getline(ss, token, ';')) _unlikely
             throw std::runtime_error("Missing X field");
         event.x = std::stoul(token);
-        if (!std::getline(ss, token, ';'))
+        if (!std::getline(ss, token, ';')) _unlikely
             throw std::runtime_error("Missing Y field");
         event.y = std::stoul(token);
     } catch (const std::exception& e) {

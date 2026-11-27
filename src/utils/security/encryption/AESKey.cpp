@@ -61,7 +61,7 @@ _hot _nodiscard std::string utils::security::encryption::AESKey::encrypt(const s
 
     // Init the context
     EVP_CIPHER_CTX* context = EVP_CIPHER_CTX_new();
-    if (!context)
+    if (!context) _unlikely
         throw utils::exception::ErrorException(utils::exception::InternalCode::Encryption, "Error during the creation of the AES context");
     if (!EVP_EncryptInit_ex(context, EVP_aes_256_gcm(), nullptr, nullptr, nullptr)
         || EVP_CIPHER_CTX_ctrl(context, EVP_CTRL_GCM_SET_IVLEN, static_cast<int>(iv.size()), nullptr) != 1
@@ -113,7 +113,7 @@ _hot _nodiscard std::string utils::security::encryption::AESKey::decrypt(const s
 
     // Init the context
     EVP_CIPHER_CTX* context = EVP_CIPHER_CTX_new();
-    if (!context)
+    if (!context) _unlikely
         throw utils::exception::ErrorException(utils::exception::InternalCode::Decryption, "Error during the creation of the AES context");
     if (!EVP_DecryptInit_ex(context, EVP_aes_256_gcm(), nullptr, nullptr, nullptr)
         || EVP_CIPHER_CTX_ctrl(context, EVP_CTRL_GCM_SET_IVLEN, static_cast<int>(iv.size()), nullptr) != 1

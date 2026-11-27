@@ -72,9 +72,9 @@ _cold void utils::network::Server::start(void)
     std::lock_guard lock(this->_lock);
 
     // Check status
-    if (this->_status == utils::network::Status::Up) {
+    if (this->_status == utils::network::Status::Up) _unlikely {
         throw utils::exception::WarningException(utils::exception::InternalCode::AlreadyRunning);
-    } else if (this->_status == utils::network::Status::Terminated) {
+    } else if (this->_status == utils::network::Status::Terminated) _unlikely {
         throw utils::exception::WarningException(utils::exception::InternalCode::Killed);
     }
     onBasicVerbose("Starting server...");

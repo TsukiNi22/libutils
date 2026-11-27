@@ -153,7 +153,7 @@ _hot void utils::cli::Cli::launch_(const std::size_t call)
             }
         }
     } catch (const utils::exception::NoneException& e) { // Catch exit throw
-        if (e.getCode() != utils::exception::InternalCode::Exit)
+        if (e.getCode() != utils::exception::InternalCode::Exit) _unlikely
             throw; // _running is reset by start (last access to the cli)
     }
 
@@ -506,9 +506,9 @@ _hot void utils::cli::Cli::exec_(const utils::cli::ParsedData& parsedInput)
                 if (parsedFn) { // Check the command existense
                     // Check commands arguments number (-1 = no limit), size = <command> <command> [args...] <separator>
                     const std::int16_t args = static_cast<std::int16_t>(command.size()) - 1 - 2;
-                    if (min != -1 && args < min)
+                    if (min != -1 && args < min) _unlikely
                         throw utils::exception::ErrorException(utils::exception::InternalCode::CliParser, "Not enough arguments");
-                    else if (max != -1 && args > max)
+                    else if (max != -1 && args > max) _unlikely
                         throw utils::exception::ErrorException(utils::exception::InternalCode::CliParser, "Too many arguments");
                     parsedFn(*this, std::vector<std::string>(command.begin() + 1, command.end() - 1));
                 } else
@@ -547,7 +547,7 @@ _hot void utils::cli::Cli::exec_(const utils::cli::ParsedData& parsedInput)
             throw;
         } catch (const std::exception& e) {
             lastExceptionInfo = std::string("Callback exception: ") + e.what();
-            if (!(this->_flags & utils::cli::Flag::CATCH))
+            if (!(this->_flags & utils::cli::Flag::CATCH)) _unlikely
                 throw utils::exception::ErrorException(utils::exception::InternalCode::CliExecution, lastExceptionInfo);
             status = 3;
         }

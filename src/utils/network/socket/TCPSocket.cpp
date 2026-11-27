@@ -49,7 +49,7 @@ _cold void utils::network::TCPSocket::connect(const utils::network::Address& add
 
     // Init the socket
     onAdvancedVerbose("Socket initialisation...");
-    if ((this->_fd = utils::platform::socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    if ((this->_fd = utils::platform::socket(AF_INET, SOCK_STREAM, 0)) < 0) _unlikely
         throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, utils::platform::strerror(errno));
 
     // Any error after the creation: close the socket
@@ -59,7 +59,7 @@ _cold void utils::network::TCPSocket::connect(const utils::network::Address& add
         sockaddr_in addr{};
         addr.sin_family = AF_INET;
         addr.sin_port = ::htons(address.port);
-        if (::inet_pton(AF_INET, address.ip.first.c_str(), &addr.sin_addr) != 1)
+        if (::inet_pton(AF_INET, address.ip.first.c_str(), &addr.sin_addr) != 1) _unlikely
             throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, "Invalid ip given, can't convert it, excepted ipv4: x.x.x.x");
 
         // Setup the timeout
@@ -67,7 +67,7 @@ _cold void utils::network::TCPSocket::connect(const utils::network::Address& add
         tv.tv_sec = SOCKET_TIMEOUT;
         tv.tv_usec = 0;
         onAdvancedVerbose("Setup of the socket's parameters...");
-        if (utils::platform::setsockopt(this->_fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) < 0)
+        if (utils::platform::setsockopt(this->_fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) < 0) _unlikely
             throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, utils::platform::strerror(errno));
 
         // Bind the socket with the parameter
@@ -100,7 +100,7 @@ _cold void utils::network::TCPSocket::listen(const utils::network::Address& addr
 
     // Init the socket
     onAdvancedVerbose("Socket initialisation...");
-    if ((this->_fd = utils::platform::socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    if ((this->_fd = utils::platform::socket(AF_INET, SOCK_STREAM, 0)) < 0) _unlikely
         throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, utils::platform::strerror(errno));
 
     // Any error after the creation: close the socket
@@ -108,7 +108,7 @@ _cold void utils::network::TCPSocket::listen(const utils::network::Address& addr
         // Setup port to accept a reuse of the server before the tcp cooldown/TIME_WAIT
         int opt = 1;
         onAdvancedVerbose("Setup of the socket's parameters...");
-        if (utils::platform::setsockopt(this->_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
+        if (utils::platform::setsockopt(this->_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) _unlikely
             throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, utils::platform::strerror(errno));
 
         // Setup the sockaddr_in
@@ -119,12 +119,12 @@ _cold void utils::network::TCPSocket::listen(const utils::network::Address& addr
 
         // Bind the socket with the parameter
         onAdvancedVerbose("Binding of the socket...");
-        if (utils::platform::bind(this->_fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) < 0)
+        if (utils::platform::bind(this->_fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) < 0) _unlikely
             throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, utils::platform::strerror(errno));
         onBasicVerbose("Server started!");
 
         // Init the listen of the server
-        if (utils::platform::listen(this->_fd, SOMAXCONN) < 0)
+        if (utils::platform::listen(this->_fd, SOMAXCONN) < 0) _unlikely
             throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, utils::platform::strerror(errno));
     } catch (...) {
         utils::platform::close(this->_fd);

@@ -96,7 +96,7 @@ class ArgParser: private utils::security::observer::Observer<"ArgParser"> {
         _cold void setUsage(const std::string& id, const std::string& name, const bool ordered, const std::vector<std::pair<std::string, bool>>& ids, const std::string& description = "[None]")
         {
             if constexpr (!force) {
-                if (this->_usages.contains(id))
+                if (this->_usages.contains(id)) _unlikely
                     throw utils::exception::ErrorException(utils::exception::InternalCode::Override, std::string("An option with this id is already defined: ") + id);
             }
             this->_usages[id] = utils::arguments::Usage{name, ordered, ids, description};
@@ -106,7 +106,7 @@ class ArgParser: private utils::security::observer::Observer<"ArgParser"> {
         _cold void setOption(const std::string& id, const std::string& name, std::function<std::optional<std::string>(const std::string&)> check, const std::string& description = "[None]")
         {
             if constexpr (!force) {
-                if (this->_options.contains(id) || this->_flags.contains(id))
+                if (this->_options.contains(id) || this->_flags.contains(id)) _unlikely
                     throw utils::exception::ErrorException(utils::exception::InternalCode::Override, std::string("An option/flag with this id is already defined: ") + id);
             }
             this->_options[id] = utils::arguments::Option{name, false, check, description};
@@ -115,7 +115,7 @@ class ArgParser: private utils::security::observer::Observer<"ArgParser"> {
         _cold void setOption(const std::string& id, const std::string& name, const std::string& description = "[None]")
         {
             if constexpr (!force) {
-                if (this->_options.contains(id) || this->_flags.contains(id))
+                if (this->_options.contains(id) || this->_flags.contains(id)) _unlikely
                     throw utils::exception::ErrorException(utils::exception::InternalCode::Override, std::string("An option/flag with this id is already defined: ") + id);
             }
             this->_options[id] = utils::arguments::Option{name, true, utils::arguments::defaultTrueParsingHook, description};
@@ -125,10 +125,10 @@ class ArgParser: private utils::security::observer::Observer<"ArgParser"> {
         _cold void setFlag(const std::string& id, const std::tuple<std::string, std::string, std::string, std::string>& flag, const std::vector<std::tuple<std::string, bool, std::function<std::optional<std::string>(const std::string&)>>>& options, const std::string& description = "[None]", const bool unlimited = false, const bool ignore_case = false)
         {
             if constexpr (!force) {
-                if (this->_flags.contains(id) || this->_options.contains(id))
+                if (this->_flags.contains(id) || this->_options.contains(id)) _unlikely
                     throw utils::exception::ErrorException(utils::exception::InternalCode::Override, std::string("A flag/option with this id is already defined: ") + id);
             }
-            if (unlimited && options.empty()) {
+            if (unlimited && options.empty()) _unlikely {
                 throw utils::exception::ErrorException(utils::exception::InternalCode::FlagOption, "An unlimited flag must have at least one option: " + id);
             }
             this->_flags[id] = utils::arguments::Flag{flag, {unlimited, ignore_case}, options, description};

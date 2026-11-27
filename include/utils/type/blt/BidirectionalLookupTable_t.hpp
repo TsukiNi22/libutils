@@ -82,7 +82,7 @@ class BidirectionalLookupTable<T, T, Hash, Hash, Equal, Equal>: public utils::ty
         {
             this->requireUnfrozen();
             if constexpr (!force) {
-                if (this->_table.contains(left) || this->_table.contains(right))
+                if (this->_table.contains(left) || this->_table.contains(right)) _unlikely
                     throw utils::exception::ErrorException(utils::exception::InternalCode::Override, "The override is disabled for the BidirectionalLookupTable");
             } else {
                 // Remove the old pairs to not keep a dangling reverse link

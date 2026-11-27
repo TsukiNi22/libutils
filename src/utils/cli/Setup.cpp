@@ -69,7 +69,7 @@ utils::cli::Cli::Cli(const bool sig)
     this->loadHistory_();
 }
 
-utils::cli::Cli::~Cli()
+_cold utils::cli::Cli::~Cli()
 {
     // Stop a running cli (thread) before destroying what it uses
     if (this->_running) {

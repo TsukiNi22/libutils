@@ -54,8 +54,7 @@ _cold _nodiscard std::string utils::platform::windows::strerror(DWORD code)
 
 _cold void utils::platform::windows::startup(void)
 {
-    static const WinsockSession session; // thread safe initialization (retried on the next call if it throws)
-    (void)session;
+    _unused static const WinsockSession session; // thread safe initialization (retried on the next call if it throws)
 }
 
 _hot _nodiscard int utils::platform::windows::socket_errno(int code)

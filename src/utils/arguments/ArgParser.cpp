@@ -373,7 +373,7 @@ _hot _nodiscard utils::arguments::ParsedUsages utils::arguments::ArgParser::pars
     utils::arguments::ParsedUsages usages;
 
     // Minimalist check
-    if (argv.size() == 0)
+    if (argv.size() == 0) _unlikely
         throw utils::exception::ErrorException(utils::exception::InternalCode::ArgumentsNumber, "The arguments should start with the binary name, with a size of 1 at least, got: 0");
 
     // Check for hardcoded flag: -h, -help, --help
@@ -440,7 +440,7 @@ _hot _nodiscard utils::arguments::ParsedUsages utils::arguments::ArgParser::pars
         usages.emplace_back(usageFull.id, usageFull.arguments);
 
     // No compliant usage where found
-    if (usages.size() == 0)
+    if (usages.size() == 0) _unlikely
         throw utils::exception::ErrorException(utils::exception::InternalCode::NoCompliantUsage);
 
     // Sort the usage from the one who match the most option to the least

@@ -83,7 +83,7 @@ _cold _nodiscard pid_t utils::encapsulation::Process::spawn(void)
     #ifdef UTILS_WINDOWS
         throw utils::exception::FatalException(utils::exception::InternalCode::UndefinedCall, "Process::spawn(void) is a fork: no equivalent on Windows, use spawn(path, args)");
     #else
-        if (this->_pid != -1) {
+        if (this->_pid != -1) _unlikely {
             throw utils::exception::ErrorException(utils::exception::InternalCode::Process, "Process is already running, call kill() or wait() before spawn()");
         }
 
@@ -110,7 +110,7 @@ _cold _nodiscard pid_t utils::encapsulation::Process::spawn(void)
 _cold _nodiscard pid_t utils::encapsulation::Process::spawn(const std::string& path, const std::vector<std::string>& args)
 {
     #ifdef UTILS_WINDOWS
-        if (this->_pid != -1) {
+        if (this->_pid != -1) _unlikely {
             throw utils::exception::ErrorException(utils::exception::InternalCode::Process, "Process is already running, call kill() or wait() before spawn()");
         }
 
@@ -182,7 +182,7 @@ _cold _nodiscard pid_t utils::encapsulation::Process::spawn(const std::string& p
         this->_pid = static_cast<pid_t>(process.dwProcessId);
         return this->_pid;
     #else
-        if (this->_pid != -1) {
+        if (this->_pid != -1) _unlikely {
             throw utils::exception::ErrorException(utils::exception::InternalCode::Process, "Process is already running, call kill() or wait() before spawn()");
         }
 
@@ -230,7 +230,7 @@ _cold _nodiscard pid_t utils::encapsulation::Process::spawn(const std::string& p
 _cold _noreturn void utils::encapsulation::Process::replace(const std::string& path, const std::vector<std::string>& args)
 {
     #ifdef UTILS_WINDOWS
-        if (this->_pid != -1) {
+        if (this->_pid != -1) _unlikely {
             throw utils::exception::ErrorException(utils::exception::InternalCode::Process, "Process is already running, call kill() or wait() before spawn()");
         }
 
@@ -252,7 +252,7 @@ _cold _noreturn void utils::encapsulation::Process::replace(const std::string& p
         // _execvp has failed
         ::_exit(127);
     #else
-        if (this->_pid != -1) {
+        if (this->_pid != -1) _unlikely {
             throw utils::exception::ErrorException(utils::exception::InternalCode::Process, "Process is already running, call kill() or wait() before spawn()");
         }
 
@@ -296,7 +296,7 @@ _cold _nodiscard utils::encapsulation::Status utils::encapsulation::Process::wai
         result.code = static_cast<int>(code);
         return result;
     #else
-        if (this->_pid == 0) {
+        if (this->_pid == 0) _unlikely {
             throw utils::exception::ErrorException(utils::exception::InternalCode::Process, "Can only be called from the parent, pid: 0");
         } else if (this->_pid == -1) _unlikely {
             throw utils::exception::ErrorException(utils::exception::InternalCode::Process, "The process is already dead, pid: -1");
@@ -345,12 +345,12 @@ _cold void utils::encapsulation::Process::kill(void)
         this->_handle = nullptr;
         this->_pid = -1;
     #else
-        if (this->_pid == 0) {
+        if (this->_pid == 0) _unlikely {
             throw utils::exception::ErrorException(utils::exception::InternalCode::Process, "Can only be called from the parent, pid: 0");
         } else if (this->_pid == -1) return; // Ignore if already killed
 
         // ESRCH -> already killed (no existing process+pid)
-        if (::kill(this->_pid, SIGKILL) == -1 && errno != ESRCH) {
+        if (::kill(this->_pid, SIGKILL) == -1 && errno != ESRCH) _unlikely {
             throw utils::exception::ErrorException(utils::exception::InternalCode::Kill, ::strerror(errno));
         }
 

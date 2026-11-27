@@ -53,11 +53,11 @@ _hot _nodiscard static std::u32string decode_utf8(const std::string& setting)
         else if ((c & 0xF8) == 0xF0) {codepoint = c & 0x07; extra = 3;}
         else
             throw std::invalid_argument("invalid UTF-8 leading byte");
-        if (i + extra >= setting.size())
+        if (i + extra >= setting.size()) _unlikely
             throw std::invalid_argument("truncated UTF-8 sequence");
         for (std::size_t j = 1; j <= extra; ++j) {
             unsigned char cc = static_cast<unsigned char>(setting[i + j]);
-            if ((cc & 0xC0) != 0x80)
+            if ((cc & 0xC0) != 0x80) _unlikely
                 throw std::invalid_argument("invalid UTF-8 continuation byte");
             codepoint = (codepoint << 6) | (cc & 0x3F);
         }
@@ -70,7 +70,7 @@ _hot _nodiscard static std::u32string decode_utf8(const std::string& setting)
 _hot _nodiscard const utils::arguments::Setting& utils::arguments::Settings::at(std::string_view id) const
 {
     auto it = this->_settings.find(id); // single lookup (heterogeneous, no std::string built)
-    if (it == this->_settings.end())
+    if (it == this->_settings.end()) _unlikely
         throw utils::exception::ErrorException(utils::exception::InternalCode::UnknownId, std::string(id));
     return it->second;
 }
@@ -78,7 +78,7 @@ _hot _nodiscard const utils::arguments::Setting& utils::arguments::Settings::at(
 _hot _nodiscard utils::arguments::Setting& utils::arguments::Settings::at(std::string_view id)
 {
     auto it = this->_settings.find(id);
-    if (it == this->_settings.end())
+    if (it == this->_settings.end()) _unlikely
         throw utils::exception::ErrorException(utils::exception::InternalCode::UnknownId, std::string(id));
     return it->second;
 }
@@ -152,16 +152,16 @@ _hot _nodiscard utils::arguments::CastType utils::arguments::Settings::getType_(
 _hot _nodiscard std::byte utils::arguments::Settings::castByte_(const std::string& setting)
 {
     try {
-        if (setting.empty())
+        if (setting.empty()) _unlikely
             throw std::invalid_argument("empty");
         const std::size_t sign = (setting.front() == '+'); // optional '+' (accepted by getType_)
-        if (sign == setting.size() || !std::all_of(setting.begin() + static_cast<std::ptrdiff_t>(sign), setting.end(), [](unsigned char c) {return std::isdigit(c);}))
+        if (sign == setting.size() || !std::all_of(setting.begin() + static_cast<std::ptrdiff_t>(sign), setting.end(), [](unsigned char c) {return std::isdigit(c);})) _unlikely
             throw std::invalid_argument("not numeric");
         std::size_t pos = 0;
         unsigned long value = std::stoul(setting, &pos);
-        if (pos != setting.size())
+        if (pos != setting.size()) _unlikely
             throw std::invalid_argument("invalid number");
-        if (value > 0xFF)
+        if (value > 0xFF) _unlikely
             throw std::out_of_range("byte overflow");
         return static_cast<std::byte>(value);
     } catch (const std::exception& e) {
@@ -172,7 +172,7 @@ _hot _nodiscard std::byte utils::arguments::Settings::castByte_(const std::strin
 _hot _nodiscard bool utils::arguments::Settings::castBool_(const std::string& setting)
 {
     try {
-        if (setting.empty())
+        if (setting.empty()) _unlikely
             throw std::invalid_argument("empty");
         std::string lower;
         std::transform(setting.begin(), setting.end(), std::back_inserter(lower), [](unsigned char c) {return static_cast<char>(std::tolower(c));});
@@ -189,11 +189,11 @@ _hot _nodiscard bool utils::arguments::Settings::castBool_(const std::string& se
 _hot _nodiscard std::int8_t utils::arguments::Settings::castInt8_(const std::string& setting)
 {
     try {
-        if (setting.empty())
+        if (setting.empty()) _unlikely
             throw std::invalid_argument("empty");
         std::size_t pos = 0;
         long value = std::stol(setting, &pos);
-        if (pos != setting.size())
+        if (pos != setting.size()) _unlikely
             throw std::invalid_argument("invalid number");
         if (value < std::numeric_limits<std::int8_t>::min() ||
             value > std::numeric_limits<std::int8_t>::max())
@@ -207,11 +207,11 @@ _hot _nodiscard std::int8_t utils::arguments::Settings::castInt8_(const std::str
 _hot _nodiscard std::int16_t utils::arguments::Settings::castInt16_(const std::string& setting)
 {
     try {
-        if (setting.empty())
+        if (setting.empty()) _unlikely
             throw std::invalid_argument("empty");
         std::size_t pos = 0;
         long value = std::stol(setting, &pos);
-        if (pos != setting.size())
+        if (pos != setting.size()) _unlikely
             throw std::invalid_argument("invalid number");
         if (value < std::numeric_limits<std::int16_t>::min() ||
             value > std::numeric_limits<std::int16_t>::max())
@@ -225,11 +225,11 @@ _hot _nodiscard std::int16_t utils::arguments::Settings::castInt16_(const std::s
 _hot _nodiscard std::int32_t utils::arguments::Settings::castInt32_(const std::string& setting)
 {
     try {
-        if (setting.empty())
+        if (setting.empty()) _unlikely
             throw std::invalid_argument("empty");
         std::size_t pos = 0;
         long long value = std::stoll(setting, &pos);
-        if (pos != setting.size())
+        if (pos != setting.size()) _unlikely
             throw std::invalid_argument("invalid number");
         if (value < std::numeric_limits<std::int32_t>::min() ||
             value > std::numeric_limits<std::int32_t>::max())
@@ -243,11 +243,11 @@ _hot _nodiscard std::int32_t utils::arguments::Settings::castInt32_(const std::s
 _hot _nodiscard std::int64_t utils::arguments::Settings::castInt64_(const std::string& setting)
 {
     try {
-        if (setting.empty())
+        if (setting.empty()) _unlikely
             throw std::invalid_argument("empty");
         std::size_t pos = 0;
         long long value = std::stoll(setting, &pos);
-        if (pos != setting.size())
+        if (pos != setting.size()) _unlikely
             throw std::invalid_argument("invalid number");
         return static_cast<std::int64_t>(value);
     } catch (const std::exception& e) {
@@ -258,16 +258,16 @@ _hot _nodiscard std::int64_t utils::arguments::Settings::castInt64_(const std::s
 _hot _nodiscard std::uint8_t utils::arguments::Settings::castUInt8_(const std::string& setting)
 {
     try {
-        if (setting.empty())
+        if (setting.empty()) _unlikely
             throw std::invalid_argument("empty");
         const std::size_t sign = (setting.front() == '+'); // optional '+' (accepted by getType_)
-        if (sign == setting.size() || !std::all_of(setting.begin() + static_cast<std::ptrdiff_t>(sign), setting.end(), [](unsigned char c) {return std::isdigit(c);}))
+        if (sign == setting.size() || !std::all_of(setting.begin() + static_cast<std::ptrdiff_t>(sign), setting.end(), [](unsigned char c) {return std::isdigit(c);})) _unlikely
             throw std::invalid_argument("not numeric");
         std::size_t pos = 0;
         unsigned long value = std::stoul(setting, &pos);
-        if (pos != setting.size())
+        if (pos != setting.size()) _unlikely
             throw std::invalid_argument("invalid number");
-        if (value > std::numeric_limits<std::uint8_t>::max())
+        if (value > std::numeric_limits<std::uint8_t>::max()) _unlikely
             throw std::out_of_range("uint8 overflow");
         return static_cast<std::uint8_t>(value);
     } catch (const std::exception& e) {
@@ -278,16 +278,16 @@ _hot _nodiscard std::uint8_t utils::arguments::Settings::castUInt8_(const std::s
 _hot _nodiscard std::uint16_t utils::arguments::Settings::castUInt16_(const std::string& setting)
 {
     try {
-        if (setting.empty())
+        if (setting.empty()) _unlikely
             throw std::invalid_argument("empty");
         const std::size_t sign = (setting.front() == '+'); // optional '+' (accepted by getType_)
-        if (sign == setting.size() || !std::all_of(setting.begin() + static_cast<std::ptrdiff_t>(sign), setting.end(), [](unsigned char c) {return std::isdigit(c);}))
+        if (sign == setting.size() || !std::all_of(setting.begin() + static_cast<std::ptrdiff_t>(sign), setting.end(), [](unsigned char c) {return std::isdigit(c);})) _unlikely
             throw std::invalid_argument("not numeric");
         std::size_t pos = 0;
         unsigned long value = std::stoul(setting, &pos);
-        if (pos != setting.size())
+        if (pos != setting.size()) _unlikely
             throw std::invalid_argument("invalid number");
-        if (value > std::numeric_limits<std::uint16_t>::max())
+        if (value > std::numeric_limits<std::uint16_t>::max()) _unlikely
             throw std::out_of_range("uint16 overflow");
         return static_cast<std::uint16_t>(value);
     } catch (const std::exception& e) {
@@ -298,16 +298,16 @@ _hot _nodiscard std::uint16_t utils::arguments::Settings::castUInt16_(const std:
 _hot _nodiscard std::uint32_t utils::arguments::Settings::castUInt32_(const std::string& setting)
 {
     try {
-        if (setting.empty())
+        if (setting.empty()) _unlikely
             throw std::invalid_argument("empty");
         const std::size_t sign = (setting.front() == '+'); // optional '+' (accepted by getType_)
-        if (sign == setting.size() || !std::all_of(setting.begin() + static_cast<std::ptrdiff_t>(sign), setting.end(), [](unsigned char c) {return std::isdigit(c);}))
+        if (sign == setting.size() || !std::all_of(setting.begin() + static_cast<std::ptrdiff_t>(sign), setting.end(), [](unsigned char c) {return std::isdigit(c);})) _unlikely
             throw std::invalid_argument("not numeric");
         std::size_t pos = 0;
         unsigned long value = std::stoul(setting, &pos);
-        if (pos != setting.size())
+        if (pos != setting.size()) _unlikely
             throw std::invalid_argument("invalid number");
-        if (value > std::numeric_limits<std::uint32_t>::max())
+        if (value > std::numeric_limits<std::uint32_t>::max()) _unlikely
             throw std::out_of_range("uint32 overflow");
         return static_cast<std::uint32_t>(value);
     } catch (const std::exception& e) {
@@ -318,14 +318,14 @@ _hot _nodiscard std::uint32_t utils::arguments::Settings::castUInt32_(const std:
 _hot _nodiscard std::uint64_t utils::arguments::Settings::castUInt64_(const std::string& setting)
 {
     try {
-        if (setting.empty())
+        if (setting.empty()) _unlikely
             throw std::invalid_argument("empty");
         const std::size_t sign = (setting.front() == '+'); // optional '+' (accepted by getType_)
-        if (sign == setting.size() || !std::all_of(setting.begin() + static_cast<std::ptrdiff_t>(sign), setting.end(), [](unsigned char c) {return std::isdigit(c);}))
+        if (sign == setting.size() || !std::all_of(setting.begin() + static_cast<std::ptrdiff_t>(sign), setting.end(), [](unsigned char c) {return std::isdigit(c);})) _unlikely
             throw std::invalid_argument("not numeric");
         std::size_t pos = 0;
         unsigned long long value = std::stoull(setting, &pos);
-        if (pos != setting.size())
+        if (pos != setting.size()) _unlikely
             throw std::invalid_argument("invalid number");
         return static_cast<std::uint64_t>(value);
     } catch (const std::exception& e) {
@@ -336,13 +336,13 @@ _hot _nodiscard std::uint64_t utils::arguments::Settings::castUInt64_(const std:
 _hot _nodiscard utils::arguments::float16_t utils::arguments::Settings::castFloat16_(const std::string& setting)
 {
     try {
-        if (setting.empty())
+        if (setting.empty()) _unlikely
             throw std::invalid_argument("empty");
         std::size_t pos = 0;
         float value = std::stof(setting, &pos);
-        if (pos != setting.size())
+        if (pos != setting.size()) _unlikely
             throw std::invalid_argument("not a float");
-        if (std::isfinite(value) && std::isinf(static_cast<float>(static_cast<utils::arguments::float16_t>(value))))
+        if (std::isfinite(value) && std::isinf(static_cast<float>(static_cast<utils::arguments::float16_t>(value)))) _unlikely
             throw utils::exception::ErrorException(utils::exception::InternalCode::OutOfBounds, "float16 overflow: " + setting);
         return static_cast<utils::arguments::float16_t>(value);
     } catch (const utils::exception::IException&) {
@@ -355,11 +355,11 @@ _hot _nodiscard utils::arguments::float16_t utils::arguments::Settings::castFloa
 _hot _nodiscard utils::arguments::float32_t utils::arguments::Settings::castFloat32_(const std::string& setting)
 {
     try {
-        if (setting.empty())
+        if (setting.empty()) _unlikely
             throw std::invalid_argument("empty");
         std::size_t pos = 0;
         float value = std::stof(setting, &pos);
-        if (pos != setting.size())
+        if (pos != setting.size()) _unlikely
             throw std::invalid_argument("not a float");
         return static_cast<utils::arguments::float32_t>(value);
     } catch (const std::exception& e) {
@@ -370,11 +370,11 @@ _hot _nodiscard utils::arguments::float32_t utils::arguments::Settings::castFloa
 _hot _nodiscard utils::arguments::float64_t utils::arguments::Settings::castFloat64_(const std::string& setting)
 {
     try {
-        if (setting.empty())
+        if (setting.empty()) _unlikely
             throw std::invalid_argument("empty");
         std::size_t pos = 0;
         double value = std::stod(setting, &pos);
-        if (pos != setting.size())
+        if (pos != setting.size()) _unlikely
             throw std::invalid_argument("not a float");
         return static_cast<utils::arguments::float64_t>(value);
     } catch (const std::exception& e) {
@@ -385,11 +385,11 @@ _hot _nodiscard utils::arguments::float64_t utils::arguments::Settings::castFloa
 _hot _nodiscard utils::arguments::float128_t utils::arguments::Settings::castFloat128_(const std::string& setting)
 {
     try {
-        if (setting.empty())
+        if (setting.empty()) _unlikely
             throw std::invalid_argument("empty");
         char* end = nullptr;
         long double value = std::strtold(setting.c_str(), &end);
-        if (end != setting.c_str() + setting.size())
+        if (end != setting.c_str() + setting.size()) _unlikely
             throw std::invalid_argument("not a float");
         return static_cast<utils::arguments::float128_t>(value);
     } catch (const std::exception& e) {
@@ -400,7 +400,7 @@ _hot _nodiscard utils::arguments::float128_t utils::arguments::Settings::castFlo
 _hot _nodiscard char8_t utils::arguments::Settings::castChar8_(const std::string& setting)
 {
     try {
-        if (setting.size() != 1)
+        if (setting.size() != 1) _unlikely
             throw std::invalid_argument("expected a single character");
         return static_cast<char8_t>(setting[0]);
     } catch (const std::exception& e) {
@@ -417,7 +417,7 @@ _hot _nodiscard static unsigned long code_point(const std::string& setting)
         if (pos == setting.size()) return value;
     } catch (const std::invalid_argument&) {} // not a number, try as a character
     std::u32string codepoints = decode_utf8(setting);
-    if (codepoints.size() != 1)
+    if (codepoints.size() != 1) _unlikely
         throw utils::exception::ErrorException(utils::exception::InternalCode::InvalidArgument, "Expected a code point or a single character: " + setting);
     return codepoints[0];
 }
@@ -425,10 +425,10 @@ _hot _nodiscard static unsigned long code_point(const std::string& setting)
 _hot _nodiscard char16_t utils::arguments::Settings::castChar16_(const std::string& setting)
 {
     try {
-        if (setting.empty())
+        if (setting.empty()) _unlikely
             throw std::invalid_argument("empty");
         unsigned long value = code_point(setting); // number (0x263A, 9786) or a single character
-        if (value > std::numeric_limits<char16_t>::max())
+        if (value > std::numeric_limits<char16_t>::max()) _unlikely
             throw std::out_of_range("char16 overflow");
         return static_cast<char16_t>(value);
     } catch (const utils::exception::IException&) {
@@ -441,10 +441,10 @@ _hot _nodiscard char16_t utils::arguments::Settings::castChar16_(const std::stri
 _hot _nodiscard char32_t utils::arguments::Settings::castChar32_(const std::string& setting)
 {
     try {
-        if (setting.empty())
+        if (setting.empty()) _unlikely
             throw std::invalid_argument("empty");
         unsigned long value = code_point(setting); // number (0x1F600, 128512) or a single character
-        if (value > 0x10FFFF)
+        if (value > 0x10FFFF) _unlikely
             throw std::out_of_range("not a valid Unicode code point");
         return static_cast<char32_t>(value);
     } catch (const utils::exception::IException&) {
@@ -497,7 +497,7 @@ _hot _nodiscard wchar_t utils::arguments::Settings::castWChar_(const std::string
 {
     try {
         std::u32string codepoints = decode_utf8(setting);
-        if (codepoints.size() != 1)
+        if (codepoints.size() != 1) _unlikely
             throw std::invalid_argument("expected a single character");
         return static_cast<wchar_t>(codepoints[0]);
     } catch (const std::exception& e) {
@@ -518,7 +518,7 @@ _hot _nodiscard std::wstring utils::arguments::Settings::castWString_(const std:
 _hot _nodiscard std::filesystem::path utils::arguments::Settings::castPath_(const std::string& setting)
 {
     try {
-        if (setting.empty())
+        if (setting.empty()) _unlikely
             throw std::invalid_argument("empty");
         return std::filesystem::path(setting);
     } catch (const std::exception& e) {

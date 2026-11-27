@@ -35,7 +35,7 @@ _cold void utils::exception::AException::subinit_(void)
     // Check the restriction for code & type combination
     std::uint8_t restriction = this->_restrictions.at(this->_code);
     if (this->_code == utils::exception::InternalCode::ExceptionCodeRestriction) return; // Check to counter any mistake and cause a infinit throw loop
-    else if (restriction != 0 && (this->_type & restriction) != this->_type)
+    else if (restriction != 0 && (this->_type & restriction) != this->_type) _unlikely
         throw utils::exception::FatalException(utils::exception::InternalCode::ExceptionCodeRestriction, this->_loc);
 }
 

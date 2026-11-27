@@ -80,7 +80,7 @@ _cold void utils::encapsulation::Poll::edit(int fd, std::uint32_t events, void* 
         ev.data.fd = fd;
     }
 
-    if (utils::platform::epoll_ctl(this->_fd, EPOLL_CTL_MOD, fd, &ev) == -1) {
+    if (utils::platform::epoll_ctl(this->_fd, EPOLL_CTL_MOD, fd, &ev) == -1) _unlikely {
         throw utils::exception::ErrorException(utils::exception::InternalCode::EPoll, utils::platform::strerror(errno));
     }
 }

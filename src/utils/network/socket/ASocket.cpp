@@ -59,7 +59,7 @@ _cold _nodiscard std::string utils::network::resolve_hostname(const std::string&
 
     // Get the information
     onAdvancedVerbose("Get the correponding ipv4 from the hostname '" << hostname << "'...");
-    if ((status = utils::platform::getaddrinfo(hostname.c_str(), nullptr, &settings, &res)) != 0)
+    if ((status = utils::platform::getaddrinfo(hostname.c_str(), nullptr, &settings, &res)) != 0) _unlikely
         throw utils::exception::ErrorException(utils::exception::InternalCode::SocketInit, utils::platform::gai_strerror(status));
 
     // Convert the result in an ip
@@ -182,7 +182,7 @@ _hot _nodiscard int utils::network::ASocket::accept(void)
 
     // Accept the client
     onAdvancedVerbose("Accepting the new connection...");
-    if ((fd = this->accept(this->_fd, reinterpret_cast<sockaddr*>(&storage), &len)) < 0)
+    if ((fd = this->accept(this->_fd, reinterpret_cast<sockaddr*>(&storage), &len)) < 0) _unlikely
         throw utils::exception::ErrorException(utils::exception::InternalCode::Accept, utils::platform::strerror(errno));
     const sockaddr_in& in = reinterpret_cast<const sockaddr_in&>(storage);
     onBasicVerbose("New client '" << ::inet_ntoa(in.sin_addr) << ":" << ::ntohs(in.sin_port) << "'");

@@ -165,11 +165,11 @@ _hot _nodiscard bool utils::cli::defaultGetCHook(char& c)
     // poll call
     int res = utils::platform::poll(&pfd, 1, 0);
     if (res == 0) return false;
-    if (res < 0) throw std::runtime_error(utils::platform::strerror(errno));
+    if (res < 0) _unlikely {throw std::runtime_error(utils::platform::strerror(errno));}
 
     // poll -> thing to read
     ssize_t bytes = utils::platform::read(STDIN_FILENO, &c, 1);
-    if (bytes < 0)
+    if (bytes < 0) _unlikely
         throw std::runtime_error(utils::platform::strerror(errno));
     if (bytes == 0) c = 0; // EOF
     return true;

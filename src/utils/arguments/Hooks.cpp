@@ -160,7 +160,7 @@ _cold void utils::arguments::defaultHelpHook(const utils::arguments::ArgParser& 
 _hot _nodiscard std::optional<std::string> utils::arguments::defaultBoolParsingHook(const std::string& option)
 {
     try {
-        if (option.empty())
+        if (option.empty()) _unlikely
             throw std::invalid_argument("empty");
         if (option == "0" || option == "1" || option == "false" || option == "true") return std::nullopt;
         else return "Invalid boolean option (0/1/false/true): " + option;
@@ -172,14 +172,14 @@ _hot _nodiscard std::optional<std::string> utils::arguments::defaultBoolParsingH
 _hot _nodiscard std::optional<std::string> utils::arguments::defaultInt32ParsingHook(const std::string& option)
 {
     try {
-        if (option.empty())
+        if (option.empty()) _unlikely
             throw std::invalid_argument("empty");
         const std::size_t sign = (option.front() == '-' || option.front() == '+'); // optional sign
-        if (sign == option.size() || !std::all_of(option.begin() + static_cast<std::ptrdiff_t>(sign), option.end(), [](unsigned char c) {return std::isdigit(c);}))
+        if (sign == option.size() || !std::all_of(option.begin() + static_cast<std::ptrdiff_t>(sign), option.end(), [](unsigned char c) {return std::isdigit(c);})) _unlikely
             throw std::invalid_argument("not numeric");
         std::size_t pos = 0;
         long value = std::stol(option, &pos);
-        if (pos != option.size())
+        if (pos != option.size()) _unlikely
             throw std::invalid_argument("invalid number");
         if (value < std::numeric_limits<std::int32_t>::min() ||
             value > std::numeric_limits<std::int32_t>::max())
@@ -193,13 +193,13 @@ _hot _nodiscard std::optional<std::string> utils::arguments::defaultInt32Parsing
 _hot _nodiscard std::optional<std::string> utils::arguments::defaultSizetParsingHook(const std::string& option)
 {
     try {
-        if (option.empty())
+        if (option.empty()) _unlikely
             throw std::invalid_argument("empty");
-        if (!std::all_of(option.begin(), option.end(), [](unsigned char c) {return std::isdigit(c);}))
+        if (!std::all_of(option.begin(), option.end(), [](unsigned char c) {return std::isdigit(c);})) _unlikely
             throw std::invalid_argument("not numeric");
         std::size_t pos = 0;
         (void)std::stoull(option, &pos);
-        if (pos != option.size())
+        if (pos != option.size()) _unlikely
             throw std::invalid_argument("invalid number");
         return std::nullopt;
     } catch (const std::exception& e) {
@@ -210,11 +210,11 @@ _hot _nodiscard std::optional<std::string> utils::arguments::defaultSizetParsing
 _hot _nodiscard std::optional<std::string> utils::arguments::defaultDoubleParsingHook(const std::string& option)
 {
     try {
-        if (option.empty())
+        if (option.empty()) _unlikely
             throw std::invalid_argument("empty");
         std::size_t pos = 0;
         (void)std::stod(option, &pos);
-        if (pos != option.size())
+        if (pos != option.size()) _unlikely
             throw std::invalid_argument("not a float");
         return std::nullopt;
     } catch (const std::exception& e) {
