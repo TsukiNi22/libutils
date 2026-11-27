@@ -156,7 +156,7 @@ _nothrow _format(printf, 2, 0) _null_terminated_string_arg(2) int utils_verbose_
 _nothrow _format(printf, 3, 0) _null_terminated_string_arg(3) int utils_verbose_vlog_to(FILE* output, utils_verbose_t level, const char* fmt, va_list args);</code></pre><h3 id="c-6">Fonctions · Run fn with the output locked</h3><p><em>run fn with the output locked (utils::verbose::locked, recursive: the logs can be called inside), returns what fn returned</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow int utils_verbose_locked(utils_verbose_fn_t fn, void* data);
 _nodiscard _nothrow int utils_verbose_on(utils_verbose_t level, utils_verbose_fn_t fn, void* data); // only when the level is displayed (like onVerboseFn), UTILS_OK when not run</code></pre></div></section><nav class="pager"><a href="exception.html"><span data-i18n>Previous</span><span data-lang="en">Exceptions</span><span data-lang="fr">Exceptions</span></a><a class="next" href="pool.html"><span data-i18n>Next</span><span data-lang="en">Pool</span><span data-lang="fr">Pool</span></a></nav></main>
 </div>
-<footer class="site">libutils v5.1.0-pre · 34d7018 · docs</footer>
+<footer class="site">libutils v5.1.0-pre · 780c01d · docs</footer>
 <script src="site.js"></script>
 <script src="search-index.js" defer></script>
 </body>

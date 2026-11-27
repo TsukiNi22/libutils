@@ -28,6 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `utils::platform` is annotated like its C API (descriptors, buffers, strings, `_restrict`)
 - The error paths of the library are `_unlikely` (128 `throw`, the error of the emulated `epoll_ctl` on Windows)
 - The getters returning a reference to a member are `_lifetimebound` (`ArgParser`, `Pipe`, `Process`)
+- The `_nodiscard` of the C++ functions is also on their header declarations (only on the `.cpp` definition, the callers were never warned: `ArgParser::parse`, the casts of `Settings`, `ASocket::recv`...)
+- A call of `Process::spawn(void)` / `utils_process_spawn` compiled for Windows is a compiler warning (`_warning`: a fork, it aborts)
 - The C headers include `utils/attribute/Attribute.hpp` themselves (`math` and `platform` didn't get the macros)
 - Missing attributes added: `_format` of the internal `vformat` of the verbose C API, `_cold` of `~Cli` and `gai_strerrorA`, `_unused` of the Winsock session
 - A push that only changes `docs/` no longer runs `Dispatch (CI/CD)` (`Docs - Pages (CD)` publishes it)

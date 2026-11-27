@@ -182,7 +182,8 @@ struct Status {
 };
 class Process: private utils::security::observer::Observer&lt;"Process"&gt; {
     bool is(void) const;
-    pid_t spawn(void); // fork (Windows: FatalException UndefinedCall, no fork)
+    _warning("Process::spawn(void) is a fork: no equivalent on Windows, it aborts (FatalException UndefinedCall): use spawn(path, args)") pid_t spawn(void);
+    pid_t spawn(void); // fork
     pid_t spawn(const std::string&amp; path, const std::vector&lt;std::string&gt;&amp; args); // execvp (Windows: CreateProcess, only the fds 0, 1 &amp; 2 can be dup)
     _noreturn void replace(const std::string&amp; path, const std::vector&lt;std::string&gt;&amp; args); // execvp (Windows: _execvp) (never return: exec or _exit)
     utils::encapsulation::Status wait(void); // waitpid (Windows: WaitForSingleObject, never killed by a signal)
@@ -345,7 +346,8 @@ struct Status {
 };
 class Process: private utils::security::observer::Observer&lt;"Process"&gt; {
     bool is(void) const;
-    pid_t spawn(void); // fork (Windows: FatalException UndefinedCall, no fork)
+    _warning("Process::spawn(void) is a fork: no equivalent on Windows, it aborts (FatalException UndefinedCall): use spawn(path, args)") pid_t spawn(void);
+    pid_t spawn(void); // fork
     pid_t spawn(const std::string&amp; path, const std::vector&lt;std::string&gt;&amp; args); // execvp (Windows: CreateProcess, only the fds 0, 1 &amp; 2 can be dup)
     _noreturn void replace(const std::string&amp; path, const std::vector&lt;std::string&gt;&amp; args); // execvp (Windows: _execvp) (never return: exec or _exit)
     utils::encapsulation::Status wait(void); // waitpid (Windows: WaitForSingleObject, never killed by a signal)
@@ -512,7 +514,11 @@ _nodiscard _nothrow bool utils_poll_contains(const utils_poll_t* poll, int fd);
 _nodiscard _nothrow int utils_poll_get_fd(const utils_poll_t* poll); // -1 on error</code></pre><h3 id="c-10">Functions · Process</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow utils_process_t* utils_process_create(void); // NULL on error
 _nothrow void utils_process_destroy(utils_process_t* process); // NULL: nothing (the parent kills the child)
 _nodiscard _nothrow bool utils_process_is(const utils_process_t* process); // the child is running
-_nodiscard _nothrow pid_t utils_process_spawn(utils_process_t* process); // fork (Windows: error, no fork), -1 on error
+#ifdef _WIN32
+    _nodiscard _nothrow _warning("utils_process_spawn is a fork: no equivalent on Windows, it aborts (FatalException UndefinedCall): use utils_process_spawn_exec") pid_t utils_process_spawn(utils_process_t* process);
+#else
+    _nodiscard _nothrow pid_t utils_process_spawn(utils_process_t* process); // fork, -1 on error
+#endif
 _nodiscard _nothrow _null_terminated_string_arg(2) pid_t utils_process_spawn_exec(utils_process_t* process, const char* path, const char* const* args, size_t count); // execvp (argv[0] = path, args after it), -1 on error
 _nothrow _noreturn _null_terminated_string_arg(2) void utils_process_replace(utils_process_t* process, const char* path, const char* const* args, size_t count); // execvp in this process (never return: exec or _exit(127))
 _nodiscard _nothrow int utils_process_wait(utils_process_t* process, utils_process_status_t* status); // waitpid
@@ -615,7 +621,11 @@ _nodiscard _nothrow bool utils_poll_contains(const utils_poll_t* poll, int fd);
 _nodiscard _nothrow int utils_poll_get_fd(const utils_poll_t* poll); // -1 on error</code></pre><h3 id="c-10">Fonctions · Process</h3><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow utils_process_t* utils_process_create(void); // NULL on error
 _nothrow void utils_process_destroy(utils_process_t* process); // NULL: nothing (the parent kills the child)
 _nodiscard _nothrow bool utils_process_is(const utils_process_t* process); // the child is running
-_nodiscard _nothrow pid_t utils_process_spawn(utils_process_t* process); // fork (Windows: error, no fork), -1 on error
+#ifdef _WIN32
+    _nodiscard _nothrow _warning("utils_process_spawn is a fork: no equivalent on Windows, it aborts (FatalException UndefinedCall): use utils_process_spawn_exec") pid_t utils_process_spawn(utils_process_t* process);
+#else
+    _nodiscard _nothrow pid_t utils_process_spawn(utils_process_t* process); // fork, -1 on error
+#endif
 _nodiscard _nothrow _null_terminated_string_arg(2) pid_t utils_process_spawn_exec(utils_process_t* process, const char* path, const char* const* args, size_t count); // execvp (argv[0] = path, args after it), -1 on error
 _nothrow _noreturn _null_terminated_string_arg(2) void utils_process_replace(utils_process_t* process, const char* path, const char* const* args, size_t count); // execvp in this process (never return: exec or _exit(127))
 _nodiscard _nothrow int utils_process_wait(utils_process_t* process, utils_process_status_t* status); // waitpid
@@ -658,7 +668,7 @@ _nodiscard _nothrow int utils_shm_messages_id(const utils_shm_messages_t* messag
 _nodiscard _nothrow size_t utils_shm_messages_size(const utils_shm_messages_t* messages, size_t i); // number of payloads of the id i
 _nodiscard _nothrow const void* utils_shm_messages_get(const utils_shm_messages_t* messages, size_t i, size_t j, size_t* size); // payload j of the id i, valid while messages lives (NULL on error)</code></pre></div></section><nav class="pager"><a href="concepts.html"><span data-i18n>Previous</span><span data-lang="en">Concepts</span><span data-lang="fr">Concepts</span></a><a class="next" href="system.html"><span data-i18n>Next</span><span data-lang="en">System</span><span data-lang="fr">System</span></a></nav></main>
 </div>
-<footer class="site">libutils v5.1.0-pre · 34d7018 · docs</footer>
+<footer class="site">libutils v5.1.0-pre · 780c01d · docs</footer>
 <script src="site.js"></script>
 <script src="search-index.js" defer></script>
 </body>
