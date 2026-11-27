@@ -167,7 +167,10 @@ if(CMAKE_CROSSCOMPILING)
         DISCOVERY_TIMEOUT 120 # first start of wine
     )
 else()
-    gtest_discover_tests(${TARGET})
+    # Asan: the leaks made on purpose by the leak detection tests are suppressed
+    gtest_discover_tests(${TARGET}
+        PROPERTIES ENVIRONMENT "LSAN_OPTIONS=suppressions=${CMAKE_CURRENT_SOURCE_DIR}/lsan.supp"
+    )
 endif()
 
 # =========================
@@ -186,6 +189,11 @@ foreach(STANDARD 11 23)
     )
     target_include_directories(${C_TARGET} PRIVATE ${CMAKE_BINARY_DIR}/generated) # utils/version.h
     target_compile_options(${C_TARGET} PRIVATE -W -Wall -Wextra)
+    if(NOT WIN32)
+        # libutils_asan.a needs the AddressSanitizer runtime at the link (like unit_tests)
+        target_compile_options(${C_TARGET} PRIVATE $<$<CONFIG:Asan>:-fsanitize=address -fno-omit-frame-pointer>)
+        target_link_options(${C_TARGET} PRIVATE $<$<CONFIG:Asan>:-fsanitize=address>)
+    endif()
     target_link_libraries(${C_TARGET} PRIVATE utils)
     add_test(NAME CApi.C${STANDARD} COMMAND ${C_TARGET})
 endforeach()

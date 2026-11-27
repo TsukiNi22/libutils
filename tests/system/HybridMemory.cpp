@@ -25,6 +25,15 @@ File Description:
 #include <vector>
 #include <string>
 
+// AddressSanitizer build (Asan mode): __SANITIZE_ADDRESS__ with gcc, __has_feature with clang
+#if defined(__SANITIZE_ADDRESS__)
+    #define TESTS_ASAN
+#elif defined(__has_feature)
+    #if __has_feature(address_sanitizer)
+        #define TESTS_ASAN
+    #endif
+#endif
+
 // Run fn and expect the exception code
 template<typename Fn>
 static void expectCode(Fn fn, const utils::exception::InternalCode code)
@@ -233,6 +242,9 @@ TEST(HybridMemory, RamOutOfBounds) {
 }
 
 TEST(HybridMemory, RamOverflow) {
+    #ifdef TESTS_ASAN
+        GTEST_SKIP() << "AddressSanitizer aborts on a failed operator new instead of throwing std::bad_alloc";
+    #endif
     expectCode([](void) {utils::system::HybridMemory<double> memory(std::numeric_limits<std::size_t>::max() / 2, utils::system::MemoryMode::Ram);}, utils::exception::InternalCode::OutOfMemory);
 }
 
@@ -269,6 +281,9 @@ TEST(HybridMemory, MakeGpuRam) {
 }
 
 TEST(HybridMemory, AutoWorksWhateverTheMachine) {
+    #ifdef TESTS_ASAN
+        GTEST_SKIP() << "the gpu drivers loaded by Auto are not instrumented by AddressSanitizer: their leaks are reported";
+    #endif
     utils::system::HybridMemory<int> memory(4, utils::system::MemoryMode::Auto);
     const std::vector<int> values = {4, 3, 2, 1};
 
@@ -458,7 +473,15 @@ TEST(HybridMemory, CustomMove) {
 }
 
 /* ------------------------------- Real backends ------------------------------- */
-class HybridMemoryBackend: public ::testing::TestWithParam<utils::system::MemoryMode> {};
+class HybridMemoryBackend: public ::testing::TestWithParam<utils::system::MemoryMode> {
+    protected:
+        void SetUp(void) override
+        {
+            #ifdef TESTS_ASAN
+                GTEST_SKIP() << "the gpu drivers are not instrumented by AddressSanitizer: their leaks are reported";
+            #endif
+        };
+};
 
 TEST_P(HybridMemoryBackend, RoundTrip) {
     std::unique_ptr<utils::system::HybridMemory<float>> memory;
