@@ -372,7 +372,10 @@ TEST(Process, UnknownProgram) {
 }
 
 TEST(ProcessDeathTest, ForkIsUndefined) {
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wattribute-warning" // the abort of the call is what is tested
     EXPECT_DEATH({utils::encapsulation::Process process; (void)process.spawn();}, "");
+    #pragma GCC diagnostic pop
 }
 
 TEST(ProcessDeathTest, DupOutsideStandardFdsIsUndefined) {

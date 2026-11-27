@@ -29,7 +29,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"   // _noreturn
+    #include "../attribute/Attribute.hpp"   // _nodiscard, _nothrow, _noreturn, _warning, _read_only, _null_terminated_string_arg
     #include "../exception/CApi.h"          // utils_exception, UTILS_OK, UTILS_KO
     #include "../platform/CApi.h"           // pid_t, struct epoll_event, EPOLL*
     #include <stdbool.h>                    // bool
@@ -141,7 +141,11 @@ _nodiscard _nothrow int utils_poll_get_fd(const utils_poll_t* poll); // -1 on er
 _nodiscard _nothrow utils_process_t* utils_process_create(void); // NULL on error
 _nothrow void utils_process_destroy(utils_process_t* process); // NULL: nothing (the parent kills the child)
 _nodiscard _nothrow bool utils_process_is(const utils_process_t* process); // the child is running
-_nodiscard _nothrow pid_t utils_process_spawn(utils_process_t* process); // fork (Windows: error, no fork), -1 on error
+#ifdef _WIN32
+    _nodiscard _nothrow _warning("utils_process_spawn is a fork: no equivalent on Windows, it aborts (FatalException UndefinedCall): use utils_process_spawn_exec") pid_t utils_process_spawn(utils_process_t* process);
+#else
+    _nodiscard _nothrow pid_t utils_process_spawn(utils_process_t* process); // fork, -1 on error
+#endif
 _nodiscard _nothrow _null_terminated_string_arg(2) pid_t utils_process_spawn_exec(utils_process_t* process, const char* path, const char* const* args, size_t count); // execvp (argv[0] = path, args after it), -1 on error
 _nothrow _noreturn _null_terminated_string_arg(2) void utils_process_replace(utils_process_t* process, const char* path, const char* const* args, size_t count); // execvp in this process (never return: exec or _exit(127))
 _nodiscard _nothrow int utils_process_wait(utils_process_t* process, utils_process_status_t* status); // waitpid

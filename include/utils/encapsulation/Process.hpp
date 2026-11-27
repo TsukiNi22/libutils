@@ -25,7 +25,8 @@ File Description:
 
     /* type */
     #include "../security/observer/Observer.hpp"    // utils::security::observer::Observer
-    #include "../attribute/Attribute.hpp"           // _cold, _hot, _nodiscard, _noreturn
+    #include "../attribute/Attribute.hpp"           // _cold, _hot, _nodiscard, _noreturn, _warning, _lifetimebound
+    #include "../platform/Platform.hpp"             // UTILS_WINDOWS
     #include "Pipe.hpp"                             // utils::encapsulation::Pipe
     #include "Dup.hpp"                              // utils::encapsulation::Dup
     #include <sys/types.h>                          // pid_t (also on MinGW)
@@ -59,7 +60,11 @@ class Process: private utils::security::observer::Observer<"Process"> {
         // ---------- Pre-Function -------- //
         /* process */
         _nodiscard bool is(void) const;
-        _nodiscard pid_t spawn(void); // fork (Windows: FatalException UndefinedCall, no fork)
+        #ifdef UTILS_WINDOWS
+            _nodiscard _warning("Process::spawn(void) is a fork: no equivalent on Windows, it aborts (FatalException UndefinedCall): use spawn(path, args)") pid_t spawn(void);
+        #else
+            _nodiscard pid_t spawn(void); // fork
+        #endif
         _nodiscard pid_t spawn(const std::string& path, const std::vector<std::string>& args); // execvp (Windows: CreateProcess, only the fds 0, 1 & 2 can be dup)
         _noreturn void replace(const std::string& path, const std::vector<std::string>& args); // execvp (Windows: _execvp) (never return: exec or _exit)
         _nodiscard utils::encapsulation::Status wait(void); // waitpid (Windows: WaitForSingleObject, never killed by a signal)

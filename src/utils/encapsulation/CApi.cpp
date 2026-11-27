@@ -341,7 +341,10 @@ _cold _nothrow bool utils_process_is(const utils_process_t* process)
 
 _cold _nothrow pid_t utils_process_spawn(utils_process_t* process)
 {
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wattribute-warning" // forwards the call on purpose (the declaration warns the caller)
     return utils::exception::c_api::guard_fallback(-1, [&](void) -> pid_t {return utils::exception::c_api::not_null_ref(process, "process").spawn();});
+    #pragma GCC diagnostic pop
 }
 
 _cold _nothrow pid_t utils_process_spawn_exec(utils_process_t* process, const char* path, const char* const* args, size_t count)
