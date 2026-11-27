@@ -214,7 +214,7 @@ _cold _nodiscard pid_t utils::platform::getpid(void)
     #endif
 }
 
-_cold _nodiscard ssize_t utils::platform::readlink(const char* path, char* buf, std::size_t size)
+_cold _nodiscard ssize_t utils::platform::readlink(const char* _restrict path, char* _restrict buf, std::size_t size)
 {
     #ifdef UTILS_WINDOWS
         std::string target;

@@ -69,7 +69,7 @@ _cold int utils::platform::listen(int fd, int backlog)
     #endif
 }
 
-_hot _nodiscard int utils::platform::accept(int fd, struct sockaddr* addr, socklen_t* len)
+_hot _nodiscard int utils::platform::accept(int fd, struct sockaddr* _restrict addr, socklen_t* _restrict len)
 {
     #ifdef UTILS_WINDOWS
         const SOCKET client = ::accept(static_cast<SOCKET>(fd), addr, len);
@@ -115,7 +115,7 @@ _cold int utils::platform::setsockopt(int fd, int level, int name, const void* v
     #endif
 }
 
-_cold int utils::platform::getsockname(int fd, struct sockaddr* addr, socklen_t* len)
+_cold int utils::platform::getsockname(int fd, struct sockaddr* _restrict addr, socklen_t* _restrict len)
 {
     #ifdef UTILS_WINDOWS
         WSA_CALL(::getsockname(static_cast<SOCKET>(fd), addr, len))
@@ -124,7 +124,7 @@ _cold int utils::platform::getsockname(int fd, struct sockaddr* addr, socklen_t*
     #endif
 }
 
-_cold int utils::platform::getpeername(int fd, struct sockaddr* addr, socklen_t* len)
+_cold int utils::platform::getpeername(int fd, struct sockaddr* _restrict addr, socklen_t* _restrict len)
 {
     #ifdef UTILS_WINDOWS
         WSA_CALL(::getpeername(static_cast<SOCKET>(fd), addr, len))
@@ -133,7 +133,7 @@ _cold int utils::platform::getpeername(int fd, struct sockaddr* addr, socklen_t*
     #endif
 }
 
-_cold _nodiscard int utils::platform::getaddrinfo(const char* node, const char* service, const struct addrinfo* hints, struct addrinfo** res)
+_cold _nodiscard int utils::platform::getaddrinfo(const char* _restrict node, const char* _restrict service, const struct addrinfo* _restrict hints, struct addrinfo** _restrict res)
 {
     #ifdef UTILS_WINDOWS
         utils::platform::windows::startup();

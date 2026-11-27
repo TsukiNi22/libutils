@@ -25,13 +25,14 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "Platform.hpp"             // UTILS_WINDOWS
-    #include "Types.h"                  // struct sockaddr, struct addrinfo, socklen_t, MSG_NOSIGNAL (Windows)
-    #include <sys/types.h>              // ssize_t
-    #include <cstddef>                  // std::size_t
+    #include "../attribute/Attribute.hpp"   // _restrict, _read_only, _write_only, _null_terminated_string_arg, _fd_arg, _fd_arg_read, _fd_arg_write
+    #include "Platform.hpp"                 // UTILS_WINDOWS
+    #include "Types.h"                      // struct sockaddr, struct addrinfo, socklen_t, MSG_NOSIGNAL (Windows)
+    #include <sys/types.h>                  // ssize_t
+    #include <cstddef>                      // std::size_t
     #ifndef UTILS_WINDOWS
-        #include <sys/socket.h>         // struct sockaddr, socklen_t, MSG_NOSIGNAL
-        #include <netdb.h>              // struct addrinfo
+        #include <sys/socket.h>             // struct sockaddr, socklen_t, MSG_NOSIGNAL
+        #include <netdb.h>                  // struct addrinfo
     #endif
 
 namespace utils::platform { // namespace start
@@ -39,16 +40,16 @@ namespace utils::platform { // namespace start
 /* PROTOTYPE */
 
 int socket(int domain, int type, int protocol);
-int connect(int fd, const struct sockaddr* addr, socklen_t len);
-int bind(int fd, const struct sockaddr* addr, socklen_t len);
-int listen(int fd, int backlog);
-int accept(int fd, struct sockaddr* addr, socklen_t* len);
-ssize_t recv(int fd, void* buf, std::size_t len, int flags);
-ssize_t send(int fd, const void* buf, std::size_t len, int flags);
-int setsockopt(int fd, int level, int name, const void* value, socklen_t len); // Windows: SO_SNDTIMEO / SO_RCVTIMEO take a timeval, SO_REUSEADDR is the default (no-op)
-int getsockname(int fd, struct sockaddr* addr, socklen_t* len);
-int getpeername(int fd, struct sockaddr* addr, socklen_t* len);
-int getaddrinfo(const char* node, const char* service, const struct addrinfo* hints, struct addrinfo** res); // EAI_* error code (gai_strerror)
+_fd_arg(1) int connect(int fd, const struct sockaddr* addr, socklen_t len);
+_fd_arg(1) int bind(int fd, const struct sockaddr* addr, socklen_t len);
+_fd_arg(1) int listen(int fd, int backlog);
+_fd_arg(1) int accept(int fd, struct sockaddr* _restrict addr, socklen_t* _restrict len);
+_fd_arg_read(1) _write_only(2, 3) ssize_t recv(int fd, void* buf, std::size_t len, int flags);
+_fd_arg_write(1) _read_only(2, 3) ssize_t send(int fd, const void* buf, std::size_t len, int flags);
+_fd_arg(1) _read_only(4, 5) int setsockopt(int fd, int level, int name, const void* value, socklen_t len); // Windows: SO_SNDTIMEO / SO_RCVTIMEO take a timeval, SO_REUSEADDR is the default (no-op)
+_fd_arg(1) int getsockname(int fd, struct sockaddr* _restrict addr, socklen_t* _restrict len);
+_fd_arg(1) int getpeername(int fd, struct sockaddr* _restrict addr, socklen_t* _restrict len);
+_null_terminated_string_arg(1) _null_terminated_string_arg(2) int getaddrinfo(const char* _restrict node, const char* _restrict service, const struct addrinfo* _restrict hints, struct addrinfo** _restrict res); // EAI_* error code (gai_strerror)
 void freeaddrinfo(struct addrinfo* res);
 #ifdef UTILS_WINDOWS
     #pragma push_macro("gai_strerror")

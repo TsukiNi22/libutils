@@ -93,8 +93,8 @@ _nodiscard _nothrow _fd_arg(1) int utils_platform_epoll_wait(int epfd, struct ep
 
 /* socket */
 _nodiscard _nothrow int utils_platform_socket(int domain, int type, int protocol);
-_nodiscard _nothrow _fd_arg(1) _read_only(2, 3) int utils_platform_connect(int fd, const struct sockaddr* addr, socklen_t len);
-_nodiscard _nothrow _fd_arg(1) _read_only(2, 3) int utils_platform_bind(int fd, const struct sockaddr* addr, socklen_t len);
+_nodiscard _nothrow _fd_arg(1) int utils_platform_connect(int fd, const struct sockaddr* addr, socklen_t len);
+_nodiscard _nothrow _fd_arg(1) int utils_platform_bind(int fd, const struct sockaddr* addr, socklen_t len);
 _nodiscard _nothrow _fd_arg(1) int utils_platform_listen(int fd, int backlog);
 _nodiscard _nothrow _fd_arg(1) int utils_platform_accept(int fd, struct sockaddr* _restrict addr, socklen_t* _restrict len);
 _nodiscard _nothrow _fd_arg_read(1) _write_only(2, 3) ssize_t utils_platform_recv(int fd, void* buf, size_t len, int flags);
