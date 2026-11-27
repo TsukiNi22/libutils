@@ -48,6 +48,7 @@ File Description:
     #define _cold
     #define _const
     #define _pure
+    #define _nothrow
     #define _assume(expr)
     #define _unreachable() ((void)0)
 
@@ -61,6 +62,12 @@ File Description:
     /* diagnostics */
     #define _format(archetype, i_fmt, i_args)
     #define _sentinel
+    #define _warning(msg)
+    #define _error(msg)
+    #define _fd_arg(i_fd)
+    #define _fd_arg_read(i_fd)
+    #define _fd_arg_write(i_fd)
+    #define _null_terminated_string_arg(i_str)
 
     /* binary layout */
     #define _noaddress
@@ -72,7 +79,10 @@ File Description:
     #define _alloc_size_mul(i_mul, i_size)
     #define _nonnull(i_ptr)
     #define _returns_nonnull
+    #define _assume_aligned(i_align)
     #define _read_only(i_ptr, i_size)
     #define _write_only(i_ptr, i_size)
+    #define _read_write(i_ptr, i_size)
+    #define _lifetimebound
 
 #endif /* ATTRIBUTE_FALLBACK_H */
