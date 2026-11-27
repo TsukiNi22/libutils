@@ -192,23 +192,23 @@ _cold static void cast_runtime(utils::arguments::Settings& settings, const std::
 /* ARGPARSER */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold utils_argparser_t* utils_argparser_create(const char* binary, const char* description)
+_cold _nothrow utils_argparser_t* utils_argparser_create(const char* binary, const char* description)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_argparser_t* {return new utils_argparser_t(text(binary, "[None]"), text(description, "..."));});
 }
 
-_cold void utils_argparser_destroy(utils_argparser_t* parser)
+_cold _nothrow void utils_argparser_destroy(utils_argparser_t* parser)
 {
     (void)utils::exception::c_api::guard([&](void) {delete parser;}); // like free(NULL)
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_help(const utils_argparser_t* parser)
+_cold _nothrow int utils_argparser_help(const utils_argparser_t* parser)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(parser, "parser").help();});
 }
 
-_cold utils_argparser_result_t* utils_argparser_parse(const utils_argparser_t* parser, int argc, const char* const* argv, bool failsafe)
+_cold _nothrow utils_argparser_result_t* utils_argparser_parse(const utils_argparser_t* parser, int argc, const char* const* argv, bool failsafe)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_argparser_result_t* {
         const utils::arguments::ArgParser& self = utils::exception::c_api::not_null_ref(parser, "parser");
@@ -225,12 +225,12 @@ _cold utils_argparser_result_t* utils_argparser_parse(const utils_argparser_t* p
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_set_default_usage(utils_argparser_t* parser)
+_cold _nothrow int utils_argparser_set_default_usage(utils_argparser_t* parser)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(parser, "parser").setDefaultUsage();});
 }
 
-_cold int utils_argparser_set_usage(utils_argparser_t* parser, const char* id, const char* name, bool ordered, const char* const* ids, const bool* mandatory, size_t count, const char* description, bool force)
+_cold _nothrow int utils_argparser_set_usage(utils_argparser_t* parser, const char* id, const char* name, bool ordered, const char* const* ids, const bool* mandatory, size_t count, const char* description, bool force)
 {
     return utils::exception::c_api::guard([&](void) {
         utils::arguments::ArgParser& self = utils::exception::c_api::not_null_ref(parser, "parser");
@@ -244,7 +244,7 @@ _cold int utils_argparser_set_usage(utils_argparser_t* parser, const char* id, c
     });
 }
 
-_cold int utils_argparser_set_option(utils_argparser_t* parser, const char* id, const char* name, utils_argparser_check_t check, void* data, const char* description, bool force)
+_cold _nothrow int utils_argparser_set_option(utils_argparser_t* parser, const char* id, const char* name, utils_argparser_check_t check, void* data, const char* description, bool force)
 {
     return utils::exception::c_api::guard([&](void) {
         utils::arguments::ArgParser& self = utils::exception::c_api::not_null_ref(parser, "parser");
@@ -258,7 +258,7 @@ _cold int utils_argparser_set_option(utils_argparser_t* parser, const char* id, 
     });
 }
 
-_cold int utils_argparser_set_flag(utils_argparser_t* parser, const char* id, const char* short_flag, const char* flag, const char* long_flag, const char* env, const utils_argparser_flag_option_t* options, size_t count, const char* description, bool unlimited, bool ignore_case, bool force)
+_cold _nothrow int utils_argparser_set_flag(utils_argparser_t* parser, const char* id, const char* short_flag, const char* flag, const char* long_flag, const char* env, const utils_argparser_flag_option_t* options, size_t count, const char* description, bool unlimited, bool ignore_case, bool force)
 {
     return utils::exception::c_api::guard([&](void) {
         utils::arguments::ArgParser& self = utils::exception::c_api::not_null_ref(parser, "parser");
@@ -274,55 +274,55 @@ _cold int utils_argparser_set_flag(utils_argparser_t* parser, const char* id, co
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_remove_usage(utils_argparser_t* parser, const char* id)
+_cold _nothrow int utils_argparser_remove_usage(utils_argparser_t* parser, const char* id)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(parser, "parser").removeUsage(utils::exception::c_api::not_null(id, "id"));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_remove_usages(utils_argparser_t* parser, const char* const* ids, size_t count)
+_cold _nothrow int utils_argparser_remove_usages(utils_argparser_t* parser, const char* const* ids, size_t count)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(parser, "parser").removeUsages(strings(ids, count));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_remove_option(utils_argparser_t* parser, const char* id)
+_cold _nothrow int utils_argparser_remove_option(utils_argparser_t* parser, const char* id)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(parser, "parser").removeOption(utils::exception::c_api::not_null(id, "id"));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_remove_options(utils_argparser_t* parser, const char* const* ids, size_t count)
+_cold _nothrow int utils_argparser_remove_options(utils_argparser_t* parser, const char* const* ids, size_t count)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(parser, "parser").removeOptions(strings(ids, count));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_remove_flag(utils_argparser_t* parser, const char* id)
+_cold _nothrow int utils_argparser_remove_flag(utils_argparser_t* parser, const char* id)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(parser, "parser").removeFlag(utils::exception::c_api::not_null(id, "id"));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_remove_flags(utils_argparser_t* parser, const char* const* ids, size_t count)
+_cold _nothrow int utils_argparser_remove_flags(utils_argparser_t* parser, const char* const* ids, size_t count)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(parser, "parser").removeFlags(strings(ids, count));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_reset_usages(utils_argparser_t* parser)
+_cold _nothrow int utils_argparser_reset_usages(utils_argparser_t* parser)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(parser, "parser").resetUsages();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_reset_options(utils_argparser_t* parser)
+_cold _nothrow int utils_argparser_reset_options(utils_argparser_t* parser)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(parser, "parser").resetOptions();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_reset_flags(utils_argparser_t* parser)
+_cold _nothrow int utils_argparser_reset_flags(utils_argparser_t* parser)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(parser, "parser").resetFlags();});
 }
@@ -330,7 +330,7 @@ _cold int utils_argparser_reset_flags(utils_argparser_t* parser)
 //----------------------------------------------------------------//
 /* ARGPARSER HOOKS */
 
-_cold int utils_argparser_set_help_hook(utils_argparser_t* parser, utils_argparser_help_hook_t hook, void* data)
+_cold _nothrow int utils_argparser_set_help_hook(utils_argparser_t* parser, utils_argparser_help_hook_t hook, void* data)
 {
     return utils::exception::c_api::guard([&](void) {
         utils::arguments::ArgParser& self = utils::exception::c_api::not_null_ref(parser, "parser");
@@ -344,61 +344,61 @@ _cold int utils_argparser_set_help_hook(utils_argparser_t* parser, utils_argpars
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_reset_help_hook(utils_argparser_t* parser)
+_cold _nothrow int utils_argparser_reset_help_hook(utils_argparser_t* parser)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(parser, "parser").resetHelpHook();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_default_help_hook(const utils_argparser_t* parser)
+_cold _nothrow int utils_argparser_default_help_hook(const utils_argparser_t* parser)
 {
     return utils::exception::c_api::guard([&](void) {utils::arguments::defaultHelpHook(utils::exception::c_api::not_null_ref(parser, "parser"));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_check_true(const char* option, _unused void* data)
+_cold _nothrow int utils_argparser_check_true(const char* option, _unused void* data)
 {
     return check_with(utils::arguments::defaultTrueParsingHook, option);
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_check_bool(const char* option, _unused void* data)
+_cold _nothrow int utils_argparser_check_bool(const char* option, _unused void* data)
 {
     return check_with(utils::arguments::defaultBoolParsingHook, option);
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_check_int32(const char* option, _unused void* data)
+_cold _nothrow int utils_argparser_check_int32(const char* option, _unused void* data)
 {
     return check_with(utils::arguments::defaultInt32ParsingHook, option);
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_check_sizet(const char* option, _unused void* data)
+_cold _nothrow int utils_argparser_check_sizet(const char* option, _unused void* data)
 {
     return check_with(utils::arguments::defaultSizetParsingHook, option);
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_check_double(const char* option, _unused void* data)
+_cold _nothrow int utils_argparser_check_double(const char* option, _unused void* data)
 {
     return check_with(utils::arguments::defaultDoubleParsingHook, option);
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_check_file(const char* option, _unused void* data)
+_cold _nothrow int utils_argparser_check_file(const char* option, _unused void* data)
 {
     return check_with(utils::arguments::defaultFileParsingHook, option);
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_check_directory(const char* option, _unused void* data)
+_cold _nothrow int utils_argparser_check_directory(const char* option, _unused void* data)
 {
     return check_with(utils::arguments::defaultDirectoryParsingHook, option);
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_check_writable(const char* option, _unused void* data)
+_cold _nothrow int utils_argparser_check_writable(const char* option, _unused void* data)
 {
     return check_with(utils::arguments::defaultWritableParsingHook, option);
 }
@@ -407,31 +407,31 @@ _cold int utils_argparser_check_writable(const char* option, _unused void* data)
 /* ARGPARSER SETTER / GETTER */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_disable_help(utils_argparser_t* parser)
+_cold _nothrow int utils_argparser_disable_help(utils_argparser_t* parser)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(parser, "parser").disableHelp();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_set_binary(utils_argparser_t* parser, const char* binary)
+_cold _nothrow int utils_argparser_set_binary(utils_argparser_t* parser, const char* binary)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(parser, "parser").setBinary(utils::exception::c_api::not_null(binary, "binary"));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_argparser_set_description(utils_argparser_t* parser, const char* description)
+_cold _nothrow int utils_argparser_set_description(utils_argparser_t* parser, const char* description)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(parser, "parser").setDescription(utils::exception::c_api::not_null(description, "description"));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold const char* utils_argparser_get_binary(const utils_argparser_t* parser)
+_cold _nothrow const char* utils_argparser_get_binary(const utils_argparser_t* parser)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return utils::exception::c_api::not_null_ref(parser, "parser").getBinary().c_str();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold const char* utils_argparser_get_description(const utils_argparser_t* parser)
+_cold _nothrow const char* utils_argparser_get_description(const utils_argparser_t* parser)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return utils::exception::c_api::not_null_ref(parser, "parser").getDescription().c_str();});
 }
@@ -440,18 +440,18 @@ _cold const char* utils_argparser_get_description(const utils_argparser_t* parse
 /* ARGPARSER USAGES / OPTIONS / FLAGS */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold size_t utils_argparser_usages_count(const utils_argparser_t* parser)
+_cold _nothrow size_t utils_argparser_usages_count(const utils_argparser_t* parser)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::exception::c_api::not_null_ref(parser, "parser").getUsages().size();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold const char* utils_argparser_usage_id(const utils_argparser_t* parser, size_t i)
+_cold _nothrow const char* utils_argparser_usage_id(const utils_argparser_t* parser, size_t i)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return key_at(utils::exception::c_api::not_null_ref(parser, "parser").getUsages(), i).c_str();});
 }
 
-_cold int utils_argparser_get_usage(const utils_argparser_t* parser, const char* id, const char** name, bool* ordered, const char** description)
+_cold _nothrow int utils_argparser_get_usage(const utils_argparser_t* parser, const char* id, const char** name, bool* ordered, const char** description)
 {
     return utils::exception::c_api::guard([&](void) {
         const utils::arguments::Usage& usage = value_of(utils::exception::c_api::not_null_ref(parser, "parser").getUsages(), id);
@@ -463,12 +463,12 @@ _cold int utils_argparser_get_usage(const utils_argparser_t* parser, const char*
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold size_t utils_argparser_usage_ids_count(const utils_argparser_t* parser, const char* id)
+_cold _nothrow size_t utils_argparser_usage_ids_count(const utils_argparser_t* parser, const char* id)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return value_of(utils::exception::c_api::not_null_ref(parser, "parser").getUsages(), id).ids.size();});
 }
 
-_cold int utils_argparser_usage_get_id(const utils_argparser_t* parser, const char* id, size_t i, const char** option_id, bool* mandatory)
+_cold _nothrow int utils_argparser_usage_get_id(const utils_argparser_t* parser, const char* id, size_t i, const char** option_id, bool* mandatory)
 {
     return utils::exception::c_api::guard([&](void) {
         const std::pair<std::string, bool>& entry = value_of(utils::exception::c_api::not_null_ref(parser, "parser").getUsages(), id).ids.at(i);
@@ -479,18 +479,18 @@ _cold int utils_argparser_usage_get_id(const utils_argparser_t* parser, const ch
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold size_t utils_argparser_options_count(const utils_argparser_t* parser)
+_cold _nothrow size_t utils_argparser_options_count(const utils_argparser_t* parser)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::exception::c_api::not_null_ref(parser, "parser").getOptions().size();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold const char* utils_argparser_option_id(const utils_argparser_t* parser, size_t i)
+_cold _nothrow const char* utils_argparser_option_id(const utils_argparser_t* parser, size_t i)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return key_at(utils::exception::c_api::not_null_ref(parser, "parser").getOptions(), i).c_str();});
 }
 
-_cold int utils_argparser_get_option(const utils_argparser_t* parser, const char* id, const char** name, bool* exact, const char** description)
+_cold _nothrow int utils_argparser_get_option(const utils_argparser_t* parser, const char* id, const char** name, bool* exact, const char** description)
 {
     return utils::exception::c_api::guard([&](void) {
         const utils::arguments::Option& option = value_of(utils::exception::c_api::not_null_ref(parser, "parser").getOptions(), id);
@@ -502,18 +502,18 @@ _cold int utils_argparser_get_option(const utils_argparser_t* parser, const char
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold size_t utils_argparser_flags_count(const utils_argparser_t* parser)
+_cold _nothrow size_t utils_argparser_flags_count(const utils_argparser_t* parser)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::exception::c_api::not_null_ref(parser, "parser").getFlags().size();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold const char* utils_argparser_flag_id(const utils_argparser_t* parser, size_t i)
+_cold _nothrow const char* utils_argparser_flag_id(const utils_argparser_t* parser, size_t i)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return key_at(utils::exception::c_api::not_null_ref(parser, "parser").getFlags(), i).c_str();});
 }
 
-_cold int utils_argparser_get_flag(const utils_argparser_t* parser, const char* id, const char** short_flag, const char** flag, const char** long_flag, const char** env, const char** description, bool* unlimited)
+_cold _nothrow int utils_argparser_get_flag(const utils_argparser_t* parser, const char* id, const char** short_flag, const char** flag, const char** long_flag, const char** env, const char** description, bool* unlimited)
 {
     return utils::exception::c_api::guard([&](void) {
         const utils::arguments::Flag& found = value_of(utils::exception::c_api::not_null_ref(parser, "parser").getFlags(), id);
@@ -528,12 +528,12 @@ _cold int utils_argparser_get_flag(const utils_argparser_t* parser, const char* 
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold size_t utils_argparser_flag_options_count(const utils_argparser_t* parser, const char* id)
+_cold _nothrow size_t utils_argparser_flag_options_count(const utils_argparser_t* parser, const char* id)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return value_of(utils::exception::c_api::not_null_ref(parser, "parser").getFlags(), id).options.size();});
 }
 
-_cold int utils_argparser_flag_get_option(const utils_argparser_t* parser, const char* id, size_t i, const char** name, bool* mandatory)
+_cold _nothrow int utils_argparser_flag_get_option(const utils_argparser_t* parser, const char* id, size_t i, const char** name, bool* mandatory)
 {
     return utils::exception::c_api::guard([&](void) {
         const auto &[option, required, _] = value_of(utils::exception::c_api::not_null_ref(parser, "parser").getFlags(), id).options.at(i);
@@ -546,49 +546,49 @@ _cold int utils_argparser_flag_get_option(const utils_argparser_t* parser, const
 //----------------------------------------------------------------//
 /* ARGPARSER RESULT */
 
-_cold void utils_argparser_result_destroy(utils_argparser_result_t* result)
+_cold _nothrow void utils_argparser_result_destroy(utils_argparser_result_t* result)
 {
     (void)utils::exception::c_api::guard([&](void) {delete result;}); // like free(NULL)
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold size_t utils_argparser_result_count(const utils_argparser_result_t* result)
+_cold _nothrow size_t utils_argparser_result_count(const utils_argparser_result_t* result)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::exception::c_api::not_null_ref(result, "result").usages.size();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold const char* utils_argparser_result_usage(const utils_argparser_result_t* result, size_t i)
+_cold _nothrow const char* utils_argparser_result_usage(const utils_argparser_result_t* result, size_t i)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return usage_at(result, i).id.c_str();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold size_t utils_argparser_result_arguments_count(const utils_argparser_result_t* result, size_t i)
+_cold _nothrow size_t utils_argparser_result_arguments_count(const utils_argparser_result_t* result, size_t i)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return usage_at(result, i).arguments.size();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold const char* utils_argparser_result_argument_id(const utils_argparser_result_t* result, size_t i, size_t j)
+_cold _nothrow const char* utils_argparser_result_argument_id(const utils_argparser_result_t* result, size_t i, size_t j)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return std::get<0>(argument_at(result, i, j)).c_str();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold bool utils_argparser_result_argument_is_option(const utils_argparser_result_t* result, size_t i, size_t j)
+_cold _nothrow bool utils_argparser_result_argument_is_option(const utils_argparser_result_t* result, size_t i, size_t j)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return std::get<1>(argument_at(result, i, j));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold size_t utils_argparser_result_values_count(const utils_argparser_result_t* result, size_t i, size_t j)
+_cold _nothrow size_t utils_argparser_result_values_count(const utils_argparser_result_t* result, size_t i, size_t j)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return std::get<2>(argument_at(result, i, j)).size();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold const char* utils_argparser_result_value(const utils_argparser_result_t* result, size_t i, size_t j, size_t k)
+_cold _nothrow const char* utils_argparser_result_value(const utils_argparser_result_t* result, size_t i, size_t j, size_t k)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return std::get<2>(argument_at(result, i, j)).at(k).c_str();});
 }
@@ -597,17 +597,17 @@ _cold const char* utils_argparser_result_value(const utils_argparser_result_t* r
 /* SETTINGS */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold utils_settings_t* utils_settings_create(void)
+_cold _nothrow utils_settings_t* utils_settings_create(void)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [](void) -> utils_settings_t* {return new utils_settings_t();});
 }
 
-_cold void utils_settings_destroy(utils_settings_t* settings)
+_cold _nothrow void utils_settings_destroy(utils_settings_t* settings)
 {
     (void)utils::exception::c_api::guard([&](void) {delete settings;}); // like free(NULL)
 }
 
-_cold int utils_settings_auto_cast(utils_settings_t* settings, const char* id, const char* setting, bool force, utils_settings_cast_t* type)
+_cold _nothrow int utils_settings_auto_cast(utils_settings_t* settings, const char* id, const char* setting, bool force, utils_settings_cast_t* type)
 {
     return utils::exception::c_api::guard([&](void) {
         utils::arguments::Settings& self = settings_of(settings);
@@ -619,7 +619,7 @@ _cold int utils_settings_auto_cast(utils_settings_t* settings, const char* id, c
     });
 }
 
-_cold int utils_settings_cast(utils_settings_t* settings, const char* id, const char* setting, utils_settings_cast_t type, bool force)
+_cold _nothrow int utils_settings_cast(utils_settings_t* settings, const char* id, const char* setting, utils_settings_cast_t type, bool force)
 {
     return utils::exception::c_api::guard([&](void) {
         utils::arguments::Settings& self = settings_of(settings);
@@ -631,7 +631,7 @@ _cold int utils_settings_cast(utils_settings_t* settings, const char* id, const 
     });
 }
 
-_cold int utils_settings_remove(utils_settings_t* settings, const char* id, bool failsafe)
+_cold _nothrow int utils_settings_remove(utils_settings_t* settings, const char* id, bool failsafe)
 {
     return utils::exception::c_api::guard([&](void) {
         utils::arguments::Settings& self = settings_of(settings);
@@ -643,18 +643,18 @@ _cold int utils_settings_remove(utils_settings_t* settings, const char* id, bool
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_settings_clear(utils_settings_t* settings)
+_cold _nothrow int utils_settings_clear(utils_settings_t* settings)
 {
     return utils::exception::c_api::guard([&](void) {settings_of(settings).clear();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot bool utils_settings_contains(const utils_settings_t* settings, const char* id)
+_hot _nothrow bool utils_settings_contains(const utils_settings_t* settings, const char* id)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return settings_of(settings).contains(utils::exception::c_api::not_null(id, "id"));});
 }
 
-_cold utils_settings_cast_t utils_settings_get_type(const utils_settings_t* settings, const char* id)
+_cold _nothrow utils_settings_cast_t utils_settings_get_type(const utils_settings_t* settings, const char* id)
 {
     return utils::exception::c_api::guard_fallback(C_API_SETTINGS_CAST_OTHER, [&](void) -> utils_settings_cast_t {
         const utils::arguments::Setting& setting = settings_of(settings).get(utils::exception::c_api::not_null(id, "id"));
@@ -704,7 +704,7 @@ C_API_SETTINGS_STRING_DEF(u32string, uint_least32_t, std::u32string)
 C_API_SETTINGS_STRING_DEF(wstring, wchar_t, std::wstring)
 
 /* bytes */
-_cold int utils_settings_set_bytes(utils_settings_t* settings, const char* id, const void* data, size_t size, bool force)
+_cold _nothrow int utils_settings_set_bytes(utils_settings_t* settings, const char* id, const void* data, size_t size, bool force)
 {
     return utils::exception::c_api::guard([&](void) {
         const std::byte* begin = (size > 0 ? static_cast<const std::byte*>(utils::exception::c_api::not_null(data, "data")) : nullptr);
@@ -713,7 +713,7 @@ _cold int utils_settings_set_bytes(utils_settings_t* settings, const char* id, c
     });
 }
 
-_cold int utils_settings_get_bytes(const utils_settings_t* settings, const char* id, const void** data, size_t* size)
+_cold _nothrow int utils_settings_get_bytes(const utils_settings_t* settings, const char* id, const void** data, size_t* size)
 {
     return utils::exception::c_api::guard([&](void) {
         const void*& res = utils::exception::c_api::not_null_ref(data, "data");
@@ -725,7 +725,7 @@ _cold int utils_settings_get_bytes(const utils_settings_t* settings, const char*
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold bool utils_settings_is_bytes(const utils_settings_t* settings, const char* id)
+_cold _nothrow bool utils_settings_is_bytes(const utils_settings_t* settings, const char* id)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return setting_is<std::vector<std::byte>>(settings, id);});
 }

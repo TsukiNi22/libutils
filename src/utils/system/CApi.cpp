@@ -138,7 +138,7 @@ _hot _nodiscard static H& memory(H* handle) {return utils::exception::c_api::not
 //----------------------------------------------------------------//
 /* GPU */
 
-_cold utils_gpu_t* utils_gpu_create(utils_memory_mode_t mode)
+_cold _nothrow utils_gpu_t* utils_gpu_create(utils_memory_mode_t mode)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_gpu_t* {
         const utils::system::MemoryMode cpp = mode_of(mode);
@@ -150,7 +150,7 @@ _cold utils_gpu_t* utils_gpu_create(utils_memory_mode_t mode)
     });
 }
 
-_cold utils_gpu_t* utils_gpu_create_custom(const utils_gpu_callbacks_t* callbacks, void* data)
+_cold _nothrow utils_gpu_t* utils_gpu_create_custom(const utils_gpu_callbacks_t* callbacks, void* data)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_gpu_t* {
         const utils_gpu_callbacks_t& given = utils::exception::c_api::not_null_ref(callbacks, "callbacks");
@@ -165,24 +165,24 @@ _cold utils_gpu_t* utils_gpu_create_custom(const utils_gpu_callbacks_t* callback
     });
 }
 
-_cold void utils_gpu_destroy(utils_gpu_t* gpu)
+_cold _nothrow void utils_gpu_destroy(utils_gpu_t* gpu)
 {
     (void)utils::exception::c_api::guard([&](void) {delete gpu;}); // like free(NULL)
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold bool utils_gpu_is_available(const utils_gpu_t* gpu)
+_cold _nothrow bool utils_gpu_is_available(const utils_gpu_t* gpu)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return gpu_of(gpu).isAvailable();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold utils_memory_mode_t utils_gpu_get_mode(const utils_gpu_t* gpu)
+_cold _nothrow utils_memory_mode_t utils_gpu_get_mode(const utils_gpu_t* gpu)
 {
     return utils::exception::c_api::guard_fallback(C_API_MEMORY_MODE_RAM, [&](void) -> utils_memory_mode_t {return static_cast<utils_memory_mode_t>(gpu_of(gpu).getMode());});
 }
 
-_cold const char* utils_gpu_get_name(const utils_gpu_t* gpu)
+_cold _nothrow const char* utils_gpu_get_name(const utils_gpu_t* gpu)
 {
     // xstyle: ignore-next CPP-THIS (false positive: _thread_local is the attribute macro, not a member)
     static _thread_local std::string name;
@@ -191,55 +191,55 @@ _cold const char* utils_gpu_get_name(const utils_gpu_t* gpu)
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold size_t utils_gpu_get_name_r(const utils_gpu_t* gpu, char* buf, size_t size)
+_cold _nothrow size_t utils_gpu_get_name_r(const utils_gpu_t* gpu, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(gpu_of(gpu).getName(), buf, size);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold size_t utils_gpu_get_memory(const utils_gpu_t* gpu)
+_cold _nothrow size_t utils_gpu_get_memory(const utils_gpu_t* gpu)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return gpu_of(gpu).getMemory();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot uintptr_t utils_gpu_allocate(utils_gpu_t* gpu, size_t bytes)
+_hot _nothrow uintptr_t utils_gpu_allocate(utils_gpu_t* gpu, size_t bytes)
 {
     return utils::exception::c_api::guard_fallback(static_cast<uintptr_t>(0), [&](void) -> uintptr_t {return gpu_of(gpu).allocate(bytes);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_gpu_free(utils_gpu_t* gpu, uintptr_t buffer)
+_hot _nothrow int utils_gpu_free(utils_gpu_t* gpu, uintptr_t buffer)
 {
     return utils::exception::c_api::guard([&](void) {gpu_of(gpu).free(buffer);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_gpu_store(utils_gpu_t* gpu, uintptr_t dst, const void* src, size_t bytes, size_t offset)
+_hot _nothrow int utils_gpu_store(utils_gpu_t* gpu, uintptr_t dst, const void* src, size_t bytes, size_t offset)
 {
     return utils::exception::c_api::guard([&](void) {gpu_of(gpu).store(dst, utils::exception::c_api::not_null(src, "source"), bytes, offset);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_gpu_fetch(const utils_gpu_t* gpu, void* dst, uintptr_t src, size_t bytes, size_t offset)
+_hot _nothrow int utils_gpu_fetch(const utils_gpu_t* gpu, void* dst, uintptr_t src, size_t bytes, size_t offset)
 {
     return utils::exception::c_api::guard([&](void) {gpu_of(gpu).fetch(utils::exception::c_api::not_null(dst, "destination"), src, bytes, offset);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_gpu_memset(utils_gpu_t* gpu, uintptr_t buffer, uint8_t value, size_t bytes, size_t offset)
+_hot _nothrow int utils_gpu_memset(utils_gpu_t* gpu, uintptr_t buffer, uint8_t value, size_t bytes, size_t offset)
 {
     return utils::exception::c_api::guard([&](void) {gpu_of(gpu).memset(buffer, static_cast<std::byte>(value), bytes, offset);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_gpu_memcpy(utils_gpu_t* gpu, uintptr_t dst, uintptr_t src, size_t bytes, size_t dst_offset, size_t src_offset)
+_hot _nothrow int utils_gpu_memcpy(utils_gpu_t* gpu, uintptr_t dst, uintptr_t src, size_t bytes, size_t dst_offset, size_t src_offset)
 {
     return utils::exception::c_api::guard([&](void) {gpu_of(gpu).memcpy(dst, src, bytes, dst_offset, src_offset);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_gpu_join(utils_gpu_t* gpu)
+_hot _nothrow int utils_gpu_join(utils_gpu_t* gpu)
 {
     return utils::exception::c_api::guard([&](void) {gpu_of(gpu).join();});
 }
@@ -248,47 +248,47 @@ _hot int utils_gpu_join(utils_gpu_t* gpu)
 /* HYBRID MEMORY (bytes) */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold utils_hybrid_memory_t* utils_hybrid_memory_create(size_t bytes, utils_memory_mode_t mode)
+_cold _nothrow utils_hybrid_memory_t* utils_hybrid_memory_create(size_t bytes, utils_memory_mode_t mode)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_hybrid_memory_t* {return memory_new<utils_hybrid_memory_t>(bytes, mode);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold utils_hybrid_memory_t* utils_hybrid_memory_create_gpu(size_t bytes, const utils_gpu_t* gpu)
+_cold _nothrow utils_hybrid_memory_t* utils_hybrid_memory_create_gpu(size_t bytes, const utils_gpu_t* gpu)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_hybrid_memory_t* {return new utils_hybrid_memory_t(bytes, utils::exception::c_api::not_null_ref(gpu, "gpu").gpu);});
 }
 
-_cold void utils_hybrid_memory_destroy(utils_hybrid_memory_t* m)
+_cold _nothrow void utils_hybrid_memory_destroy(utils_hybrid_memory_t* m)
 {
     (void)utils::exception::c_api::guard([&](void) {delete m;}); // like free(NULL)
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_hybrid_memory_allocate(utils_hybrid_memory_t* m, size_t bytes)
+_cold _nothrow int utils_hybrid_memory_allocate(utils_hybrid_memory_t* m, size_t bytes)
 {
     return utils::exception::c_api::guard([&](void) {memory(m).allocate(bytes);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_hybrid_memory_resize(utils_hybrid_memory_t* m, size_t bytes)
+_cold _nothrow int utils_hybrid_memory_resize(utils_hybrid_memory_t* m, size_t bytes)
 {
     return utils::exception::c_api::guard([&](void) {memory(m).resize(bytes);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_hybrid_memory_free(utils_hybrid_memory_t* m)
+_cold _nothrow int utils_hybrid_memory_free(utils_hybrid_memory_t* m)
 {
     return utils::exception::c_api::guard([&](void) {memory(m).free();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_hybrid_memory_clear(utils_hybrid_memory_t* m)
+_hot _nothrow int utils_hybrid_memory_clear(utils_hybrid_memory_t* m)
 {
     return utils::exception::c_api::guard([&](void) {memory(m).clear();});
 }
 
-_hot int utils_hybrid_memory_store(utils_hybrid_memory_t* m, const void* data, size_t bytes, size_t offset)
+_hot _nothrow int utils_hybrid_memory_store(utils_hybrid_memory_t* m, const void* data, size_t bytes, size_t offset)
 {
     return utils::exception::c_api::guard([&](void) {
         if (bytes > 0) (void)utils::exception::c_api::not_null(data, "data");
@@ -296,7 +296,7 @@ _hot int utils_hybrid_memory_store(utils_hybrid_memory_t* m, const void* data, s
     });
 }
 
-_hot int utils_hybrid_memory_fetch(const utils_hybrid_memory_t* m, void* out, size_t bytes, size_t offset)
+_hot _nothrow int utils_hybrid_memory_fetch(const utils_hybrid_memory_t* m, void* out, size_t bytes, size_t offset)
 {
     return utils::exception::c_api::guard([&](void) {
         if (bytes > 0) (void)utils::exception::c_api::not_null(out, "output");
@@ -305,61 +305,61 @@ _hot int utils_hybrid_memory_fetch(const utils_hybrid_memory_t* m, void* out, si
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_hybrid_memory_fill(utils_hybrid_memory_t* m, uint8_t value)
+_hot _nothrow int utils_hybrid_memory_fill(utils_hybrid_memory_t* m, uint8_t value)
 {
     return utils::exception::c_api::guard([&](void) {memory(m).fill(static_cast<std::byte>(value));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_hybrid_memory_join(utils_hybrid_memory_t* m)
+_hot _nothrow int utils_hybrid_memory_join(utils_hybrid_memory_t* m)
 {
     return utils::exception::c_api::guard([&](void) {memory(m).join();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold size_t utils_hybrid_memory_bytes(const utils_hybrid_memory_t* m)
+_cold _nothrow size_t utils_hybrid_memory_bytes(const utils_hybrid_memory_t* m)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return memory(m).bytes();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold bool utils_hybrid_memory_empty(const utils_hybrid_memory_t* m)
+_cold _nothrow bool utils_hybrid_memory_empty(const utils_hybrid_memory_t* m)
 {
     return utils::exception::c_api::guard_fallback(true, [&](void) -> bool {return memory(m).empty();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold bool utils_hybrid_memory_is_on_gpu(const utils_hybrid_memory_t* m)
+_cold _nothrow bool utils_hybrid_memory_is_on_gpu(const utils_hybrid_memory_t* m)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return memory(m).isOnGpu();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold utils_memory_mode_t utils_hybrid_memory_get_mode(const utils_hybrid_memory_t* m)
+_cold _nothrow utils_memory_mode_t utils_hybrid_memory_get_mode(const utils_hybrid_memory_t* m)
 {
     return utils::exception::c_api::guard_fallback(C_API_MEMORY_MODE_RAM, [&](void) -> utils_memory_mode_t {return static_cast<utils_memory_mode_t>(memory(m).getMode());});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold utils_memory_mode_t utils_hybrid_memory_get_requested_mode(const utils_hybrid_memory_t* m)
+_cold _nothrow utils_memory_mode_t utils_hybrid_memory_get_requested_mode(const utils_hybrid_memory_t* m)
 {
     return utils::exception::c_api::guard_fallback(C_API_MEMORY_MODE_RAM, [&](void) -> utils_memory_mode_t {return static_cast<utils_memory_mode_t>(memory(m).getRequestedMode());});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold utils_gpu_t* utils_hybrid_memory_get_gpu(const utils_hybrid_memory_t* m)
+_cold _nothrow utils_gpu_t* utils_hybrid_memory_get_gpu(const utils_hybrid_memory_t* m)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_gpu_t* {return gpu_handle(memory(m).getGpu());});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot uintptr_t utils_hybrid_memory_native(const utils_hybrid_memory_t* m)
+_hot _nothrow uintptr_t utils_hybrid_memory_native(const utils_hybrid_memory_t* m)
 {
     return utils::exception::c_api::guard_fallback(static_cast<uintptr_t>(0), [&](void) -> uintptr_t {return memory(m).native();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot void* utils_hybrid_memory_data(utils_hybrid_memory_t* m)
+_hot _nothrow void* utils_hybrid_memory_data(utils_hybrid_memory_t* m)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> void* {return memory(m).data();});
 }
@@ -374,17 +374,17 @@ C_API_INT_TYPES(C_API_ID_HANDLER_DEF)
 /* LOAD BALANCER */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold utils_load_balancer_t* utils_load_balancer_create(size_t limit, uint64_t lifespan_ms)
+_cold _nothrow utils_load_balancer_t* utils_load_balancer_create(size_t limit, uint64_t lifespan_ms)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_load_balancer_t* {return new utils_load_balancer_t(limit, std::chrono::milliseconds{lifespan_ms});});
 }
 
-_cold void utils_load_balancer_destroy(utils_load_balancer_t* balancer)
+_cold _nothrow void utils_load_balancer_destroy(utils_load_balancer_t* balancer)
 {
     (void)utils::exception::c_api::guard([&](void) {delete balancer;}); // like free(NULL)
 }
 
-_hot utils_worker_t* utils_load_balancer_get_worker(utils_load_balancer_t* balancer)
+_hot _nothrow utils_worker_t* utils_load_balancer_get_worker(utils_load_balancer_t* balancer)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_worker_t* {
         std::future<utils_worker&> worker = utils::exception::c_api::not_null_ref(balancer, "balancer").getWorker();
@@ -394,12 +394,12 @@ _hot utils_worker_t* utils_load_balancer_get_worker(utils_load_balancer_t* balan
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_load_balancer_spawn(utils_load_balancer_t* balancer, size_t n)
+_cold _nothrow int utils_load_balancer_spawn(utils_load_balancer_t* balancer, size_t n)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(balancer, "balancer").spawn(n);});
 }
 
-_cold int utils_load_balancer_kill(utils_load_balancer_t* balancer, bool forced)
+_cold _nothrow int utils_load_balancer_kill(utils_load_balancer_t* balancer, bool forced)
 {
     return utils::exception::c_api::guard([&](void) {
         utils::system::LoadBalancer<utils_worker>& self = utils::exception::c_api::not_null_ref(balancer, "balancer");
@@ -409,7 +409,7 @@ _cold int utils_load_balancer_kill(utils_load_balancer_t* balancer, bool forced)
     });
 }
 
-_cold int utils_load_balancer_kill_n(utils_load_balancer_t* balancer, size_t n, bool forced)
+_cold _nothrow int utils_load_balancer_kill_n(utils_load_balancer_t* balancer, size_t n, bool forced)
 {
     return utils::exception::c_api::guard([&](void) {
         utils::system::LoadBalancer<utils_worker>& self = utils::exception::c_api::not_null_ref(balancer, "balancer");
@@ -420,31 +420,31 @@ _cold int utils_load_balancer_kill_n(utils_load_balancer_t* balancer, size_t n, 
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_load_balancer_set_limit(utils_load_balancer_t* balancer, size_t limit)
+_cold _nothrow int utils_load_balancer_set_limit(utils_load_balancer_t* balancer, size_t limit)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(balancer, "balancer").setLimit(limit);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_load_balancer_set_lifespan(utils_load_balancer_t* balancer, uint64_t lifespan_ms)
+_cold _nothrow int utils_load_balancer_set_lifespan(utils_load_balancer_t* balancer, uint64_t lifespan_ms)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(balancer, "balancer").setLifespan(std::chrono::milliseconds{lifespan_ms});});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold size_t utils_load_balancer_get_limit(const utils_load_balancer_t* balancer)
+_cold _nothrow size_t utils_load_balancer_get_limit(const utils_load_balancer_t* balancer)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::exception::c_api::not_null_ref(balancer, "balancer").getLimit();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold uint64_t utils_load_balancer_get_lifespan(const utils_load_balancer_t* balancer)
+_cold _nothrow uint64_t utils_load_balancer_get_lifespan(const utils_load_balancer_t* balancer)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::uint64_t {return static_cast<std::uint64_t>(utils::exception::c_api::not_null_ref(balancer, "balancer").getLifespan().count());});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold size_t utils_load_balancer_size(const utils_load_balancer_t* balancer)
+_cold _nothrow size_t utils_load_balancer_size(const utils_load_balancer_t* balancer)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::exception::c_api::not_null_ref(balancer, "balancer").size();});
 }
@@ -453,17 +453,17 @@ _cold size_t utils_load_balancer_size(const utils_load_balancer_t* balancer)
 /* SCHEDULER */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold utils_scheduler_t* utils_scheduler_create(void)
+_cold _nothrow utils_scheduler_t* utils_scheduler_create(void)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [](void) -> utils_scheduler_t* {return new utils_scheduler_t();});
 }
 
-_cold void utils_scheduler_destroy(utils_scheduler_t* scheduler)
+_cold _nothrow void utils_scheduler_destroy(utils_scheduler_t* scheduler)
 {
     (void)utils::exception::c_api::guard([&](void) {delete scheduler;}); // like free(NULL)
 }
 
-_cold size_t utils_scheduler_schedule(utils_scheduler_t* scheduler, uint64_t delay_ms, utils_scheduler_task_t task, void* data)
+_cold _nothrow size_t utils_scheduler_schedule(utils_scheduler_t* scheduler, uint64_t delay_ms, utils_scheduler_task_t task, void* data)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {
         utils::system::Scheduler& self = utils::exception::c_api::not_null_ref(scheduler, "scheduler");
@@ -474,13 +474,13 @@ _cold size_t utils_scheduler_schedule(utils_scheduler_t* scheduler, uint64_t del
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_scheduler_cancel(utils_scheduler_t* scheduler, size_t id)
+_cold _nothrow int utils_scheduler_cancel(utils_scheduler_t* scheduler, size_t id)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(scheduler, "scheduler").cancel(id);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_scheduler_cancel_all(utils_scheduler_t* scheduler)
+_cold _nothrow int utils_scheduler_cancel_all(utils_scheduler_t* scheduler)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(scheduler, "scheduler").cancel();});
 }

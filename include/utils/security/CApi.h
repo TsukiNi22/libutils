@@ -29,11 +29,12 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../manip/smanip/CApi.h"   // utils_string_t
-    #include "../exception/CApi.h"      // utils_exception, UTILS_OK, UTILS_KO
-    #include <stdbool.h>                // bool
-    #include <stddef.h>                 // size_t
-    #include <stdint.h>                 // uint16_t
+    #include "../attribute/Attribute.hpp"   // _nodiscard, _nothrow, _read_only, _null_terminated_string_arg
+    #include "../manip/smanip/CApi.h"       // utils_string_t
+    #include "../exception/CApi.h"          // utils_exception, UTILS_OK, UTILS_KO
+    #include <stdbool.h>                    // bool
+    #include <stddef.h>                     // size_t
+    #include <stdint.h>                     // uint16_t
 
     //----------------------------------------------------------------//
     /* DEFINE */
@@ -57,45 +58,45 @@ typedef struct utils_observer utils_observer_t; // instance of the C side linked
 /* PROTOTYPE */
 
 /* AES key (encrypt: the key & iv of data are used, its tag is set, decrypt: key, iv & tag are used) */
-utils_aes_key_t* utils_aes_key_create(void); // NULL on error
-void utils_aes_key_destroy(utils_aes_key_t* key); // NULL: nothing
-int utils_aes_key_random_bytes(const utils_aes_key_t* key, uint16_t size, utils_string_t* out); // out replaced
-int utils_aes_key_encrypt(const utils_aes_key_t* key, const char* in, size_t size, utils_aes_data_t* data, utils_string_t* out); // out replaced
-int utils_aes_key_decrypt(const utils_aes_key_t* key, const char* in, size_t size, utils_aes_data_t* data, utils_string_t* out); // out replaced
-bool utils_aes_key_has_generate_overload(const utils_aes_key_t* key);
-bool utils_aes_key_has_set_overload(const utils_aes_key_t* key);
-bool utils_aes_key_has_get_overload(const utils_aes_key_t* key);
+_nodiscard _nothrow utils_aes_key_t* utils_aes_key_create(void); // NULL on error
+_nothrow void utils_aes_key_destroy(utils_aes_key_t* key); // NULL: nothing
+_nodiscard _nothrow int utils_aes_key_random_bytes(const utils_aes_key_t* key, uint16_t size, utils_string_t* out); // out replaced
+_nodiscard _nothrow _read_only(2, 3) int utils_aes_key_encrypt(const utils_aes_key_t* key, const char* in, size_t size, utils_aes_data_t* data, utils_string_t* out); // out replaced
+_nodiscard _nothrow _read_only(2, 3) int utils_aes_key_decrypt(const utils_aes_key_t* key, const char* in, size_t size, utils_aes_data_t* data, utils_string_t* out); // out replaced
+_nodiscard _nothrow bool utils_aes_key_has_generate_overload(const utils_aes_key_t* key);
+_nodiscard _nothrow bool utils_aes_key_has_set_overload(const utils_aes_key_t* key);
+_nodiscard _nothrow bool utils_aes_key_has_get_overload(const utils_aes_key_t* key);
 
 /* AES data (bytes: given back valid until data is changed, size: optional) */
-utils_aes_data_t* utils_aes_data_create(void); // NULL on error
-void utils_aes_data_destroy(utils_aes_data_t* data); // NULL: nothing
-int utils_aes_data_set_key(utils_aes_data_t* data, const char* bytes, size_t size); // 32 bytes (AES-256)
-int utils_aes_data_set_iv(utils_aes_data_t* data, const char* bytes, size_t size);
-int utils_aes_data_set_tag(utils_aes_data_t* data, const char* bytes, size_t size);
-const char* utils_aes_data_get_key(const utils_aes_data_t* data, size_t* size); // NULL on error
-const char* utils_aes_data_get_iv(const utils_aes_data_t* data, size_t* size); // NULL on error
-const char* utils_aes_data_get_tag(const utils_aes_data_t* data, size_t* size); // NULL on error
+_nodiscard _nothrow utils_aes_data_t* utils_aes_data_create(void); // NULL on error
+_nothrow void utils_aes_data_destroy(utils_aes_data_t* data); // NULL: nothing
+_nodiscard _nothrow _read_only(2, 3) int utils_aes_data_set_key(utils_aes_data_t* data, const char* bytes, size_t size); // 32 bytes (AES-256)
+_nodiscard _nothrow _read_only(2, 3) int utils_aes_data_set_iv(utils_aes_data_t* data, const char* bytes, size_t size);
+_nodiscard _nothrow _read_only(2, 3) int utils_aes_data_set_tag(utils_aes_data_t* data, const char* bytes, size_t size);
+_nodiscard _nothrow const char* utils_aes_data_get_key(const utils_aes_data_t* data, size_t* size); // NULL on error
+_nodiscard _nothrow const char* utils_aes_data_get_iv(const utils_aes_data_t* data, size_t* size); // NULL on error
+_nodiscard _nothrow const char* utils_aes_data_get_tag(const utils_aes_data_t* data, size_t* size); // NULL on error
 
 /* RSA key (keys in PEM, strings given back valid until the key is changed) */
-utils_rsa_key_t* utils_rsa_key_create(void); // NULL on error
-utils_rsa_key_t* utils_rsa_key_create_common(const char* path); // the common key loaded (path: NULL = C_API_SECURITY_DEFAULT_COMMON_RSA_PATH), NULL on error
-void utils_rsa_key_destroy(utils_rsa_key_t* key); // NULL: nothing
-int utils_rsa_key_load_common(utils_rsa_key_t* key, const char* path); // path: NULL = C_API_SECURITY_DEFAULT_COMMON_RSA_PATH
-int utils_rsa_key_generate(utils_rsa_key_t* key);
-int utils_rsa_key_set(utils_rsa_key_t* key, const char* private_key, const char* public_key); // NULL: ""
-const char* utils_rsa_key_get_private(const utils_rsa_key_t* key); // NULL on error
-const char* utils_rsa_key_get_public(const utils_rsa_key_t* key); // NULL on error
-int utils_rsa_key_random_bytes(const utils_rsa_key_t* key, uint16_t size, utils_string_t* out); // out replaced
-int utils_rsa_key_encrypt(const utils_rsa_key_t* key, const char* in, size_t size, utils_string_t* out); // with the public key, out replaced
-int utils_rsa_key_decrypt(const utils_rsa_key_t* key, const char* in, size_t size, utils_string_t* out); // with the private key, out replaced
-bool utils_rsa_key_has_generate_overload(const utils_rsa_key_t* key);
-bool utils_rsa_key_has_set_overload(const utils_rsa_key_t* key);
-bool utils_rsa_key_has_get_overload(const utils_rsa_key_t* key);
+_nodiscard _nothrow utils_rsa_key_t* utils_rsa_key_create(void); // NULL on error
+_nodiscard _nothrow _null_terminated_string_arg(1) utils_rsa_key_t* utils_rsa_key_create_common(const char* path); // the common key loaded (path: NULL = C_API_SECURITY_DEFAULT_COMMON_RSA_PATH), NULL on error
+_nothrow void utils_rsa_key_destroy(utils_rsa_key_t* key); // NULL: nothing
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_rsa_key_load_common(utils_rsa_key_t* key, const char* path); // path: NULL = C_API_SECURITY_DEFAULT_COMMON_RSA_PATH
+_nodiscard _nothrow int utils_rsa_key_generate(utils_rsa_key_t* key);
+_nodiscard _nothrow _null_terminated_string_arg(2) _null_terminated_string_arg(3) int utils_rsa_key_set(utils_rsa_key_t* key, const char* private_key, const char* public_key); // NULL: ""
+_nodiscard _nothrow const char* utils_rsa_key_get_private(const utils_rsa_key_t* key); // NULL on error
+_nodiscard _nothrow const char* utils_rsa_key_get_public(const utils_rsa_key_t* key); // NULL on error
+_nodiscard _nothrow int utils_rsa_key_random_bytes(const utils_rsa_key_t* key, uint16_t size, utils_string_t* out); // out replaced
+_nodiscard _nothrow _read_only(2, 3) int utils_rsa_key_encrypt(const utils_rsa_key_t* key, const char* in, size_t size, utils_string_t* out); // with the public key, out replaced
+_nodiscard _nothrow _read_only(2, 3) int utils_rsa_key_decrypt(const utils_rsa_key_t* key, const char* in, size_t size, utils_string_t* out); // with the private key, out replaced
+_nodiscard _nothrow bool utils_rsa_key_has_generate_overload(const utils_rsa_key_t* key);
+_nodiscard _nothrow bool utils_rsa_key_has_set_overload(const utils_rsa_key_t* key);
+_nodiscard _nothrow bool utils_rsa_key_has_get_overload(const utils_rsa_key_t* key);
 
 /* observers (an observer not destroyed is reported as a leak by the memory leak notifier, safe_mode: thread safe) */
-utils_observer_t* utils_observer_create(const char* instance, bool safe_mode); // linked to the notifiers, NULL on error
-void utils_observer_destroy(utils_observer_t* observer); // NULL: nothing (unlinked)
-int utils_observer_trigger(void); // force every notifier to check its status now (memory leak: report the instances still linked)
+_nodiscard _nothrow _null_terminated_string_arg(1) utils_observer_t* utils_observer_create(const char* instance, bool safe_mode); // linked to the notifiers, NULL on error
+_nothrow void utils_observer_destroy(utils_observer_t* observer); // NULL: nothing (unlinked)
+_nodiscard _nothrow int utils_observer_trigger(void); // force every notifier to check its status now (memory leak: report the instances still linked)
 
 #ifdef __cplusplus
     } // end of: extern "C"

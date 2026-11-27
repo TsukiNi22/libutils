@@ -30,11 +30,12 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../exception/CApi.h"  // utils_exception, UTILS_OK, UTILS_KO
-    #include "CApiTypes.h"          // C_API_*_TYPES
-    #include <stdbool.h>            // bool
-    #include <stddef.h>             // size_t
-    #include <stdint.h>             // uint64_t
+    #include "../attribute/Attribute.hpp"   // _nodiscard, _nothrow, _read_only, _write_only
+    #include "../exception/CApi.h"          // utils_exception, UTILS_OK, UTILS_KO
+    #include "CApiTypes.h"                  // C_API_*_TYPES
+    #include <stdbool.h>                    // bool
+    #include <stddef.h>                     // size_t
+    #include <stdint.h>                     // uint64_t
 
     //----------------------------------------------------------------//
     /* MACRO */
@@ -45,37 +46,37 @@ File Description:
             type x; \
             type y; \
         } utils_vector2_##name##_t; \
-        utils_vector2_##name##_t utils_vector2_##name##_add(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
-        utils_vector2_##name##_t utils_vector2_##name##_sub(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
-        utils_vector2_##name##_t utils_vector2_##name##_mul(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
-        utils_vector2_##name##_t utils_vector2_##name##_div(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
-        utils_vector2_##name##_t utils_vector2_##name##_add_scalar(utils_vector2_##name##_t v, type s); \
-        utils_vector2_##name##_t utils_vector2_##name##_sub_scalar(utils_vector2_##name##_t v, type s); \
-        utils_vector2_##name##_t utils_vector2_##name##_mul_scalar(utils_vector2_##name##_t v, type s); \
-        utils_vector2_##name##_t utils_vector2_##name##_div_scalar(utils_vector2_##name##_t v, type s); \
-        utils_vector2_##name##_t utils_vector2_##name##_neg(utils_vector2_##name##_t v); \
-        utils_vector2_##name##_t utils_vector2_##name##_min(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
-        utils_vector2_##name##_t utils_vector2_##name##_max(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
-        utils_vector2_##name##_t utils_vector2_##name##_clamp(utils_vector2_##name##_t v, utils_vector2_##name##_t min, utils_vector2_##name##_t max); \
-        utils_vector2_##name##_t utils_vector2_##name##_sign(utils_vector2_##name##_t v); \
-        utils_vector2_##name##_t utils_vector2_##name##_normalize(utils_vector2_##name##_t v); /* zero vector: kept */ \
-        type utils_vector2_##name##_dot(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
-        type utils_vector2_##name##_cross(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
-        type utils_vector2_##name##_length(utils_vector2_##name##_t v); /* truncated for the integer types */ \
-        type utils_vector2_##name##_length_squared(utils_vector2_##name##_t v); \
-        bool utils_vector2_##name##_equal(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
-        bool utils_vector2_##name##_less(utils_vector2_##name##_t a, utils_vector2_##name##_t b); /* like operator< of the c++ */ \
-        bool utils_vector2_##name##_less_equal(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
-        bool utils_vector2_##name##_greater(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
-        bool utils_vector2_##name##_greater_equal(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
-        type utils_vector2_##name##_get(utils_vector2_##name##_t v, size_t index); /* 0 on error (index >= 2) */ \
-        int utils_vector2_##name##_set(utils_vector2_##name##_t* v, size_t index, type value);
+        _nodiscard _nothrow utils_vector2_##name##_t utils_vector2_##name##_add(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+        _nodiscard _nothrow utils_vector2_##name##_t utils_vector2_##name##_sub(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+        _nodiscard _nothrow utils_vector2_##name##_t utils_vector2_##name##_mul(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+        _nodiscard _nothrow utils_vector2_##name##_t utils_vector2_##name##_div(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+        _nodiscard _nothrow utils_vector2_##name##_t utils_vector2_##name##_add_scalar(utils_vector2_##name##_t v, type s); \
+        _nodiscard _nothrow utils_vector2_##name##_t utils_vector2_##name##_sub_scalar(utils_vector2_##name##_t v, type s); \
+        _nodiscard _nothrow utils_vector2_##name##_t utils_vector2_##name##_mul_scalar(utils_vector2_##name##_t v, type s); \
+        _nodiscard _nothrow utils_vector2_##name##_t utils_vector2_##name##_div_scalar(utils_vector2_##name##_t v, type s); \
+        _nodiscard _nothrow utils_vector2_##name##_t utils_vector2_##name##_neg(utils_vector2_##name##_t v); \
+        _nodiscard _nothrow utils_vector2_##name##_t utils_vector2_##name##_min(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+        _nodiscard _nothrow utils_vector2_##name##_t utils_vector2_##name##_max(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+        _nodiscard _nothrow utils_vector2_##name##_t utils_vector2_##name##_clamp(utils_vector2_##name##_t v, utils_vector2_##name##_t min, utils_vector2_##name##_t max); \
+        _nodiscard _nothrow utils_vector2_##name##_t utils_vector2_##name##_sign(utils_vector2_##name##_t v); \
+        _nodiscard _nothrow utils_vector2_##name##_t utils_vector2_##name##_normalize(utils_vector2_##name##_t v); /* zero vector: kept */ \
+        _nodiscard _nothrow type utils_vector2_##name##_dot(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+        _nodiscard _nothrow type utils_vector2_##name##_cross(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+        _nodiscard _nothrow type utils_vector2_##name##_length(utils_vector2_##name##_t v); /* truncated for the integer types */ \
+        _nodiscard _nothrow type utils_vector2_##name##_length_squared(utils_vector2_##name##_t v); \
+        _nodiscard _nothrow bool utils_vector2_##name##_equal(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+        _nodiscard _nothrow bool utils_vector2_##name##_less(utils_vector2_##name##_t a, utils_vector2_##name##_t b); /* like operator< of the c++ */ \
+        _nodiscard _nothrow bool utils_vector2_##name##_less_equal(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+        _nodiscard _nothrow bool utils_vector2_##name##_greater(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+        _nodiscard _nothrow bool utils_vector2_##name##_greater_equal(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+        _nodiscard _nothrow type utils_vector2_##name##_get(utils_vector2_##name##_t v, size_t index); /* 0 on error (index >= 2) */ \
+        _nodiscard _nothrow int utils_vector2_##name##_set(utils_vector2_##name##_t* v, size_t index, type value);
 
     /* vector2 of the integers (bitwise) */
     #define C_API_VECTOR2_INT_DECL(name, type) \
-        utils_vector2_##name##_t utils_vector2_##name##_and(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
-        utils_vector2_##name##_t utils_vector2_##name##_or(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
-        utils_vector2_##name##_t utils_vector2_##name##_xor(utils_vector2_##name##_t a, utils_vector2_##name##_t b);
+        _nodiscard _nothrow utils_vector2_##name##_t utils_vector2_##name##_and(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+        _nodiscard _nothrow utils_vector2_##name##_t utils_vector2_##name##_or(utils_vector2_##name##_t a, utils_vector2_##name##_t b); \
+        _nodiscard _nothrow utils_vector2_##name##_t utils_vector2_##name##_xor(utils_vector2_##name##_t a, utils_vector2_##name##_t b);
 
     /* vector3 (by value, utils::type::OVector3) */
     #define C_API_VECTOR3_DECL(name, type) \
@@ -84,68 +85,68 @@ File Description:
             type y; \
             type z; \
         } utils_vector3_##name##_t; \
-        utils_vector3_##name##_t utils_vector3_##name##_add(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
-        utils_vector3_##name##_t utils_vector3_##name##_sub(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
-        utils_vector3_##name##_t utils_vector3_##name##_mul(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
-        utils_vector3_##name##_t utils_vector3_##name##_div(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
-        utils_vector3_##name##_t utils_vector3_##name##_add_scalar(utils_vector3_##name##_t v, type s); \
-        utils_vector3_##name##_t utils_vector3_##name##_sub_scalar(utils_vector3_##name##_t v, type s); \
-        utils_vector3_##name##_t utils_vector3_##name##_mul_scalar(utils_vector3_##name##_t v, type s); \
-        utils_vector3_##name##_t utils_vector3_##name##_div_scalar(utils_vector3_##name##_t v, type s); \
-        utils_vector3_##name##_t utils_vector3_##name##_neg(utils_vector3_##name##_t v); \
-        utils_vector3_##name##_t utils_vector3_##name##_min(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
-        utils_vector3_##name##_t utils_vector3_##name##_max(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
-        utils_vector3_##name##_t utils_vector3_##name##_clamp(utils_vector3_##name##_t v, utils_vector3_##name##_t min, utils_vector3_##name##_t max); \
-        utils_vector3_##name##_t utils_vector3_##name##_sign(utils_vector3_##name##_t v); \
-        utils_vector3_##name##_t utils_vector3_##name##_normalize(utils_vector3_##name##_t v); /* zero vector: kept */ \
-        utils_vector3_##name##_t utils_vector3_##name##_cross(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
-        type utils_vector3_##name##_dot(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
-        type utils_vector3_##name##_length(utils_vector3_##name##_t v); /* truncated for the integer types */ \
-        type utils_vector3_##name##_length_squared(utils_vector3_##name##_t v); \
-        bool utils_vector3_##name##_equal(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
-        bool utils_vector3_##name##_less(utils_vector3_##name##_t a, utils_vector3_##name##_t b); /* like operator< of the c++ */ \
-        bool utils_vector3_##name##_less_equal(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
-        bool utils_vector3_##name##_greater(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
-        bool utils_vector3_##name##_greater_equal(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
-        type utils_vector3_##name##_get(utils_vector3_##name##_t v, size_t index); /* 0 on error (index >= 3) */ \
-        int utils_vector3_##name##_set(utils_vector3_##name##_t* v, size_t index, type value);
+        _nodiscard _nothrow utils_vector3_##name##_t utils_vector3_##name##_add(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+        _nodiscard _nothrow utils_vector3_##name##_t utils_vector3_##name##_sub(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+        _nodiscard _nothrow utils_vector3_##name##_t utils_vector3_##name##_mul(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+        _nodiscard _nothrow utils_vector3_##name##_t utils_vector3_##name##_div(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+        _nodiscard _nothrow utils_vector3_##name##_t utils_vector3_##name##_add_scalar(utils_vector3_##name##_t v, type s); \
+        _nodiscard _nothrow utils_vector3_##name##_t utils_vector3_##name##_sub_scalar(utils_vector3_##name##_t v, type s); \
+        _nodiscard _nothrow utils_vector3_##name##_t utils_vector3_##name##_mul_scalar(utils_vector3_##name##_t v, type s); \
+        _nodiscard _nothrow utils_vector3_##name##_t utils_vector3_##name##_div_scalar(utils_vector3_##name##_t v, type s); \
+        _nodiscard _nothrow utils_vector3_##name##_t utils_vector3_##name##_neg(utils_vector3_##name##_t v); \
+        _nodiscard _nothrow utils_vector3_##name##_t utils_vector3_##name##_min(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+        _nodiscard _nothrow utils_vector3_##name##_t utils_vector3_##name##_max(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+        _nodiscard _nothrow utils_vector3_##name##_t utils_vector3_##name##_clamp(utils_vector3_##name##_t v, utils_vector3_##name##_t min, utils_vector3_##name##_t max); \
+        _nodiscard _nothrow utils_vector3_##name##_t utils_vector3_##name##_sign(utils_vector3_##name##_t v); \
+        _nodiscard _nothrow utils_vector3_##name##_t utils_vector3_##name##_normalize(utils_vector3_##name##_t v); /* zero vector: kept */ \
+        _nodiscard _nothrow utils_vector3_##name##_t utils_vector3_##name##_cross(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+        _nodiscard _nothrow type utils_vector3_##name##_dot(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+        _nodiscard _nothrow type utils_vector3_##name##_length(utils_vector3_##name##_t v); /* truncated for the integer types */ \
+        _nodiscard _nothrow type utils_vector3_##name##_length_squared(utils_vector3_##name##_t v); \
+        _nodiscard _nothrow bool utils_vector3_##name##_equal(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+        _nodiscard _nothrow bool utils_vector3_##name##_less(utils_vector3_##name##_t a, utils_vector3_##name##_t b); /* like operator< of the c++ */ \
+        _nodiscard _nothrow bool utils_vector3_##name##_less_equal(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+        _nodiscard _nothrow bool utils_vector3_##name##_greater(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+        _nodiscard _nothrow bool utils_vector3_##name##_greater_equal(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+        _nodiscard _nothrow type utils_vector3_##name##_get(utils_vector3_##name##_t v, size_t index); /* 0 on error (index >= 3) */ \
+        _nodiscard _nothrow int utils_vector3_##name##_set(utils_vector3_##name##_t* v, size_t index, type value);
 
     /* vector3 of the integers (bitwise) */
     #define C_API_VECTOR3_INT_DECL(name, type) \
-        utils_vector3_##name##_t utils_vector3_##name##_and(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
-        utils_vector3_##name##_t utils_vector3_##name##_or(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
-        utils_vector3_##name##_t utils_vector3_##name##_xor(utils_vector3_##name##_t a, utils_vector3_##name##_t b);
+        _nodiscard _nothrow utils_vector3_##name##_t utils_vector3_##name##_and(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+        _nodiscard _nothrow utils_vector3_##name##_t utils_vector3_##name##_or(utils_vector3_##name##_t a, utils_vector3_##name##_t b); \
+        _nodiscard _nothrow utils_vector3_##name##_t utils_vector3_##name##_xor(utils_vector3_##name##_t a, utils_vector3_##name##_t b);
 
     /* operation of a matrix: new handle (NULL on error, destroy it), _r: in out (replaced, can be a / b), _assign: in a */
     #define C_API_MATRIX_OP2_DECL(name, op, arg) \
-        utils_matrix_##name##_t* utils_matrix_##name##_##op(const utils_matrix_##name##_t* a, arg); \
-        int utils_matrix_##name##_##op##_r(const utils_matrix_##name##_t* a, arg, utils_matrix_##name##_t* out); \
-        int utils_matrix_##name##_##op##_assign(utils_matrix_##name##_t* a, arg);
+        _nodiscard _nothrow utils_matrix_##name##_t* utils_matrix_##name##_##op(const utils_matrix_##name##_t* a, arg); \
+        _nodiscard _nothrow int utils_matrix_##name##_##op##_r(const utils_matrix_##name##_t* a, arg, utils_matrix_##name##_t* out); \
+        _nodiscard _nothrow int utils_matrix_##name##_##op##_assign(utils_matrix_##name##_t* a, arg);
     #define C_API_MATRIX_OP1_DECL(name, op) \
-        utils_matrix_##name##_t* utils_matrix_##name##_##op(const utils_matrix_##name##_t* a); \
-        int utils_matrix_##name##_##op##_r(const utils_matrix_##name##_t* a, utils_matrix_##name##_t* out); \
-        int utils_matrix_##name##_##op##_assign(utils_matrix_##name##_t* a);
+        _nodiscard _nothrow utils_matrix_##name##_t* utils_matrix_##name##_##op(const utils_matrix_##name##_t* a); \
+        _nodiscard _nothrow int utils_matrix_##name##_##op##_r(const utils_matrix_##name##_t* a, utils_matrix_##name##_t* out); \
+        _nodiscard _nothrow int utils_matrix_##name##_##op##_assign(utils_matrix_##name##_t* a);
 
     /* matrix (handle, utils::type::OMatrix, (x, y) = (row, col)) */
     #define C_API_MATRIX_DECL(name, type) \
         typedef struct utils_matrix_##name utils_matrix_##name##_t; \
-        utils_matrix_##name##_t* utils_matrix_##name##_create(size_t rows, size_t cols); /* every value at 0, NULL on error */ \
-        utils_matrix_##name##_t* utils_matrix_##name##_copy(const utils_matrix_##name##_t* m); /* NULL on error */ \
-        void utils_matrix_##name##_destroy(utils_matrix_##name##_t* m); /* NULL: nothing */ \
-        size_t utils_matrix_##name##_rows(const utils_matrix_##name##_t* m); \
-        size_t utils_matrix_##name##_cols(const utils_matrix_##name##_t* m); \
-        int utils_matrix_##name##_get(const utils_matrix_##name##_t* m, size_t x, size_t y, type* value); \
-        int utils_matrix_##name##_set(utils_matrix_##name##_t* m, size_t x, size_t y, type value); \
-        int utils_matrix_##name##_set_values(utils_matrix_##name##_t* m, const type* values, size_t count, size_t x, size_t y); /* row by row from (x, y) */ \
-        size_t utils_matrix_##name##_row_r(const utils_matrix_##name##_t* m, size_t n, type* buf, size_t count); /* copied in buf (count max), returns the full length (0 on error) */ \
-        size_t utils_matrix_##name##_col_r(const utils_matrix_##name##_t* m, size_t n, type* buf, size_t count); \
-        int utils_matrix_##name##_swap(utils_matrix_##name##_t* m, size_t ax, size_t ay, size_t bx, size_t by); \
-        int utils_matrix_##name##_swap_row(utils_matrix_##name##_t* m, size_t a, size_t b); \
-        int utils_matrix_##name##_swap_col(utils_matrix_##name##_t* m, size_t a, size_t b); \
-        int utils_matrix_##name##_clear(utils_matrix_##name##_t* m); /* every value at 0 */ \
-        int utils_matrix_##name##_det(const utils_matrix_##name##_t* m, type* value); /* square only */ \
-        int utils_matrix_##name##_trace(const utils_matrix_##name##_t* m, type* value); /* square only */ \
-        bool utils_matrix_##name##_equal(const utils_matrix_##name##_t* a, const utils_matrix_##name##_t* b); \
+        _nodiscard _nothrow utils_matrix_##name##_t* utils_matrix_##name##_create(size_t rows, size_t cols); /* every value at 0, NULL on error */ \
+        _nodiscard _nothrow utils_matrix_##name##_t* utils_matrix_##name##_copy(const utils_matrix_##name##_t* m); /* NULL on error */ \
+        _nothrow void utils_matrix_##name##_destroy(utils_matrix_##name##_t* m); /* NULL: nothing */ \
+        _nodiscard _nothrow size_t utils_matrix_##name##_rows(const utils_matrix_##name##_t* m); \
+        _nodiscard _nothrow size_t utils_matrix_##name##_cols(const utils_matrix_##name##_t* m); \
+        _nodiscard _nothrow int utils_matrix_##name##_get(const utils_matrix_##name##_t* m, size_t x, size_t y, type* value); \
+        _nodiscard _nothrow int utils_matrix_##name##_set(utils_matrix_##name##_t* m, size_t x, size_t y, type value); \
+        _nodiscard _nothrow _read_only(2, 3) int utils_matrix_##name##_set_values(utils_matrix_##name##_t* m, const type* values, size_t count, size_t x, size_t y); /* row by row from (x, y) */ \
+        _nodiscard _nothrow _write_only(3, 4) size_t utils_matrix_##name##_row_r(const utils_matrix_##name##_t* m, size_t n, type* buf, size_t count); /* copied in buf (count max), returns the full length (0 on error) */ \
+        _nodiscard _nothrow _write_only(3, 4) size_t utils_matrix_##name##_col_r(const utils_matrix_##name##_t* m, size_t n, type* buf, size_t count); \
+        _nodiscard _nothrow int utils_matrix_##name##_swap(utils_matrix_##name##_t* m, size_t ax, size_t ay, size_t bx, size_t by); \
+        _nodiscard _nothrow int utils_matrix_##name##_swap_row(utils_matrix_##name##_t* m, size_t a, size_t b); \
+        _nodiscard _nothrow int utils_matrix_##name##_swap_col(utils_matrix_##name##_t* m, size_t a, size_t b); \
+        _nodiscard _nothrow int utils_matrix_##name##_clear(utils_matrix_##name##_t* m); /* every value at 0 */ \
+        _nodiscard _nothrow int utils_matrix_##name##_det(const utils_matrix_##name##_t* m, type* value); /* square only */ \
+        _nodiscard _nothrow int utils_matrix_##name##_trace(const utils_matrix_##name##_t* m, type* value); /* square only */ \
+        _nodiscard _nothrow bool utils_matrix_##name##_equal(const utils_matrix_##name##_t* a, const utils_matrix_##name##_t* b); \
         C_API_MATRIX_OP2_DECL(name, add, const utils_matrix_##name##_t* b) \
         C_API_MATRIX_OP2_DECL(name, sub, const utils_matrix_##name##_t* b) \
         C_API_MATRIX_OP2_DECL(name, mul, const utils_matrix_##name##_t* b) /* product */ \
@@ -162,29 +163,29 @@ File Description:
     /* bidirectional lookup table of one type (utils::type::BidirectionalLookupTable<T, T>, an element is found on both sides) */
     #define C_API_BLT_SAME_DECL(name, type) \
         typedef struct utils_blt_##name utils_blt_##name##_t; \
-        utils_blt_##name##_t* utils_blt_##name##_create(void); /* NULL on error */ \
-        void utils_blt_##name##_destroy(utils_blt_##name##_t* blt); /* NULL: nothing */ \
-        int utils_blt_##name##_clear(utils_blt_##name##_t* blt); \
-        int utils_blt_##name##_set(utils_blt_##name##_t* blt, type left, type right, bool force); /* force: override an existing one */ \
-        int utils_blt_##name##_add(utils_blt_##name##_t* blt, type left, type right); \
-        int utils_blt_##name##_remove(utils_blt_##name##_t* blt, type element); \
-        int utils_blt_##name##_remove_all(utils_blt_##name##_t* blt, type const* elements, size_t count); \
-        int utils_blt_##name##_get(const utils_blt_##name##_t* blt, type element, type* other); /* the other side of element */
+        _nodiscard _nothrow utils_blt_##name##_t* utils_blt_##name##_create(void); /* NULL on error */ \
+        _nothrow void utils_blt_##name##_destroy(utils_blt_##name##_t* blt); /* NULL: nothing */ \
+        _nodiscard _nothrow int utils_blt_##name##_clear(utils_blt_##name##_t* blt); \
+        _nodiscard _nothrow int utils_blt_##name##_set(utils_blt_##name##_t* blt, type left, type right, bool force); /* force: override an existing one */ \
+        _nodiscard _nothrow int utils_blt_##name##_add(utils_blt_##name##_t* blt, type left, type right); \
+        _nodiscard _nothrow int utils_blt_##name##_remove(utils_blt_##name##_t* blt, type element); \
+        _nodiscard _nothrow int utils_blt_##name##_remove_all(utils_blt_##name##_t* blt, type const* elements, size_t count); \
+        _nodiscard _nothrow int utils_blt_##name##_get(const utils_blt_##name##_t* blt, type element, type* other); /* the other side of element */
 
     /* bidirectional lookup table of two types (utils::type::BidirectionalLookupTable<L, R>) */
     #define C_API_BLT_DECL(name, left_type, right_type) \
         typedef struct utils_blt_##name utils_blt_##name##_t; \
-        utils_blt_##name##_t* utils_blt_##name##_create(void); /* NULL on error */ \
-        void utils_blt_##name##_destroy(utils_blt_##name##_t* blt); /* NULL: nothing */ \
-        int utils_blt_##name##_clear(utils_blt_##name##_t* blt); \
-        int utils_blt_##name##_set(utils_blt_##name##_t* blt, left_type left, right_type right, bool force); /* force: override an existing one */ \
-        int utils_blt_##name##_add(utils_blt_##name##_t* blt, left_type left, right_type right); \
-        int utils_blt_##name##_remove_left(utils_blt_##name##_t* blt, left_type left); \
-        int utils_blt_##name##_remove_right(utils_blt_##name##_t* blt, right_type right); \
-        int utils_blt_##name##_remove_lefts(utils_blt_##name##_t* blt, left_type const* lefts, size_t count); \
-        int utils_blt_##name##_remove_rights(utils_blt_##name##_t* blt, right_type const* rights, size_t count); \
-        int utils_blt_##name##_get_right(const utils_blt_##name##_t* blt, left_type left, right_type* right); \
-        int utils_blt_##name##_get_left(const utils_blt_##name##_t* blt, right_type right, left_type* left);
+        _nodiscard _nothrow utils_blt_##name##_t* utils_blt_##name##_create(void); /* NULL on error */ \
+        _nothrow void utils_blt_##name##_destroy(utils_blt_##name##_t* blt); /* NULL: nothing */ \
+        _nodiscard _nothrow int utils_blt_##name##_clear(utils_blt_##name##_t* blt); \
+        _nodiscard _nothrow int utils_blt_##name##_set(utils_blt_##name##_t* blt, left_type left, right_type right, bool force); /* force: override an existing one */ \
+        _nodiscard _nothrow int utils_blt_##name##_add(utils_blt_##name##_t* blt, left_type left, right_type right); \
+        _nodiscard _nothrow int utils_blt_##name##_remove_left(utils_blt_##name##_t* blt, left_type left); \
+        _nodiscard _nothrow int utils_blt_##name##_remove_right(utils_blt_##name##_t* blt, right_type right); \
+        _nodiscard _nothrow int utils_blt_##name##_remove_lefts(utils_blt_##name##_t* blt, left_type const* lefts, size_t count); \
+        _nodiscard _nothrow int utils_blt_##name##_remove_rights(utils_blt_##name##_t* blt, right_type const* rights, size_t count); \
+        _nodiscard _nothrow int utils_blt_##name##_get_right(const utils_blt_##name##_t* blt, left_type left, right_type* right); \
+        _nodiscard _nothrow int utils_blt_##name##_get_left(const utils_blt_##name##_t* blt, right_type right, left_type* left);
 
     /* string <-> integer, both orders (str_i32 & i32_str, ...) */
     #define C_API_BLT_STR_INT_DECL(name, type) \
@@ -205,19 +206,19 @@ typedef struct utils_blt utils_blt_t; // utils::type::BidirectionalLookupTable o
 /* PROTOTYPE */
 
 /* Freezable of any handle (utils::type::Freezable in its class, else UTILS_KO / false: "This handle has no Freezable") */
-int utils_freezable_freeze(void* handle);
-bool utils_freezable_is_frozen(const void* handle);
-int utils_freezable_require_frozen(const void* handle); // UTILS_KO (ShouldBeFrozen) when not frozen
-int utils_freezable_require_unfrozen(const void* handle); // UTILS_KO (Frozen) when frozen
+_nodiscard _nothrow int utils_freezable_freeze(void* handle);
+_nodiscard _nothrow bool utils_freezable_is_frozen(const void* handle);
+_nodiscard _nothrow int utils_freezable_require_frozen(const void* handle); // UTILS_KO (ShouldBeFrozen) when not frozen
+_nodiscard _nothrow int utils_freezable_require_unfrozen(const void* handle); // UTILS_KO (Frozen) when frozen
 
 /* Worker of any handle (utils::type::Worker in its class, else UTILS_KO / false / 0: "This handle has no Worker") */
-utils_worker_t* utils_worker_create(void* data); // NULL on error
-void utils_worker_destroy(utils_worker_t* worker); // NULL: nothing
-void* utils_worker_get_data(const utils_worker_t* worker);
-int utils_worker_set_data(utils_worker_t* worker, void* data);
-int utils_worker_set_working_status(void* handle, bool status);
-bool utils_worker_is_working(const void* handle);
-uint64_t utils_worker_get_stoped_working_timestamp(const void* handle); // steady clock in ns (when the status was set to false), 0 on error
+_nodiscard _nothrow utils_worker_t* utils_worker_create(void* data); // NULL on error
+_nothrow void utils_worker_destroy(utils_worker_t* worker); // NULL: nothing
+_nodiscard _nothrow void* utils_worker_get_data(const utils_worker_t* worker);
+_nodiscard _nothrow int utils_worker_set_data(utils_worker_t* worker, void* data);
+_nodiscard _nothrow int utils_worker_set_working_status(void* handle, bool status);
+_nodiscard _nothrow bool utils_worker_is_working(const void* handle);
+_nodiscard _nothrow uint64_t utils_worker_get_stoped_working_timestamp(const void* handle); // steady clock in ns (when the status was set to false), 0 on error
 
 /* vectors */
 C_API_NUMERIC_TYPES(C_API_VECTOR2_DECL)
@@ -230,13 +231,13 @@ C_API_NUMERIC_TYPES(C_API_MATRIX_DECL)
 C_API_FLOAT_TYPES(C_API_MATRIX_FLOAT_DECL)
 
 /* bidirectional lookup tables of bytes (generic: an element = data + size, copied) */
-utils_blt_t* utils_blt_create(void); // NULL on error
-void utils_blt_destroy(utils_blt_t* blt); // NULL: nothing
-int utils_blt_clear(utils_blt_t* blt);
-int utils_blt_set(utils_blt_t* blt, const void* left, size_t left_size, const void* right, size_t right_size, bool force); // force: override an existing one
-int utils_blt_add(utils_blt_t* blt, const void* left, size_t left_size, const void* right, size_t right_size);
-int utils_blt_remove(utils_blt_t* blt, const void* element, size_t size);
-const void* utils_blt_get(const utils_blt_t* blt, const void* element, size_t size, size_t* other_size); // the other side of element, valid until the table is changed (NULL on error), other_size: optional
+_nodiscard _nothrow utils_blt_t* utils_blt_create(void); // NULL on error
+_nothrow void utils_blt_destroy(utils_blt_t* blt); // NULL: nothing
+_nodiscard _nothrow int utils_blt_clear(utils_blt_t* blt);
+_nodiscard _nothrow _read_only(2, 3) _read_only(4, 5) int utils_blt_set(utils_blt_t* blt, const void* left, size_t left_size, const void* right, size_t right_size, bool force); // force: override an existing one
+_nodiscard _nothrow _read_only(2, 3) _read_only(4, 5) int utils_blt_add(utils_blt_t* blt, const void* left, size_t left_size, const void* right, size_t right_size);
+_nodiscard _nothrow _read_only(2, 3) int utils_blt_remove(utils_blt_t* blt, const void* element, size_t size);
+_nodiscard _nothrow _read_only(2, 3) const void* utils_blt_get(const utils_blt_t* blt, const void* element, size_t size, size_t* other_size); // the other side of element, valid until the table is changed (NULL on error), other_size: optional
 
 /* bidirectional lookup tables of the fixed types (str: const char* copied, the str given back are valid until the table is changed) */
 C_API_BLT_SAME_DECL(str_str, const char*)

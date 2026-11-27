@@ -30,10 +30,11 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../exception/CApi.h"  // utils_exception, UTILS_OK, UTILS_KO
-    #include <stdbool.h>            // bool
-    #include <stddef.h>             // size_t
-    #include <stdint.h>             // uint8_t ... uint64_t
+    #include "../attribute/Attribute.hpp"   // _nodiscard, _nothrow, _read_only, _write_only, _read_write, _null_terminated_string_arg
+    #include "../exception/CApi.h"          // utils_exception, UTILS_OK, UTILS_KO
+    #include <stdbool.h>                    // bool
+    #include <stddef.h>                     // size_t
+    #include <stdint.h>                     // uint8_t ... uint64_t
 
     //----------------------------------------------------------------//
     /* DEFINE */
@@ -46,8 +47,8 @@ File Description:
 
     /* s.o.s of an unsigned integer (carrier changed in place, key: NULL / 0 = no key) */
     #define C_API_SOS_DECL(name, ctype) \
-        int utils_sos_embed_##name(ctype* carrier, size_t count, const ctype* payload, size_t payload_count, const ctype* key, size_t key_count, int options); /* options: C_API_SOS_OPTION_* */ \
-        size_t utils_sos_extract_##name(const ctype* carrier, size_t count, const ctype* key, size_t key_count, ctype* out, size_t max); /* payload copied in out (max at most), returns its full count (0 on error) */
+        _nodiscard _nothrow _read_write(1, 2) _read_only(3, 4) _read_only(5, 6) int utils_sos_embed_##name(ctype* carrier, size_t count, const ctype* payload, size_t payload_count, const ctype* key, size_t key_count, int options); /* options: C_API_SOS_OPTION_* */ \
+        _nodiscard _nothrow _read_only(1, 2) _read_only(3, 4) _write_only(5, 6) size_t utils_sos_extract_##name(const ctype* carrier, size_t count, const ctype* key, size_t key_count, ctype* out, size_t max); /* payload copied in out (max at most), returns its full count (0 on error) */
 
 #ifdef __cplusplus
     extern "C" {
@@ -66,8 +67,8 @@ typedef enum utils_sos_option {
 /* PROTOTYPE */
 
 /* c2dmp-hsm: similarity of b to a (prefix_depth: 1 to 5, counter_size: 1, 2, 4 or 8 bytes, full: count the misplaced chars of the whole a), -1 on error */
-float utils_c2dmp(const char* a, size_t a_size, const char* b, size_t b_size, uint8_t prefix_depth, size_t counter_size, bool full);
-float utils_c2dmp_default(const char* a, const char* b); // '\0' terminated strings, prefix depth 3, 1 byte counter, not full
+_nodiscard _nothrow _read_only(1, 2) _read_only(3, 4) float utils_c2dmp(const char* a, size_t a_size, const char* b, size_t b_size, uint8_t prefix_depth, size_t counter_size, bool full);
+_nodiscard _nothrow _null_terminated_string_arg(1) _null_terminated_string_arg(2) float utils_c2dmp_default(const char* a, const char* b); // '\0' terminated strings, prefix depth 3, 1 byte counter, not full
 
 /* s.o.s of the unsigned integers */
 C_API_SOS_DECL(u8, uint8_t)

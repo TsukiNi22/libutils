@@ -93,19 +93,19 @@ _cold _nodiscard static int run(utils_verbose_fn_t fn, void* data)
 //----------------------------------------------------------------//
 /* LEVEL */
 
-_cold void utils_verbose_set(utils_verbose_t level)
+_cold _nothrow void utils_verbose_set(utils_verbose_t level)
 {
     (void)utils::exception::c_api::guard([&](void) {utils::verbose::verbose.store(level_of(level));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot utils_verbose_t utils_verbose_get(void)
+_hot _nothrow utils_verbose_t utils_verbose_get(void)
 {
     return static_cast<utils_verbose_t>(utils::verbose::verbose.load(std::memory_order_relaxed));
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot bool utils_verbose_is(utils_verbose_t level)
+_hot _nothrow bool utils_verbose_is(utils_verbose_t level)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return displayed(level);});
 }
@@ -113,7 +113,7 @@ _hot bool utils_verbose_is(utils_verbose_t level)
 //----------------------------------------------------------------//
 /* LOG */
 
-_hot int utils_verbose_log(utils_verbose_t level, const char* fmt, ...)
+_hot _nothrow int utils_verbose_log(utils_verbose_t level, const char* fmt, ...)
 {
     va_list args;
     int ret = UTILS_KO;
@@ -124,7 +124,7 @@ _hot int utils_verbose_log(utils_verbose_t level, const char* fmt, ...)
     return ret;
 }
 
-_hot int utils_verbose_vlog(utils_verbose_t level, const char* fmt, va_list args)
+_hot _nothrow int utils_verbose_vlog(utils_verbose_t level, const char* fmt, va_list args)
 {
     return utils::exception::c_api::guard([&](void) {
         if (!displayed(level)) return;
@@ -133,7 +133,7 @@ _hot int utils_verbose_vlog(utils_verbose_t level, const char* fmt, va_list args
     });
 }
 
-_hot int utils_verbose_log_to(FILE* output, utils_verbose_t level, const char* fmt, ...)
+_hot _nothrow int utils_verbose_log_to(FILE* output, utils_verbose_t level, const char* fmt, ...)
 {
     va_list args;
     int ret = UTILS_KO;
@@ -144,7 +144,7 @@ _hot int utils_verbose_log_to(FILE* output, utils_verbose_t level, const char* f
     return ret;
 }
 
-_hot int utils_verbose_vlog_to(FILE* output, utils_verbose_t level, const char* fmt, va_list args)
+_hot _nothrow int utils_verbose_vlog_to(FILE* output, utils_verbose_t level, const char* fmt, va_list args)
 {
     return utils::exception::c_api::guard([&](void) {
         (void)utils::exception::c_api::not_null(output, "output");
@@ -162,12 +162,12 @@ _hot int utils_verbose_vlog_to(FILE* output, utils_verbose_t level, const char* 
 /* LOCKED */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_verbose_locked(utils_verbose_fn_t fn, void* data)
+_cold _nothrow int utils_verbose_locked(utils_verbose_fn_t fn, void* data)
 {
     return run(fn, data);
 }
 
-_cold int utils_verbose_on(utils_verbose_t level, utils_verbose_fn_t fn, void* data)
+_cold _nothrow int utils_verbose_on(utils_verbose_t level, utils_verbose_fn_t fn, void* data)
 {
     bool show = false;
 

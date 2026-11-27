@@ -29,7 +29,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"   // _thread_local
+    #include "../attribute/Attribute.hpp"   // _thread_local, _nodiscard, _nothrow, _write_only, _null_terminated_string_arg
     #include "Common.hpp"                   // UTILS_OK, UTILS_KO, OK, KO
     #include <stdbool.h>                    // bool, true, false
     #include <stddef.h>                     // size_t
@@ -109,12 +109,12 @@ extern _thread_local utils_exception_status_t utils_exception;
 /* PROTOTYPE */
 
 /* status */
-void utils_exception_clear(void); // reset the whole status of the thread
-int utils_exception_set_at(utils_exception_type_t type, uint64_t code, const char* what, const char* info, const char* file, uint64_t line, const char* function); // origin C, returns UTILS_KO (see utils_exception_set / utils_fail)
+_nothrow void utils_exception_clear(void); // reset the whole status of the thread
+_nothrow _null_terminated_string_arg(3) _null_terminated_string_arg(4) _null_terminated_string_arg(5) _null_terminated_string_arg(7) int utils_exception_set_at(utils_exception_type_t type, uint64_t code, const char* what, const char* info, const char* file, uint64_t line, const char* function); // origin C, returns UTILS_KO (see utils_exception_set / utils_fail)
 
 /* format (like utils::exception::IException::formated, "" when there is no exception, never changes the status) */
-const char* utils_exception_format(void); // valid until the next call in the thread (NULL on error)
-size_t utils_exception_format_r(char* buf, size_t size); // copied in buf (truncated, always '\0' terminated), returns the full length like snprintf (0 on error)
+_nodiscard _nothrow const char* utils_exception_format(void); // valid until the next call in the thread (NULL on error)
+_nodiscard _nothrow _write_only(1, 2) size_t utils_exception_format_r(char* buf, size_t size); // copied in buf (truncated, always '\0' terminated), returns the full length like snprintf (0 on error)
 
 #ifdef __cplusplus
     } // end of: extern "C"

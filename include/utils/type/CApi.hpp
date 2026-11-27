@@ -56,31 +56,31 @@ File Description:
 
     /* vector2 */
     #define C_API_VECTOR2_DEF(name, ctype) \
-        utils_vector2_##name##_t utils_vector2_##name##_add(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return c2<utils_vector2_##name##_t>(o2<ctype>(a) + o2<ctype>(b));}; \
-        utils_vector2_##name##_t utils_vector2_##name##_sub(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return c2<utils_vector2_##name##_t>(o2<ctype>(a) - o2<ctype>(b));}; \
-        utils_vector2_##name##_t utils_vector2_##name##_mul(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return c2<utils_vector2_##name##_t>(o2<ctype>(a) * o2<ctype>(b));}; \
-        utils_vector2_##name##_t utils_vector2_##name##_div(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return c2<utils_vector2_##name##_t>(o2<ctype>(a) / o2<ctype>(b));}; \
-        utils_vector2_##name##_t utils_vector2_##name##_add_scalar(utils_vector2_##name##_t v, ctype s) {return c2<utils_vector2_##name##_t>(o2<ctype>(v) + s);}; \
-        utils_vector2_##name##_t utils_vector2_##name##_sub_scalar(utils_vector2_##name##_t v, ctype s) {return c2<utils_vector2_##name##_t>(o2<ctype>(v) - s);}; \
-        utils_vector2_##name##_t utils_vector2_##name##_mul_scalar(utils_vector2_##name##_t v, ctype s) {return c2<utils_vector2_##name##_t>(o2<ctype>(v) * s);}; \
-        utils_vector2_##name##_t utils_vector2_##name##_div_scalar(utils_vector2_##name##_t v, ctype s) {return c2<utils_vector2_##name##_t>(o2<ctype>(v) / s);}; \
-        utils_vector2_##name##_t utils_vector2_##name##_neg(utils_vector2_##name##_t v) {return c2<utils_vector2_##name##_t>(-o2<ctype>(v));}; \
-        utils_vector2_##name##_t utils_vector2_##name##_min(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return c2<utils_vector2_##name##_t>(o2<ctype>(a).min(o2<ctype>(b)));}; \
-        utils_vector2_##name##_t utils_vector2_##name##_max(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return c2<utils_vector2_##name##_t>(o2<ctype>(a).max(o2<ctype>(b)));}; \
-        utils_vector2_##name##_t utils_vector2_##name##_clamp(utils_vector2_##name##_t v, utils_vector2_##name##_t min, utils_vector2_##name##_t max) {return c2<utils_vector2_##name##_t>(o2<ctype>(v).clamp(o2<ctype>(min), o2<ctype>(max)));}; \
-        utils_vector2_##name##_t utils_vector2_##name##_sign(utils_vector2_##name##_t v) {return c2<utils_vector2_##name##_t>(o2<ctype>(v).sign());}; \
-        utils_vector2_##name##_t utils_vector2_##name##_normalize(utils_vector2_##name##_t v) {return c2<utils_vector2_##name##_t>(o2<ctype>(v).normalize());}; \
-        ctype utils_vector2_##name##_dot(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return o2<ctype>(a).dot(o2<ctype>(b));}; \
-        ctype utils_vector2_##name##_cross(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return o2<ctype>(a).cross(o2<ctype>(b));}; \
-        ctype utils_vector2_##name##_length(utils_vector2_##name##_t v) {return o2<ctype>(v).length();}; \
-        ctype utils_vector2_##name##_length_squared(utils_vector2_##name##_t v) {return o2<ctype>(v).lengthSquared();}; \
-        bool utils_vector2_##name##_equal(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return o2<ctype>(a) == o2<ctype>(b);}; \
-        bool utils_vector2_##name##_less(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return o2<ctype>(a) < o2<ctype>(b);}; \
-        bool utils_vector2_##name##_less_equal(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return o2<ctype>(a) <= o2<ctype>(b);}; \
-        bool utils_vector2_##name##_greater(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return o2<ctype>(a) > o2<ctype>(b);}; \
-        bool utils_vector2_##name##_greater_equal(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return o2<ctype>(a) >= o2<ctype>(b);}; \
-        ctype utils_vector2_##name##_get(utils_vector2_##name##_t v, size_t index) {return utils::exception::c_api::guard_fallback(static_cast<ctype>(0), [&](void) -> ctype {return o2<ctype>(v).get(index);});}; \
-        int utils_vector2_##name##_set(utils_vector2_##name##_t* v, size_t index, ctype value) \
+        _nothrow utils_vector2_##name##_t utils_vector2_##name##_add(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return c2<utils_vector2_##name##_t>(o2<ctype>(a) + o2<ctype>(b));}; \
+        _nothrow utils_vector2_##name##_t utils_vector2_##name##_sub(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return c2<utils_vector2_##name##_t>(o2<ctype>(a) - o2<ctype>(b));}; \
+        _nothrow utils_vector2_##name##_t utils_vector2_##name##_mul(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return c2<utils_vector2_##name##_t>(o2<ctype>(a) * o2<ctype>(b));}; \
+        _nothrow utils_vector2_##name##_t utils_vector2_##name##_div(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return c2<utils_vector2_##name##_t>(o2<ctype>(a) / o2<ctype>(b));}; \
+        _nothrow utils_vector2_##name##_t utils_vector2_##name##_add_scalar(utils_vector2_##name##_t v, ctype s) {return c2<utils_vector2_##name##_t>(o2<ctype>(v) + s);}; \
+        _nothrow utils_vector2_##name##_t utils_vector2_##name##_sub_scalar(utils_vector2_##name##_t v, ctype s) {return c2<utils_vector2_##name##_t>(o2<ctype>(v) - s);}; \
+        _nothrow utils_vector2_##name##_t utils_vector2_##name##_mul_scalar(utils_vector2_##name##_t v, ctype s) {return c2<utils_vector2_##name##_t>(o2<ctype>(v) * s);}; \
+        _nothrow utils_vector2_##name##_t utils_vector2_##name##_div_scalar(utils_vector2_##name##_t v, ctype s) {return c2<utils_vector2_##name##_t>(o2<ctype>(v) / s);}; \
+        _nothrow utils_vector2_##name##_t utils_vector2_##name##_neg(utils_vector2_##name##_t v) {return c2<utils_vector2_##name##_t>(-o2<ctype>(v));}; \
+        _nothrow utils_vector2_##name##_t utils_vector2_##name##_min(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return c2<utils_vector2_##name##_t>(o2<ctype>(a).min(o2<ctype>(b)));}; \
+        _nothrow utils_vector2_##name##_t utils_vector2_##name##_max(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return c2<utils_vector2_##name##_t>(o2<ctype>(a).max(o2<ctype>(b)));}; \
+        _nothrow utils_vector2_##name##_t utils_vector2_##name##_clamp(utils_vector2_##name##_t v, utils_vector2_##name##_t min, utils_vector2_##name##_t max) {return c2<utils_vector2_##name##_t>(o2<ctype>(v).clamp(o2<ctype>(min), o2<ctype>(max)));}; \
+        _nothrow utils_vector2_##name##_t utils_vector2_##name##_sign(utils_vector2_##name##_t v) {return c2<utils_vector2_##name##_t>(o2<ctype>(v).sign());}; \
+        _nothrow utils_vector2_##name##_t utils_vector2_##name##_normalize(utils_vector2_##name##_t v) {return c2<utils_vector2_##name##_t>(o2<ctype>(v).normalize());}; \
+        _nothrow ctype utils_vector2_##name##_dot(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return o2<ctype>(a).dot(o2<ctype>(b));}; \
+        _nothrow ctype utils_vector2_##name##_cross(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return o2<ctype>(a).cross(o2<ctype>(b));}; \
+        _nothrow ctype utils_vector2_##name##_length(utils_vector2_##name##_t v) {return o2<ctype>(v).length();}; \
+        _nothrow ctype utils_vector2_##name##_length_squared(utils_vector2_##name##_t v) {return o2<ctype>(v).lengthSquared();}; \
+        _nothrow bool utils_vector2_##name##_equal(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return o2<ctype>(a) == o2<ctype>(b);}; \
+        _nothrow bool utils_vector2_##name##_less(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return o2<ctype>(a) < o2<ctype>(b);}; \
+        _nothrow bool utils_vector2_##name##_less_equal(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return o2<ctype>(a) <= o2<ctype>(b);}; \
+        _nothrow bool utils_vector2_##name##_greater(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return o2<ctype>(a) > o2<ctype>(b);}; \
+        _nothrow bool utils_vector2_##name##_greater_equal(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return o2<ctype>(a) >= o2<ctype>(b);}; \
+        _nothrow ctype utils_vector2_##name##_get(utils_vector2_##name##_t v, size_t index) {return utils::exception::c_api::guard_fallback(static_cast<ctype>(0), [&](void) -> ctype {return o2<ctype>(v).get(index);});}; \
+        _nothrow int utils_vector2_##name##_set(utils_vector2_##name##_t* v, size_t index, ctype value) \
         { \
             return utils::exception::c_api::guard([&](void) { \
                 utils::type::OVector2<ctype> res = o2<ctype>(utils::exception::c_api::not_null_ref(v, "vector")); \
@@ -89,37 +89,37 @@ File Description:
             }); \
         }
     #define C_API_VECTOR2_INT_DEF(name, ctype) \
-        utils_vector2_##name##_t utils_vector2_##name##_and(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return c2<utils_vector2_##name##_t>(o2<ctype>(a) & o2<ctype>(b));}; \
-        utils_vector2_##name##_t utils_vector2_##name##_or(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return c2<utils_vector2_##name##_t>(o2<ctype>(a) | o2<ctype>(b));}; \
-        utils_vector2_##name##_t utils_vector2_##name##_xor(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return c2<utils_vector2_##name##_t>(o2<ctype>(a) ^ o2<ctype>(b));}
+        _nothrow utils_vector2_##name##_t utils_vector2_##name##_and(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return c2<utils_vector2_##name##_t>(o2<ctype>(a) & o2<ctype>(b));}; \
+        _nothrow utils_vector2_##name##_t utils_vector2_##name##_or(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return c2<utils_vector2_##name##_t>(o2<ctype>(a) | o2<ctype>(b));}; \
+        _nothrow utils_vector2_##name##_t utils_vector2_##name##_xor(utils_vector2_##name##_t a, utils_vector2_##name##_t b) {return c2<utils_vector2_##name##_t>(o2<ctype>(a) ^ o2<ctype>(b));}
 
     /* vector3 */
     #define C_API_VECTOR3_DEF(name, ctype) \
-        utils_vector3_##name##_t utils_vector3_##name##_add(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return c3<utils_vector3_##name##_t>(o3<ctype>(a) + o3<ctype>(b));}; \
-        utils_vector3_##name##_t utils_vector3_##name##_sub(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return c3<utils_vector3_##name##_t>(o3<ctype>(a) - o3<ctype>(b));}; \
-        utils_vector3_##name##_t utils_vector3_##name##_mul(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return c3<utils_vector3_##name##_t>(o3<ctype>(a) * o3<ctype>(b));}; \
-        utils_vector3_##name##_t utils_vector3_##name##_div(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return c3<utils_vector3_##name##_t>(o3<ctype>(a) / o3<ctype>(b));}; \
-        utils_vector3_##name##_t utils_vector3_##name##_add_scalar(utils_vector3_##name##_t v, ctype s) {return c3<utils_vector3_##name##_t>(o3<ctype>(v) + s);}; \
-        utils_vector3_##name##_t utils_vector3_##name##_sub_scalar(utils_vector3_##name##_t v, ctype s) {return c3<utils_vector3_##name##_t>(o3<ctype>(v) - s);}; \
-        utils_vector3_##name##_t utils_vector3_##name##_mul_scalar(utils_vector3_##name##_t v, ctype s) {return c3<utils_vector3_##name##_t>(o3<ctype>(v) * s);}; \
-        utils_vector3_##name##_t utils_vector3_##name##_div_scalar(utils_vector3_##name##_t v, ctype s) {return c3<utils_vector3_##name##_t>(o3<ctype>(v) / s);}; \
-        utils_vector3_##name##_t utils_vector3_##name##_neg(utils_vector3_##name##_t v) {return c3<utils_vector3_##name##_t>(-o3<ctype>(v));}; \
-        utils_vector3_##name##_t utils_vector3_##name##_min(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return c3<utils_vector3_##name##_t>(o3<ctype>(a).min(o3<ctype>(b)));}; \
-        utils_vector3_##name##_t utils_vector3_##name##_max(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return c3<utils_vector3_##name##_t>(o3<ctype>(a).max(o3<ctype>(b)));}; \
-        utils_vector3_##name##_t utils_vector3_##name##_clamp(utils_vector3_##name##_t v, utils_vector3_##name##_t min, utils_vector3_##name##_t max) {return c3<utils_vector3_##name##_t>(o3<ctype>(v).clamp(o3<ctype>(min), o3<ctype>(max)));}; \
-        utils_vector3_##name##_t utils_vector3_##name##_sign(utils_vector3_##name##_t v) {return c3<utils_vector3_##name##_t>(o3<ctype>(v).sign());}; \
-        utils_vector3_##name##_t utils_vector3_##name##_normalize(utils_vector3_##name##_t v) {return c3<utils_vector3_##name##_t>(o3<ctype>(v).normalize());}; \
-        utils_vector3_##name##_t utils_vector3_##name##_cross(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return c3<utils_vector3_##name##_t>(o3<ctype>(a).cross(o3<ctype>(b)));}; \
-        ctype utils_vector3_##name##_dot(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return o3<ctype>(a).dot(o3<ctype>(b));}; \
-        ctype utils_vector3_##name##_length(utils_vector3_##name##_t v) {return o3<ctype>(v).length();}; \
-        ctype utils_vector3_##name##_length_squared(utils_vector3_##name##_t v) {return o3<ctype>(v).lengthSquared();}; \
-        bool utils_vector3_##name##_equal(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return o3<ctype>(a) == o3<ctype>(b);}; \
-        bool utils_vector3_##name##_less(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return o3<ctype>(a) < o3<ctype>(b);}; \
-        bool utils_vector3_##name##_less_equal(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return o3<ctype>(a) <= o3<ctype>(b);}; \
-        bool utils_vector3_##name##_greater(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return o3<ctype>(a) > o3<ctype>(b);}; \
-        bool utils_vector3_##name##_greater_equal(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return o3<ctype>(a) >= o3<ctype>(b);}; \
-        ctype utils_vector3_##name##_get(utils_vector3_##name##_t v, size_t index) {return utils::exception::c_api::guard_fallback(static_cast<ctype>(0), [&](void) -> ctype {return o3<ctype>(v).get(index);});}; \
-        int utils_vector3_##name##_set(utils_vector3_##name##_t* v, size_t index, ctype value) \
+        _nothrow utils_vector3_##name##_t utils_vector3_##name##_add(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return c3<utils_vector3_##name##_t>(o3<ctype>(a) + o3<ctype>(b));}; \
+        _nothrow utils_vector3_##name##_t utils_vector3_##name##_sub(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return c3<utils_vector3_##name##_t>(o3<ctype>(a) - o3<ctype>(b));}; \
+        _nothrow utils_vector3_##name##_t utils_vector3_##name##_mul(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return c3<utils_vector3_##name##_t>(o3<ctype>(a) * o3<ctype>(b));}; \
+        _nothrow utils_vector3_##name##_t utils_vector3_##name##_div(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return c3<utils_vector3_##name##_t>(o3<ctype>(a) / o3<ctype>(b));}; \
+        _nothrow utils_vector3_##name##_t utils_vector3_##name##_add_scalar(utils_vector3_##name##_t v, ctype s) {return c3<utils_vector3_##name##_t>(o3<ctype>(v) + s);}; \
+        _nothrow utils_vector3_##name##_t utils_vector3_##name##_sub_scalar(utils_vector3_##name##_t v, ctype s) {return c3<utils_vector3_##name##_t>(o3<ctype>(v) - s);}; \
+        _nothrow utils_vector3_##name##_t utils_vector3_##name##_mul_scalar(utils_vector3_##name##_t v, ctype s) {return c3<utils_vector3_##name##_t>(o3<ctype>(v) * s);}; \
+        _nothrow utils_vector3_##name##_t utils_vector3_##name##_div_scalar(utils_vector3_##name##_t v, ctype s) {return c3<utils_vector3_##name##_t>(o3<ctype>(v) / s);}; \
+        _nothrow utils_vector3_##name##_t utils_vector3_##name##_neg(utils_vector3_##name##_t v) {return c3<utils_vector3_##name##_t>(-o3<ctype>(v));}; \
+        _nothrow utils_vector3_##name##_t utils_vector3_##name##_min(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return c3<utils_vector3_##name##_t>(o3<ctype>(a).min(o3<ctype>(b)));}; \
+        _nothrow utils_vector3_##name##_t utils_vector3_##name##_max(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return c3<utils_vector3_##name##_t>(o3<ctype>(a).max(o3<ctype>(b)));}; \
+        _nothrow utils_vector3_##name##_t utils_vector3_##name##_clamp(utils_vector3_##name##_t v, utils_vector3_##name##_t min, utils_vector3_##name##_t max) {return c3<utils_vector3_##name##_t>(o3<ctype>(v).clamp(o3<ctype>(min), o3<ctype>(max)));}; \
+        _nothrow utils_vector3_##name##_t utils_vector3_##name##_sign(utils_vector3_##name##_t v) {return c3<utils_vector3_##name##_t>(o3<ctype>(v).sign());}; \
+        _nothrow utils_vector3_##name##_t utils_vector3_##name##_normalize(utils_vector3_##name##_t v) {return c3<utils_vector3_##name##_t>(o3<ctype>(v).normalize());}; \
+        _nothrow utils_vector3_##name##_t utils_vector3_##name##_cross(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return c3<utils_vector3_##name##_t>(o3<ctype>(a).cross(o3<ctype>(b)));}; \
+        _nothrow ctype utils_vector3_##name##_dot(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return o3<ctype>(a).dot(o3<ctype>(b));}; \
+        _nothrow ctype utils_vector3_##name##_length(utils_vector3_##name##_t v) {return o3<ctype>(v).length();}; \
+        _nothrow ctype utils_vector3_##name##_length_squared(utils_vector3_##name##_t v) {return o3<ctype>(v).lengthSquared();}; \
+        _nothrow bool utils_vector3_##name##_equal(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return o3<ctype>(a) == o3<ctype>(b);}; \
+        _nothrow bool utils_vector3_##name##_less(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return o3<ctype>(a) < o3<ctype>(b);}; \
+        _nothrow bool utils_vector3_##name##_less_equal(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return o3<ctype>(a) <= o3<ctype>(b);}; \
+        _nothrow bool utils_vector3_##name##_greater(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return o3<ctype>(a) > o3<ctype>(b);}; \
+        _nothrow bool utils_vector3_##name##_greater_equal(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return o3<ctype>(a) >= o3<ctype>(b);}; \
+        _nothrow ctype utils_vector3_##name##_get(utils_vector3_##name##_t v, size_t index) {return utils::exception::c_api::guard_fallback(static_cast<ctype>(0), [&](void) -> ctype {return o3<ctype>(v).get(index);});}; \
+        _nothrow int utils_vector3_##name##_set(utils_vector3_##name##_t* v, size_t index, ctype value) \
         { \
             return utils::exception::c_api::guard([&](void) { \
                 utils::type::OVector3<ctype> res = o3<ctype>(utils::exception::c_api::not_null_ref(v, "vector")); \
@@ -128,46 +128,46 @@ File Description:
             }); \
         }
     #define C_API_VECTOR3_INT_DEF(name, ctype) \
-        utils_vector3_##name##_t utils_vector3_##name##_and(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return c3<utils_vector3_##name##_t>(o3<ctype>(a) & o3<ctype>(b));}; \
-        utils_vector3_##name##_t utils_vector3_##name##_or(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return c3<utils_vector3_##name##_t>(o3<ctype>(a) | o3<ctype>(b));}; \
-        utils_vector3_##name##_t utils_vector3_##name##_xor(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return c3<utils_vector3_##name##_t>(o3<ctype>(a) ^ o3<ctype>(b));}
+        _nothrow utils_vector3_##name##_t utils_vector3_##name##_and(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return c3<utils_vector3_##name##_t>(o3<ctype>(a) & o3<ctype>(b));}; \
+        _nothrow utils_vector3_##name##_t utils_vector3_##name##_or(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return c3<utils_vector3_##name##_t>(o3<ctype>(a) | o3<ctype>(b));}; \
+        _nothrow utils_vector3_##name##_t utils_vector3_##name##_xor(utils_vector3_##name##_t a, utils_vector3_##name##_t b) {return c3<utils_vector3_##name##_t>(o3<ctype>(a) ^ o3<ctype>(b));}
 
     /* matrix operations: new handle, _r (out), _assign (a) */
     #define C_API_MATRIX_OP2_DEF(name, ctype, op, arg_type, arg) \
-        utils_matrix_##name##_t* utils_matrix_##name##_##op(const utils_matrix_##name##_t* a, arg_type b) \
+        _nothrow utils_matrix_##name##_t* utils_matrix_##name##_##op(const utils_matrix_##name##_t* a, arg_type b) \
         {return matrix_new<utils_matrix_##name##_t>([&](void) {return MatrixOp<ctype>::op(matrix(a), arg);});} \
-        int utils_matrix_##name##_##op##_r(const utils_matrix_##name##_t* a, arg_type b, utils_matrix_##name##_t* out) \
+        _nothrow int utils_matrix_##name##_##op##_r(const utils_matrix_##name##_t* a, arg_type b, utils_matrix_##name##_t* out) \
         {return matrix_r(out, [&](void) {return MatrixOp<ctype>::op(matrix(a), arg);});} \
-        int utils_matrix_##name##_##op##_assign(utils_matrix_##name##_t* a, arg_type b) \
+        _nothrow int utils_matrix_##name##_##op##_assign(utils_matrix_##name##_t* a, arg_type b) \
         {return matrix_r(a, [&](void) {return MatrixOp<ctype>::op(matrix(a), arg);});}
     #define C_API_MATRIX_OP1_DEF(name, ctype, op) \
-        utils_matrix_##name##_t* utils_matrix_##name##_##op(const utils_matrix_##name##_t* a) \
+        _nothrow utils_matrix_##name##_t* utils_matrix_##name##_##op(const utils_matrix_##name##_t* a) \
         {return matrix_new<utils_matrix_##name##_t>([&](void) {return MatrixOp<ctype>::op(matrix(a));});} \
-        int utils_matrix_##name##_##op##_r(const utils_matrix_##name##_t* a, utils_matrix_##name##_t* out) \
+        _nothrow int utils_matrix_##name##_##op##_r(const utils_matrix_##name##_t* a, utils_matrix_##name##_t* out) \
         {return matrix_r(out, [&](void) {return MatrixOp<ctype>::op(matrix(a));});} \
-        int utils_matrix_##name##_##op##_assign(utils_matrix_##name##_t* a) \
+        _nothrow int utils_matrix_##name##_##op##_assign(utils_matrix_##name##_t* a) \
         {return matrix_r(a, [&](void) {return MatrixOp<ctype>::op(matrix(a));});}
 
     /* matrix */
     #define C_API_MATRIX_DEF(name, ctype) \
-        utils_matrix_##name##_t* utils_matrix_##name##_create(size_t rows, size_t cols) \
+        _nothrow utils_matrix_##name##_t* utils_matrix_##name##_create(size_t rows, size_t cols) \
         {return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_matrix_##name##_t* {return new utils_matrix_##name##_t(utils::type::OMatrix<ctype>(rows, cols));});} \
-        utils_matrix_##name##_t* utils_matrix_##name##_copy(const utils_matrix_##name##_t* m) \
+        _nothrow utils_matrix_##name##_t* utils_matrix_##name##_copy(const utils_matrix_##name##_t* m) \
         {return matrix_new<utils_matrix_##name##_t>([&](void) {return matrix(m);});} \
-        void utils_matrix_##name##_destroy(utils_matrix_##name##_t* m) {(void)utils::exception::c_api::guard([&](void) {delete m;});}; \
-        size_t utils_matrix_##name##_rows(const utils_matrix_##name##_t* m) {return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return matrix(m).row();});}; \
-        size_t utils_matrix_##name##_cols(const utils_matrix_##name##_t* m) {return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return matrix(m).col();});}; \
-        int utils_matrix_##name##_get(const utils_matrix_##name##_t* m, size_t x, size_t y, ctype* value) \
+        _nothrow void utils_matrix_##name##_destroy(utils_matrix_##name##_t* m) {(void)utils::exception::c_api::guard([&](void) {delete m;});}; \
+        _nothrow size_t utils_matrix_##name##_rows(const utils_matrix_##name##_t* m) {return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return matrix(m).row();});}; \
+        _nothrow size_t utils_matrix_##name##_cols(const utils_matrix_##name##_t* m) {return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return matrix(m).col();});}; \
+        _nothrow int utils_matrix_##name##_get(const utils_matrix_##name##_t* m, size_t x, size_t y, ctype* value) \
         {return utils::exception::c_api::guard([&](void) {ctype& res = utils::exception::c_api::not_null_ref(value, "value"); res = matrix(m).at(x, y);});} \
-        int utils_matrix_##name##_set(utils_matrix_##name##_t* m, size_t x, size_t y, ctype value) {return utils::exception::c_api::guard([&](void) {matrix(m).set(x, y, value);});}; \
-        int utils_matrix_##name##_set_values(utils_matrix_##name##_t* m, const ctype* values, size_t count, size_t x, size_t y) \
+        _nothrow int utils_matrix_##name##_set(utils_matrix_##name##_t* m, size_t x, size_t y, ctype value) {return utils::exception::c_api::guard([&](void) {matrix(m).set(x, y, value);});}; \
+        _nothrow int utils_matrix_##name##_set_values(utils_matrix_##name##_t* m, const ctype* values, size_t count, size_t x, size_t y) \
         { \
             return utils::exception::c_api::guard([&](void) { \
                 if (count > 0) (void)utils::exception::c_api::not_null(values, "values"); \
                 matrix(m).set(values, values + count, x, y); \
             }); \
         } \
-        size_t utils_matrix_##name##_row_r(const utils_matrix_##name##_t* m, size_t n, ctype* buf, size_t count) \
+        _nothrow size_t utils_matrix_##name##_row_r(const utils_matrix_##name##_t* m, size_t n, ctype* buf, size_t count) \
         { \
             return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t { \
                 const std::vector<ctype> row = matrix(m).row(n); \
@@ -175,7 +175,7 @@ File Description:
                 return row.size(); \
             }); \
         } \
-        size_t utils_matrix_##name##_col_r(const utils_matrix_##name##_t* m, size_t n, ctype* buf, size_t count) \
+        _nothrow size_t utils_matrix_##name##_col_r(const utils_matrix_##name##_t* m, size_t n, ctype* buf, size_t count) \
         { \
             return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t { \
                 const std::vector<ctype> col = matrix(m).col(n); \
@@ -183,9 +183,9 @@ File Description:
                 return col.size(); \
             }); \
         } \
-        int utils_matrix_##name##_swap(utils_matrix_##name##_t* m, size_t ax, size_t ay, size_t bx, size_t by) \
+        _nothrow int utils_matrix_##name##_swap(utils_matrix_##name##_t* m, size_t ax, size_t ay, size_t bx, size_t by) \
         {return utils::exception::c_api::guard([&](void) {utils::type::OMatrix<ctype>& self = matrix(m); std::swap(self.at(ax, ay), self.at(bx, by));});} \
-        int utils_matrix_##name##_swap_row(utils_matrix_##name##_t* m, size_t a, size_t b) \
+        _nothrow int utils_matrix_##name##_swap_row(utils_matrix_##name##_t* m, size_t a, size_t b) \
         { \
             return utils::exception::c_api::guard([&](void) { \
                 utils::type::OMatrix<ctype>& self = matrix(m); \
@@ -193,14 +193,14 @@ File Description:
                     std::swap(self.at(a, y), self.at(b, y)); \
             }); \
         } \
-        int utils_matrix_##name##_swap_col(utils_matrix_##name##_t* m, size_t a, size_t b) {return utils::exception::c_api::guard([&](void) {matrix(m).swapCol(a, b);});}; \
-        int utils_matrix_##name##_clear(utils_matrix_##name##_t* m) \
+        _nothrow int utils_matrix_##name##_swap_col(utils_matrix_##name##_t* m, size_t a, size_t b) {return utils::exception::c_api::guard([&](void) {matrix(m).swapCol(a, b);});}; \
+        _nothrow int utils_matrix_##name##_clear(utils_matrix_##name##_t* m) \
         {return utils::exception::c_api::guard([&](void) {utils::type::OMatrix<ctype>& self = matrix(m); self = utils::type::OMatrix<ctype>(self.row(), self.col());});} \
-        int utils_matrix_##name##_det(const utils_matrix_##name##_t* m, ctype* value) \
+        _nothrow int utils_matrix_##name##_det(const utils_matrix_##name##_t* m, ctype* value) \
         {return utils::exception::c_api::guard([&](void) {ctype& res = utils::exception::c_api::not_null_ref(value, "value"); res = matrix(m).det();});} \
-        int utils_matrix_##name##_trace(const utils_matrix_##name##_t* m, ctype* value) \
+        _nothrow int utils_matrix_##name##_trace(const utils_matrix_##name##_t* m, ctype* value) \
         {return utils::exception::c_api::guard([&](void) {ctype& res = utils::exception::c_api::not_null_ref(value, "value"); res = matrix(m).trace();});} \
-        bool utils_matrix_##name##_equal(const utils_matrix_##name##_t* a, const utils_matrix_##name##_t* b) \
+        _nothrow bool utils_matrix_##name##_equal(const utils_matrix_##name##_t* a, const utils_matrix_##name##_t* b) \
         {return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return matrix(a) == matrix(b);});} \
         C_API_MATRIX_OP2_DEF(name, ctype, add, const utils_matrix_##name##_t*, matrix(b)) \
         C_API_MATRIX_OP2_DEF(name, ctype, sub, const utils_matrix_##name##_t*, matrix(b)) \
@@ -215,10 +215,10 @@ File Description:
 
     /* bidirectional lookup table of one type */
     #define C_API_BLT_SAME_DEF(name, ctype) \
-        utils_blt_##name##_t* utils_blt_##name##_create(void) {return utils::exception::c_api::guard_fallback(nullptr, [](void) -> utils_blt_##name##_t* {return new utils_blt_##name##_t();});}; \
-        void utils_blt_##name##_destroy(utils_blt_##name##_t* blt) {(void)utils::exception::c_api::guard([&](void) {delete blt;});}; \
-        int utils_blt_##name##_clear(utils_blt_##name##_t* blt) {return utils::exception::c_api::guard([&](void) {table(blt).clear();});}; \
-        int utils_blt_##name##_set(utils_blt_##name##_t* blt, ctype left, ctype right, bool force) \
+        _nothrow utils_blt_##name##_t* utils_blt_##name##_create(void) {return utils::exception::c_api::guard_fallback(nullptr, [](void) -> utils_blt_##name##_t* {return new utils_blt_##name##_t();});}; \
+        _nothrow void utils_blt_##name##_destroy(utils_blt_##name##_t* blt) {(void)utils::exception::c_api::guard([&](void) {delete blt;});}; \
+        _nothrow int utils_blt_##name##_clear(utils_blt_##name##_t* blt) {return utils::exception::c_api::guard([&](void) {table(blt).clear();});}; \
+        _nothrow int utils_blt_##name##_set(utils_blt_##name##_t* blt, ctype left, ctype right, bool force) \
         { \
             return utils::exception::c_api::guard([&](void) { \
                 utils_blt_##name##_t& self = table(blt); \
@@ -226,13 +226,13 @@ File Description:
                 else self.template setElement<false>(utils::type::c_api::Storage<ctype>::cpp(left), utils::type::c_api::Storage<ctype>::cpp(right)); \
             }); \
         } \
-        int utils_blt_##name##_add(utils_blt_##name##_t* blt, ctype left, ctype right) \
+        _nothrow int utils_blt_##name##_add(utils_blt_##name##_t* blt, ctype left, ctype right) \
         {return utils::exception::c_api::guard([&](void) {table(blt).addElement(utils::type::c_api::Storage<ctype>::cpp(left), utils::type::c_api::Storage<ctype>::cpp(right));});} \
-        int utils_blt_##name##_remove(utils_blt_##name##_t* blt, ctype element) \
+        _nothrow int utils_blt_##name##_remove(utils_blt_##name##_t* blt, ctype element) \
         {return utils::exception::c_api::guard([&](void) {table(blt).removeElement(utils::type::c_api::Storage<ctype>::cpp(element));});} \
-        int utils_blt_##name##_remove_all(utils_blt_##name##_t* blt, ctype const* elements_, size_t count) \
+        _nothrow int utils_blt_##name##_remove_all(utils_blt_##name##_t* blt, ctype const* elements_, size_t count) \
         {return utils::exception::c_api::guard([&](void) {utils_blt_##name##_t& self = table(blt); self.removeElements(elements(elements_, count));});} \
-        int utils_blt_##name##_get(const utils_blt_##name##_t* blt, ctype element, ctype* other) \
+        _nothrow int utils_blt_##name##_get(const utils_blt_##name##_t* blt, ctype element, ctype* other) \
         { \
             return utils::exception::c_api::guard([&](void) { \
                 ctype& res = utils::exception::c_api::not_null_ref(other, "other"); \
@@ -242,10 +242,10 @@ File Description:
 
     /* bidirectional lookup table of two types */
     #define C_API_BLT_DEF(name, left_type, right_type) \
-        utils_blt_##name##_t* utils_blt_##name##_create(void) {return utils::exception::c_api::guard_fallback(nullptr, [](void) -> utils_blt_##name##_t* {return new utils_blt_##name##_t();});}; \
-        void utils_blt_##name##_destroy(utils_blt_##name##_t* blt) {(void)utils::exception::c_api::guard([&](void) {delete blt;});}; \
-        int utils_blt_##name##_clear(utils_blt_##name##_t* blt) {return utils::exception::c_api::guard([&](void) {table(blt).clear();});}; \
-        int utils_blt_##name##_set(utils_blt_##name##_t* blt, left_type left, right_type right, bool force) \
+        _nothrow utils_blt_##name##_t* utils_blt_##name##_create(void) {return utils::exception::c_api::guard_fallback(nullptr, [](void) -> utils_blt_##name##_t* {return new utils_blt_##name##_t();});}; \
+        _nothrow void utils_blt_##name##_destroy(utils_blt_##name##_t* blt) {(void)utils::exception::c_api::guard([&](void) {delete blt;});}; \
+        _nothrow int utils_blt_##name##_clear(utils_blt_##name##_t* blt) {return utils::exception::c_api::guard([&](void) {table(blt).clear();});}; \
+        _nothrow int utils_blt_##name##_set(utils_blt_##name##_t* blt, left_type left, right_type right, bool force) \
         { \
             return utils::exception::c_api::guard([&](void) { \
                 utils_blt_##name##_t& self = table(blt); \
@@ -253,24 +253,24 @@ File Description:
                 else self.template setElement<false>(utils::type::c_api::Storage<left_type>::cpp(left), utils::type::c_api::Storage<right_type>::cpp(right)); \
             }); \
         } \
-        int utils_blt_##name##_add(utils_blt_##name##_t* blt, left_type left, right_type right) \
+        _nothrow int utils_blt_##name##_add(utils_blt_##name##_t* blt, left_type left, right_type right) \
         {return utils::exception::c_api::guard([&](void) {table(blt).addElement(utils::type::c_api::Storage<left_type>::cpp(left), utils::type::c_api::Storage<right_type>::cpp(right));});} \
-        int utils_blt_##name##_remove_left(utils_blt_##name##_t* blt, left_type left) \
+        _nothrow int utils_blt_##name##_remove_left(utils_blt_##name##_t* blt, left_type left) \
         {return utils::exception::c_api::guard([&](void) {table(blt).removeElement(utils::type::c_api::Storage<left_type>::cpp(left));});} \
-        int utils_blt_##name##_remove_right(utils_blt_##name##_t* blt, right_type right) \
+        _nothrow int utils_blt_##name##_remove_right(utils_blt_##name##_t* blt, right_type right) \
         {return utils::exception::c_api::guard([&](void) {table(blt).removeElement(utils::type::c_api::Storage<right_type>::cpp(right));});} \
-        int utils_blt_##name##_remove_lefts(utils_blt_##name##_t* blt, left_type const* lefts, size_t count) \
+        _nothrow int utils_blt_##name##_remove_lefts(utils_blt_##name##_t* blt, left_type const* lefts, size_t count) \
         {return utils::exception::c_api::guard([&](void) {utils_blt_##name##_t& self = table(blt); self.removeElements(elements(lefts, count));});} \
-        int utils_blt_##name##_remove_rights(utils_blt_##name##_t* blt, right_type const* rights, size_t count) \
+        _nothrow int utils_blt_##name##_remove_rights(utils_blt_##name##_t* blt, right_type const* rights, size_t count) \
         {return utils::exception::c_api::guard([&](void) {utils_blt_##name##_t& self = table(blt); self.removeElements(elements(rights, count));});} \
-        int utils_blt_##name##_get_right(const utils_blt_##name##_t* blt, left_type left, right_type* right) \
+        _nothrow int utils_blt_##name##_get_right(const utils_blt_##name##_t* blt, left_type left, right_type* right) \
         { \
             return utils::exception::c_api::guard([&](void) { \
                 right_type& res = utils::exception::c_api::not_null_ref(right, "right"); \
                 res = utils::type::c_api::Storage<right_type>::c(table(blt)[utils::type::c_api::Storage<left_type>::cpp(left)]); \
             }); \
         } \
-        int utils_blt_##name##_get_left(const utils_blt_##name##_t* blt, right_type right, left_type* left) \
+        _nothrow int utils_blt_##name##_get_left(const utils_blt_##name##_t* blt, right_type right, left_type* left) \
         { \
             return utils::exception::c_api::guard([&](void) { \
                 left_type& res = utils::exception::c_api::not_null_ref(left, "left"); \

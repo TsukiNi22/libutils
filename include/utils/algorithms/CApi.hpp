@@ -30,9 +30,9 @@ File Description:
 
     /* s.o.s of an unsigned integer (sos_embed / sos_extract of the .cpp) */
     #define C_API_SOS_DEF(name, ctype) \
-        int utils_sos_embed_##name(ctype* carrier, size_t count, const ctype* payload, size_t payload_count, const ctype* key, size_t key_count, int options) \
+        _nothrow int utils_sos_embed_##name(ctype* carrier, size_t count, const ctype* payload, size_t payload_count, const ctype* key, size_t key_count, int options) \
         {return sos_embed(carrier, count, payload, payload_count, key, key_count, options);} \
-        size_t utils_sos_extract_##name(const ctype* carrier, size_t count, const ctype* key, size_t key_count, ctype* out, size_t max) \
+        _nothrow size_t utils_sos_extract_##name(const ctype* carrier, size_t count, const ctype* key, size_t key_count, ctype* out, size_t max) \
         {return sos_extract(carrier, count, key, key_count, out, max);}
 
 #endif /* ALGORITHMS_CAPI_H */

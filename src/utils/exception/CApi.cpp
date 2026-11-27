@@ -92,12 +92,12 @@ _cold void utils::exception::c_api::set_status(const char* what, const utils_exc
 /* C SIDE */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold void utils_exception_clear(void)
+_cold _nothrow void utils_exception_clear(void)
 {
     utils::exception::c_api::clear_status();
 }
 
-_cold int utils_exception_set_at(utils_exception_type_t type, uint64_t code, const char* what, const char* info, const char* file, uint64_t line, const char* function)
+_cold _nothrow int utils_exception_set_at(utils_exception_type_t type, uint64_t code, const char* what, const char* info, const char* file, uint64_t line, const char* function)
 {
     utils::exception::c_api::clear_status();
 
@@ -119,7 +119,7 @@ _cold int utils_exception_set_at(utils_exception_type_t type, uint64_t code, con
 }
 
 // Not through guard: reading the status never changes it
-_cold const char* utils_exception_format(void)
+_cold _nothrow const char* utils_exception_format(void)
 {
     // xstyle: ignore-next CPP-THIS (false positive: _thread_local is the attribute macro, not a member)
     static _thread_local std::string str;
@@ -130,7 +130,7 @@ _cold const char* utils_exception_format(void)
     } catch (...) {return nullptr;}
 }
 
-_cold size_t utils_exception_format_r(char* buf, size_t size)
+_cold _nothrow size_t utils_exception_format_r(char* buf, size_t size)
 {
     if (!buf && size > 0) _unlikely {return 0;}
     try {

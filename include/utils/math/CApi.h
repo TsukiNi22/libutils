@@ -29,8 +29,9 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include <stdbool.h>    // bool
-    #include <stdint.h>     // int32_t, uint64_t
+    #include "../attribute/Attribute.hpp"   // _nodiscard, _nothrow, _const
+    #include <stdbool.h>                    // bool
+    #include <stdint.h>                     // int32_t, uint64_t
 
 #ifdef __cplusplus
     extern "C" {
@@ -89,13 +90,13 @@ typedef struct utils_math_cframe {
 /* PROTOTYPE */
 
 /* trigonometry */
-utils_math_type_t utils_math_deg_to_rad(utils_math_angle_t deg);
-utils_math_angle_t utils_math_rad_to_deg(utils_math_type_t rad);
+_nodiscard _nothrow _const utils_math_type_t utils_math_deg_to_rad(utils_math_angle_t deg);
+_nodiscard _nothrow _const utils_math_angle_t utils_math_rad_to_deg(utils_math_type_t rad);
 
 /* geometry (rad: the angle / orientation is in radian, else in deg) */
-utils_math_direction_t utils_math_to_look(utils_math_direction_t orientation); // orientation in deg -> look vector normalized
-utils_math_coord2d_t utils_math_rotate_point_2d(utils_math_coord2d_t origin, utils_math_coord2d_t point, utils_math_angle_t angle, bool rad);
-utils_math_coord_t utils_math_rotate_point_3d(utils_math_coord_t origin, utils_math_coord_t point, utils_math_direction_t orientation, bool rad);
+_nodiscard _nothrow _const utils_math_direction_t utils_math_to_look(utils_math_direction_t orientation); // orientation in deg -> look vector normalized
+_nodiscard _nothrow _const utils_math_coord2d_t utils_math_rotate_point_2d(utils_math_coord2d_t origin, utils_math_coord2d_t point, utils_math_angle_t angle, bool rad);
+_nodiscard _nothrow _const utils_math_coord_t utils_math_rotate_point_3d(utils_math_coord_t origin, utils_math_coord_t point, utils_math_direction_t orientation, bool rad);
 
 #ifdef __cplusplus
     } // end of: extern "C"

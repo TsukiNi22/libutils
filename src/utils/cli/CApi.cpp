@@ -146,12 +146,12 @@ _cold _nodiscard static int add_middleware(utils_cli_t* cli, const bool valid, F
 /* HANDLE */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold utils_cli_t* utils_cli_create(bool sig)
+_cold _nothrow utils_cli_t* utils_cli_create(bool sig)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_cli_t* {return new utils_cli_t(sig);});
 }
 
-_cold void utils_cli_destroy(utils_cli_t* cli)
+_cold _nothrow void utils_cli_destroy(utils_cli_t* cli)
 {
     (void)utils::exception::c_api::guard([&](void) {
         if (!cli) return; // like free(NULL)
@@ -167,7 +167,7 @@ _cold void utils_cli_destroy(utils_cli_t* cli)
 //----------------------------------------------------------------//
 /* RUN */
 
-_cold int utils_cli_start(utils_cli_t* cli, const char* const* inputs, size_t count, size_t call)
+_cold _nothrow int utils_cli_start(utils_cli_t* cli, const char* const* inputs, size_t count, size_t call)
 {
     return utils::exception::c_api::guard([&](void) {
         utils_cli_t& self = utils::exception::c_api::not_null_ref(cli, "cli handle");
@@ -189,7 +189,7 @@ _cold int utils_cli_start(utils_cli_t* cli, const char* const* inputs, size_t co
     });
 }
 
-_cold void utils_cli_join(utils_cli_t* cli)
+_cold _nothrow void utils_cli_join(utils_cli_t* cli)
 {
     (void)utils::exception::c_api::guard([&](void) {
         utils_cli_t& self = utils::exception::c_api::not_null_ref(cli, "cli handle");
@@ -200,13 +200,13 @@ _cold void utils_cli_join(utils_cli_t* cli)
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold void utils_cli_interrupt(utils_cli_t* cli)
+_cold _nothrow void utils_cli_interrupt(utils_cli_t* cli)
 {
     (void)utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.interrupt();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold void utils_cli_kill(utils_cli_t* cli)
+_cold _nothrow void utils_cli_kill(utils_cli_t* cli)
 {
     (void)utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.kill();});
 }
@@ -215,25 +215,25 @@ _cold void utils_cli_kill(utils_cli_t* cli)
 /* STATUS */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold bool utils_cli_is_running(const utils_cli_t* cli)
+_cold _nothrow bool utils_cli_is_running(const utils_cli_t* cli)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return utils::exception::c_api::not_null_ref(cli, "cli handle").cli.isRunning();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold bool utils_cli_was_interrupted(const utils_cli_t* cli)
+_cold _nothrow bool utils_cli_was_interrupted(const utils_cli_t* cli)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return utils::exception::c_api::not_null_ref(cli, "cli handle").cli.wasInterrupted();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold bool utils_cli_was_killed(const utils_cli_t* cli)
+_cold _nothrow bool utils_cli_was_killed(const utils_cli_t* cli)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return utils::exception::c_api::not_null_ref(cli, "cli handle").cli.wasKilled();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold bool utils_cli_was_stopped(const utils_cli_t* cli)
+_cold _nothrow bool utils_cli_was_stopped(const utils_cli_t* cli)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return utils::exception::c_api::not_null_ref(cli, "cli handle").cli.wasStopped();});
 }
@@ -242,25 +242,25 @@ _cold bool utils_cli_was_stopped(const utils_cli_t* cli)
 /* FLAGS */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold void utils_cli_reset_flags(utils_cli_t* cli)
+_cold _nothrow void utils_cli_reset_flags(utils_cli_t* cli)
 {
     (void)utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.resetFlags();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold void utils_cli_sub_flags(utils_cli_t* cli, uint32_t flags)
+_cold _nothrow void utils_cli_sub_flags(utils_cli_t* cli, uint32_t flags)
 {
     (void)utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.subFlags(flags);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold void utils_cli_add_flags(utils_cli_t* cli, uint32_t flags)
+_cold _nothrow void utils_cli_add_flags(utils_cli_t* cli, uint32_t flags)
 {
     (void)utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.addFlags(flags);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold void utils_cli_set_flags(utils_cli_t* cli, uint32_t flags)
+_cold _nothrow void utils_cli_set_flags(utils_cli_t* cli, uint32_t flags)
 {
     (void)utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.setFlags(flags);});
 }
@@ -268,7 +268,7 @@ _cold void utils_cli_set_flags(utils_cli_t* cli, uint32_t flags)
 //----------------------------------------------------------------//
 /* COMMANDS */
 
-_cold int utils_cli_set_parsed_command(utils_cli_t* cli, const char* name, utils_cli_parsed_command_t fn, int16_t min, int16_t max, void* data, bool force)
+_cold _nothrow int utils_cli_set_parsed_command(utils_cli_t* cli, const char* name, utils_cli_parsed_command_t fn, int16_t min, int16_t max, void* data, bool force)
 {
     return utils::exception::c_api::guard([&](void) {
         utils_cli_t& self = utils::exception::c_api::not_null_ref(cli, "cli handle");
@@ -278,7 +278,7 @@ _cold int utils_cli_set_parsed_command(utils_cli_t* cli, const char* name, utils
     });
 }
 
-_cold int utils_cli_set_raw_command(utils_cli_t* cli, const char* name, utils_cli_raw_command_t fn, void* data, bool force)
+_cold _nothrow int utils_cli_set_raw_command(utils_cli_t* cli, const char* name, utils_cli_raw_command_t fn, void* data, bool force)
 {
     return utils::exception::c_api::guard([&](void) {
         utils_cli_t& self = utils::exception::c_api::not_null_ref(cli, "cli handle");
@@ -288,7 +288,7 @@ _cold int utils_cli_set_raw_command(utils_cli_t* cli, const char* name, utils_cl
     });
 }
 
-_cold int utils_cli_set_parsed_commands(utils_cli_t* cli, const utils_cli_parsed_command_entry_t* commands, size_t count, bool force)
+_cold _nothrow int utils_cli_set_parsed_commands(utils_cli_t* cli, const utils_cli_parsed_command_entry_t* commands, size_t count, bool force)
 {
     return utils::exception::c_api::guard([&](void) {
         utils_cli_t& self = utils::exception::c_api::not_null_ref(cli, "cli handle");
@@ -306,7 +306,7 @@ _cold int utils_cli_set_parsed_commands(utils_cli_t* cli, const utils_cli_parsed
     });
 }
 
-_cold int utils_cli_set_raw_commands(utils_cli_t* cli, const utils_cli_raw_command_entry_t* commands, size_t count, bool force)
+_cold _nothrow int utils_cli_set_raw_commands(utils_cli_t* cli, const utils_cli_raw_command_entry_t* commands, size_t count, bool force)
 {
     return utils::exception::c_api::guard([&](void) {
         utils_cli_t& self = utils::exception::c_api::not_null_ref(cli, "cli handle");
@@ -325,12 +325,12 @@ _cold int utils_cli_set_raw_commands(utils_cli_t* cli, const utils_cli_raw_comma
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_cli_del_command(utils_cli_t* cli, const char* name)
+_cold _nothrow int utils_cli_del_command(utils_cli_t* cli, const char* name)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.delCommand(utils::exception::c_api::not_null(name, "command name"));});
 }
 
-_cold int utils_cli_del_commands(utils_cli_t* cli, const char* const* names, size_t count)
+_cold _nothrow int utils_cli_del_commands(utils_cli_t* cli, const char* const* names, size_t count)
 {
     return utils::exception::c_api::guard([&](void) {
         utils_cli_t& self = utils::exception::c_api::not_null_ref(cli, "cli handle");
@@ -346,13 +346,13 @@ _cold int utils_cli_del_commands(utils_cli_t* cli, const char* const* names, siz
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_cli_reset_commands(utils_cli_t* cli)
+_cold _nothrow int utils_cli_reset_commands(utils_cli_t* cli)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.resetCommands();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_cli_clear_commands(utils_cli_t* cli)
+_cold _nothrow int utils_cli_clear_commands(utils_cli_t* cli)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.clearCommands();});
 }
@@ -361,30 +361,30 @@ _cold int utils_cli_clear_commands(utils_cli_t* cli)
 /* HOOKS */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_cli_reset_hooks(utils_cli_t* cli)
+_cold _nothrow int utils_cli_reset_hooks(utils_cli_t* cli)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.resetHooks();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_cli_reset_prompt_hook(utils_cli_t* cli)
+_cold _nothrow int utils_cli_reset_prompt_hook(utils_cli_t* cli)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.resetPromptHook();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_cli_reset_parser_hook(utils_cli_t* cli)
+_cold _nothrow int utils_cli_reset_parser_hook(utils_cli_t* cli)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.resetParserHook();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_cli_reset_getc_hook(utils_cli_t* cli)
+_cold _nothrow int utils_cli_reset_getc_hook(utils_cli_t* cli)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.resetGetCHook();});
 }
 
-_cold int utils_cli_set_prompt_hook(utils_cli_t* cli, utils_cli_prompt_hook_t hook, void* data)
+_cold _nothrow int utils_cli_set_prompt_hook(utils_cli_t* cli, utils_cli_prompt_hook_t hook, void* data)
 {
     return utils::exception::c_api::guard([&](void) {
         utils_cli_t& self = utils::exception::c_api::not_null_ref(cli, "cli handle");
@@ -399,7 +399,7 @@ _cold int utils_cli_set_prompt_hook(utils_cli_t* cli, utils_cli_prompt_hook_t ho
     });
 }
 
-_cold int utils_cli_set_parser_hook(utils_cli_t* cli, utils_cli_parser_hook_t hook, void* data)
+_cold _nothrow int utils_cli_set_parser_hook(utils_cli_t* cli, utils_cli_parser_hook_t hook, void* data)
 {
     return utils::exception::c_api::guard([&](void) {
         utils_cli_t& self = utils::exception::c_api::not_null_ref(cli, "cli handle");
@@ -416,7 +416,7 @@ _cold int utils_cli_set_parser_hook(utils_cli_t* cli, utils_cli_parser_hook_t ho
     });
 }
 
-_cold int utils_cli_set_getc_hook(utils_cli_t* cli, utils_cli_getc_hook_t hook, void* data)
+_cold _nothrow int utils_cli_set_getc_hook(utils_cli_t* cli, utils_cli_getc_hook_t hook, void* data)
 {
     return utils::exception::c_api::guard([&](void) {
         utils_cli_t& self = utils::exception::c_api::not_null_ref(cli, "cli handle");
@@ -437,12 +437,12 @@ _cold int utils_cli_set_getc_hook(utils_cli_t* cli, utils_cli_getc_hook_t hook, 
 //----------------------------------------------------------------//
 /* DEFAULT HOOKS */
 
-_cold int utils_cli_default_prompt_hook(const utils_cli_t* cli, uint8_t code, _unused void* data)
+_cold _nothrow int utils_cli_default_prompt_hook(const utils_cli_t* cli, uint8_t code, _unused void* data)
 {
     return utils::exception::c_api::guard([&](void) {utils::cli::defaultPromptHook(utils::exception::c_api::not_null_ref(cli, "cli handle").cli, code);});
 }
 
-_cold int utils_cli_default_parser_hook(const char* input, bool trim, bool logic, bool parse, utils_cli_parsed_t* out, _unused void* data)
+_cold _nothrow int utils_cli_default_parser_hook(const char* input, bool trim, bool logic, bool parse, utils_cli_parsed_t* out, _unused void* data)
 {
     return utils::exception::c_api::guard([&](void) {
         utils::cli::ParsedData& parsed = parsed_data(out);
@@ -450,7 +450,7 @@ _cold int utils_cli_default_parser_hook(const char* input, bool trim, bool logic
     });
 }
 
-_cold int utils_cli_default_getc_hook(char* c, _unused void* data)
+_cold _nothrow int utils_cli_default_getc_hook(char* c, _unused void* data)
 {
     bool read = false;
 
@@ -462,126 +462,126 @@ _cold int utils_cli_default_getc_hook(char* c, _unused void* data)
 /* MIDDLEWARES */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_cli_reset_middlewares(utils_cli_t* cli)
+_cold _nothrow int utils_cli_reset_middlewares(utils_cli_t* cli)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.resetMiddlewares();});
 }
 
 /* cli */
-_cold int utils_cli_cli_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_t fn, void* data)
+_cold _nothrow int utils_cli_cli_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_t fn, void* data)
 {
     return add_middleware(cli, fn, [&](utils_cli_t& self) {self.cli.cliMiddlewares.addBefore(middleware(&self, fn, data));});
 }
 
-_cold int utils_cli_cli_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_t fn, void* data)
+_cold _nothrow int utils_cli_cli_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_t fn, void* data)
 {
     return add_middleware(cli, fn, [&](utils_cli_t& self) {self.cli.cliMiddlewares.addAfter(middleware(&self, fn, data));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_cli_cli_middlewares_clear(utils_cli_t* cli)
+_cold _nothrow int utils_cli_cli_middlewares_clear(utils_cli_t* cli)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.cliMiddlewares.clear();});
 }
 
 /* error */
-_cold int utils_cli_error_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_code_t fn, void* data)
+_cold _nothrow int utils_cli_error_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_code_t fn, void* data)
 {
     return add_middleware(cli, fn, [&](utils_cli_t& self) {self.cli.errorMiddlewares.addBefore(middleware(&self, fn, data));});
 }
 
-_cold int utils_cli_error_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_code_t fn, void* data)
+_cold _nothrow int utils_cli_error_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_code_t fn, void* data)
 {
     return add_middleware(cli, fn, [&](utils_cli_t& self) {self.cli.errorMiddlewares.addAfter(middleware(&self, fn, data));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_cli_error_middlewares_clear(utils_cli_t* cli)
+_cold _nothrow int utils_cli_error_middlewares_clear(utils_cli_t* cli)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.errorMiddlewares.clear();});
 }
 
 /* prompt */
-_cold int utils_cli_prompt_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_t fn, void* data)
+_cold _nothrow int utils_cli_prompt_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_t fn, void* data)
 {
     return add_middleware(cli, fn, [&](utils_cli_t& self) {self.cli.promptMiddlewares.addBefore(middleware(&self, fn, data));});
 }
 
-_cold int utils_cli_prompt_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_t fn, void* data)
+_cold _nothrow int utils_cli_prompt_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_t fn, void* data)
 {
     return add_middleware(cli, fn, [&](utils_cli_t& self) {self.cli.promptMiddlewares.addAfter(middleware(&self, fn, data));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_cli_prompt_middlewares_clear(utils_cli_t* cli)
+_cold _nothrow int utils_cli_prompt_middlewares_clear(utils_cli_t* cli)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.promptMiddlewares.clear();});
 }
 
 /* input */
-_cold int utils_cli_input_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_t fn, void* data)
+_cold _nothrow int utils_cli_input_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_t fn, void* data)
 {
     return add_middleware(cli, fn, [&](utils_cli_t& self) {self.cli.inputMiddlewares.addBefore(middleware(&self, fn, data));});
 }
 
-_cold int utils_cli_input_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_char_t fn, void* data)
+_cold _nothrow int utils_cli_input_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_char_t fn, void* data)
 {
     return add_middleware(cli, fn, [&](utils_cli_t& self) {self.cli.inputMiddlewares.addAfter(middleware(&self, fn, data));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_cli_input_middlewares_clear(utils_cli_t* cli)
+_cold _nothrow int utils_cli_input_middlewares_clear(utils_cli_t* cli)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.inputMiddlewares.clear();});
 }
 
 /* parser */
-_cold int utils_cli_parser_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_str_t fn, void* data)
+_cold _nothrow int utils_cli_parser_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_str_t fn, void* data)
 {
     return add_middleware(cli, fn, [&](utils_cli_t& self) {self.cli.parserMiddlewares.addBefore(middleware(&self, fn, data));});
 }
 
-_cold int utils_cli_parser_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_parsed_t fn, void* data)
+_cold _nothrow int utils_cli_parser_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_parsed_t fn, void* data)
 {
     return add_middleware(cli, fn, [&](utils_cli_t& self) {self.cli.parserMiddlewares.addAfter(middleware(&self, fn, data));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_cli_parser_middlewares_clear(utils_cli_t* cli)
+_cold _nothrow int utils_cli_parser_middlewares_clear(utils_cli_t* cli)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.parserMiddlewares.clear();});
 }
 
 /* exec */
-_cold int utils_cli_exec_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_parsed_t fn, void* data)
+_cold _nothrow int utils_cli_exec_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_parsed_t fn, void* data)
 {
     return add_middleware(cli, fn, [&](utils_cli_t& self) {self.cli.execMiddlewares.addBefore(middleware(&self, fn, data));});
 }
 
-_cold int utils_cli_exec_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_parsed_t fn, void* data)
+_cold _nothrow int utils_cli_exec_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_parsed_t fn, void* data)
 {
     return add_middleware(cli, fn, [&](utils_cli_t& self) {self.cli.execMiddlewares.addAfter(middleware(&self, fn, data));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_cli_exec_middlewares_clear(utils_cli_t* cli)
+_cold _nothrow int utils_cli_exec_middlewares_clear(utils_cli_t* cli)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.execMiddlewares.clear();});
 }
 
 /* command */
-_cold int utils_cli_command_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_str_t fn, void* data)
+_cold _nothrow int utils_cli_command_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_str_t fn, void* data)
 {
     return add_middleware(cli, fn, [&](utils_cli_t& self) {self.cli.commandMiddlewares.addBefore(middleware(&self, fn, data));});
 }
 
-_cold int utils_cli_command_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_str_t fn, void* data)
+_cold _nothrow int utils_cli_command_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_str_t fn, void* data)
 {
     return add_middleware(cli, fn, [&](utils_cli_t& self) {self.cli.commandMiddlewares.addAfter(middleware(&self, fn, data));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_cli_command_middlewares_clear(utils_cli_t* cli)
+_cold _nothrow int utils_cli_command_middlewares_clear(utils_cli_t* cli)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.commandMiddlewares.clear();});
 }
@@ -590,31 +590,31 @@ _cold int utils_cli_command_middlewares_clear(utils_cli_t* cli)
 /* SETTER / GETTER */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold void utils_cli_set_input_delimitor(utils_cli_t* cli, char c)
+_cold _nothrow void utils_cli_set_input_delimitor(utils_cli_t* cli, char c)
 {
     (void)utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(cli, "cli handle").cli.setInputDelimitor(c);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold char utils_cli_get_input_delimitor(const utils_cli_t* cli)
+_cold _nothrow char utils_cli_get_input_delimitor(const utils_cli_t* cli)
 {
     return utils::exception::c_api::guard_fallback('\0', [&](void) -> char {return utils::exception::c_api::not_null_ref(cli, "cli handle").cli.getInputDelimitor();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold uint8_t utils_cli_get_code(const utils_cli_t* cli)
+_cold _nothrow uint8_t utils_cli_get_code(const utils_cli_t* cli)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> uint8_t {return utils::exception::c_api::not_null_ref(cli, "cli handle").cli.getCode();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold uint32_t utils_cli_get_flags(const utils_cli_t* cli)
+_cold _nothrow uint32_t utils_cli_get_flags(const utils_cli_t* cli)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> uint32_t {return utils::exception::c_api::not_null_ref(cli, "cli handle").cli.getFlags();});
 }
 
 /* strings (thread local buffer) */
-_cold const char* utils_cli_strcode(const utils_cli_t* cli, uint8_t code)
+_cold _nothrow const char* utils_cli_strcode(const utils_cli_t* cli, uint8_t code)
 {
     // xstyle: ignore-next CPP-THIS (false positive: _thread_local is the attribute macro, not a member)
     static _thread_local std::string str;
@@ -622,7 +622,7 @@ _cold const char* utils_cli_strcode(const utils_cli_t* cli, uint8_t code)
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {str = utils::exception::c_api::not_null_ref(cli, "cli handle").cli.strcode(code); return str.c_str();});
 }
 
-_cold const char* utils_cli_history_get(const utils_cli_t* cli, size_t i)
+_cold _nothrow const char* utils_cli_history_get(const utils_cli_t* cli, size_t i)
 {
     // xstyle: ignore-next CPP-THIS (false positive: _thread_local is the attribute macro, not a member)
     static _thread_local std::string str;
@@ -638,19 +638,19 @@ _cold const char* utils_cli_history_get(const utils_cli_t* cli, size_t i)
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold size_t utils_cli_history_size(const utils_cli_t* cli)
+_cold _nothrow size_t utils_cli_history_size(const utils_cli_t* cli)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::exception::c_api::not_null_ref(cli, "cli handle").cli.getHistory().size();});
 }
 
 /* strings (_r: buffer of the user) */
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold size_t utils_cli_strcode_r(const utils_cli_t* cli, uint8_t code, char* buf, size_t size)
+_cold _nothrow size_t utils_cli_strcode_r(const utils_cli_t* cli, uint8_t code, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::exception::c_api::not_null_ref(cli, "cli handle").cli.strcode(code), buf, size);});
 }
 
-_cold size_t utils_cli_history_get_r(const utils_cli_t* cli, size_t i, char* buf, size_t size)
+_cold _nothrow size_t utils_cli_history_get_r(const utils_cli_t* cli, size_t i, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {
         const std::vector<std::string> history = utils::exception::c_api::not_null_ref(cli, "cli handle").cli.getHistory();
@@ -665,30 +665,30 @@ _cold size_t utils_cli_history_get_r(const utils_cli_t* cli, size_t i, char* buf
 /* PARSED DATA */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold utils_cli_parsed_t* utils_cli_parsed_create(void)
+_cold _nothrow utils_cli_parsed_t* utils_cli_parsed_create(void)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_cli_parsed_t* {return parsed_c(*new utils::cli::ParsedData());});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold void utils_cli_parsed_destroy(utils_cli_parsed_t* parsed)
+_cold _nothrow void utils_cli_parsed_destroy(utils_cli_parsed_t* parsed)
 {
     (void)utils::exception::c_api::guard([&](void) {delete reinterpret_cast<utils::cli::ParsedData*>(parsed);}); // like free(NULL)
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_cli_parsed_clear(utils_cli_parsed_t* parsed)
+_cold _nothrow int utils_cli_parsed_clear(utils_cli_parsed_t* parsed)
 {
     return utils::exception::c_api::guard([&](void) {parsed_data(parsed).clear();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_cli_parsed_add_group(utils_cli_parsed_t* parsed)
+_cold _nothrow int utils_cli_parsed_add_group(utils_cli_parsed_t* parsed)
 {
     return utils::exception::c_api::guard([&](void) {parsed_data(parsed).emplace_back();});
 }
 
-_cold int utils_cli_parsed_add_arg(utils_cli_parsed_t* parsed, const char* arg)
+_cold _nothrow int utils_cli_parsed_add_arg(utils_cli_parsed_t* parsed, const char* arg)
 {
     return utils::exception::c_api::guard([&](void) {
         utils::cli::ParsedData& data = parsed_data(parsed);
@@ -700,12 +700,12 @@ _cold int utils_cli_parsed_add_arg(utils_cli_parsed_t* parsed, const char* arg)
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold size_t utils_cli_parsed_groups(const utils_cli_parsed_t* parsed)
+_cold _nothrow size_t utils_cli_parsed_groups(const utils_cli_parsed_t* parsed)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return parsed_data(parsed).size();});
 }
 
-_cold size_t utils_cli_parsed_size(const utils_cli_parsed_t* parsed, size_t group)
+_cold _nothrow size_t utils_cli_parsed_size(const utils_cli_parsed_t* parsed, size_t group)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {
         const utils::cli::ParsedData& data = parsed_data(parsed);
@@ -716,7 +716,7 @@ _cold size_t utils_cli_parsed_size(const utils_cli_parsed_t* parsed, size_t grou
     });
 }
 
-_cold const char* utils_cli_parsed_get(const utils_cli_parsed_t* parsed, size_t group, size_t i)
+_cold _nothrow const char* utils_cli_parsed_get(const utils_cli_parsed_t* parsed, size_t group, size_t i)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {
         const utils::cli::ParsedData& data = parsed_data(parsed);

@@ -37,27 +37,27 @@ File Description:
 
     /* settings of the fixed types */
     #define C_API_SETTINGS_DEF(name, ctype) \
-        int utils_settings_add_##name(utils_settings_t* settings, const char* id, ctype value) \
+        _nothrow int utils_settings_add_##name(utils_settings_t* settings, const char* id, ctype value) \
         {return utils::exception::c_api::guard([&](void) {store(settings_of(settings), id, utils::type::c_api::Storage<ctype>::cpp(value), true, false);});} \
-        int utils_settings_set_##name(utils_settings_t* settings, const char* id, ctype value, bool force) \
+        _nothrow int utils_settings_set_##name(utils_settings_t* settings, const char* id, ctype value, bool force) \
         {return utils::exception::c_api::guard([&](void) {store(settings_of(settings), id, utils::type::c_api::Storage<ctype>::cpp(value), false, force);});} \
-        int utils_settings_get_##name(const utils_settings_t* settings, const char* id, ctype* value) \
+        _nothrow int utils_settings_get_##name(const utils_settings_t* settings, const char* id, ctype* value) \
         { \
             return utils::exception::c_api::guard([&](void) { \
                 ctype& res = utils::exception::c_api::not_null_ref(value, "value"); \
                 res = utils::type::c_api::Storage<ctype>::c(settings_of(settings).template get<utils::type::c_api::cpp_t<ctype>>(utils::exception::c_api::not_null(id, "id"))); \
             }); \
         } \
-        bool utils_settings_is_##name(const utils_settings_t* settings, const char* id) \
+        _nothrow bool utils_settings_is_##name(const utils_settings_t* settings, const char* id) \
         {return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return setting_is<utils::type::c_api::cpp_t<ctype>>(settings, id);});}
 
     /* settings of a type of the casts (value: the C side, stored: the c++ side) */
     #define C_API_SETTINGS_CAST_DEF(name, ctype, cpptype, to_cpp, to_c) \
-        int utils_settings_add_##name(utils_settings_t* settings, const char* id, ctype value) \
+        _nothrow int utils_settings_add_##name(utils_settings_t* settings, const char* id, ctype value) \
         {return utils::exception::c_api::guard([&](void) {store(settings_of(settings), id, cpptype(to_cpp), true, false);});} \
-        int utils_settings_set_##name(utils_settings_t* settings, const char* id, ctype value, bool force) \
+        _nothrow int utils_settings_set_##name(utils_settings_t* settings, const char* id, ctype value, bool force) \
         {return utils::exception::c_api::guard([&](void) {store(settings_of(settings), id, cpptype(to_cpp), false, force);});} \
-        int utils_settings_get_##name(const utils_settings_t* settings, const char* id, ctype* value) \
+        _nothrow int utils_settings_get_##name(const utils_settings_t* settings, const char* id, ctype* value) \
         { \
             return utils::exception::c_api::guard([&](void) { \
                 ctype& res = utils::exception::c_api::not_null_ref(value, "value"); \
@@ -65,19 +65,19 @@ File Description:
                 res = (to_c); \
             }); \
         } \
-        bool utils_settings_is_##name(const utils_settings_t* settings, const char* id) \
+        _nothrow bool utils_settings_is_##name(const utils_settings_t* settings, const char* id) \
         {return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return setting_is<cpptype>(settings, id);});}
 
     /* settings of a string of the casts (data + size) */
     #define C_API_SETTINGS_STRING_DEF(name, ctype, cpptype) \
-        int utils_settings_set_##name(utils_settings_t* settings, const char* id, const ctype* str, size_t size, bool force) \
+        _nothrow int utils_settings_set_##name(utils_settings_t* settings, const char* id, const ctype* str, size_t size, bool force) \
         { \
             return utils::exception::c_api::guard([&](void) { \
                 if (size > 0) (void)utils::exception::c_api::not_null(str, "string"); \
                 store(settings_of(settings), id, (size > 0 ? cpptype(reinterpret_cast<const cpptype::value_type*>(str), size) : cpptype()), false, force); \
             }); \
         } \
-        int utils_settings_get_##name(const utils_settings_t* settings, const char* id, const ctype** str, size_t* size) \
+        _nothrow int utils_settings_get_##name(const utils_settings_t* settings, const char* id, const ctype** str, size_t* size) \
         { \
             return utils::exception::c_api::guard([&](void) { \
                 const ctype*& res = utils::exception::c_api::not_null_ref(str, "string"); \
@@ -86,7 +86,7 @@ File Description:
                 if (size) *size = stored.size(); \
             }); \
         } \
-        bool utils_settings_is_##name(const utils_settings_t* settings, const char* id) \
+        _nothrow bool utils_settings_is_##name(const utils_settings_t* settings, const char* id) \
         {return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return setting_is<cpptype>(settings, id);});}
 
     // Path of a setting as a C string (its native string is not a char* on Windows), valid until the next call in the thread

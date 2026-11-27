@@ -43,13 +43,13 @@ File Description:
 
     /* cluster of a fixed type */
     #define C_API_CLUSTER_DEF(name, ctype) \
-        utils_cluster_##name##_t* utils_cluster_##name##_create(void) {return utils::exception::c_api::guard_fallback(nullptr, [](void) -> utils_cluster_##name##_t* {return new utils_cluster_##name##_t();});}; \
-        void utils_cluster_##name##_destroy(utils_cluster_##name##_t* c) {(void)utils::exception::c_api::guard([&](void) {delete c;});}; \
-        int utils_cluster_##name##_spawn(utils_cluster_##name##_t* c, size_t n, ctype value) {return utils::exception::c_api::guard([&](void) {cluster(c).spawn(n, value);});}; \
-        int utils_cluster_##name##_kill(utils_cluster_##name##_t* c) {return utils::exception::c_api::guard([&](void) {cluster(c).kill();});}; \
-        int utils_cluster_##name##_kill_n(utils_cluster_##name##_t* c, size_t n) {return utils::exception::c_api::guard([&](void) {cluster(c).kill(n);});}; \
-        size_t utils_cluster_##name##_size(const utils_cluster_##name##_t* c) {return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return cluster(c).size();});}; \
-        int utils_cluster_##name##_apply(utils_cluster_##name##_t* c, utils_cluster_##name##_fn_t fn, void* data) \
+        _nothrow utils_cluster_##name##_t* utils_cluster_##name##_create(void) {return utils::exception::c_api::guard_fallback(nullptr, [](void) -> utils_cluster_##name##_t* {return new utils_cluster_##name##_t();});}; \
+        _nothrow void utils_cluster_##name##_destroy(utils_cluster_##name##_t* c) {(void)utils::exception::c_api::guard([&](void) {delete c;});}; \
+        _nothrow int utils_cluster_##name##_spawn(utils_cluster_##name##_t* c, size_t n, ctype value) {return utils::exception::c_api::guard([&](void) {cluster(c).spawn(n, value);});}; \
+        _nothrow int utils_cluster_##name##_kill(utils_cluster_##name##_t* c) {return utils::exception::c_api::guard([&](void) {cluster(c).kill();});}; \
+        _nothrow int utils_cluster_##name##_kill_n(utils_cluster_##name##_t* c, size_t n) {return utils::exception::c_api::guard([&](void) {cluster(c).kill(n);});}; \
+        _nothrow size_t utils_cluster_##name##_size(const utils_cluster_##name##_t* c) {return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return cluster(c).size();});}; \
+        _nothrow int utils_cluster_##name##_apply(utils_cluster_##name##_t* c, utils_cluster_##name##_fn_t fn, void* data) \
         { \
             return utils::exception::c_api::guard([&](void) { \
                 utils::pool::Cluster<ctype>& self = cluster(c); \
@@ -60,30 +60,30 @@ File Description:
 
     /* middlewares of a fixed type */
     #define C_API_MIDDLEWARES_DEF(name, ctype) \
-        utils_middlewares_##name##_t* utils_middlewares_##name##_create(void) {return utils::exception::c_api::guard_fallback(nullptr, [](void) -> utils_middlewares_##name##_t* {return new utils_middlewares_##name##_t();});}; \
-        void utils_middlewares_##name##_destroy(utils_middlewares_##name##_t* m) {(void)utils::exception::c_api::guard([&](void) {delete m;});}; \
-        int utils_middlewares_##name##_clear(utils_middlewares_##name##_t* m) {return utils::exception::c_api::guard([&](void) {middlewares(m).clear();});}; \
-        int utils_middlewares_##name##_add_before(utils_middlewares_##name##_t* m, utils_middleware_##name##_t fn, void* data) \
+        _nothrow utils_middlewares_##name##_t* utils_middlewares_##name##_create(void) {return utils::exception::c_api::guard_fallback(nullptr, [](void) -> utils_middlewares_##name##_t* {return new utils_middlewares_##name##_t();});}; \
+        _nothrow void utils_middlewares_##name##_destroy(utils_middlewares_##name##_t* m) {(void)utils::exception::c_api::guard([&](void) {delete m;});}; \
+        _nothrow int utils_middlewares_##name##_clear(utils_middlewares_##name##_t* m) {return utils::exception::c_api::guard([&](void) {middlewares(m).clear();});}; \
+        _nothrow int utils_middlewares_##name##_add_before(utils_middlewares_##name##_t* m, utils_middleware_##name##_t fn, void* data) \
         { \
             return utils::exception::c_api::guard([&](void) { \
                 (void)utils::exception::c_api::not_null(fn, "middleware"); \
                 middlewares(m).addBefore([fn, data](utils::type::c_api::cpp_t<ctype> arg) {call([&](void) {return fn(utils::type::c_api::Storage<ctype>::c(arg), data);});}); \
             }); \
         } \
-        int utils_middlewares_##name##_add_after(utils_middlewares_##name##_t* m, utils_middleware_##name##_t fn, void* data) \
+        _nothrow int utils_middlewares_##name##_add_after(utils_middlewares_##name##_t* m, utils_middleware_##name##_t fn, void* data) \
         { \
             return utils::exception::c_api::guard([&](void) { \
                 (void)utils::exception::c_api::not_null(fn, "middleware"); \
                 middlewares(m).addAfter([fn, data](utils::type::c_api::cpp_t<ctype> arg) {call([&](void) {return fn(utils::type::c_api::Storage<ctype>::c(arg), data);});}); \
             }); \
         } \
-        int utils_middlewares_##name##_call_before(const utils_middlewares_##name##_t* m, ctype arg) \
+        _nothrow int utils_middlewares_##name##_call_before(const utils_middlewares_##name##_t* m, ctype arg) \
         {return utils::exception::c_api::guard([&](void) {middlewares(m).callBefore(utils::type::c_api::Storage<ctype>::cpp(arg));});} \
-        int utils_middlewares_##name##_call_after(const utils_middlewares_##name##_t* m, ctype arg) \
+        _nothrow int utils_middlewares_##name##_call_after(const utils_middlewares_##name##_t* m, ctype arg) \
         {return utils::exception::c_api::guard([&](void) {middlewares(m).callAfter(utils::type::c_api::Storage<ctype>::cpp(arg));});} \
-        size_t utils_middlewares_##name##_before_count(const utils_middlewares_##name##_t* m) \
+        _nothrow size_t utils_middlewares_##name##_before_count(const utils_middlewares_##name##_t* m) \
         {return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {const utils_middlewares_##name##_t& self = middlewares(m); std::shared_lock lock(self._lock); return self.before.size();});} \
-        size_t utils_middlewares_##name##_after_count(const utils_middlewares_##name##_t* m) \
+        _nothrow size_t utils_middlewares_##name##_after_count(const utils_middlewares_##name##_t* m) \
         {return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {const utils_middlewares_##name##_t& self = middlewares(m); std::shared_lock lock(self._lock); return self.after.size();});}
 
 //----------------------------------------------------------------//

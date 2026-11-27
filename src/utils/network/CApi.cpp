@@ -124,12 +124,12 @@ _hot _nodiscard static std::string payload_of(const char* data, const std::size_
 /* TOOLS (network) */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold bool utils_network_is_ip(const char* str)
+_cold _nothrow bool utils_network_is_ip(const char* str)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return utils::network::is_ip(utils::exception::c_api::not_null(str, "string"));});
 }
 
-_cold const char* utils_network_resolve_hostname(const char* hostname)
+_cold _nothrow const char* utils_network_resolve_hostname(const char* hostname)
 {
     // xstyle: ignore-next CPP-THIS (false positive: _thread_local is the attribute macro, not a member)
     static _thread_local std::string ip;
@@ -138,7 +138,7 @@ _cold const char* utils_network_resolve_hostname(const char* hostname)
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold size_t utils_network_resolve_hostname_r(const char* hostname, char* buf, size_t size)
+_cold _nothrow size_t utils_network_resolve_hostname_r(const char* hostname, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::network::resolve_hostname(utils::exception::c_api::not_null(hostname, "hostname")), buf, size);});
 }
@@ -147,23 +147,23 @@ _cold size_t utils_network_resolve_hostname_r(const char* hostname, char* buf, s
 /* PAYLOADS */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold utils_payloads_t* utils_payloads_create(void)
+_cold _nothrow utils_payloads_t* utils_payloads_create(void)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [](void) -> utils_payloads_t* {return new utils_payloads_t();});
 }
 
-_cold void utils_payloads_destroy(utils_payloads_t* payloads)
+_cold _nothrow void utils_payloads_destroy(utils_payloads_t* payloads)
 {
     (void)utils::exception::c_api::guard([&](void) {delete payloads;}); // like free(NULL)
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot size_t utils_payloads_count(const utils_payloads_t* payloads)
+_hot _nothrow size_t utils_payloads_count(const utils_payloads_t* payloads)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::exception::c_api::not_null_ref(payloads, "payloads").payloads.size();});
 }
 
-_hot const char* utils_payloads_get(const utils_payloads_t* payloads, size_t i, size_t* size)
+_hot _nothrow const char* utils_payloads_get(const utils_payloads_t* payloads, size_t i, size_t* size)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {
         const std::string& payload = utils::exception::c_api::not_null_ref(payloads, "payloads").payloads.at(i);
@@ -177,35 +177,35 @@ _hot const char* utils_payloads_get(const utils_payloads_t* payloads, size_t i, 
 /* MESSAGES */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold utils_network_messages_t* utils_network_messages_create(void)
+_cold _nothrow utils_network_messages_t* utils_network_messages_create(void)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [](void) -> utils_network_messages_t* {return new utils_network_messages_t();});
 }
 
-_cold void utils_network_messages_destroy(utils_network_messages_t* messages)
+_cold _nothrow void utils_network_messages_destroy(utils_network_messages_t* messages)
 {
     (void)utils::exception::c_api::guard([&](void) {delete messages;}); // like free(NULL)
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot size_t utils_network_messages_count(const utils_network_messages_t* messages)
+_hot _nothrow size_t utils_network_messages_count(const utils_network_messages_t* messages)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::exception::c_api::not_null_ref(messages, "messages").messages.size();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_network_messages_fd(const utils_network_messages_t* messages, size_t i)
+_hot _nothrow int utils_network_messages_fd(const utils_network_messages_t* messages, size_t i)
 {
     return utils::exception::c_api::guard_fallback(-1, [&](void) -> int {return utils::exception::c_api::not_null_ref(messages, "messages").messages.at(i).first;});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot size_t utils_network_messages_size(const utils_network_messages_t* messages, size_t i)
+_hot _nothrow size_t utils_network_messages_size(const utils_network_messages_t* messages, size_t i)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::exception::c_api::not_null_ref(messages, "messages").messages.at(i).second.size();});
 }
 
-_hot const char* utils_network_messages_get(const utils_network_messages_t* messages, size_t i, size_t j, size_t* size)
+_hot _nothrow const char* utils_network_messages_get(const utils_network_messages_t* messages, size_t i, size_t j, size_t* size)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {
         const std::string& payload = utils::exception::c_api::not_null_ref(messages, "messages").messages.at(i).second.at(j);
@@ -219,12 +219,12 @@ _hot const char* utils_network_messages_get(const utils_network_messages_t* mess
 /* SOCKET */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold utils_socket_t* utils_socket_create_tcp(void)
+_cold _nothrow utils_socket_t* utils_socket_create_tcp(void)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [](void) -> utils_socket_t* {return new utils_socket_t(std::make_shared<utils::network::TCPSocket>());});
 }
 
-_cold utils_socket_t* utils_socket_create(const utils_socket_callbacks_t* callbacks, void* data)
+_cold _nothrow utils_socket_t* utils_socket_create(const utils_socket_callbacks_t* callbacks, void* data)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_socket_t* {
         const utils_socket_callbacks_t& given = utils::exception::c_api::not_null_ref(callbacks, "callbacks");
@@ -235,108 +235,108 @@ _cold utils_socket_t* utils_socket_create(const utils_socket_callbacks_t* callba
     });
 }
 
-_cold void utils_socket_destroy(utils_socket_t* socket)
+_cold _nothrow void utils_socket_destroy(utils_socket_t* socket)
 {
     (void)utils::exception::c_api::guard([&](void) {delete socket;}); // like free(NULL)
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_socket_set_payload_separator(utils_socket_t* socket, const char* separator)
+_cold _nothrow int utils_socket_set_payload_separator(utils_socket_t* socket, const char* separator)
 {
     return utils::exception::c_api::guard([&](void) {sock(socket).setPayloadSeparator(std::string(utils::exception::c_api::not_null(separator, "separator")));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_socket_set_chunk_size(utils_socket_t* socket, size_t size)
+_cold _nothrow int utils_socket_set_chunk_size(utils_socket_t* socket, size_t size)
 {
     return utils::exception::c_api::guard([&](void) {sock(socket).setChunckSize(size);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_socket_set_overflow(utils_socket_t* socket, size_t overflow)
+_cold _nothrow int utils_socket_set_overflow(utils_socket_t* socket, size_t overflow)
 {
     return utils::exception::c_api::guard([&](void) {sock(socket).setOverflow(overflow);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_socket_get_fd(const utils_socket_t* socket)
+_cold _nothrow int utils_socket_get_fd(const utils_socket_t* socket)
 {
     return utils::exception::c_api::guard_fallback(-1, [&](void) -> int {return sock(socket).getFd();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold bool utils_socket_has_accept_overload(const utils_socket_t* socket)
+_cold _nothrow bool utils_socket_has_accept_overload(const utils_socket_t* socket)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return sock(socket).hasAcceptOverload();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold bool utils_socket_has_recv_overload(const utils_socket_t* socket)
+_cold _nothrow bool utils_socket_has_recv_overload(const utils_socket_t* socket)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return sock(socket).hasRecvOverload();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold bool utils_socket_has_send_overload(const utils_socket_t* socket)
+_cold _nothrow bool utils_socket_has_send_overload(const utils_socket_t* socket)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return sock(socket).hasSendOverload();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_socket_connect(utils_socket_t* socket, const utils_network_address_t* address)
+_cold _nothrow int utils_socket_connect(utils_socket_t* socket, const utils_network_address_t* address)
 {
     return utils::exception::c_api::guard([&](void) {sock(socket).connect(address_of(address));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_socket_listen(utils_socket_t* socket, const utils_network_address_t* address)
+_cold _nothrow int utils_socket_listen(utils_socket_t* socket, const utils_network_address_t* address)
 {
     return utils::exception::c_api::guard([&](void) {sock(socket).listen(address_of(address));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_socket_reset(utils_socket_t* socket)
+_cold _nothrow int utils_socket_reset(utils_socket_t* socket)
 {
     return utils::exception::c_api::guard([&](void) {sock(socket).reset();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_socket_close(utils_socket_t* socket)
+_cold _nothrow int utils_socket_close(utils_socket_t* socket)
 {
     return utils::exception::c_api::guard([&](void) {sock(socket).close();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_socket_accept(utils_socket_t* socket)
+_cold _nothrow int utils_socket_accept(utils_socket_t* socket)
 {
     return utils::exception::c_api::guard_fallback(-1, [&](void) -> int {return sock(socket).accept();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_socket_accept_raw(const utils_socket_t* socket, int fd, struct sockaddr* addr, socklen_t* len)
+_hot _nothrow int utils_socket_accept_raw(const utils_socket_t* socket, int fd, struct sockaddr* addr, socklen_t* len)
 {
     return utils::exception::c_api::guard_fallback(-1, [&](void) -> int {return sock(socket).accept(fd, addr, len);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot ssize_t utils_socket_recv_raw(const utils_socket_t* socket, int fd, char* buf, size_t len)
+_hot _nothrow ssize_t utils_socket_recv_raw(const utils_socket_t* socket, int fd, char* buf, size_t len)
 {
     return utils::exception::c_api::guard_fallback(static_cast<ssize_t>(-1), [&](void) -> ssize_t {return sock(socket).recv(fd, buf, len);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot ssize_t utils_socket_send_raw(const utils_socket_t* socket, int fd, const char* buf, size_t len)
+_hot _nothrow ssize_t utils_socket_send_raw(const utils_socket_t* socket, int fd, const char* buf, size_t len)
 {
     return utils::exception::c_api::guard_fallback(static_cast<ssize_t>(-1), [&](void) -> ssize_t {return sock(socket).send(fd, buf, len);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot bool utils_socket_empty(const utils_socket_t* socket, int fd)
+_hot _nothrow bool utils_socket_empty(const utils_socket_t* socket, int fd)
 {
     return utils::exception::c_api::guard_fallback(true, [&](void) -> bool {return sock(socket).empty(fd);});
 }
 
-_hot int utils_socket_recv(utils_socket_t* socket, int fd, utils_string_t* payload)
+_hot _nothrow int utils_socket_recv(utils_socket_t* socket, int fd, utils_string_t* payload)
 {
     return utils::exception::c_api::guard([&](void) {
         utils_string_t& out = utils::exception::c_api::not_null_ref(payload, "payload");
@@ -345,7 +345,7 @@ _hot int utils_socket_recv(utils_socket_t* socket, int fd, utils_string_t* paylo
     });
 }
 
-_hot int utils_socket_recv_all(utils_socket_t* socket, int fd, utils_payloads_t* payloads)
+_hot _nothrow int utils_socket_recv_all(utils_socket_t* socket, int fd, utils_payloads_t* payloads)
 {
     return utils::exception::c_api::guard([&](void) {
         utils_payloads_t& out = utils::exception::c_api::not_null_ref(payloads, "payloads");
@@ -355,31 +355,31 @@ _hot int utils_socket_recv_all(utils_socket_t* socket, int fd, utils_payloads_t*
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_socket_flush(utils_socket_t* socket, int fd)
+_hot _nothrow int utils_socket_flush(utils_socket_t* socket, int fd)
 {
     return utils::exception::c_api::guard([&](void) {sock(socket).flush(fd);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot size_t utils_socket_receive(utils_socket_t* socket, int fd)
+_hot _nothrow size_t utils_socket_receive(utils_socket_t* socket, int fd)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return sock(socket).receive(fd);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_socket_discard(utils_socket_t* socket, int fd)
+_cold _nothrow int utils_socket_discard(utils_socket_t* socket, int fd)
 {
     return utils::exception::c_api::guard([&](void) {sock(socket).discard(fd);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_socket_send(utils_socket_t* socket, const char* data, size_t size, int fd)
+_hot _nothrow int utils_socket_send(utils_socket_t* socket, const char* data, size_t size, int fd)
 {
     return utils::exception::c_api::guard([&](void) {sock(socket).send(payload_of(data, size), fd);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_socket_send_buffered(utils_socket_t* socket, const char* data, size_t size, int fd)
+_hot _nothrow int utils_socket_send_buffered(utils_socket_t* socket, const char* data, size_t size, int fd)
 {
     return utils::exception::c_api::guard([&](void) {sock(socket).sendBuffered(payload_of(data, size), fd);});
 }
@@ -388,35 +388,35 @@ _hot int utils_socket_send_buffered(utils_socket_t* socket, const char* data, si
 /* CLIENT */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold utils_client_t* utils_client_create(const utils_socket_t* socket, const utils_network_address_t* address)
+_cold _nothrow utils_client_t* utils_client_create(const utils_socket_t* socket, const utils_network_address_t* address)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_client_t* {return new utils_client_t(socket_of(socket), address_of(address));});
 }
 
-_cold void utils_client_destroy(utils_client_t* client)
+_cold _nothrow void utils_client_destroy(utils_client_t* client)
 {
     (void)utils::exception::c_api::guard([&](void) {delete client;}); // like free(NULL)
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_client_start(utils_client_t* client)
+_cold _nothrow int utils_client_start(utils_client_t* client)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(client, "client").start();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_client_stop(utils_client_t* client)
+_cold _nothrow int utils_client_stop(utils_client_t* client)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(client, "client").stop();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_client_kill(utils_client_t* client)
+_cold _nothrow int utils_client_kill(utils_client_t* client)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(client, "client").kill();});
 }
 
-_hot int utils_client_listen(utils_client_t* client, utils_payloads_t* payloads)
+_hot _nothrow int utils_client_listen(utils_client_t* client, utils_payloads_t* payloads)
 {
     return utils::exception::c_api::guard([&](void) {
         utils_payloads_t& out = utils::exception::c_api::not_null_ref(payloads, "payloads");
@@ -426,31 +426,31 @@ _hot int utils_client_listen(utils_client_t* client, utils_payloads_t* payloads)
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_client_join(utils_client_t* client)
+_hot _nothrow int utils_client_join(utils_client_t* client)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(client, "client").join();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_client_flush(utils_client_t* client)
+_hot _nothrow int utils_client_flush(utils_client_t* client)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(client, "client").flush();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_client_send(utils_client_t* client, const char* payload, size_t size)
+_hot _nothrow int utils_client_send(utils_client_t* client, const char* payload, size_t size)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(client, "client").send<false>(payload_of(payload, size));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_client_send_buffered(utils_client_t* client, const char* payload, size_t size)
+_hot _nothrow int utils_client_send_buffered(utils_client_t* client, const char* payload, size_t size)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(client, "client").send<true>(payload_of(payload, size));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold utils_network_status_t utils_client_get_status(const utils_client_t* client)
+_cold _nothrow utils_network_status_t utils_client_get_status(const utils_client_t* client)
 {
     return utils::exception::c_api::guard_fallback(C_API_NETWORK_STATUS_CRASHED, [&](void) -> utils_network_status_t {return static_cast<utils_network_status_t>(utils::exception::c_api::not_null_ref(client, "client").getStatus());});
 }
@@ -459,65 +459,65 @@ _cold utils_network_status_t utils_client_get_status(const utils_client_t* clien
 /* SERVER */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold utils_server_t* utils_server_create(const utils_socket_t* socket, const utils_network_address_t* address)
+_cold _nothrow utils_server_t* utils_server_create(const utils_socket_t* socket, const utils_network_address_t* address)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_server_t* {return new utils_server_t(socket_of(socket), address_of(address));});
 }
 
-_cold void utils_server_destroy(utils_server_t* server)
+_cold _nothrow void utils_server_destroy(utils_server_t* server)
 {
     (void)utils::exception::c_api::guard([&](void) {delete server;}); // like free(NULL)
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_server_start(utils_server_t* server)
+_cold _nothrow int utils_server_start(utils_server_t* server)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(server, "server").start();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_server_stop(utils_server_t* server)
+_cold _nothrow int utils_server_stop(utils_server_t* server)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(server, "server").stop();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_server_kill(utils_server_t* server)
+_cold _nothrow int utils_server_kill(utils_server_t* server)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(server, "server").kill();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_server_join(utils_server_t* server, int fd)
+_hot _nothrow int utils_server_join(utils_server_t* server, int fd)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(server, "server").join(fd);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_server_flush(utils_server_t* server)
+_hot _nothrow int utils_server_flush(utils_server_t* server)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(server, "server").flush();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_server_flush_fd(utils_server_t* server, int fd)
+_hot _nothrow int utils_server_flush_fd(utils_server_t* server, int fd)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(server, "server").flush(fd);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_server_send(utils_server_t* server, int fd, const char* payload, size_t size)
+_hot _nothrow int utils_server_send(utils_server_t* server, int fd, const char* payload, size_t size)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(server, "server").send<false>(fd, payload_of(payload, size));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_server_send_buffered(utils_server_t* server, int fd, const char* payload, size_t size)
+_hot _nothrow int utils_server_send_buffered(utils_server_t* server, int fd, const char* payload, size_t size)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(server, "server").send<true>(fd, payload_of(payload, size));});
 }
 
-_hot int utils_server_listen(utils_server_t* server, utils_network_messages_t* messages)
+_hot _nothrow int utils_server_listen(utils_server_t* server, utils_network_messages_t* messages)
 {
     return utils::exception::c_api::guard([&](void) {
         utils_network_messages_t& out = utils::exception::c_api::not_null_ref(messages, "messages");
@@ -527,7 +527,7 @@ _hot int utils_server_listen(utils_server_t* server, utils_network_messages_t* m
     });
 }
 
-_hot int utils_server_listen_fd(utils_server_t* server, int fd, utils_payloads_t* payloads)
+_hot _nothrow int utils_server_listen_fd(utils_server_t* server, int fd, utils_payloads_t* payloads)
 {
     return utils::exception::c_api::guard([&](void) {
         utils_payloads_t& out = utils::exception::c_api::not_null_ref(payloads, "payloads");
@@ -536,7 +536,7 @@ _hot int utils_server_listen_fd(utils_server_t* server, int fd, utils_payloads_t
     });
 }
 
-_cold size_t utils_server_get_fds(const utils_server_t* server, int* fds, size_t max)
+_cold _nothrow size_t utils_server_get_fds(const utils_server_t* server, int* fds, size_t max)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {
         const std::vector<int> list = utils::exception::c_api::not_null_ref(server, "server").getFds();
@@ -547,7 +547,7 @@ _cold size_t utils_server_get_fds(const utils_server_t* server, int* fds, size_t
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold utils_network_status_t utils_server_get_status(const utils_server_t* server)
+_cold _nothrow utils_network_status_t utils_server_get_status(const utils_server_t* server)
 {
     return utils::exception::c_api::guard_fallback(C_API_NETWORK_STATUS_CRASHED, [&](void) -> utils_network_status_t {return static_cast<utils_network_status_t>(utils::exception::c_api::not_null_ref(server, "server").getStatus());});
 }

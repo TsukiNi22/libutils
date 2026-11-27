@@ -31,10 +31,11 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../exception/CApi.h"  // utils_exception, utils_fail, UTILS_OK, UTILS_KO
-    #include <stdbool.h>            // bool
-    #include <stddef.h>             // size_t
-    #include <stdint.h>             // uint8_t, int16_t, uint32_t
+    #include "../attribute/Attribute.hpp"   // _nodiscard, _nothrow, _write_only, _null_terminated_string_arg
+    #include "../exception/CApi.h"          // utils_exception, utils_fail, UTILS_OK, UTILS_KO
+    #include <stdbool.h>                    // bool
+    #include <stddef.h>                     // size_t
+    #include <stdint.h>                     // uint8_t, int16_t, uint32_t
 
     //----------------------------------------------------------------//
     /* DEFINE */
@@ -132,99 +133,99 @@ typedef struct utils_cli_raw_command_entry {
 /* PROTOTYPE */
 
 /* handle */
-utils_cli_t* utils_cli_create(bool sig); // NULL on error, sig: catch of ctrl-c & ctrl-z
-void utils_cli_destroy(utils_cli_t* cli); // kill & join a running cli
+_nodiscard _nothrow utils_cli_t* utils_cli_create(bool sig); // NULL on error, sig: catch of ctrl-c & ctrl-z
+_nothrow void utils_cli_destroy(utils_cli_t* cli); // kill & join a running cli
 
 /* run */
-int utils_cli_start(utils_cli_t* cli, const char* const* inputs, size_t count, size_t call); // inputs executed on start (NULL / 0: none)
-void utils_cli_join(utils_cli_t* cli); // join the thread kept in the handle (THREAD) or wait the end of the cli
-void utils_cli_interrupt(utils_cli_t* cli);
-void utils_cli_kill(utils_cli_t* cli); // can't be undone
+_nodiscard _nothrow int utils_cli_start(utils_cli_t* cli, const char* const* inputs, size_t count, size_t call); // inputs executed on start (NULL / 0: none)
+_nothrow void utils_cli_join(utils_cli_t* cli); // join the thread kept in the handle (THREAD) or wait the end of the cli
+_nothrow void utils_cli_interrupt(utils_cli_t* cli);
+_nothrow void utils_cli_kill(utils_cli_t* cli); // can't be undone
 
 /* status */
-bool utils_cli_is_running(const utils_cli_t* cli);
-bool utils_cli_was_interrupted(const utils_cli_t* cli);
-bool utils_cli_was_killed(const utils_cli_t* cli);
-bool utils_cli_was_stopped(const utils_cli_t* cli);
+_nodiscard _nothrow bool utils_cli_is_running(const utils_cli_t* cli);
+_nodiscard _nothrow bool utils_cli_was_interrupted(const utils_cli_t* cli);
+_nodiscard _nothrow bool utils_cli_was_killed(const utils_cli_t* cli);
+_nodiscard _nothrow bool utils_cli_was_stopped(const utils_cli_t* cli);
 
 /* flags */
-void utils_cli_reset_flags(utils_cli_t* cli);
-void utils_cli_sub_flags(utils_cli_t* cli, uint32_t flags);
-void utils_cli_add_flags(utils_cli_t* cli, uint32_t flags);
-void utils_cli_set_flags(utils_cli_t* cli, uint32_t flags);
+_nothrow void utils_cli_reset_flags(utils_cli_t* cli);
+_nothrow void utils_cli_sub_flags(utils_cli_t* cli, uint32_t flags);
+_nothrow void utils_cli_add_flags(utils_cli_t* cli, uint32_t flags);
+_nothrow void utils_cli_set_flags(utils_cli_t* cli, uint32_t flags);
 
 /* commands */
-int utils_cli_set_parsed_command(utils_cli_t* cli, const char* name, utils_cli_parsed_command_t fn, int16_t min, int16_t max, void* data, bool force); // force: override an existing one
-int utils_cli_set_raw_command(utils_cli_t* cli, const char* name, utils_cli_raw_command_t fn, void* data, bool force);
-int utils_cli_set_parsed_commands(utils_cli_t* cli, const utils_cli_parsed_command_entry_t* commands, size_t count, bool force);
-int utils_cli_set_raw_commands(utils_cli_t* cli, const utils_cli_raw_command_entry_t* commands, size_t count, bool force);
-int utils_cli_del_command(utils_cli_t* cli, const char* name);
-int utils_cli_del_commands(utils_cli_t* cli, const char* const* names, size_t count);
-int utils_cli_reset_commands(utils_cli_t* cli); // default commands (exit, ...)
-int utils_cli_clear_commands(utils_cli_t* cli);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_cli_set_parsed_command(utils_cli_t* cli, const char* name, utils_cli_parsed_command_t fn, int16_t min, int16_t max, void* data, bool force); // force: override an existing one
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_cli_set_raw_command(utils_cli_t* cli, const char* name, utils_cli_raw_command_t fn, void* data, bool force);
+_nodiscard _nothrow int utils_cli_set_parsed_commands(utils_cli_t* cli, const utils_cli_parsed_command_entry_t* commands, size_t count, bool force);
+_nodiscard _nothrow int utils_cli_set_raw_commands(utils_cli_t* cli, const utils_cli_raw_command_entry_t* commands, size_t count, bool force);
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_cli_del_command(utils_cli_t* cli, const char* name);
+_nodiscard _nothrow int utils_cli_del_commands(utils_cli_t* cli, const char* const* names, size_t count);
+_nodiscard _nothrow int utils_cli_reset_commands(utils_cli_t* cli); // default commands (exit, ...)
+_nodiscard _nothrow int utils_cli_clear_commands(utils_cli_t* cli);
 
 /* hooks */
-int utils_cli_reset_hooks(utils_cli_t* cli);
-int utils_cli_reset_prompt_hook(utils_cli_t* cli);
-int utils_cli_reset_parser_hook(utils_cli_t* cli);
-int utils_cli_reset_getc_hook(utils_cli_t* cli);
-int utils_cli_set_prompt_hook(utils_cli_t* cli, utils_cli_prompt_hook_t hook, void* data);
-int utils_cli_set_parser_hook(utils_cli_t* cli, utils_cli_parser_hook_t hook, void* data);
-int utils_cli_set_getc_hook(utils_cli_t* cli, utils_cli_getc_hook_t hook, void* data);
+_nodiscard _nothrow int utils_cli_reset_hooks(utils_cli_t* cli);
+_nodiscard _nothrow int utils_cli_reset_prompt_hook(utils_cli_t* cli);
+_nodiscard _nothrow int utils_cli_reset_parser_hook(utils_cli_t* cli);
+_nodiscard _nothrow int utils_cli_reset_getc_hook(utils_cli_t* cli);
+_nodiscard _nothrow int utils_cli_set_prompt_hook(utils_cli_t* cli, utils_cli_prompt_hook_t hook, void* data);
+_nodiscard _nothrow int utils_cli_set_parser_hook(utils_cli_t* cli, utils_cli_parser_hook_t hook, void* data);
+_nodiscard _nothrow int utils_cli_set_getc_hook(utils_cli_t* cli, utils_cli_getc_hook_t hook, void* data);
 
 /* default hooks (same signature as the hooks, data unused) */
-int utils_cli_default_prompt_hook(const utils_cli_t* cli, uint8_t code, void* data);
-int utils_cli_default_parser_hook(const char* input, bool trim, bool logic, bool parse, utils_cli_parsed_t* out, void* data);
-int utils_cli_default_getc_hook(char* c, void* data);
+_nodiscard _nothrow int utils_cli_default_prompt_hook(const utils_cli_t* cli, uint8_t code, void* data);
+_nodiscard _nothrow _null_terminated_string_arg(1) int utils_cli_default_parser_hook(const char* input, bool trim, bool logic, bool parse, utils_cli_parsed_t* out, void* data);
+_nodiscard _nothrow int utils_cli_default_getc_hook(char* c, void* data);
 
 /* middlewares (before / after of each step, called in the order of addition) */
-int utils_cli_reset_middlewares(utils_cli_t* cli);
-int utils_cli_cli_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_t fn, void* data); // When the cli start & end
-int utils_cli_cli_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_t fn, void* data);
-int utils_cli_cli_middlewares_clear(utils_cli_t* cli);
-int utils_cli_error_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_code_t fn, void* data); // When an error is triggered
-int utils_cli_error_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_code_t fn, void* data);
-int utils_cli_error_middlewares_clear(utils_cli_t* cli);
-int utils_cli_prompt_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_t fn, void* data); // When the prompt is displayed
-int utils_cli_prompt_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_t fn, void* data);
-int utils_cli_prompt_middlewares_clear(utils_cli_t* cli);
-int utils_cli_input_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_t fn, void* data); // When a key is pressed
-int utils_cli_input_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_char_t fn, void* data);
-int utils_cli_input_middlewares_clear(utils_cli_t* cli);
-int utils_cli_parser_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_str_t fn, void* data); // When the parser is called
-int utils_cli_parser_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_parsed_t fn, void* data);
-int utils_cli_parser_middlewares_clear(utils_cli_t* cli);
-int utils_cli_exec_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_parsed_t fn, void* data); // When the parsed data is executed
-int utils_cli_exec_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_parsed_t fn, void* data);
-int utils_cli_exec_middlewares_clear(utils_cli_t* cli);
-int utils_cli_command_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_str_t fn, void* data); // When a command is executed
-int utils_cli_command_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_str_t fn, void* data);
-int utils_cli_command_middlewares_clear(utils_cli_t* cli);
+_nodiscard _nothrow int utils_cli_reset_middlewares(utils_cli_t* cli);
+_nodiscard _nothrow int utils_cli_cli_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_t fn, void* data); // When the cli start & end
+_nodiscard _nothrow int utils_cli_cli_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_t fn, void* data);
+_nodiscard _nothrow int utils_cli_cli_middlewares_clear(utils_cli_t* cli);
+_nodiscard _nothrow int utils_cli_error_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_code_t fn, void* data); // When an error is triggered
+_nodiscard _nothrow int utils_cli_error_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_code_t fn, void* data);
+_nodiscard _nothrow int utils_cli_error_middlewares_clear(utils_cli_t* cli);
+_nodiscard _nothrow int utils_cli_prompt_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_t fn, void* data); // When the prompt is displayed
+_nodiscard _nothrow int utils_cli_prompt_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_t fn, void* data);
+_nodiscard _nothrow int utils_cli_prompt_middlewares_clear(utils_cli_t* cli);
+_nodiscard _nothrow int utils_cli_input_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_t fn, void* data); // When a key is pressed
+_nodiscard _nothrow int utils_cli_input_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_char_t fn, void* data);
+_nodiscard _nothrow int utils_cli_input_middlewares_clear(utils_cli_t* cli);
+_nodiscard _nothrow int utils_cli_parser_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_str_t fn, void* data); // When the parser is called
+_nodiscard _nothrow int utils_cli_parser_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_parsed_t fn, void* data);
+_nodiscard _nothrow int utils_cli_parser_middlewares_clear(utils_cli_t* cli);
+_nodiscard _nothrow int utils_cli_exec_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_parsed_t fn, void* data); // When the parsed data is executed
+_nodiscard _nothrow int utils_cli_exec_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_parsed_t fn, void* data);
+_nodiscard _nothrow int utils_cli_exec_middlewares_clear(utils_cli_t* cli);
+_nodiscard _nothrow int utils_cli_command_middlewares_add_before(utils_cli_t* cli, utils_cli_middleware_str_t fn, void* data); // When a command is executed
+_nodiscard _nothrow int utils_cli_command_middlewares_add_after(utils_cli_t* cli, utils_cli_middleware_str_t fn, void* data);
+_nodiscard _nothrow int utils_cli_command_middlewares_clear(utils_cli_t* cli);
 
 /* setter / getter */
-void utils_cli_set_input_delimitor(utils_cli_t* cli, char c);
-char utils_cli_get_input_delimitor(const utils_cli_t* cli);
-uint8_t utils_cli_get_code(const utils_cli_t* cli);
-uint32_t utils_cli_get_flags(const utils_cli_t* cli);
+_nothrow void utils_cli_set_input_delimitor(utils_cli_t* cli, char c);
+_nodiscard _nothrow char utils_cli_get_input_delimitor(const utils_cli_t* cli);
+_nodiscard _nothrow uint8_t utils_cli_get_code(const utils_cli_t* cli);
+_nodiscard _nothrow uint32_t utils_cli_get_flags(const utils_cli_t* cli);
 
 /* strings: the pointer is valid until the next call of the same function in the thread (NULL on error) */
-const char* utils_cli_strcode(const utils_cli_t* cli, uint8_t code);
-const char* utils_cli_history_get(const utils_cli_t* cli, size_t i);
-size_t utils_cli_history_size(const utils_cli_t* cli);
+_nodiscard _nothrow const char* utils_cli_strcode(const utils_cli_t* cli, uint8_t code);
+_nodiscard _nothrow const char* utils_cli_history_get(const utils_cli_t* cli, size_t i);
+_nodiscard _nothrow size_t utils_cli_history_size(const utils_cli_t* cli);
 
 /* strings (_r): copied in buf (truncated, always '\0' terminated), returns the full length like snprintf (0 on error) */
-size_t utils_cli_strcode_r(const utils_cli_t* cli, uint8_t code, char* buf, size_t size);
-size_t utils_cli_history_get_r(const utils_cli_t* cli, size_t i, char* buf, size_t size);
+_nodiscard _nothrow _write_only(3, 4) size_t utils_cli_strcode_r(const utils_cli_t* cli, uint8_t code, char* buf, size_t size);
+_nodiscard _nothrow _write_only(3, 4) size_t utils_cli_history_get_r(const utils_cli_t* cli, size_t i, char* buf, size_t size);
 
 /* parsed data (one group per command, PARSED: <command> <command> [args...] <separator>, raw: <command> <input> <separator>, separator: "&&", "||", ";" or "") */
-utils_cli_parsed_t* utils_cli_parsed_create(void); // NULL on error
-void utils_cli_parsed_destroy(utils_cli_parsed_t* parsed);
-int utils_cli_parsed_clear(utils_cli_parsed_t* parsed);
-int utils_cli_parsed_add_group(utils_cli_parsed_t* parsed); // new command
-int utils_cli_parsed_add_arg(utils_cli_parsed_t* parsed, const char* arg); // to the last group
-size_t utils_cli_parsed_groups(const utils_cli_parsed_t* parsed);
-size_t utils_cli_parsed_size(const utils_cli_parsed_t* parsed, size_t group);
-const char* utils_cli_parsed_get(const utils_cli_parsed_t* parsed, size_t group, size_t i); // valid until parsed is changed (NULL on error)
+_nodiscard _nothrow utils_cli_parsed_t* utils_cli_parsed_create(void); // NULL on error
+_nothrow void utils_cli_parsed_destroy(utils_cli_parsed_t* parsed);
+_nodiscard _nothrow int utils_cli_parsed_clear(utils_cli_parsed_t* parsed);
+_nodiscard _nothrow int utils_cli_parsed_add_group(utils_cli_parsed_t* parsed); // new command
+_nodiscard _nothrow _null_terminated_string_arg(2) int utils_cli_parsed_add_arg(utils_cli_parsed_t* parsed, const char* arg); // to the last group
+_nodiscard _nothrow size_t utils_cli_parsed_groups(const utils_cli_parsed_t* parsed);
+_nodiscard _nothrow size_t utils_cli_parsed_size(const utils_cli_parsed_t* parsed, size_t group);
+_nodiscard _nothrow const char* utils_cli_parsed_get(const utils_cli_parsed_t* parsed, size_t group, size_t i); // valid until parsed is changed (NULL on error)
 
 #ifdef __cplusplus
     } // end of: extern "C"

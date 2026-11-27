@@ -45,13 +45,13 @@ _hot _nodiscard static utils_math_coord_t c(const utils::math::Coord& v)      {r
 /* TRIGONOMETRY */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot utils_math_type_t utils_math_deg_to_rad(utils_math_angle_t deg)
+_hot _nothrow utils_math_type_t utils_math_deg_to_rad(utils_math_angle_t deg)
 {
     return utils::math::trigo::deg_to_rad(deg);
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot utils_math_angle_t utils_math_rad_to_deg(utils_math_type_t rad)
+_hot _nothrow utils_math_angle_t utils_math_rad_to_deg(utils_math_type_t rad)
 {
     return utils::math::trigo::rad_to_deg(rad);
 }
@@ -60,19 +60,19 @@ _hot utils_math_angle_t utils_math_rad_to_deg(utils_math_type_t rad)
 /* GEOMETRY */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot utils_math_direction_t utils_math_to_look(utils_math_direction_t orientation)
+_hot _nothrow utils_math_direction_t utils_math_to_look(utils_math_direction_t orientation)
 {
     return c(utils::math::geometry::to_look(cpp(orientation)));
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot utils_math_coord2d_t utils_math_rotate_point_2d(utils_math_coord2d_t origin, utils_math_coord2d_t point, utils_math_angle_t angle, bool rad)
+_hot _nothrow utils_math_coord2d_t utils_math_rotate_point_2d(utils_math_coord2d_t origin, utils_math_coord2d_t point, utils_math_angle_t angle, bool rad)
 {
     return c(utils::math::geometry::rotate_point_2D(cpp(origin), cpp(point), angle, rad));
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot utils_math_coord_t utils_math_rotate_point_3d(utils_math_coord_t origin, utils_math_coord_t point, utils_math_direction_t orientation, bool rad)
+_hot _nothrow utils_math_coord_t utils_math_rotate_point_3d(utils_math_coord_t origin, utils_math_coord_t point, utils_math_direction_t orientation, bool rad)
 {
     return c(utils::math::geometry::rotate_point_3D(cpp(origin), cpp(point), cpp(orientation), rad));
 }

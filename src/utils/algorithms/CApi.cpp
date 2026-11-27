@@ -129,7 +129,7 @@ _hot _nodiscard static std::size_t sos_extract(const T* carrier, const std::size
 //----------------------------------------------------------------//
 /* C2DMP */
 
-_hot float utils_c2dmp(const char* a, size_t a_size, const char* b, size_t b_size, uint8_t prefix_depth, size_t counter_size, bool full)
+_hot _nothrow float utils_c2dmp(const char* a, size_t a_size, const char* b, size_t b_size, uint8_t prefix_depth, size_t counter_size, bool full)
 {
     return utils::exception::c_api::guard_fallback(-1.0f, [&](void) -> float {
         const std::string_view first = view(a, a_size, "a");
@@ -146,7 +146,7 @@ _hot float utils_c2dmp(const char* a, size_t a_size, const char* b, size_t b_siz
     });
 }
 
-_hot float utils_c2dmp_default(const char* a, const char* b)
+_hot _nothrow float utils_c2dmp_default(const char* a, const char* b)
 {
     return utils::exception::c_api::guard_fallback(-1.0f, [&](void) -> float {
         const char* first = utils::exception::c_api::not_null(a, "a");

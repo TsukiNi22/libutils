@@ -49,41 +49,41 @@ _hot static void call(F&& f)
 /* CLUSTER (bytes) */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold utils_cluster_t* utils_cluster_create(void)
+_cold _nothrow utils_cluster_t* utils_cluster_create(void)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [](void) -> utils_cluster_t* {return new utils_cluster_t();});
 }
 
-_cold void utils_cluster_destroy(utils_cluster_t* c)
+_cold _nothrow void utils_cluster_destroy(utils_cluster_t* c)
 {
     (void)utils::exception::c_api::guard([&](void) {delete c;}); // like free(NULL)
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_cluster_spawn(utils_cluster_t* c, size_t n, const void* value, size_t size)
+_hot _nothrow int utils_cluster_spawn(utils_cluster_t* c, size_t n, const void* value, size_t size)
 {
     return utils::exception::c_api::guard([&](void) {cluster(c).spawn(n, utils::smanip::c_api::bytes(value, size));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_cluster_kill(utils_cluster_t* c)
+_hot _nothrow int utils_cluster_kill(utils_cluster_t* c)
 {
     return utils::exception::c_api::guard([&](void) {cluster(c).kill();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_cluster_kill_n(utils_cluster_t* c, size_t n)
+_hot _nothrow int utils_cluster_kill_n(utils_cluster_t* c, size_t n)
 {
     return utils::exception::c_api::guard([&](void) {cluster(c).kill(n);});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot size_t utils_cluster_size(const utils_cluster_t* c)
+_hot _nothrow size_t utils_cluster_size(const utils_cluster_t* c)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return cluster(c).size();});
 }
 
-_hot int utils_cluster_apply(utils_cluster_t* c, utils_cluster_fn_t fn, void* data)
+_hot _nothrow int utils_cluster_apply(utils_cluster_t* c, utils_cluster_fn_t fn, void* data)
 {
     return utils::exception::c_api::guard([&](void) {
         utils::pool::Cluster<std::string>& self = cluster(c);
@@ -103,23 +103,23 @@ C_API_CLUSTER_DEF(char, char)
 /* MIDDLEWARES (void) */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold utils_middlewares_t* utils_middlewares_create(void)
+_cold _nothrow utils_middlewares_t* utils_middlewares_create(void)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [](void) -> utils_middlewares_t* {return new utils_middlewares_t();});
 }
 
-_cold void utils_middlewares_destroy(utils_middlewares_t* m)
+_cold _nothrow void utils_middlewares_destroy(utils_middlewares_t* m)
 {
     (void)utils::exception::c_api::guard([&](void) {delete m;}); // like free(NULL)
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_middlewares_clear(utils_middlewares_t* m)
+_cold _nothrow int utils_middlewares_clear(utils_middlewares_t* m)
 {
     return utils::exception::c_api::guard([&](void) {middlewares(m).clear();});
 }
 
-_cold int utils_middlewares_add_before(utils_middlewares_t* m, utils_middleware_t fn, void* data)
+_cold _nothrow int utils_middlewares_add_before(utils_middlewares_t* m, utils_middleware_t fn, void* data)
 {
     return utils::exception::c_api::guard([&](void) {
         (void)utils::exception::c_api::not_null(fn, "middleware");
@@ -127,7 +127,7 @@ _cold int utils_middlewares_add_before(utils_middlewares_t* m, utils_middleware_
     });
 }
 
-_cold int utils_middlewares_add_after(utils_middlewares_t* m, utils_middleware_t fn, void* data)
+_cold _nothrow int utils_middlewares_add_after(utils_middlewares_t* m, utils_middleware_t fn, void* data)
 {
     return utils::exception::c_api::guard([&](void) {
         (void)utils::exception::c_api::not_null(fn, "middleware");
@@ -136,18 +136,18 @@ _cold int utils_middlewares_add_after(utils_middlewares_t* m, utils_middleware_t
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_middlewares_call_before(const utils_middlewares_t* m)
+_hot _nothrow int utils_middlewares_call_before(const utils_middlewares_t* m)
 {
     return utils::exception::c_api::guard([&](void) {middlewares(m).callBefore();});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_middlewares_call_after(const utils_middlewares_t* m)
+_hot _nothrow int utils_middlewares_call_after(const utils_middlewares_t* m)
 {
     return utils::exception::c_api::guard([&](void) {middlewares(m).callAfter();});
 }
 
-_cold size_t utils_middlewares_before_count(const utils_middlewares_t* m)
+_cold _nothrow size_t utils_middlewares_before_count(const utils_middlewares_t* m)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {
         const utils_middlewares_t& self = middlewares(m);
@@ -157,7 +157,7 @@ _cold size_t utils_middlewares_before_count(const utils_middlewares_t* m)
     });
 }
 
-_cold size_t utils_middlewares_after_count(const utils_middlewares_t* m)
+_cold _nothrow size_t utils_middlewares_after_count(const utils_middlewares_t* m)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {
         const utils_middlewares_t& self = middlewares(m);
@@ -171,23 +171,23 @@ _cold size_t utils_middlewares_after_count(const utils_middlewares_t* m)
 /* MIDDLEWARES (bytes) */
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold utils_middlewares_bytes_t* utils_middlewares_bytes_create(void)
+_cold _nothrow utils_middlewares_bytes_t* utils_middlewares_bytes_create(void)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [](void) -> utils_middlewares_bytes_t* {return new utils_middlewares_bytes_t();});
 }
 
-_cold void utils_middlewares_bytes_destroy(utils_middlewares_bytes_t* m)
+_cold _nothrow void utils_middlewares_bytes_destroy(utils_middlewares_bytes_t* m)
 {
     (void)utils::exception::c_api::guard([&](void) {delete m;}); // like free(NULL)
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_cold int utils_middlewares_bytes_clear(utils_middlewares_bytes_t* m)
+_cold _nothrow int utils_middlewares_bytes_clear(utils_middlewares_bytes_t* m)
 {
     return utils::exception::c_api::guard([&](void) {middlewares(m).clear();});
 }
 
-_cold int utils_middlewares_bytes_add_before(utils_middlewares_bytes_t* m, utils_middleware_bytes_t fn, void* data)
+_cold _nothrow int utils_middlewares_bytes_add_before(utils_middlewares_bytes_t* m, utils_middleware_bytes_t fn, void* data)
 {
     return utils::exception::c_api::guard([&](void) {
         (void)utils::exception::c_api::not_null(fn, "middleware");
@@ -195,7 +195,7 @@ _cold int utils_middlewares_bytes_add_before(utils_middlewares_bytes_t* m, utils
     });
 }
 
-_cold int utils_middlewares_bytes_add_after(utils_middlewares_bytes_t* m, utils_middleware_bytes_t fn, void* data)
+_cold _nothrow int utils_middlewares_bytes_add_after(utils_middlewares_bytes_t* m, utils_middleware_bytes_t fn, void* data)
 {
     return utils::exception::c_api::guard([&](void) {
         (void)utils::exception::c_api::not_null(fn, "middleware");
@@ -204,18 +204,18 @@ _cold int utils_middlewares_bytes_add_after(utils_middlewares_bytes_t* m, utils_
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_middlewares_bytes_call_before(const utils_middlewares_bytes_t* m, const void* arg, size_t size)
+_hot _nothrow int utils_middlewares_bytes_call_before(const utils_middlewares_bytes_t* m, const void* arg, size_t size)
 {
     return utils::exception::c_api::guard([&](void) {middlewares(m).callBefore(utils::smanip::c_api::bytes(arg, size));});
 }
 
 // xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
-_hot int utils_middlewares_bytes_call_after(const utils_middlewares_bytes_t* m, const void* arg, size_t size)
+_hot _nothrow int utils_middlewares_bytes_call_after(const utils_middlewares_bytes_t* m, const void* arg, size_t size)
 {
     return utils::exception::c_api::guard([&](void) {middlewares(m).callAfter(utils::smanip::c_api::bytes(arg, size));});
 }
 
-_cold size_t utils_middlewares_bytes_before_count(const utils_middlewares_bytes_t* m)
+_cold _nothrow size_t utils_middlewares_bytes_before_count(const utils_middlewares_bytes_t* m)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {
         const utils_middlewares_bytes_t& self = middlewares(m);
@@ -225,7 +225,7 @@ _cold size_t utils_middlewares_bytes_before_count(const utils_middlewares_bytes_
     });
 }
 
-_cold size_t utils_middlewares_bytes_after_count(const utils_middlewares_bytes_t* m)
+_cold _nothrow size_t utils_middlewares_bytes_after_count(const utils_middlewares_bytes_t* m)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {
         const utils_middlewares_bytes_t& self = middlewares(m);
