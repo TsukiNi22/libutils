@@ -40,6 +40,9 @@ gcc -std=c11 main.c -o app -lutils -lstdc++ -lssl -lcrypto -lm
 
 No exception crosses the C boundary: each function runs in a guard that catches everything.
 
+> [!NOTE]
+> The declarations carry `_nothrow` and `_nodiscard`: a result that is not read (status, handle, value) is a warning, `(void)call(...)` ignores it on purpose (not for `utils_fail`, `utils_exception_set` and the logs of the verbose). With gcc, the buffers (`_read_only` / `_write_only`), the strings (`_null_terminated_string_arg`) and the file descriptors of the platform (`_fd_arg`) are checked too.
+
 | A function returns | Failure |
 |---|---|
 | `int` (`UTILS_OK` / `UTILS_KO`) | `UTILS_KO` |

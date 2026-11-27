@@ -40,6 +40,19 @@ warning disable:               NO_<warning>
 | Fatal Exception | Usage | `FATALEXCEPTION_USAGE_WARNING` |
 | EETP Parser | Usage | `EETPPARSER_USAGE_WARNING` |
 
+## Attributs {#attributes}
+
+Les attributs des déclarations sont vérifiés par le compilateur lui-même : ces avertissements ne dépendent pas des defines ci-dessus.
+
+| Attribut | Avertit quand | Compilateur |
+|---|---|---|
+| `_nodiscard` (chaque fonction de la C API qui renvoie, sauf `utils_fail`, `utils_exception_set` et les logs) | Un statut, un handle ou une valeur n'est pas lu : `(void)appel(...)` l'ignore volontairement | gcc, clang |
+| `_read_only` / `_write_only` / `_read_write` | Un tampon est plus petit que la taille donnée avec lui | gcc |
+| `_format` | Les arguments ne correspondent pas au format d'un log de style printf | gcc, clang |
+| `_warning(msg)` / `_error(msg)` | Une fonction marquée ainsi est appelée (avertissement / erreur) | gcc, clang |
+| `_lifetimebound` | Une référence renvoyée par un getter survit à son objet | clang |
+| `_fd_arg*`, `_null_terminated_string_arg` | Un descripteur fermé ou une chaîne sans `'\0'` est donné (`-fanalyzer`) | gcc 13+ / 14+ |
+
 ## Exemple {#example}
 
 ```cpp

@@ -30,11 +30,11 @@ Short macros for the compiler attributes, defined from the language and its vers
 | visibility | `_hidden`, `_export`, `_import` (`dllexport` / `dllimport` on Windows) |
 | lifetime | `_ctor`, `_dtor` (run before / after `main`), `_cleanup(fn)` |
 | inlining | `_always_inline`, `_noinline`, `_flatten` |
-| optimisation | `_hot`, `_cold`, `_const`, `_pure`, `_assume(expr)`, `_unreachable()` |
+| optimisation | `_hot`, `_cold`, `_const`, `_pure`, `_nothrow` (never throws: every function of the C API), `_assume(expr)`, `_unreachable()` |
 | branch prediction | `_likely`, `_unlikely` (after the condition: `if (error) _unlikely {...}`), `_likely_c(c)`, `_unlikely_c(c)`, `_expect(c, v)` |
-| diagnostics | `_format(archetype, i_fmt, i_args)`, `_sentinel` |
+| diagnostics | `_format(archetype, i_fmt, i_args)`, `_sentinel`, `_warning(msg)` / `_error(msg)` (a call warns / fails the compilation), `_fd_arg(i)`, `_fd_arg_read(i)`, `_fd_arg_write(i)` (a file descriptor, gcc 13+, `-fanalyzer`), `_null_terminated_string_arg(i)` (a `'\0'` terminated string, gcc 14+) |
 | binary layout | `_noaddress`, `_packed`, `_alignas(n)` |
-| memory | `_malloc`, `_alloc_size(i)`, `_alloc_size_mul(i, j)`, `_nonnull(i)`, `_returns_nonnull`, `_read_only(ptr, size)`, `_write_only(ptr, size)`, `_restrict` |
+| memory | `_malloc`, `_alloc_size(i)`, `_alloc_size_mul(i, j)`, `_nonnull(i)`, `_returns_nonnull`, `_assume_aligned(n)`, `_read_only(ptr, size)`, `_write_only(ptr, size)`, `_read_write(ptr, size)`, `_restrict`, `_lifetimebound` (clang, after the `const` of a getter returning a reference) |
 | storage | `_thread_local` |
 
 ## Deprecation {#deprecation}

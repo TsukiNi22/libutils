@@ -38,6 +38,9 @@ gcc -std=c11 main.c -o app -lutils -lstdc++ -lssl -lcrypto -lm
 
 Aucune exception ne traverse la frontière C : chaque fonction tourne dans une garde qui attrape tout.
 
+> [!NOTE]
+> Les déclarations portent `_nothrow` et `_nodiscard` : un résultat non lu (statut, handle, valeur) est un avertissement, `(void)appel(...)` l'ignore volontairement (pas pour `utils_fail`, `utils_exception_set` et les logs du verbose). Avec gcc, les tampons (`_read_only` / `_write_only`), les chaînes (`_null_terminated_string_arg`) et les descripteurs de fichier de la plateforme (`_fd_arg`) sont aussi vérifiés.
+
 | Une fonction renvoie | Échec |
 |---|---|
 | `int` (`UTILS_OK` / `UTILS_KO`) | `UTILS_KO` |

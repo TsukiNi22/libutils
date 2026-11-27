@@ -10,7 +10,7 @@
 <a class="skip-link" href="#main" data-i18n>Skip to the content</a>
 <header class="topbar">
   <button class="icon-btn menu-btn" type="button" id="menuBtn" aria-label="Open the navigation" data-i18n-aria-label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
-  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v5.0.0</span></a>
+  <a class="brand" href="index.html"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><!-- default logo: replace with the project logo (inline SVG, currentColor) --><rect x="4" y="4" width="18" height="22" rx="3" fill="currentColor" opacity=".35"/><rect x="9" y="7" width="18" height="22" rx="3" fill="currentColor"/><path d="M13 14h10M13 18h10M13 22h6" stroke="var(--surface)" stroke-width="2" stroke-linecap="round"/></svg><span class="repo-name">libutils</span><span class="ver repo-version">v5.1.0-pre</span></a>
   <nav class="tabs" aria-label="Pages" hidden></nav>
   <span class="spacer"></span>
   <div class="top-actions">
@@ -93,116 +93,116 @@ int main(void)
     printf("%s %s\n", buf, utils_platform_strerror(ECONNREFUSED)); // "Connection refused" (Unix &amp; Windows)
     return 0;
 }</code></pre></div></section><section id="cpp-api"><h2>7. <span data-lang="en">C++ API</span><span data-lang="fr">API C++</span></h2><div data-lang="en"><p>Read from the headers of <code>include/utils/platform/</code> (public part only, the trailing comments of the code kept). Include <code>&lt;utils/utils.hpp&gt;</code> with the define of the section, never these headers one by one.</p><h3 id="h-platform-dlfcn-hpp"><code>utils/platform/Dlfcn.hpp</code></h3><p>Dynamic loading calls of &lt;dlfcn.h&gt; for Unix &amp; Windows (same names, same contract) Unix: the system call, Windows: LoadLibrary / GetProcAddress / FreeLibrary</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::platform
-void* dlopen(const char* path, int flags); // nullptr on error (dlerror)
-void* dlsym(void* handle, const char* name); // nullptr on error (dlerror)
+_null_terminated_string_arg(1) void* dlopen(const char* path, int flags); // nullptr on error (dlerror)
+_null_terminated_string_arg(2) void* dlsym(void* handle, const char* name); // nullptr on error (dlerror)
 int dlclose(void* handle); // 0 on success
 char* dlerror(void); // last error of the thread, nullptr if none (cleared by the call)
 int dladdr(const void* addr, Dl_info* info); // 0 on error</code></pre><h3 id="h-platform-epoll-hpp"><code>utils/platform/Epoll.hpp</code></h3><p>epoll for Unix &amp; Windows (same names, same behavior) Unix: &lt;sys/epoll.h&gt;, Windows: emulation over WSAPoll (sockets only)</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::platform
 int epoll_create1(int flags);
-int epoll_ctl(int epfd, int op, int fd, struct epoll_event* event);
-int epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout);</code></pre><h3 id="h-platform-platform-hpp"><code>utils/platform/Platform.hpp</code></h3><p>Detection of the target platform (Unix or Windows) UTILS_UNIX / UTILS_WINDOWS, UTILS_PLATFORM</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define UTILS_WINDOWS
+_fd_arg(1) _fd_arg(3) int epoll_ctl(int epfd, int op, int fd, struct epoll_event* event);
+_fd_arg(1) int epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout);</code></pre><h3 id="h-platform-platform-hpp"><code>utils/platform/Platform.hpp</code></h3><p>Detection of the target platform (Unix or Windows) UTILS_UNIX / UTILS_WINDOWS, UTILS_PLATFORM</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define UTILS_WINDOWS
 #define UTILS_PLATFORM "windows"
 #define UTILS_UNIX
 #define UTILS_PLATFORM "unix"
 </code></pre><h3 id="h-platform-socket-hpp"><code>utils/platform/Socket.hpp</code></h3><p>BSD socket calls for Unix &amp; Windows (same names, same contract: -1 &amp; errno) Unix: the system call, Windows: Winsock 2 (started on the first use, errors translated in errno)</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::platform
 int socket(int domain, int type, int protocol);
-int connect(int fd, const struct sockaddr* addr, socklen_t len);
-int bind(int fd, const struct sockaddr* addr, socklen_t len);
-int listen(int fd, int backlog);
-int accept(int fd, struct sockaddr* addr, socklen_t* len);
-ssize_t recv(int fd, void* buf, std::size_t len, int flags);
-ssize_t send(int fd, const void* buf, std::size_t len, int flags);
-int setsockopt(int fd, int level, int name, const void* value, socklen_t len); // Windows: SO_SNDTIMEO / SO_RCVTIMEO take a timeval, SO_REUSEADDR is the default (no-op)
-int getsockname(int fd, struct sockaddr* addr, socklen_t* len);
-int getpeername(int fd, struct sockaddr* addr, socklen_t* len);
-int getaddrinfo(const char* node, const char* service, const struct addrinfo* hints, struct addrinfo** res); // EAI_* error code (gai_strerror)
+_fd_arg(1) int connect(int fd, const struct sockaddr* addr, socklen_t len);
+_fd_arg(1) int bind(int fd, const struct sockaddr* addr, socklen_t len);
+_fd_arg(1) int listen(int fd, int backlog);
+_fd_arg(1) int accept(int fd, struct sockaddr* _restrict addr, socklen_t* _restrict len);
+_fd_arg_read(1) _write_only(2, 3) ssize_t recv(int fd, void* buf, std::size_t len, int flags);
+_fd_arg_write(1) _read_only(2, 3) ssize_t send(int fd, const void* buf, std::size_t len, int flags);
+_fd_arg(1) _read_only(4, 5) int setsockopt(int fd, int level, int name, const void* value, socklen_t len); // Windows: SO_SNDTIMEO / SO_RCVTIMEO take a timeval, SO_REUSEADDR is the default (no-op)
+_fd_arg(1) int getsockname(int fd, struct sockaddr* _restrict addr, socklen_t* _restrict len);
+_fd_arg(1) int getpeername(int fd, struct sockaddr* _restrict addr, socklen_t* _restrict len);
+_null_terminated_string_arg(1) _null_terminated_string_arg(2) int getaddrinfo(const char* _restrict node, const char* _restrict service, const struct addrinfo* _restrict hints, struct addrinfo** _restrict res); // EAI_* error code (gai_strerror)
 void freeaddrinfo(struct addrinfo* res);
 const char* gai_strerror(int code);
 const char* gai_strerrorA(int code); // call renamed by the &lt;ws2tcpip.h&gt; macro</code></pre><h3 id="h-platform-termios-hpp"><code>utils/platform/Termios.hpp</code></h3><p>Terminal calls of &lt;termios.h&gt; for Unix &amp; Windows (same names, same contract: -1 &amp; errno) Unix: the system call, Windows: console mode (ICANON = line input, ECHO = echo, ISIG = ctrl+c)</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::platform
-int tcgetattr(int fd, struct termios* term); // Windows: ENOTTY when the fd is not a console
-int tcsetattr(int fd, int action, const struct termios* term); // Windows: without ICANON the input gives the escape sequences (VT input)</code></pre><h3 id="h-platform-unistd-hpp"><code>utils/platform/Unistd.hpp</code></h3><p>POSIX calls of &lt;unistd.h&gt; &amp; co for Unix &amp; Windows (same names, same contract: -1 &amp; errno) Unix: the system call, Windows: CRT / Win32 implementation</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::platform
-int close(int fd); // any fd (Windows: socket, CRT fd or emulated epoll)
-ssize_t read(int fd, void* buf, std::size_t count); // Windows: recv on a socket
-ssize_t write(int fd, const void* buf, std::size_t count); // Windows: send on a socket
+_fd_arg(1) int tcgetattr(int fd, struct termios* term); // Windows: ENOTTY when the fd is not a console
+_fd_arg(1) int tcsetattr(int fd, int action, const struct termios* term); // Windows: without ICANON the input gives the escape sequences (VT input)</code></pre><h3 id="h-platform-unistd-hpp"><code>utils/platform/Unistd.hpp</code></h3><p>POSIX calls of &lt;unistd.h&gt; &amp; co for Unix &amp; Windows (same names, same contract: -1 &amp; errno) Unix: the system call, Windows: CRT / Win32 implementation</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::platform
+_fd_arg(1) int close(int fd); // any fd (Windows: socket, CRT fd or emulated epoll)
+_fd_arg_read(1) _write_only(2, 3) ssize_t read(int fd, void* buf, std::size_t count); // Windows: recv on a socket
+_fd_arg_write(1) _read_only(2, 3) ssize_t write(int fd, const void* buf, std::size_t count); // Windows: send on a socket
 int pipe(int fds[2]); // Windows: binary mode
-int dup(int fd);
-int dup2(int fd, int fd2);
-int isatty(int fd); // Windows: console
+_fd_arg(1) int dup(int fd);
+_fd_arg(1) int dup2(int fd, int fd2);
+_fd_arg(1) int isatty(int fd); // Windows: console
 int poll(struct pollfd* fds, nfds_t nfds, int timeout); // Windows: sockets (WSAPoll), console / pipe / file input
 pid_t getpid(void);
-ssize_t readlink(const char* path, char* buf, std::size_t size); // Windows: "/proc/self/exe" = GetModuleFileName, else a symbolic link
+_null_terminated_string_arg(1) _write_only(2, 3) ssize_t readlink(const char* _restrict path, char* _restrict buf, std::size_t size); // Windows: "/proc/self/exe" = GetModuleFileName, else a symbolic link
 const char* strerror(int errnum); // Windows: also the socket errors (WSA) translated in errno</code></pre></div><div data-lang="fr"><p>Lu dans les en-têtes de <code>include/utils/platform/</code> (partie publique seulement, avec les commentaires du code). Inclure <code>&lt;utils/utils.hpp&gt;</code> avec le define de la section, jamais ces en-têtes un par un.</p><h3 id="h-platform-dlfcn-hpp"><code>utils/platform/Dlfcn.hpp</code></h3><p>Dynamic loading calls of &lt;dlfcn.h&gt; for Unix &amp; Windows (same names, same contract) Unix: the system call, Windows: LoadLibrary / GetProcAddress / FreeLibrary</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::platform
-void* dlopen(const char* path, int flags); // nullptr on error (dlerror)
-void* dlsym(void* handle, const char* name); // nullptr on error (dlerror)
+_null_terminated_string_arg(1) void* dlopen(const char* path, int flags); // nullptr on error (dlerror)
+_null_terminated_string_arg(2) void* dlsym(void* handle, const char* name); // nullptr on error (dlerror)
 int dlclose(void* handle); // 0 on success
 char* dlerror(void); // last error of the thread, nullptr if none (cleared by the call)
 int dladdr(const void* addr, Dl_info* info); // 0 on error</code></pre><h3 id="h-platform-epoll-hpp"><code>utils/platform/Epoll.hpp</code></h3><p>epoll for Unix &amp; Windows (same names, same behavior) Unix: &lt;sys/epoll.h&gt;, Windows: emulation over WSAPoll (sockets only)</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::platform
 int epoll_create1(int flags);
-int epoll_ctl(int epfd, int op, int fd, struct epoll_event* event);
-int epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout);</code></pre><h3 id="h-platform-platform-hpp"><code>utils/platform/Platform.hpp</code></h3><p>Detection of the target platform (Unix or Windows) UTILS_UNIX / UTILS_WINDOWS, UTILS_PLATFORM</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define UTILS_WINDOWS
+_fd_arg(1) _fd_arg(3) int epoll_ctl(int epfd, int op, int fd, struct epoll_event* event);
+_fd_arg(1) int epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout);</code></pre><h3 id="h-platform-platform-hpp"><code>utils/platform/Platform.hpp</code></h3><p>Detection of the target platform (Unix or Windows) UTILS_UNIX / UTILS_WINDOWS, UTILS_PLATFORM</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">#define UTILS_WINDOWS
 #define UTILS_PLATFORM "windows"
 #define UTILS_UNIX
 #define UTILS_PLATFORM "unix"
 </code></pre><h3 id="h-platform-socket-hpp"><code>utils/platform/Socket.hpp</code></h3><p>BSD socket calls for Unix &amp; Windows (same names, same contract: -1 &amp; errno) Unix: the system call, Windows: Winsock 2 (started on the first use, errors translated in errno)</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::platform
 int socket(int domain, int type, int protocol);
-int connect(int fd, const struct sockaddr* addr, socklen_t len);
-int bind(int fd, const struct sockaddr* addr, socklen_t len);
-int listen(int fd, int backlog);
-int accept(int fd, struct sockaddr* addr, socklen_t* len);
-ssize_t recv(int fd, void* buf, std::size_t len, int flags);
-ssize_t send(int fd, const void* buf, std::size_t len, int flags);
-int setsockopt(int fd, int level, int name, const void* value, socklen_t len); // Windows: SO_SNDTIMEO / SO_RCVTIMEO take a timeval, SO_REUSEADDR is the default (no-op)
-int getsockname(int fd, struct sockaddr* addr, socklen_t* len);
-int getpeername(int fd, struct sockaddr* addr, socklen_t* len);
-int getaddrinfo(const char* node, const char* service, const struct addrinfo* hints, struct addrinfo** res); // EAI_* error code (gai_strerror)
+_fd_arg(1) int connect(int fd, const struct sockaddr* addr, socklen_t len);
+_fd_arg(1) int bind(int fd, const struct sockaddr* addr, socklen_t len);
+_fd_arg(1) int listen(int fd, int backlog);
+_fd_arg(1) int accept(int fd, struct sockaddr* _restrict addr, socklen_t* _restrict len);
+_fd_arg_read(1) _write_only(2, 3) ssize_t recv(int fd, void* buf, std::size_t len, int flags);
+_fd_arg_write(1) _read_only(2, 3) ssize_t send(int fd, const void* buf, std::size_t len, int flags);
+_fd_arg(1) _read_only(4, 5) int setsockopt(int fd, int level, int name, const void* value, socklen_t len); // Windows: SO_SNDTIMEO / SO_RCVTIMEO take a timeval, SO_REUSEADDR is the default (no-op)
+_fd_arg(1) int getsockname(int fd, struct sockaddr* _restrict addr, socklen_t* _restrict len);
+_fd_arg(1) int getpeername(int fd, struct sockaddr* _restrict addr, socklen_t* _restrict len);
+_null_terminated_string_arg(1) _null_terminated_string_arg(2) int getaddrinfo(const char* _restrict node, const char* _restrict service, const struct addrinfo* _restrict hints, struct addrinfo** _restrict res); // EAI_* error code (gai_strerror)
 void freeaddrinfo(struct addrinfo* res);
 const char* gai_strerror(int code);
 const char* gai_strerrorA(int code); // call renamed by the &lt;ws2tcpip.h&gt; macro</code></pre><h3 id="h-platform-termios-hpp"><code>utils/platform/Termios.hpp</code></h3><p>Terminal calls of &lt;termios.h&gt; for Unix &amp; Windows (same names, same contract: -1 &amp; errno) Unix: the system call, Windows: console mode (ICANON = line input, ECHO = echo, ISIG = ctrl+c)</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::platform
-int tcgetattr(int fd, struct termios* term); // Windows: ENOTTY when the fd is not a console
-int tcsetattr(int fd, int action, const struct termios* term); // Windows: without ICANON the input gives the escape sequences (VT input)</code></pre><h3 id="h-platform-unistd-hpp"><code>utils/platform/Unistd.hpp</code></h3><p>POSIX calls of &lt;unistd.h&gt; &amp; co for Unix &amp; Windows (same names, same contract: -1 &amp; errno) Unix: the system call, Windows: CRT / Win32 implementation</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::platform
-int close(int fd); // any fd (Windows: socket, CRT fd or emulated epoll)
-ssize_t read(int fd, void* buf, std::size_t count); // Windows: recv on a socket
-ssize_t write(int fd, const void* buf, std::size_t count); // Windows: send on a socket
+_fd_arg(1) int tcgetattr(int fd, struct termios* term); // Windows: ENOTTY when the fd is not a console
+_fd_arg(1) int tcsetattr(int fd, int action, const struct termios* term); // Windows: without ICANON the input gives the escape sequences (VT input)</code></pre><h3 id="h-platform-unistd-hpp"><code>utils/platform/Unistd.hpp</code></h3><p>POSIX calls of &lt;unistd.h&gt; &amp; co for Unix &amp; Windows (same names, same contract: -1 &amp; errno) Unix: the system call, Windows: CRT / Win32 implementation</p><pre tabindex="0" role="region" aria-label="Code (cpp)"><code class="language-cpp">// namespace utils::platform
+_fd_arg(1) int close(int fd); // any fd (Windows: socket, CRT fd or emulated epoll)
+_fd_arg_read(1) _write_only(2, 3) ssize_t read(int fd, void* buf, std::size_t count); // Windows: recv on a socket
+_fd_arg_write(1) _read_only(2, 3) ssize_t write(int fd, const void* buf, std::size_t count); // Windows: send on a socket
 int pipe(int fds[2]); // Windows: binary mode
-int dup(int fd);
-int dup2(int fd, int fd2);
-int isatty(int fd); // Windows: console
+_fd_arg(1) int dup(int fd);
+_fd_arg(1) int dup2(int fd, int fd2);
+_fd_arg(1) int isatty(int fd); // Windows: console
 int poll(struct pollfd* fds, nfds_t nfds, int timeout); // Windows: sockets (WSAPoll), console / pipe / file input
 pid_t getpid(void);
-ssize_t readlink(const char* path, char* buf, std::size_t size); // Windows: "/proc/self/exe" = GetModuleFileName, else a symbolic link
+_null_terminated_string_arg(1) _write_only(2, 3) ssize_t readlink(const char* _restrict path, char* _restrict buf, std::size_t size); // Windows: "/proc/self/exe" = GetModuleFileName, else a symbolic link
 const char* strerror(int errnum); // Windows: also the socket errors (WSA) translated in errno</code></pre></div></section><section id="c-api"><h2>8. <span data-lang="en">C API</span><span data-lang="fr">API C</span></h2><div data-lang="en"><p>Read from <code>include/utils/platform/CApi.h</code>, <code>include/utils/platform/Types.h</code>, included by <code>&lt;utils.h&gt;</code> with the define of the section. Every function that can fail returns <code>UTILS_OK</code> / <code>UTILS_KO</code> (or <code>NULL</code> / <code>0</code>) and fills <code>utils_exception</code> (see <a href="c-api.html#errors">the C API guide</a>).</p><h3 id="c-platform-capi-h"><code>utils/platform/CApi.h</code></h3><p>C API of utils::platform: the POSIX calls of libutils for Unix &amp; Windows (C &amp; C++ compatible) Same contract as POSIX (-1 &amp; errno, NULL &amp; dlerror, EAI_* code), utils_exception is never used Unix: the POSIX structures need the POSIX features (_POSIX_C_SOURCE &gt;= 200112L, default of gnu11 / gnu23)</p><h4 id="c-1">Structures · Information of utils_platform_dladdr</h4><p><em>information of utils_platform_dladdr (fields of Dl_info, without the need of _GNU_SOURCE)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">typedef struct utils_platform_dl_info {
     const char* dli_fname; // path of the module
     void* dli_fbase; // base address of the module
     const char* dli_sname; // nearest symbol (always NULL on Windows)
     void* dli_saddr; // address of the nearest symbol (always NULL on Windows)
-} utils_platform_dl_info_t;</code></pre><h4 id="c-2">Functions · Fd</h4><p><em>fd (unistd)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_platform_close(int fd); // any fd (Windows: socket, CRT fd or emulated epoll)
-ssize_t utils_platform_read(int fd, void* buf, size_t count); // Windows: recv on a socket
-ssize_t utils_platform_write(int fd, const void* buf, size_t count); // Windows: send on a socket
-int utils_platform_pipe(int fds[2]); // Windows: binary mode
-int utils_platform_dup(int fd);
-int utils_platform_dup2(int fd, int fd2);
-int utils_platform_isatty(int fd); // Windows: console
-int utils_platform_poll(struct pollfd* fds, nfds_t nfds, int timeout); // Windows: sockets (WSAPoll), console / pipe / file input</code></pre><h4 id="c-3">Functions · Process</h4><p><em>process (unistd)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">pid_t utils_platform_getpid(void);
-ssize_t utils_platform_readlink(const char* path, char* buf, size_t size); // Windows: "/proc/self/exe" = GetModuleFileName, else a symbolic link</code></pre><h4 id="c-4">Functions · Error</h4><p><em>error (unistd)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">const char* utils_platform_strerror(int errnum); // Windows: also the socket errors (WSA) translated in errno</code></pre><h4 id="c-5">Functions · Shared library</h4><p><em>shared library (dlfcn)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">void* utils_platform_dlopen(const char* path, int flags); // NULL on error (utils_platform_dlerror)
-void* utils_platform_dlsym(void* handle, const char* name); // NULL on error (utils_platform_dlerror)
-int utils_platform_dlclose(void* handle); // 0 on success
-char* utils_platform_dlerror(void); // last error of the thread, NULL if none (cleared by the call)
-int utils_platform_dladdr(const void* addr, utils_platform_dl_info_t* info); // 0 on error</code></pre><h4 id="c-6">Functions · Epoll</h4><p><em>epoll (Windows: only sockets can be linked (ENOTSOCK), EPOLLET is refused (EINVAL), EPOLLONESHOT is emulated)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_platform_epoll_create1(int flags);
-int utils_platform_epoll_ctl(int epfd, int op, int fd, struct epoll_event* event);
-int utils_platform_epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout);</code></pre><h4 id="c-7">Functions · Socket</h4><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_platform_socket(int domain, int type, int protocol);
-int utils_platform_connect(int fd, const struct sockaddr* addr, socklen_t len);
-int utils_platform_bind(int fd, const struct sockaddr* addr, socklen_t len);
-int utils_platform_listen(int fd, int backlog);
-int utils_platform_accept(int fd, struct sockaddr* addr, socklen_t* len);
-ssize_t utils_platform_recv(int fd, void* buf, size_t len, int flags);
-ssize_t utils_platform_send(int fd, const void* buf, size_t len, int flags);
-int utils_platform_setsockopt(int fd, int level, int name, const void* value, socklen_t len); // Windows: SO_SNDTIMEO / SO_RCVTIMEO take a timeval, SO_REUSEADDR is the default (no-op)
-int utils_platform_getsockname(int fd, struct sockaddr* addr, socklen_t* len);
-int utils_platform_getpeername(int fd, struct sockaddr* addr, socklen_t* len);
-int utils_platform_getaddrinfo(const char* node, const char* service, const struct addrinfo* hints, struct addrinfo** res); // EAI_* error code (utils_platform_gai_strerror)
-void utils_platform_freeaddrinfo(struct addrinfo* res);
-const char* utils_platform_gai_strerror(int code);</code></pre><h4 id="c-8">Functions · Terminal</h4><p><em>terminal (termios)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_platform_tcgetattr(int fd, struct termios* term); // Windows: ENOTTY when the fd is not a console
-int utils_platform_tcsetattr(int fd, int action, const struct termios* term); // Windows: without ICANON the input gives the escape sequences (VT input)</code></pre><h3 id="c-platform-types-h"><code>utils/platform/Types.h</code></h3><p>Windows versions of the POSIX defines, structures &amp; types used by utils::platform (C &amp; C++ compatible) Same names, values &amp; layout as Linux; nothing on Unix (the system headers give them)</p><h4 id="c-9">Defines</h4><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#ifdef UTILS_WINDOWS</code></pre><h4 id="c-10">Defines · Unistd</h4><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#ifndef STDIN_FILENO
+} utils_platform_dl_info_t;</code></pre><h4 id="c-2">Functions · Fd</h4><p><em>fd (unistd)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow _fd_arg(1) int utils_platform_close(int fd); // any fd (Windows: socket, CRT fd or emulated epoll)
+_nodiscard _nothrow _fd_arg_read(1) _write_only(2, 3) ssize_t utils_platform_read(int fd, void* buf, size_t count); // Windows: recv on a socket
+_nodiscard _nothrow _fd_arg_write(1) _read_only(2, 3) ssize_t utils_platform_write(int fd, const void* buf, size_t count); // Windows: send on a socket
+_nodiscard _nothrow int utils_platform_pipe(int fds[2]); // Windows: binary mode
+_nodiscard _nothrow _fd_arg(1) int utils_platform_dup(int fd);
+_nodiscard _nothrow _fd_arg(1) int utils_platform_dup2(int fd, int fd2);
+_nodiscard _nothrow _fd_arg(1) int utils_platform_isatty(int fd); // Windows: console
+_nodiscard _nothrow int utils_platform_poll(struct pollfd* fds, nfds_t nfds, int timeout); // Windows: sockets (WSAPoll), console / pipe / file input</code></pre><h4 id="c-3">Functions · Process</h4><p><em>process (unistd)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow pid_t utils_platform_getpid(void);
+_nodiscard _nothrow _null_terminated_string_arg(1) _write_only(2, 3) ssize_t utils_platform_readlink(const char* _restrict path, char* _restrict buf, size_t size); // Windows: "/proc/self/exe" = GetModuleFileName, else a symbolic link</code></pre><h4 id="c-4">Functions · Error</h4><p><em>error (unistd)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow const char* utils_platform_strerror(int errnum); // Windows: also the socket errors (WSA) translated in errno</code></pre><h4 id="c-5">Functions · Shared library</h4><p><em>shared library (dlfcn)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow _null_terminated_string_arg(1) void* utils_platform_dlopen(const char* path, int flags); // NULL on error (utils_platform_dlerror)
+_nodiscard _nothrow _null_terminated_string_arg(2) void* utils_platform_dlsym(void* handle, const char* name); // NULL on error (utils_platform_dlerror)
+_nodiscard _nothrow int utils_platform_dlclose(void* handle); // 0 on success
+_nodiscard _nothrow char* utils_platform_dlerror(void); // last error of the thread, NULL if none (cleared by the call)
+_nodiscard _nothrow int utils_platform_dladdr(const void* addr, utils_platform_dl_info_t* info); // 0 on error</code></pre><h4 id="c-6">Functions · Epoll</h4><p><em>epoll (Windows: only sockets can be linked (ENOTSOCK), EPOLLET is refused (EINVAL), EPOLLONESHOT is emulated)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow int utils_platform_epoll_create1(int flags);
+_nodiscard _nothrow _fd_arg(1) _fd_arg(3) int utils_platform_epoll_ctl(int epfd, int op, int fd, struct epoll_event* event);
+_nodiscard _nothrow _fd_arg(1) int utils_platform_epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout);</code></pre><h4 id="c-7">Functions · Socket</h4><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow int utils_platform_socket(int domain, int type, int protocol);
+_nodiscard _nothrow _fd_arg(1) int utils_platform_connect(int fd, const struct sockaddr* addr, socklen_t len);
+_nodiscard _nothrow _fd_arg(1) int utils_platform_bind(int fd, const struct sockaddr* addr, socklen_t len);
+_nodiscard _nothrow _fd_arg(1) int utils_platform_listen(int fd, int backlog);
+_nodiscard _nothrow _fd_arg(1) int utils_platform_accept(int fd, struct sockaddr* _restrict addr, socklen_t* _restrict len);
+_nodiscard _nothrow _fd_arg_read(1) _write_only(2, 3) ssize_t utils_platform_recv(int fd, void* buf, size_t len, int flags);
+_nodiscard _nothrow _fd_arg_write(1) _read_only(2, 3) ssize_t utils_platform_send(int fd, const void* buf, size_t len, int flags);
+_nodiscard _nothrow _fd_arg(1) _read_only(4, 5) int utils_platform_setsockopt(int fd, int level, int name, const void* value, socklen_t len); // Windows: SO_SNDTIMEO / SO_RCVTIMEO take a timeval, SO_REUSEADDR is the default (no-op)
+_nodiscard _nothrow _fd_arg(1) int utils_platform_getsockname(int fd, struct sockaddr* _restrict addr, socklen_t* _restrict len);
+_nodiscard _nothrow _fd_arg(1) int utils_platform_getpeername(int fd, struct sockaddr* _restrict addr, socklen_t* _restrict len);
+_nodiscard _nothrow _null_terminated_string_arg(1) _null_terminated_string_arg(2) int utils_platform_getaddrinfo(const char* _restrict node, const char* _restrict service, const struct addrinfo* _restrict hints, struct addrinfo** _restrict res); // EAI_* error code (utils_platform_gai_strerror)
+_nothrow void utils_platform_freeaddrinfo(struct addrinfo* res);
+_nodiscard _nothrow const char* utils_platform_gai_strerror(int code);</code></pre><h4 id="c-8">Functions · Terminal</h4><p><em>terminal (termios)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow _fd_arg(1) int utils_platform_tcgetattr(int fd, struct termios* term); // Windows: ENOTTY when the fd is not a console
+_nodiscard _nothrow _fd_arg(1) int utils_platform_tcsetattr(int fd, int action, const struct termios* term); // Windows: without ICANON the input gives the escape sequences (VT input)</code></pre><h3 id="c-platform-types-h"><code>utils/platform/Types.h</code></h3><p>Windows versions of the POSIX defines, structures &amp; types used by utils::platform (C &amp; C++ compatible) Same names, values &amp; layout as Linux; nothing on Unix (the system headers give them)</p><h4 id="c-9">Defines</h4><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#ifdef UTILS_WINDOWS</code></pre><h4 id="c-10">Defines · Unistd</h4><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#ifndef STDIN_FILENO
     #define STDIN_FILENO    0
     #define STDOUT_FILENO   1
     #define STDERR_FILENO   2
@@ -271,34 +271,34 @@ struct addrinfo;</code></pre><h4 id="c-23">Structures · Termios</h4><p><em>term
     void* dli_fbase; // base address of the module
     const char* dli_sname; // nearest symbol (always NULL on Windows)
     void* dli_saddr; // address of the nearest symbol (always NULL on Windows)
-} utils_platform_dl_info_t;</code></pre><h4 id="c-2">Fonctions · Fd</h4><p><em>fd (unistd)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_platform_close(int fd); // any fd (Windows: socket, CRT fd or emulated epoll)
-ssize_t utils_platform_read(int fd, void* buf, size_t count); // Windows: recv on a socket
-ssize_t utils_platform_write(int fd, const void* buf, size_t count); // Windows: send on a socket
-int utils_platform_pipe(int fds[2]); // Windows: binary mode
-int utils_platform_dup(int fd);
-int utils_platform_dup2(int fd, int fd2);
-int utils_platform_isatty(int fd); // Windows: console
-int utils_platform_poll(struct pollfd* fds, nfds_t nfds, int timeout); // Windows: sockets (WSAPoll), console / pipe / file input</code></pre><h4 id="c-3">Fonctions · Process</h4><p><em>process (unistd)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">pid_t utils_platform_getpid(void);
-ssize_t utils_platform_readlink(const char* path, char* buf, size_t size); // Windows: "/proc/self/exe" = GetModuleFileName, else a symbolic link</code></pre><h4 id="c-4">Fonctions · Error</h4><p><em>error (unistd)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">const char* utils_platform_strerror(int errnum); // Windows: also the socket errors (WSA) translated in errno</code></pre><h4 id="c-5">Fonctions · Shared library</h4><p><em>shared library (dlfcn)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">void* utils_platform_dlopen(const char* path, int flags); // NULL on error (utils_platform_dlerror)
-void* utils_platform_dlsym(void* handle, const char* name); // NULL on error (utils_platform_dlerror)
-int utils_platform_dlclose(void* handle); // 0 on success
-char* utils_platform_dlerror(void); // last error of the thread, NULL if none (cleared by the call)
-int utils_platform_dladdr(const void* addr, utils_platform_dl_info_t* info); // 0 on error</code></pre><h4 id="c-6">Fonctions · Epoll</h4><p><em>epoll (Windows: only sockets can be linked (ENOTSOCK), EPOLLET is refused (EINVAL), EPOLLONESHOT is emulated)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_platform_epoll_create1(int flags);
-int utils_platform_epoll_ctl(int epfd, int op, int fd, struct epoll_event* event);
-int utils_platform_epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout);</code></pre><h4 id="c-7">Fonctions · Socket</h4><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_platform_socket(int domain, int type, int protocol);
-int utils_platform_connect(int fd, const struct sockaddr* addr, socklen_t len);
-int utils_platform_bind(int fd, const struct sockaddr* addr, socklen_t len);
-int utils_platform_listen(int fd, int backlog);
-int utils_platform_accept(int fd, struct sockaddr* addr, socklen_t* len);
-ssize_t utils_platform_recv(int fd, void* buf, size_t len, int flags);
-ssize_t utils_platform_send(int fd, const void* buf, size_t len, int flags);
-int utils_platform_setsockopt(int fd, int level, int name, const void* value, socklen_t len); // Windows: SO_SNDTIMEO / SO_RCVTIMEO take a timeval, SO_REUSEADDR is the default (no-op)
-int utils_platform_getsockname(int fd, struct sockaddr* addr, socklen_t* len);
-int utils_platform_getpeername(int fd, struct sockaddr* addr, socklen_t* len);
-int utils_platform_getaddrinfo(const char* node, const char* service, const struct addrinfo* hints, struct addrinfo** res); // EAI_* error code (utils_platform_gai_strerror)
-void utils_platform_freeaddrinfo(struct addrinfo* res);
-const char* utils_platform_gai_strerror(int code);</code></pre><h4 id="c-8">Fonctions · Terminal</h4><p><em>terminal (termios)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">int utils_platform_tcgetattr(int fd, struct termios* term); // Windows: ENOTTY when the fd is not a console
-int utils_platform_tcsetattr(int fd, int action, const struct termios* term); // Windows: without ICANON the input gives the escape sequences (VT input)</code></pre><h3 id="c-platform-types-h"><code>utils/platform/Types.h</code></h3><p>Windows versions of the POSIX defines, structures &amp; types used by utils::platform (C &amp; C++ compatible) Same names, values &amp; layout as Linux; nothing on Unix (the system headers give them)</p><h4 id="c-9">Defines</h4><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#ifdef UTILS_WINDOWS</code></pre><h4 id="c-10">Defines · Unistd</h4><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#ifndef STDIN_FILENO
+} utils_platform_dl_info_t;</code></pre><h4 id="c-2">Fonctions · Fd</h4><p><em>fd (unistd)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow _fd_arg(1) int utils_platform_close(int fd); // any fd (Windows: socket, CRT fd or emulated epoll)
+_nodiscard _nothrow _fd_arg_read(1) _write_only(2, 3) ssize_t utils_platform_read(int fd, void* buf, size_t count); // Windows: recv on a socket
+_nodiscard _nothrow _fd_arg_write(1) _read_only(2, 3) ssize_t utils_platform_write(int fd, const void* buf, size_t count); // Windows: send on a socket
+_nodiscard _nothrow int utils_platform_pipe(int fds[2]); // Windows: binary mode
+_nodiscard _nothrow _fd_arg(1) int utils_platform_dup(int fd);
+_nodiscard _nothrow _fd_arg(1) int utils_platform_dup2(int fd, int fd2);
+_nodiscard _nothrow _fd_arg(1) int utils_platform_isatty(int fd); // Windows: console
+_nodiscard _nothrow int utils_platform_poll(struct pollfd* fds, nfds_t nfds, int timeout); // Windows: sockets (WSAPoll), console / pipe / file input</code></pre><h4 id="c-3">Fonctions · Process</h4><p><em>process (unistd)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow pid_t utils_platform_getpid(void);
+_nodiscard _nothrow _null_terminated_string_arg(1) _write_only(2, 3) ssize_t utils_platform_readlink(const char* _restrict path, char* _restrict buf, size_t size); // Windows: "/proc/self/exe" = GetModuleFileName, else a symbolic link</code></pre><h4 id="c-4">Fonctions · Error</h4><p><em>error (unistd)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow const char* utils_platform_strerror(int errnum); // Windows: also the socket errors (WSA) translated in errno</code></pre><h4 id="c-5">Fonctions · Shared library</h4><p><em>shared library (dlfcn)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow _null_terminated_string_arg(1) void* utils_platform_dlopen(const char* path, int flags); // NULL on error (utils_platform_dlerror)
+_nodiscard _nothrow _null_terminated_string_arg(2) void* utils_platform_dlsym(void* handle, const char* name); // NULL on error (utils_platform_dlerror)
+_nodiscard _nothrow int utils_platform_dlclose(void* handle); // 0 on success
+_nodiscard _nothrow char* utils_platform_dlerror(void); // last error of the thread, NULL if none (cleared by the call)
+_nodiscard _nothrow int utils_platform_dladdr(const void* addr, utils_platform_dl_info_t* info); // 0 on error</code></pre><h4 id="c-6">Fonctions · Epoll</h4><p><em>epoll (Windows: only sockets can be linked (ENOTSOCK), EPOLLET is refused (EINVAL), EPOLLONESHOT is emulated)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow int utils_platform_epoll_create1(int flags);
+_nodiscard _nothrow _fd_arg(1) _fd_arg(3) int utils_platform_epoll_ctl(int epfd, int op, int fd, struct epoll_event* event);
+_nodiscard _nothrow _fd_arg(1) int utils_platform_epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout);</code></pre><h4 id="c-7">Fonctions · Socket</h4><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow int utils_platform_socket(int domain, int type, int protocol);
+_nodiscard _nothrow _fd_arg(1) int utils_platform_connect(int fd, const struct sockaddr* addr, socklen_t len);
+_nodiscard _nothrow _fd_arg(1) int utils_platform_bind(int fd, const struct sockaddr* addr, socklen_t len);
+_nodiscard _nothrow _fd_arg(1) int utils_platform_listen(int fd, int backlog);
+_nodiscard _nothrow _fd_arg(1) int utils_platform_accept(int fd, struct sockaddr* _restrict addr, socklen_t* _restrict len);
+_nodiscard _nothrow _fd_arg_read(1) _write_only(2, 3) ssize_t utils_platform_recv(int fd, void* buf, size_t len, int flags);
+_nodiscard _nothrow _fd_arg_write(1) _read_only(2, 3) ssize_t utils_platform_send(int fd, const void* buf, size_t len, int flags);
+_nodiscard _nothrow _fd_arg(1) _read_only(4, 5) int utils_platform_setsockopt(int fd, int level, int name, const void* value, socklen_t len); // Windows: SO_SNDTIMEO / SO_RCVTIMEO take a timeval, SO_REUSEADDR is the default (no-op)
+_nodiscard _nothrow _fd_arg(1) int utils_platform_getsockname(int fd, struct sockaddr* _restrict addr, socklen_t* _restrict len);
+_nodiscard _nothrow _fd_arg(1) int utils_platform_getpeername(int fd, struct sockaddr* _restrict addr, socklen_t* _restrict len);
+_nodiscard _nothrow _null_terminated_string_arg(1) _null_terminated_string_arg(2) int utils_platform_getaddrinfo(const char* _restrict node, const char* _restrict service, const struct addrinfo* _restrict hints, struct addrinfo** _restrict res); // EAI_* error code (utils_platform_gai_strerror)
+_nothrow void utils_platform_freeaddrinfo(struct addrinfo* res);
+_nodiscard _nothrow const char* utils_platform_gai_strerror(int code);</code></pre><h4 id="c-8">Fonctions · Terminal</h4><p><em>terminal (termios)</em></p><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">_nodiscard _nothrow _fd_arg(1) int utils_platform_tcgetattr(int fd, struct termios* term); // Windows: ENOTTY when the fd is not a console
+_nodiscard _nothrow _fd_arg(1) int utils_platform_tcsetattr(int fd, int action, const struct termios* term); // Windows: without ICANON the input gives the escape sequences (VT input)</code></pre><h3 id="c-platform-types-h"><code>utils/platform/Types.h</code></h3><p>Windows versions of the POSIX defines, structures &amp; types used by utils::platform (C &amp; C++ compatible) Same names, values &amp; layout as Linux; nothing on Unix (the system headers give them)</p><h4 id="c-9">Defines</h4><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#ifdef UTILS_WINDOWS</code></pre><h4 id="c-10">Defines · Unistd</h4><pre tabindex="0" role="region" aria-label="Code (c)"><code class="language-c">#ifndef STDIN_FILENO
     #define STDIN_FILENO    0
     #define STDOUT_FILENO   1
     #define STDERR_FILENO   2
@@ -364,7 +364,7 @@ struct addrinfo;</code></pre><h4 id="c-23">Structures · Termios</h4><p><em>term
     };
 #endif</code></pre></div></section><nav class="pager"><a href="security.html"><span data-i18n>Previous</span><span data-lang="en">Security</span><span data-lang="fr">Security</span></a><a class="next" href="attribute.html"><span data-i18n>Next</span><span data-lang="en">Attribute</span><span data-lang="fr">Attribute</span></a></nav></main>
 </div>
-<footer class="site">libutils v5.0.0 · 23d2be3 · docs</footer>
+<footer class="site">libutils v5.1.0-pre · 1a2a618 · docs</footer>
 <script src="site.js"></script>
 <script src="search-index.js" defer></script>
 </body>
