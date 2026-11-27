@@ -139,7 +139,6 @@ _cold _nodiscard static utils_shm_messages_t* messages_of(std::optional<std::uno
 //----------------------------------------------------------------//
 /* DUP */
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow utils_dup_t* utils_dup_create(int origin, int clone)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_dup_t* {return new utils_dup_t(origin, clone);});
@@ -150,55 +149,46 @@ _cold _nothrow void utils_dup_destroy(utils_dup_t* dup)
     (void)utils::exception::c_api::guard([&](void) {delete dup;}); // like free(NULL)
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_dup_trigger(utils_dup_t* dup)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(dup, "dup").trigger();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_dup_close_origin(utils_dup_t* dup)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(dup, "dup").closeOrigin();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_dup_close_clone(utils_dup_t* dup)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(dup, "dup").closeClone();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_dup_close(utils_dup_t* dup)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(dup, "dup").close();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_dup_clear(utils_dup_t* dup)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(dup, "dup").clear();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_dup_get_origin(const utils_dup_t* dup)
 {
     return utils::exception::c_api::guard_fallback(-1, [&](void) -> int {return utils::exception::c_api::not_null_ref(dup, "dup").getOrigin();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_dup_get_clone(const utils_dup_t* dup)
 {
     return utils::exception::c_api::guard_fallback(-1, [&](void) -> int {return utils::exception::c_api::not_null_ref(dup, "dup").getClone();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_dup_set_origin(utils_dup_t* dup, int fd)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(dup, "dup").setOrigin(fd);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_dup_set_clone(utils_dup_t* dup, int fd)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(dup, "dup").setClone(fd);});
@@ -207,7 +197,6 @@ _cold _nothrow int utils_dup_set_clone(utils_dup_t* dup, int fd)
 //----------------------------------------------------------------//
 /* PIPE */
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow utils_pipe_t* utils_pipe_create(int read, int write)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_pipe_t* {return new utils_pipe_t(read, write);});
@@ -218,55 +207,46 @@ _cold _nothrow void utils_pipe_destroy(utils_pipe_t* pipe)
     (void)utils::exception::c_api::guard([&](void) {delete pipe;}); // like free(NULL)
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_pipe_trigger(utils_pipe_t* pipe)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(pipe, "pipe").trigger();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_pipe_close_read(utils_pipe_t* pipe)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(pipe, "pipe").closeRead();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_pipe_close_write(utils_pipe_t* pipe)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(pipe, "pipe").closeWrite();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_pipe_close(utils_pipe_t* pipe)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(pipe, "pipe").close();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_pipe_clear(utils_pipe_t* pipe)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(pipe, "pipe").clear();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_pipe_get_read(const utils_pipe_t* pipe)
 {
     return utils::exception::c_api::guard_fallback(-1, [&](void) -> int {return utils::exception::c_api::not_null_ref(pipe, "pipe").getRead();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_pipe_get_write(const utils_pipe_t* pipe)
 {
     return utils::exception::c_api::guard_fallback(-1, [&](void) -> int {return utils::exception::c_api::not_null_ref(pipe, "pipe").getWrite();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_pipe_set_read(utils_pipe_t* pipe, int fd)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(pipe, "pipe").setRead(fd);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_pipe_set_write(utils_pipe_t* pipe, int fd)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(pipe, "pipe").setWrite(fd);});
@@ -275,7 +255,6 @@ _cold _nothrow int utils_pipe_set_write(utils_pipe_t* pipe, int fd)
 //----------------------------------------------------------------//
 /* POLL */
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow utils_poll_t* utils_poll_create(int flags)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_poll_t* {return new utils_poll_t(flags);});
@@ -286,31 +265,26 @@ _cold _nothrow void utils_poll_destroy(utils_poll_t* poll)
     (void)utils::exception::c_api::guard([&](void) {delete poll;}); // like free(NULL)
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_poll_init(utils_poll_t* poll, int flags)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(poll, "poll").init(flags);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_poll_close(utils_poll_t* poll)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(poll, "poll").close();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_poll_link(utils_poll_t* poll, int fd, uint32_t events, void* data)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(poll, "poll").link(fd, events, data);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_poll_edit(const utils_poll_t* poll, int fd, uint32_t events, void* data)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(poll, "poll").edit(fd, events, data);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_poll_unlink(utils_poll_t* poll, int fd)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(poll, "poll").unlink(fd);});
@@ -332,19 +306,16 @@ _hot _nothrow size_t utils_poll_wait(const utils_poll_t* poll, int delay, struct
     });
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_poll_size(const utils_poll_t* poll)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::exception::c_api::not_null_ref(poll, "poll").size();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow bool utils_poll_contains(const utils_poll_t* poll, int fd)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return utils::exception::c_api::not_null_ref(poll, "poll").contains(fd);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_poll_get_fd(const utils_poll_t* poll)
 {
     return utils::exception::c_api::guard_fallback(-1, [&](void) -> int {return utils::exception::c_api::not_null_ref(poll, "poll").getFd();});
@@ -353,7 +324,6 @@ _cold _nothrow int utils_poll_get_fd(const utils_poll_t* poll)
 //----------------------------------------------------------------//
 /* PROCESS */
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow utils_process_t* utils_process_create(void)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [](void) -> utils_process_t* {return new utils_process_t();});
@@ -364,19 +334,16 @@ _cold _nothrow void utils_process_destroy(utils_process_t* process)
     (void)utils::exception::c_api::guard([&](void) {delete process;}); // like free(NULL)
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow bool utils_process_is(const utils_process_t* process)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return utils::exception::c_api::not_null_ref(process, "process").is();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow pid_t utils_process_spawn(utils_process_t* process)
 {
     return utils::exception::c_api::guard_fallback(-1, [&](void) -> pid_t {return utils::exception::c_api::not_null_ref(process, "process").spawn();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow pid_t utils_process_spawn_exec(utils_process_t* process, const char* path, const char* const* args, size_t count)
 {
     return utils::exception::c_api::guard_fallback(-1, [&](void) -> pid_t {return utils::exception::c_api::not_null_ref(process, "process").spawn(utils::exception::c_api::not_null(path, "path"), arguments(args, count));});
@@ -405,25 +372,21 @@ _cold _nothrow int utils_process_wait(utils_process_t* process, utils_process_st
     });
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_process_kill(utils_process_t* process)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(process, "process").kill();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_process_clear(utils_process_t* process)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(process, "process").clear();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_process_pipe(utils_process_t* process, int read, int write)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(process, "process").pipe(read, write);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_process_dup(utils_process_t* process, int origin, int clone)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(process, "process").dup(origin, clone);});
@@ -447,13 +410,11 @@ _cold _nothrow int utils_process_add_dup(utils_process_t* process, utils_dup_t* 
     });
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow size_t utils_process_pipes_count(const utils_process_t* process)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::exception::c_api::not_null_ref(process, "process").getPipes().size();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow size_t utils_process_dups_count(const utils_process_t* process)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::exception::c_api::not_null_ref(process, "process").getDups().size();});
@@ -479,19 +440,16 @@ _cold _nothrow int utils_process_get_dup(const utils_process_t* process, size_t 
     });
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow bool utils_process_is_child(const utils_process_t* process)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return utils::exception::c_api::not_null_ref(process, "process").isChild();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow bool utils_process_is_parent(const utils_process_t* process)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return utils::exception::c_api::not_null_ref(process, "process").isParent();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow pid_t utils_process_get_pid(const utils_process_t* process)
 {
     return utils::exception::c_api::guard_fallback(-1, [&](void) -> pid_t {return utils::exception::c_api::not_null_ref(process, "process").getPid();});
@@ -500,7 +458,6 @@ _cold _nothrow pid_t utils_process_get_pid(const utils_process_t* process)
 //----------------------------------------------------------------//
 /* SHARED OBJECT */
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow utils_shared_object_t* utils_shared_object_create(const char* path)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_shared_object_t* {return new utils_shared_object_t(utils::exception::c_api::not_null(path, "path"));});
@@ -511,19 +468,16 @@ _cold _nothrow void utils_shared_object_destroy(utils_shared_object_t* so)
     (void)utils::exception::c_api::guard([&](void) {delete so;}); // like free(NULL)
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow bool utils_shared_object_is_loaded(const utils_shared_object_t* so)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return utils::exception::c_api::not_null_ref(so, "shared object").isLoaded();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow const char* utils_shared_object_path(const utils_shared_object_t* so)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return utils::exception::c_api::not_null_ref(so, "shared object").path().data();}); // view of a std::string: '\0' terminated
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow void* utils_shared_object_get(const utils_shared_object_t* so)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> void* {return utils::exception::c_api::not_null_ref(so, "shared object").get();});
@@ -541,13 +495,11 @@ _cold _nothrow void* utils_shared_object_load_function(utils_shared_object_t* so
 //----------------------------------------------------------------//
 /* SHARED MEMORY */
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow utils_shm_t* utils_shm_create(pid_t ownership)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_shm_t* {return new utils_shm_t(ownership);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow utils_shm_t* utils_shm_create_default(void)
 {
     return utils_shm_create(utils::platform::getpid());
@@ -571,19 +523,16 @@ _cold _nothrow int utils_shm_init(utils_shm_t* shm, const char* name, size_t siz
     });
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_shm_close(utils_shm_t* shm)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(shm, "shared memory").close();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow pid_t utils_shm_get_ownership(const utils_shm_t* shm)
 {
     return utils::exception::c_api::guard_fallback(-1, [&](void) -> pid_t {return utils::exception::c_api::not_null_ref(shm, "shared memory").ownership();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_shm_set_ownership(utils_shm_t* shm, pid_t ownership)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(shm, "shared memory").ownership(ownership);});
@@ -623,37 +572,31 @@ _hot _nothrow int utils_shm_send_own_id(utils_shm_t* shm, const void* bytes_, si
     });
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow int utils_shm_trigger(utils_shm_t* shm)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(shm, "shared memory").trigger();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow bool utils_shm_readable(const utils_shm_t* shm, utils_shm_read_filter_t filter)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return utils::exception::c_api::not_null_ref(shm, "shared memory").readable(filter_of(filter));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow bool utils_shm_readable_id(const utils_shm_t* shm, utils_shm_id_t id)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return utils::exception::c_api::not_null_ref(shm, "shared memory").readable(utils::encapsulation::shm::Id{id.id, id.ownership});});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow int utils_shm_join(const utils_shm_t* shm, bool last)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(shm, "shared memory").join(last);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow int utils_shm_join_id(const utils_shm_t* shm, utils_shm_id_t id, bool last)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(shm, "shared memory").join(utils::encapsulation::shm::Id{id.id, id.ownership}, last);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow utils_shm_messages_t* utils_shm_read(utils_shm_t* shm, utils_shm_read_filter_t filter)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_shm_messages_t* {return messages_of(utils::exception::c_api::not_null_ref(shm, "shared memory").read(filter_of(filter)));});
@@ -681,7 +624,6 @@ _cold _nothrow void utils_shm_messages_destroy(utils_shm_messages_t* messages)
     (void)utils::exception::c_api::guard([&](void) {delete messages;}); // like free(NULL)
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_shm_messages_count(const utils_shm_messages_t* messages)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::exception::c_api::not_null_ref(messages, "messages").messages.size();});
@@ -697,7 +639,6 @@ _hot _nothrow int utils_shm_messages_id(const utils_shm_messages_t* messages, si
     });
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_shm_messages_size(const utils_shm_messages_t* messages, size_t i)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::exception::c_api::not_null_ref(messages, "messages").messages.at(i).second.size();});

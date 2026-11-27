@@ -19,8 +19,8 @@ File Description:
 \**************************************************************/
 
 #include "utils/security/observer/UnsafeObserver.hpp"
-#include "tools/Sanitizer.hpp"
 #include "utils/security/observer/INotifier.hpp"
+#include "tools/Sanitizer.hpp"
 #include "utils.hpp"
 #include <gtest/gtest.h>
 #include <functional>

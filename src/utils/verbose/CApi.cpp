@@ -98,13 +98,11 @@ _cold _nothrow void utils_verbose_set(utils_verbose_t level)
     (void)utils::exception::c_api::guard([&](void) {utils::verbose::verbose.store(level_of(level));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow utils_verbose_t utils_verbose_get(void)
 {
     return static_cast<utils_verbose_t>(utils::verbose::verbose.load(std::memory_order_relaxed));
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow bool utils_verbose_is(utils_verbose_t level)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return displayed(level);});
@@ -161,7 +159,6 @@ _hot _nothrow int utils_verbose_vlog_to(FILE* output, utils_verbose_t level, con
 //----------------------------------------------------------------//
 /* LOCKED */
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_verbose_locked(utils_verbose_fn_t fn, void* data)
 {
     return run(fn, data);

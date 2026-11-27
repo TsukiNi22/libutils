@@ -60,12 +60,11 @@ namespace utils::cli { // namespace start
 // Return of the parser
 using ParsedData =
 std::vector< // Group of commands, separated by '&&', '||' and ';'
-    // xstyle: ignore-next CPP-NAMESPACE-INDENT (template arguments of the alias)
     std::vector< // Command separated by ' ' and '\t'
         // the first std::string represent only the command
         // The input parsed (depends on the parser mode)
         // the last std::string represent the separator '&&', '||', ';' or '' for nothing/last
-        std::string // xstyle: ignore CPP-NAMESPACE-INDENT
+        std::string
     > // xstyle: ignore CPP-NAMESPACE-INDENT
 >;
 

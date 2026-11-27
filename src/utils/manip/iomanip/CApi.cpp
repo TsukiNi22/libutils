@@ -149,7 +149,6 @@ static_assert(C_API_IOMANIP_MOUSE_BUTTON_UNKNOWN == static_cast<int>(utils::ioma
 template<int ID>
 _hot _nodiscard static const char* kept(std::string&& str)
 {
-    // xstyle: ignore-next CPP-THIS (false positive: _thread_local is the attribute macro, not a member)
     static _thread_local std::string buffer;
 
     buffer = std::move(str);
@@ -171,7 +170,6 @@ _cold _nodiscard static std::string join(const T* styles, const std::size_t coun
 //----------------------------------------------------------------//
 /* TERMINAL */
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow bool utils_iomanip_enable_ansi(void)
 {
     return utils::exception::c_api::guard_fallback(false, [](void) -> bool {return utils::iomanip::enable_ansi();});
@@ -220,349 +218,291 @@ _cold _nothrow int utils_iomanip_read_advanced_mouse_event(utils_iomanip_advance
 //----------------------------------------------------------------//
 /* SEQUENCES (without argument) */
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_esc(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::esc());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_reset(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::reset());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_strong_reset(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::strong_reset());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_dark_reset(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::dark_reset());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_italic_reset(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::italic_reset());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_underlined_reset(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::underlined_reset());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_flashing_fast_reset(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::flashing_fast_reset());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_flashing_slow_reset(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::flashing_slow_reset());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_reversed_reset(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::reversed_reset());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_hide_reset(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::hide_reset());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_bar_reset(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::bar_reset());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_framed_encircled_reset(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::framed_encircled_reset());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_overlined_reset(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::overlined_reset());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_underline_color_reset(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::underline_color_reset());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_exposant_indice_reset(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::exposant_indice_reset());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_strong(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::strong());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_dark(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::dark());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_italic(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::italic());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_underlined(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::underlined());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_flashing_fast(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::flashing_fast());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_flashing_slow(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::flashing_slow());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_reversed(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::reversed());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_hide(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::hide());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_bar(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::bar());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_monospace(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::monospace());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_framed(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::framed());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_encircled(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::encircled());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_overlined(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::overlined());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_exposant(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::exposant());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_indice(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::indice());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_load_cur(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::load_cur());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_save_cur(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::save_cur());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_screen_end(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::screen_end());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_screen_start(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::screen_start());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_screen(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::screen());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_scrollback_buffer(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::scrollback_buffer());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_line_end(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::line_end());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_line_start(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::line_start());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_line(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::line());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_inverted_color_enable(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::inverted_color_enable());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_inverted_color_disable(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::inverted_color_disable());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_wrapping_enable(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::wrapping_enable());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_wrapping_disable(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::wrapping_disable());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_show_cur(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::show_cur());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_hide_cur(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::hide_cur());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_save_screen(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::save_screen());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_load_screen(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::load_screen());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_get_pos(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::get_pos());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_mouse_tracking_enable(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::mouse_tracking_enable());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_mouse_tracking_disable(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::mouse_tracking_disable());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_mouse_move_tracking_enable(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::mouse_move_tracking_enable());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_mouse_move_tracking_disable(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::mouse_move_tracking_disable());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_mouse_adv_tracking_enable(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::mouse_adv_tracking_enable());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_mouse_adv_tracking_disable(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::mouse_adv_tracking_disable());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_report_focus_enable(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::report_focus_enable());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_report_focus_disabled(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::report_focus_disabled());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_report_past_enable(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::report_past_enable());
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_report_past_disable(void)
 {
     return C_API_STATIC_SEQUENCE(utils::iomanip::report_past_disable());
@@ -571,301 +511,251 @@ _hot _nothrow const char* utils_iomanip_report_past_disable(void)
 //----------------------------------------------------------------//
 /* SEQUENCES (with arguments) */
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_csi(const char* code)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(utils::iomanip::csi(utils::exception::c_api::not_null(code, "code")));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_csi_r(const char* code, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::iomanip::csi(utils::exception::c_api::not_null(code, "code")), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_hyperlink(const char* display, const char* link)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(utils::iomanip::hyperlink(utils::exception::c_api::not_null(display, "display"), utils::exception::c_api::not_null(link, "link")));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_hyperlink_r(const char* display, const char* link, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::iomanip::hyperlink(utils::exception::c_api::not_null(display, "display"), utils::exception::c_api::not_null(link, "link")), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_file_hyperlink(const char* display, const char* path)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(utils::iomanip::file_hyperlink(utils::exception::c_api::not_null(display, "display"), utils::exception::c_api::not_null(path, "path")));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_file_hyperlink_r(const char* display, const char* path, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::iomanip::file_hyperlink(utils::exception::c_api::not_null(display, "display"), utils::exception::c_api::not_null(path, "path")), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_set_style(utils_iomanip_style_t style)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(utils::iomanip::set_style(static_cast<utils::iomanip::Style>(style)));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_set_style_r(utils_iomanip_style_t style, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::iomanip::set_style(static_cast<utils::iomanip::Style>(style)), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_set_styles(const utils_iomanip_style_t* styles, size_t count)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(join(styles, count));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_set_styles_r(const utils_iomanip_style_t* styles, size_t count, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(join(styles, count), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_reset_style(utils_iomanip_reset_style_t style)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(utils::iomanip::reset_style(static_cast<utils::iomanip::ResetStyle>(style)));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_reset_style_r(utils_iomanip_reset_style_t style, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::iomanip::reset_style(static_cast<utils::iomanip::ResetStyle>(style)), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_reset_styles(const utils_iomanip_reset_style_t* styles, size_t count)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(join(styles, count));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_reset_styles_r(const utils_iomanip_reset_style_t* styles, size_t count, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(join(styles, count), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_color(utils_iomanip_color_t color)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(utils::iomanip::color(static_cast<utils::iomanip::Color>(color)));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_color_r(utils_iomanip_color_t color, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::iomanip::color(static_cast<utils::iomanip::Color>(color)), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_back_color(utils_iomanip_back_color_t color)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(utils::iomanip::color(static_cast<utils::iomanip::BackColor>(color)));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_back_color_r(utils_iomanip_back_color_t color, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::iomanip::color(static_cast<utils::iomanip::BackColor>(color)), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_color_id(uint8_t id)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(utils::iomanip::color_id(id));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_color_id_r(uint8_t id, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::iomanip::color_id(id), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_back_color_id(uint8_t id)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(utils::iomanip::back_color_id(id));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_back_color_id_r(uint8_t id, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::iomanip::back_color_id(id), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_underline_color_id(uint8_t id)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(utils::iomanip::underline_color_id(id));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_underline_color_id_r(uint8_t id, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::iomanip::underline_color_id(id), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_color_rgb(uint8_t r, uint8_t g, uint8_t b)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(utils::iomanip::color_rgb(r, g, b));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_color_rgb_r(uint8_t r, uint8_t g, uint8_t b, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::iomanip::color_rgb(r, g, b), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_back_color_rgb(uint8_t r, uint8_t g, uint8_t b)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(utils::iomanip::back_color_rgb(r, g, b));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_back_color_rgb_r(uint8_t r, uint8_t g, uint8_t b, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::iomanip::back_color_rgb(r, g, b), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_underline_color_rgb(uint8_t r, uint8_t g, uint8_t b)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(utils::iomanip::underline_color_rgb(r, g, b));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_underline_color_rgb_r(uint8_t r, uint8_t g, uint8_t b, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::iomanip::underline_color_rgb(r, g, b), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_up(size_t n)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(utils::iomanip::up(n));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_up_r(size_t n, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::iomanip::up(n), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_down(size_t n)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(utils::iomanip::down(n));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_down_r(size_t n, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::iomanip::down(n), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_right(size_t n)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(utils::iomanip::right(n));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_right_r(size_t n, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::iomanip::right(n), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_left(size_t n)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(utils::iomanip::left(n));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_left_r(size_t n, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::iomanip::left(n), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_next_line(size_t n)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(utils::iomanip::next_line(n));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_next_line_r(size_t n, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::iomanip::next_line(n), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_previous_line(size_t n)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(utils::iomanip::previous_line(n));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_previous_line_r(size_t n, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::iomanip::previous_line(n), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_column(size_t col)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(utils::iomanip::column(col));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_column_r(size_t col, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::iomanip::column(col), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_pos(size_t row, size_t col)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(utils::iomanip::pos(row, col));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_pos_r(size_t row, size_t col, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::iomanip::pos(row, col), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_scroll_up(size_t n)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(utils::iomanip::scroll_up(n));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_scroll_up_r(size_t n, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::iomanip::scroll_up(n), buf, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_iomanip_scroll_down(size_t n)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return kept<__LINE__>(utils::iomanip::scroll_down(n));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_iomanip_scroll_down_r(size_t n, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::iomanip::scroll_down(n), buf, size);});

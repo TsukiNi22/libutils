@@ -91,7 +91,6 @@ _cold void utils::exception::c_api::set_status(const char* what, const utils_exc
 //----------------------------------------------------------------//
 /* C SIDE */
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow void utils_exception_clear(void)
 {
     utils::exception::c_api::clear_status();

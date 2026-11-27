@@ -92,7 +92,6 @@ File Description:
     // Path of a setting as a C string (its native string is not a char* on Windows), valid until the next call in the thread
     _cold _nodiscard static const char* path_c(const std::filesystem::path& path)
     {
-        // xstyle: ignore-next CPP-THIS (false positive: _thread_local is the attribute macro, not a member)
         static _thread_local std::string buffer;
 
         buffer = path.string();

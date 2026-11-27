@@ -99,25 +99,21 @@ _cold _nodiscard static std::vector<utils::type::c_api::cpp_t<C>> elements(const
 //----------------------------------------------------------------//
 /* FREEZABLE */
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_freezable_freeze(void* handle)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::handle_base<utils::type::Freezable>(handle, "Freezable").freeze();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow bool utils_freezable_is_frozen(const void* handle)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return utils::exception::c_api::handle_base<utils::type::Freezable>(handle, "Freezable").isFrozen();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow int utils_freezable_require_frozen(const void* handle)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::handle_base<utils::type::Freezable>(handle, "Freezable").requireFrozen();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow int utils_freezable_require_unfrozen(const void* handle)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::handle_base<utils::type::Freezable>(handle, "Freezable").requireUnfrozen();});
@@ -126,7 +122,6 @@ _hot _nothrow int utils_freezable_require_unfrozen(const void* handle)
 //----------------------------------------------------------------//
 /* WORKER */
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow utils_worker_t* utils_worker_create(void* data)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_worker_t* {return new utils_worker_t(data);});
@@ -137,25 +132,21 @@ _cold _nothrow void utils_worker_destroy(utils_worker_t* worker)
     (void)utils::exception::c_api::guard([&](void) {delete worker;}); // like free(NULL)
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow void* utils_worker_get_data(const utils_worker_t* worker)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> void* {return utils::exception::c_api::not_null_ref(worker, "worker").data;});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow int utils_worker_set_data(utils_worker_t* worker, void* data)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(worker, "worker").data = data;});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow int utils_worker_set_working_status(void* handle, bool status)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::handle_base<utils::type::Worker>(handle, "Worker").setWorkingStatus(status);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow bool utils_worker_is_working(const void* handle)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return utils::exception::c_api::handle_base<utils::type::Worker>(handle, "Worker").isWorking();});
@@ -187,7 +178,6 @@ C_API_FLOAT_TYPES(C_API_MATRIX_FLOAT_DEF)
 //----------------------------------------------------------------//
 /* BIDIRECTIONAL LOOKUP TABLE (bytes) */
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow utils_blt_t* utils_blt_create(void)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [](void) -> utils_blt_t* {return new utils_blt_t();});
@@ -198,7 +188,6 @@ _cold _nothrow void utils_blt_destroy(utils_blt_t* blt)
     (void)utils::exception::c_api::guard([&](void) {delete blt;}); // like free(NULL)
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_blt_clear(utils_blt_t* blt)
 {
     return utils::exception::c_api::guard([&](void) {table(blt).clear();});
@@ -214,13 +203,11 @@ _cold _nothrow int utils_blt_set(utils_blt_t* blt, const void* left, size_t left
     });
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_blt_add(utils_blt_t* blt, const void* left, size_t left_size, const void* right, size_t right_size)
 {
     return utils::exception::c_api::guard([&](void) {table(blt).addElement(utils::smanip::c_api::bytes(left, left_size, "element"), utils::smanip::c_api::bytes(right, right_size, "element"));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_blt_remove(utils_blt_t* blt, const void* element, size_t size)
 {
     return utils::exception::c_api::guard([&](void) {table(blt).removeElement(utils::smanip::c_api::bytes(element, size, "element"));});

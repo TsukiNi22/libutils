@@ -65,7 +65,6 @@ _cold static void unlink(utils_observer_t& observer)
 //----------------------------------------------------------------//
 /* AES KEY */
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow utils_aes_key_t* utils_aes_key_create(void)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [](void) -> utils_aes_key_t* {return new utils_aes_key_t();});
@@ -107,19 +106,16 @@ _hot _nothrow int utils_aes_key_decrypt(const utils_aes_key_t* key, const char* 
     });
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow bool utils_aes_key_has_generate_overload(const utils_aes_key_t* key)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return utils::exception::c_api::not_null_ref(key, "key").hasGenerateOverload();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow bool utils_aes_key_has_set_overload(const utils_aes_key_t* key)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return utils::exception::c_api::not_null_ref(key, "key").hasSetOverload();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow bool utils_aes_key_has_get_overload(const utils_aes_key_t* key)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return utils::exception::c_api::not_null_ref(key, "key").hasGetOverload();});
@@ -128,7 +124,6 @@ _cold _nothrow bool utils_aes_key_has_get_overload(const utils_aes_key_t* key)
 //----------------------------------------------------------------//
 /* AES DATA */
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow utils_aes_data_t* utils_aes_data_create(void)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [](void) -> utils_aes_data_t* {return new utils_aes_data_t();});
@@ -139,37 +134,31 @@ _cold _nothrow void utils_aes_data_destroy(utils_aes_data_t* data)
     (void)utils::exception::c_api::guard([&](void) {delete data;}); // like free(NULL)
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_aes_data_set_key(utils_aes_data_t* data, const char* bytes_, size_t size)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(data, "data").data.AES = utils::smanip::c_api::bytes(bytes_, size, "bytes");});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_aes_data_set_iv(utils_aes_data_t* data, const char* bytes_, size_t size)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(data, "data").data.iv = utils::smanip::c_api::bytes(bytes_, size, "bytes");});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_aes_data_set_tag(utils_aes_data_t* data, const char* bytes_, size_t size)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(data, "data").data.tag = utils::smanip::c_api::bytes(bytes_, size, "bytes");});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow const char* utils_aes_data_get_key(const utils_aes_data_t* data, size_t* size)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return field(utils::exception::c_api::not_null_ref(data, "data").data.AES, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow const char* utils_aes_data_get_iv(const utils_aes_data_t* data, size_t* size)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return field(utils::exception::c_api::not_null_ref(data, "data").data.iv, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow const char* utils_aes_data_get_tag(const utils_aes_data_t* data, size_t* size)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return field(utils::exception::c_api::not_null_ref(data, "data").data.tag, size);});
@@ -178,7 +167,6 @@ _cold _nothrow const char* utils_aes_data_get_tag(const utils_aes_data_t* data, 
 //----------------------------------------------------------------//
 /* RSA KEY */
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow utils_rsa_key_t* utils_rsa_key_create(void)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [](void) -> utils_rsa_key_t* {return new utils_rsa_key_t();});
@@ -204,31 +192,26 @@ _cold _nothrow void utils_rsa_key_destroy(utils_rsa_key_t* key)
     (void)utils::exception::c_api::guard([&](void) {delete key;}); // like free(NULL)
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_rsa_key_load_common(utils_rsa_key_t* key, const char* path)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(key, "key").loadCommon(path ? path : DEFAULT_COMMON_RSA_PATH);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_rsa_key_generate(utils_rsa_key_t* key)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(key, "key").generate();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_rsa_key_set(utils_rsa_key_t* key, const char* private_key, const char* public_key)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(key, "key").set({(private_key ? private_key : ""), (public_key ? public_key : "")});});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow const char* utils_rsa_key_get_private(const utils_rsa_key_t* key)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return utils::exception::c_api::not_null_ref(key, "key").get().priv.c_str();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow const char* utils_rsa_key_get_public(const utils_rsa_key_t* key)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return utils::exception::c_api::not_null_ref(key, "key").get().pub.c_str();});
@@ -261,19 +244,16 @@ _hot _nothrow int utils_rsa_key_decrypt(const utils_rsa_key_t* key, const char* 
     });
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow bool utils_rsa_key_has_generate_overload(const utils_rsa_key_t* key)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return utils::exception::c_api::not_null_ref(key, "key").hasGenerateOverload();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow bool utils_rsa_key_has_set_overload(const utils_rsa_key_t* key)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return utils::exception::c_api::not_null_ref(key, "key").hasSetOverload();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow bool utils_rsa_key_has_get_overload(const utils_rsa_key_t* key)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return utils::exception::c_api::not_null_ref(key, "key").hasGetOverload();});

@@ -72,11 +72,11 @@ File Description:
         #include <cstddef>  // std::size_t
         namespace std { // namespace start
         #if __cplusplus >= 201703L // c++17 and above
-            inline constexpr std::size_t hardware_destructive_interference_size = 64; // xstyle: ignore CPP-NAMESPACE-INDENT (fallback in the include region)
-            inline constexpr std::size_t hardware_constructive_interference_size = 64; // xstyle: ignore CPP-NAMESPACE-INDENT
+            inline constexpr std::size_t hardware_destructive_interference_size = 64;
+            inline constexpr std::size_t hardware_constructive_interference_size = 64;
         #else
-            static constexpr std::size_t hardware_destructive_interference_size = 64; // xstyle: ignore CPP-NAMESPACE-INDENT (no inline variable before c++17)
-            static constexpr std::size_t hardware_constructive_interference_size = 64; // xstyle: ignore CPP-NAMESPACE-INDENT
+            static constexpr std::size_t hardware_destructive_interference_size = 64;
+            static constexpr std::size_t hardware_constructive_interference_size = 64;
         #endif
         } // namespace end
     #endif

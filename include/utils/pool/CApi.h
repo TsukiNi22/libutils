@@ -21,7 +21,6 @@ File Description:
 
 // xstyle: ignore-file CPP-GUARD-NAME (C header of the module: <MODULE>_CAPI_C_H like the other C API)
 // xstyle: ignore-file CPP-TYPEDEF (C header: no using in C)
-// xstyle: ignore-file CPP-CLASS-NAME (C header: C types are snake_case)
 // xstyle: ignore-file CPP-PREPRO-INDENT (extern "C" block at the level of the declarations it wraps)
 
 #ifndef POOL_CAPI_C_H

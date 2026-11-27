@@ -63,7 +63,6 @@ class CCodec final: public utils::smanip::codec::ICodec {
 //----------------------------------------------------------------//
 /* STRING */
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow utils_string_t* utils_string_create(const char* data, size_t size)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_string_t* {return new utils_string_t{utils::smanip::c_api::bytes(data, size)};});
@@ -74,37 +73,31 @@ _cold _nothrow void utils_string_destroy(utils_string_t* str)
     (void)utils::exception::c_api::guard([&](void) {delete str;}); // like free(NULL)
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow int utils_string_set(utils_string_t* str, const char* data, size_t size)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(str, "string").str = utils::smanip::c_api::bytes(data, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow int utils_string_append(utils_string_t* str, const char* data, size_t size)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(str, "string").str += utils::smanip::c_api::bytes(data, size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow int utils_string_clear(utils_string_t* str)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(str, "string").str.clear();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow const char* utils_string_data(const utils_string_t* str)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return utils::exception::c_api::not_null_ref(str, "string").str.c_str();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_string_size(const utils_string_t* str)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::exception::c_api::not_null_ref(str, "string").str.size();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _hot _nothrow size_t utils_string_copy_r(const utils_string_t* str, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::exception::c_api::not_null_ref(str, "string").str, buf, size);});
@@ -121,7 +114,6 @@ _cold _nothrow const char* utils_smanip_format(const char* str)
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {formated = utils::smanip::format(utils::exception::c_api::not_null(str, "string")); return formated.c_str();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow size_t utils_smanip_format_r(const char* str, char* buf, size_t size)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::smanip::c_api::copy_r(utils::smanip::format(utils::exception::c_api::not_null(str, "string")), buf, size);});
@@ -130,7 +122,6 @@ _cold _nothrow size_t utils_smanip_format_r(const char* str, char* buf, size_t s
 //----------------------------------------------------------------//
 /* CODEC */
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow utils_codec_t* utils_codec_create_base64(void)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [](void) -> utils_codec_t* {return new utils_codec_t{std::make_unique<utils::smanip::codec::Base64Codec>()};});
@@ -173,7 +164,6 @@ _hot _nothrow int utils_codec_decode(const utils_codec_t* codec, const char* in,
 //----------------------------------------------------------------//
 /* EETP CONTENT */
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow utils_eetp_content_t* utils_eetp_content_create(const char* type)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> utils_eetp_content_t* {return new utils_eetp_content_t{{utils::exception::c_api::not_null(type, "type"), {}}};});
@@ -184,31 +174,26 @@ _cold _nothrow void utils_eetp_content_destroy(utils_eetp_content_t* content)
     (void)utils::exception::c_api::guard([&](void) {delete content;}); // like free(NULL)
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_eetp_content_set_type(utils_eetp_content_t* content, const char* type)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(content, "content").content.type = utils::exception::c_api::not_null(type, "type");});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow const char* utils_eetp_content_get_type(const utils_eetp_content_t* content)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [&](void) -> const char* {return utils::exception::c_api::not_null_ref(content, "content").content.type.c_str();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_eetp_content_add_data(utils_eetp_content_t* content, const char* data, size_t size)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(content, "content").content.data.push_back(utils::smanip::c_api::bytes(data, size));});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_eetp_content_clear_data(utils_eetp_content_t* content)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(content, "content").content.data.clear();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow size_t utils_eetp_content_data_count(const utils_eetp_content_t* content)
 {
     return utils::exception::c_api::guard_fallback(0, [&](void) -> std::size_t {return utils::exception::c_api::not_null_ref(content, "content").content.data.size();});
@@ -227,7 +212,6 @@ _cold _nothrow const char* utils_eetp_content_get_data(const utils_eetp_content_
 //----------------------------------------------------------------//
 /* EETP PARSER */
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow utils_eetp_parser_t* utils_eetp_parser_create(void)
 {
     return utils::exception::c_api::guard_fallback(nullptr, [](void) -> utils_eetp_parser_t* {return new utils_eetp_parser_t{};});
@@ -268,19 +252,16 @@ _cold _nothrow int utils_eetp_parser_set_codec(utils_eetp_parser_t* parser, util
     });
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow int utils_eetp_parser_set_type_size(utils_eetp_parser_t* parser, size_t type_size)
 {
     return utils::exception::c_api::guard([&](void) {utils::exception::c_api::not_null_ref(parser, "parser").parser.setTypeSize(type_size);});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow bool utils_eetp_parser_has_id_overload(const utils_eetp_parser_t* parser)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return utils::exception::c_api::not_null_ref(parser, "parser").parser.hasIdOverload();});
 }
 
-// xstyle: ignore-next CPP-SINGLE-STATEMENT (C API: defined in the .cpp, the header is C)
 _cold _nothrow bool utils_eetp_parser_has_no_id_overload(const utils_eetp_parser_t* parser)
 {
     return utils::exception::c_api::guard_fallback(false, [&](void) -> bool {return utils::exception::c_api::not_null_ref(parser, "parser").parser.hasNoIdOverload();});
