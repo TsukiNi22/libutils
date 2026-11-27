@@ -24,8 +24,9 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../../../security/observer/Observer.hpp"  // utils::security::observer::Observer
-    #include <string>                                   // std::string
+    #include "../../../security/observer/Observer.hpp"   // utils::security::observer::Observer
+    #include "../../../attribute/Attribute.hpp"          // _nodiscard
+    #include <string>                                    // std::string
 
 namespace utils::smanip::parser { // namespace start
 //----------------------------------------------------------------//
@@ -35,7 +36,7 @@ template<typename T>
 class IParser: private utils::security::observer::Observer<"IParser"> {
     public:
         // ---------- Pre-Function -------- //
-        virtual std::string format(T content) const = 0;
+        _nodiscard virtual std::string format(T content) const = 0;
         virtual T parse(std::string s) const = 0;
         // For potential need of identification / individual storage
         virtual std::string format(std::string id, T content) = 0;

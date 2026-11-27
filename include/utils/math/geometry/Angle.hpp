@@ -16,14 +16,15 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../MathType.hpp"  // utils::math::* (Type)
+    #include "../../attribute/Attribute.hpp"   // _nodiscard
+    #include "../MathType.hpp"                 // utils::math::* (Type)
 
 namespace utils::math::geometry { // namespace start
 //----------------------------------------------------------------//
 /* PROTOTYPE */
 
 // Convert an orientation in deg to a look vector normalized
-utils::math::Direction to_look(const utils::math::Direction& orientation);
+_nodiscard utils::math::Direction to_look(const utils::math::Direction& orientation);
 
 } // namespace end
 #endif /* ANGLE_H */

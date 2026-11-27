@@ -55,8 +55,8 @@ struct KeyAES {
 class AESKey: public utils::security::encryption::AKey<utils::security::encryption::KeyAES> {
     public:
         // ---------- Pre-Function -------- //
-        std::string encrypt(const std::string& s, utils::security::encryption::KeyAES& key) const final;
-        std::string decrypt(const std::string& s, utils::security::encryption::KeyAES& key) const final;
+        _nodiscard std::string encrypt(const std::string& s, utils::security::encryption::KeyAES& key) const final;
+        _nodiscard std::string decrypt(const std::string& s, utils::security::encryption::KeyAES& key) const final;
 
         // ------------ Operator ---------- //
         AESKey& operator=(const AESKey& other) = delete;

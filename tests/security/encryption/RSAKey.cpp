@@ -39,7 +39,7 @@ TEST_P(RSAKeyTest, Encryption) {
 TEST_P(RSAKeyTest, Decryption) {
     std::string s = GetParam();
     try {
-        this->_key.decrypt(s);
+        (void)this->_key.decrypt(s);
         FAIL() << "Expected decryption to throw";
     } catch (const utils::exception::IException& e) {
         EXPECT_EQ(e.getType(), utils::exception::Type::Error);

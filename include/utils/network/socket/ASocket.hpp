@@ -40,8 +40,8 @@ namespace utils::network { // namespace start
 /* PROTOTYPE */
 
 /* tools */
-bool is_ip(const std::string& s);
-std::string resolve_hostname(const std::string& hostname);
+_nodiscard bool is_ip(const std::string& s);
+_nodiscard std::string resolve_hostname(const std::string& hostname);
 void resolve_address(utils::network::Address& address);
 
 //----------------------------------------------------------------//
@@ -67,17 +67,17 @@ class ASocket: public utils::network::ISocket {
     public:
         // ---------- Pre-Function -------- //
         // Only in server mode, otherwise throw
-        int accept(void) final; // accept a new connection (only server mode), fd is used as an id in server
+        _nodiscard int accept(void) final; // accept a new connection (only server mode), fd is used as an id in server
 
         void close(void) noexcept final; // reallow the use of connect/listen
         void reset(void) final; // reset fd and buffers (DOES NOT CLOSE FD!!!)
 
         // fd = -1 -> redirect on self (default value)
-        bool empty(int fd = -1) const final; // is there no valid payload in the stored buffer ?
-        std::string recv(int fd = -1) final; // (default) read by chunck of 4096, store the payload overflow into a buffer
-        std::vector<std::string> recvAll(int fd = -1) final; // read by chunck of 4096, return all valid payloads, store the overflow into a buffer
+        _nodiscard bool empty(int fd = -1) const final; // is there no valid payload in the stored buffer ?
+        _nodiscard std::string recv(int fd = -1) final; // (default) read by chunck of 4096, store the payload overflow into a buffer
+        _nodiscard std::vector<std::string> recvAll(int fd = -1) final; // read by chunck of 4096, return all valid payloads, store the overflow into a buffer
         void flush(int fd = -1) final; // send the internal buffer
-        std::size_t receive(int fd = -1) final; // read once (after a poll event) into the internal buffer, never wait for a full payload
+        _nodiscard std::size_t receive(int fd = -1) final; // read once (after a poll event) into the internal buffer, never wait for a full payload
         void discard(int fd = -1) final; // forget the internal buffers of a fd (closed connection), -1 = every fd
 
         // ------------ Function ---------- //

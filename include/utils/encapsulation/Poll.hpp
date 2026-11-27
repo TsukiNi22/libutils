@@ -54,7 +54,7 @@ class Poll: private utils::security::observer::Observer<"Poll"> {
         void unlink(int fd);
 
         /* tool */
-        std::vector<struct epoll_event> wait(int delay = -1, std::size_t limits = 0) const;
+        _nodiscard std::vector<struct epoll_event> wait(int delay = -1, std::size_t limits = 0) const;
 
         // ------------ Function ---------- //
         _hot _nodiscard inline std::size_t size(void) const {return this->_registered.size();};

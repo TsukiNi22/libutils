@@ -44,13 +44,13 @@ class ArgParser;
 
 /* default hooks (parsing = only check) */
 void defaultHelpHook(const utils::arguments::ArgParser& parser);
-std::optional<std::string> defaultBoolParsingHook(const std::string& option);      // Parse boolean (0, 1, fase, true)
-std::optional<std::string> defaultInt32ParsingHook(const std::string& option);     // Parse std::int32_t
-std::optional<std::string> defaultSizetParsingHook(const std::string& option);     // Parse std::size_t
-std::optional<std::string> defaultDoubleParsingHook(const std::string& option);    // Parse double
-std::optional<std::string> defaultFileParsingHook(const std::string& option);      // Check for file reading (only!)
-std::optional<std::string> defaultDirectoryParsingHook(const std::string& option); // Check for directory reading (only!)
-std::optional<std::string> defaultWritableParsingHook(const std::string& option);  // Check if the path/file is readable & writable (only!)
+_nodiscard std::optional<std::string> defaultBoolParsingHook(const std::string& option);      // Parse boolean (0, 1, fase, true)
+_nodiscard std::optional<std::string> defaultInt32ParsingHook(const std::string& option);     // Parse std::int32_t
+_nodiscard std::optional<std::string> defaultSizetParsingHook(const std::string& option);     // Parse std::size_t
+_nodiscard std::optional<std::string> defaultDoubleParsingHook(const std::string& option);    // Parse double
+_nodiscard std::optional<std::string> defaultFileParsingHook(const std::string& option);      // Check for file reading (only!)
+_nodiscard std::optional<std::string> defaultDirectoryParsingHook(const std::string& option); // Check for directory reading (only!)
+_nodiscard std::optional<std::string> defaultWritableParsingHook(const std::string& option);  // Check if the path/file is readable & writable (only!)
 _hot _nodiscard inline std::optional<std::string> defaultTrueParsingHook(_unused const std::string&) {return std::nullopt;};
 
 //----------------------------------------------------------------//
@@ -68,8 +68,8 @@ class ArgParser: private utils::security::observer::Observer<"ArgParser"> {
 
         // ---------- Pre-Function -------- //
         /* sub parsing */
-        bool parseFlags_(utils::arguments::ParsedUsageFull& usagesFull, const std::vector<std::string>& argv, std::size_t& i, bool& alreadyFailed, const bool failsafe = false) const;
-        bool parseOption_(utils::arguments::ParsedUsageFull& usagesFull, const std::vector<std::string>& argv, const std::size_t i, bool& alreadyFailed, const bool failsafe = false) const;
+        _nodiscard bool parseFlags_(utils::arguments::ParsedUsageFull& usagesFull, const std::vector<std::string>& argv, std::size_t& i, bool& alreadyFailed, const bool failsafe = false) const;
+        _nodiscard bool parseOption_(utils::arguments::ParsedUsageFull& usagesFull, const std::vector<std::string>& argv, const std::size_t i, bool& alreadyFailed, const bool failsafe = false) const;
         void parseEnvironement_(utils::arguments::ParsedUsageFull& usagesFull) const noexcept;
 
     public:
@@ -78,8 +78,8 @@ class ArgParser: private utils::security::observer::Observer<"ArgParser"> {
 
         /* parsing */
         // Allways ignore the first argument, return a list of flag's found
-        utils::arguments::ParsedUsages parse(const int argc, const char* const argv[], const bool failsafe = false) const;
-        utils::arguments::ParsedUsages parse(const std::vector<std::string>& argv, const bool failsafe = false) const;
+        _nodiscard utils::arguments::ParsedUsages parse(const int argc, const char* const argv[], const bool failsafe = false) const;
+        _nodiscard utils::arguments::ParsedUsages parse(const std::vector<std::string>& argv, const bool failsafe = false) const;
 
         /* setup */
         void removeUsage(const std::string& id);

@@ -16,7 +16,8 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../MathType.hpp"  // utils::math::* (Type)
+    #include "../../attribute/Attribute.hpp"   // _nodiscard
+    #include "../MathType.hpp"                 // utils::math::* (Type)
 
 namespace utils::math::geometry { // namespace start
 //----------------------------------------------------------------//
@@ -29,7 +30,7 @@ namespace utils::math::geometry { // namespace start
  * angle -> angle to rotate the point
  * rad -> is the angle in radian or deg
 */
-utils::math::Coord2D rotate_point_2D(const utils::math::Coord2D& origin, const utils::math::Coord2D& point, utils::math::Angle angle, const bool rad = false);
+_nodiscard utils::math::Coord2D rotate_point_2D(const utils::math::Coord2D& origin, const utils::math::Coord2D& point, utils::math::Angle angle, const bool rad = false);
 
 /* 3D */
 /*
@@ -38,7 +39,7 @@ utils::math::Coord2D rotate_point_2D(const utils::math::Coord2D& origin, const u
  * orientation -> angles to rotate the point
  * rad -> is the orientation in radian or deg
 */
-utils::math::Coord rotate_point_3D(const utils::math::Coord& origin, const utils::math::Coord& point, const utils::math::Direction& orientation, const bool rad = false);
+_nodiscard utils::math::Coord rotate_point_3D(const utils::math::Coord& origin, const utils::math::Coord& point, const utils::math::Direction& orientation, const bool rad = false);
 
 } // namespace end
 #endif /* POINT_H */

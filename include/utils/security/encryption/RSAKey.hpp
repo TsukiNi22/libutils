@@ -56,8 +56,8 @@ class RSAKey: public utils::security::encryption::AKey<utils::security::encrypti
     public:
         // ---------- Pre-Function -------- //
         void generate(void) final;
-        std::string encrypt(const std::string& s) const final;
-        std::string decrypt(const std::string& s) const final;
+        _nodiscard std::string encrypt(const std::string& s) const final;
+        _nodiscard std::string decrypt(const std::string& s) const final;
 
         // ------------ Function ---------- //
         _hot void set(const utils::security::encryption::KeyPair& keys) final             {this->_keys = keys;};

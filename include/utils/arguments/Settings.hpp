@@ -56,44 +56,44 @@ class Settings: private utils::security::observer::Observer<"Settings"> {
         std::unordered_map<std::string, utils::arguments::Setting, utils::arguments::SettingsHash, std::equal_to<>> _settings;
 
         // ---------- Pre-Function -------- //
-        utils::arguments::CastType getType_(const std::string& setting);
+        _nodiscard utils::arguments::CastType getType_(const std::string& setting);
 
         /* basic */
-        std::byte castByte_(const std::string& setting);
-        bool castBool_(const std::string& setting);
+        _nodiscard std::byte castByte_(const std::string& setting);
+        _nodiscard bool castBool_(const std::string& setting);
 
         /* integer */
-        std::int8_t  castInt8_(const std::string& setting);
-        std::int16_t castInt16_(const std::string& setting);
-        std::int32_t castInt32_(const std::string& setting);
-        std::int64_t castInt64_(const std::string& setting);
+        _nodiscard std::int8_t  castInt8_(const std::string& setting);
+        _nodiscard std::int16_t castInt16_(const std::string& setting);
+        _nodiscard std::int32_t castInt32_(const std::string& setting);
+        _nodiscard std::int64_t castInt64_(const std::string& setting);
 
         /* unsigned integer */
-        std::uint8_t  castUInt8_(const std::string& setting);
-        std::uint16_t castUInt16_(const std::string& setting);
-        std::uint32_t castUInt32_(const std::string& setting);
-        std::uint64_t castUInt64_(const std::string& setting);
+        _nodiscard std::uint8_t  castUInt8_(const std::string& setting);
+        _nodiscard std::uint16_t castUInt16_(const std::string& setting);
+        _nodiscard std::uint32_t castUInt32_(const std::string& setting);
+        _nodiscard std::uint64_t castUInt64_(const std::string& setting);
 
         /* floating */
-        utils::arguments::float16_t  castFloat16_(const std::string& setting);
-        utils::arguments::float32_t  castFloat32_(const std::string& setting);
-        utils::arguments::float64_t  castFloat64_(const std::string& setting);
-        utils::arguments::float128_t castFloat128_(const std::string& setting);
+        _nodiscard utils::arguments::float16_t  castFloat16_(const std::string& setting);
+        _nodiscard utils::arguments::float32_t  castFloat32_(const std::string& setting);
+        _nodiscard utils::arguments::float64_t  castFloat64_(const std::string& setting);
+        _nodiscard utils::arguments::float128_t castFloat128_(const std::string& setting);
 
         /* char */
-        char8_t  castChar8_(const std::string& setting);
-        char16_t castChar16_(const std::string& setting);
-        char32_t castChar32_(const std::string& setting);
-        std::u8string  castU8String_(const std::string& setting);
-        std::u16string castU16String_(const std::string& setting);
-        std::u32string castU32String_(const std::string& setting);
+        _nodiscard char8_t  castChar8_(const std::string& setting);
+        _nodiscard char16_t castChar16_(const std::string& setting);
+        _nodiscard char32_t castChar32_(const std::string& setting);
+        _nodiscard std::u8string  castU8String_(const std::string& setting);
+        _nodiscard std::u16string castU16String_(const std::string& setting);
+        _nodiscard std::u32string castU32String_(const std::string& setting);
 
         /* huge char */
-        wchar_t      castWChar_(const std::string& setting);
-        std::wstring castWString_(const std::string& setting);
+        _nodiscard wchar_t      castWChar_(const std::string& setting);
+        _nodiscard std::wstring castWString_(const std::string& setting);
 
         /* special */
-        std::filesystem::path castPath_(const std::string& setting);
+        _nodiscard std::filesystem::path castPath_(const std::string& setting);
 
         // ------------ Function ---------- //
         template<bool force, typename K, typename T>
@@ -110,8 +110,8 @@ class Settings: private utils::security::observer::Observer<"Settings"> {
 
     public:
         // ---------- Pre-Function -------- //
-        const utils::arguments::Setting& at(std::string_view id) const;
-        utils::arguments::Setting& at(std::string_view id);
+        _nodiscard const utils::arguments::Setting& at(std::string_view id) const;
+        _nodiscard utils::arguments::Setting& at(std::string_view id);
 
         // ------------ Function ---------- //
         template<bool force = false> // Can't override an exiting one by default

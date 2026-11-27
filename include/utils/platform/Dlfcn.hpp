@@ -25,7 +25,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"   // _null_terminated_string_arg
+    #include "../attribute/Attribute.hpp"   // _nodiscard, _null_terminated_string_arg
     #include "Platform.hpp"                 // UTILS_WINDOWS
     #include "Types.h"                      // RTLD_*, Dl_info (Windows)
     #ifndef UTILS_WINDOWS
@@ -36,11 +36,11 @@ namespace utils::platform { // namespace start
 //----------------------------------------------------------------//
 /* PROTOTYPE */
 
-_null_terminated_string_arg(1) void* dlopen(const char* path, int flags); // nullptr on error (dlerror)
-_null_terminated_string_arg(2) void* dlsym(void* handle, const char* name); // nullptr on error (dlerror)
+_nodiscard _null_terminated_string_arg(1) void* dlopen(const char* path, int flags); // nullptr on error (dlerror)
+_nodiscard _null_terminated_string_arg(2) void* dlsym(void* handle, const char* name); // nullptr on error (dlerror)
 int dlclose(void* handle); // 0 on success
-char* dlerror(void); // last error of the thread, nullptr if none (cleared by the call)
-int dladdr(const void* addr, Dl_info* info); // 0 on error
+_nodiscard char* dlerror(void); // last error of the thread, nullptr if none (cleared by the call)
+_nodiscard int dladdr(const void* addr, Dl_info* info); // 0 on error
 
 } // namespace end
 #endif /* PLATFORM_DLFCN_H */

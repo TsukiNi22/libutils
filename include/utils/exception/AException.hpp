@@ -63,8 +63,8 @@ class AException: public utils::exception::IException {
 
     public:
         // ---------- Pre-Function -------- //
-        std::string formated(void) const noexcept final;
-        std::string module(void) const noexcept final;
+        _nodiscard std::string formated(void) const noexcept final;
+        _nodiscard std::string module(void) const noexcept final;
 
         // ------------ Function ---------- //
         _cold _nodiscard utils::exception::Type getType(void) const noexcept final         {return this->_type;};

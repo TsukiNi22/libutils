@@ -25,7 +25,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"   // _fd_arg
+    #include "../attribute/Attribute.hpp"   // _nodiscard, _fd_arg
     #include "Platform.hpp"                 // UTILS_WINDOWS
     #include "Types.h"                      // struct epoll_event, EPOLL* (Windows)
     #ifndef UTILS_WINDOWS
@@ -38,7 +38,7 @@ namespace utils::platform { // namespace start
 
 // Same contract as the Linux functions: -1 and errno on error, closed by utils::platform::close
 // Windows: only sockets can be linked (ENOTSOCK), EPOLLET is refused (EINVAL), EPOLLONESHOT is emulated
-int epoll_create1(int flags);
+_nodiscard int epoll_create1(int flags);
 _fd_arg(1) _fd_arg(3) int epoll_ctl(int epfd, int op, int fd, struct epoll_event* event);
 _fd_arg(1) int epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout);
 

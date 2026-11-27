@@ -58,11 +58,11 @@ class Process: private utils::security::observer::Observer<"Process"> {
     public:
         // ---------- Pre-Function -------- //
         /* process */
-        bool is(void) const;
-        pid_t spawn(void); // fork (Windows: FatalException UndefinedCall, no fork)
-        pid_t spawn(const std::string& path, const std::vector<std::string>& args); // execvp (Windows: CreateProcess, only the fds 0, 1 & 2 can be dup)
+        _nodiscard bool is(void) const;
+        _nodiscard pid_t spawn(void); // fork (Windows: FatalException UndefinedCall, no fork)
+        _nodiscard pid_t spawn(const std::string& path, const std::vector<std::string>& args); // execvp (Windows: CreateProcess, only the fds 0, 1 & 2 can be dup)
         _noreturn void replace(const std::string& path, const std::vector<std::string>& args); // execvp (Windows: _execvp) (never return: exec or _exit)
-        utils::encapsulation::Status wait(void); // waitpid (Windows: WaitForSingleObject, never killed by a signal)
+        _nodiscard utils::encapsulation::Status wait(void); // waitpid (Windows: WaitForSingleObject, never killed by a signal)
         void kill(void); // -s 9 (Windows: TerminateProcess)
 
         // ------------ Function ---------- //

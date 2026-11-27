@@ -64,7 +64,7 @@ class Server: private utils::security::observer::Observer<"Server"> {
         void release_(void); // close every connection & the epoll
         _noreturn void crash_(const std::string& info); // error on the server socket
         void receive_(const int fd, const bool read); // read (once) & extract the payloads of a client
-        const std::unordered_map<int, utils::network::Payloads>& listen_(const int fd = -1);
+        _nodiscard const std::unordered_map<int, utils::network::Payloads>& listen_(const int fd = -1);
 
     public:
         // ---------- Pre-Function -------- //
@@ -85,10 +85,10 @@ class Server: private utils::security::observer::Observer<"Server"> {
 
         /* listen */
         // Allways return the same reference and clean between each call (empty if the client was removed)
-        const utils::network::Payloads& listen(const int fd);
+        _nodiscard const utils::network::Payloads& listen(const int fd);
 
         /* getter */
-        std::vector<int> getFds(void) const;
+        _nodiscard std::vector<int> getFds(void) const;
 
         // ------------ Function ---------- //
         // Allways return the same reference and clean between each call

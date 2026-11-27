@@ -78,8 +78,8 @@ class EETPParser: public utils::smanip::parser::AParser<utils::smanip::parser::E
 
     public:
         // ---------- Pre-Function -------- //
-        std::string format(std::string id, utils::smanip::parser::EETPContent content) final;
-        utils::smanip::parser::EETPContent parse(std::string id, std::string s) final;
+        _nodiscard std::string format(std::string id, utils::smanip::parser::EETPContent content) final;
+        _nodiscard utils::smanip::parser::EETPContent parse(std::string id, std::string s) final;
 
         // ------------ Function ---------- //
         _cold void setCodec(std::unique_ptr<utils::smanip::codec::ICodec> codec) // default: Base64Codec

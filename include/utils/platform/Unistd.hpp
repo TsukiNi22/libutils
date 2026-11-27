@@ -25,7 +25,7 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include "../attribute/Attribute.hpp"   // _restrict, _read_only, _write_only, _null_terminated_string_arg, _fd_arg, _fd_arg_read, _fd_arg_write
+    #include "../attribute/Attribute.hpp"   // _nodiscard, _restrict, _read_only, _write_only, _null_terminated_string_arg, _fd_arg, _fd_arg_read, _fd_arg_write
     #include "Platform.hpp"                 // UTILS_WINDOWS
     #include "Types.h"                      // STDIN_FILENO, struct pollfd, nfds_t (Windows)
     #include <sys/types.h>                  // ssize_t, pid_t (also on MinGW)
@@ -41,20 +41,20 @@ namespace utils::platform { // namespace start
 
 /* fd */
 _fd_arg(1) int close(int fd); // any fd (Windows: socket, CRT fd or emulated epoll)
-_fd_arg_read(1) _write_only(2, 3) ssize_t read(int fd, void* buf, std::size_t count); // Windows: recv on a socket
+_nodiscard _fd_arg_read(1) _write_only(2, 3) ssize_t read(int fd, void* buf, std::size_t count); // Windows: recv on a socket
 _fd_arg_write(1) _read_only(2, 3) ssize_t write(int fd, const void* buf, std::size_t count); // Windows: send on a socket
 int pipe(int fds[2]); // Windows: binary mode
-_fd_arg(1) int dup(int fd);
+_nodiscard _fd_arg(1) int dup(int fd);
 _fd_arg(1) int dup2(int fd, int fd2);
-_fd_arg(1) int isatty(int fd); // Windows: console
-int poll(struct pollfd* fds, nfds_t nfds, int timeout); // Windows: sockets (WSAPoll), console / pipe / file input
+_nodiscard _fd_arg(1) int isatty(int fd); // Windows: console
+_nodiscard int poll(struct pollfd* fds, nfds_t nfds, int timeout); // Windows: sockets (WSAPoll), console / pipe / file input
 
 /* process */
-pid_t getpid(void);
-_null_terminated_string_arg(1) _write_only(2, 3) ssize_t readlink(const char* _restrict path, char* _restrict buf, std::size_t size); // Windows: "/proc/self/exe" = GetModuleFileName, else a symbolic link
+_nodiscard pid_t getpid(void);
+_nodiscard _null_terminated_string_arg(1) _write_only(2, 3) ssize_t readlink(const char* _restrict path, char* _restrict buf, std::size_t size); // Windows: "/proc/self/exe" = GetModuleFileName, else a symbolic link
 
 /* error */
-const char* strerror(int errnum); // Windows: also the socket errors (WSA) translated in errno
+_nodiscard const char* strerror(int errnum); // Windows: also the socket errors (WSA) translated in errno
 
 } // namespace end
 #endif /* PLATFORM_UNISTD_H */

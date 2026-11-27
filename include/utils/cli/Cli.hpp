@@ -76,8 +76,8 @@ class Cli;
 
 /* default hooks */
 void defaultPromptHook(const utils::cli::Cli& cli, std::uint8_t code);
-utils::cli::ParsedData defaultParserHook(const std::string& input, const bool trim, const bool logic, const bool parse);
-bool defaultGetCHook(char& c);
+_nodiscard utils::cli::ParsedData defaultParserHook(const std::string& input, const bool trim, const bool logic, const bool parse);
+_nodiscard bool defaultGetCHook(char& c);
 
 //----------------------------------------------------------------//
 /* CLASS */
@@ -115,7 +115,7 @@ class Cli: private utils::security::observer::Observer<"Cli"> {
         // ---------- Pre-Function -------- //
         void launch_(const std::size_t call); // Stop on ctrl+d (except: MANUAL) or interrupt()
         void prompt_(void);
-        std::string getInput_(void);
+        _nodiscard std::string getInput_(void);
         utils::cli::ParsedData parse_(const std::string& input);
         void exec_(const utils::cli::ParsedData& parsedInput);
 
@@ -152,7 +152,7 @@ class Cli: private utils::security::observer::Observer<"Cli"> {
         void resetMiddlewares(void); // Reset all middlewares
 
         /* getter */
-        std::string strcode(std::uint8_t code) const;
+        _nodiscard std::string strcode(std::uint8_t code) const;
 
         // ------------ Function ---------- //
         _cold inline void setInputDelimitor(const char c) {this->_inputDelimitor = c;};

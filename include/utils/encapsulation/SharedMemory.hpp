@@ -205,7 +205,7 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
         void init_(void); // create the internal thread
         void read_(void); // function call by the thread
         void send_(const std::vector<std::byte>& bytes, const utils::encapsulation::shm::Id& id, const utils::encapsulation::shm::Target& target, std::pair<bool, bool> last, bool failsafe);
-        void* map_(const std::string& name, bool create, std::size_t size); // open/create & map the memory (create: size bytes, open: whole memory), set _mapped
+        _nodiscard void* map_(const std::string& name, bool create, std::size_t size); // open/create & map the memory (create: size bytes, open: whole memory), set _mapped
         void unmap_(void) noexcept; // unmap & close what map_ opened
         void wait_(std::uint32_t expected) const; // wait a wake_ while readable == expected (futex | event, can wake up spuriously)
         void wake_(void) const; // wake the readers (futex | event)
@@ -218,9 +218,9 @@ class SharedMemory: private utils::security::observer::Observer<"SharedMemory"> 
         /* communication */
         void send(const std::vector<std::byte>& bytes, const utils::encapsulation::shm::Id& id, const utils::encapsulation::shm::Target& target, bool lastSending = false, bool lastTransmission = false, bool failsafe = false); // force an id for the request
         utils::encapsulation::shm::Id send(const std::vector<std::byte>& bytes, const utils::encapsulation::shm::Target& target, bool lastSending = false, bool lastTransmission = false, bool failsafe = false); // allocate an id for this request
-        std::optional<std::unordered_map<utils::encapsulation::shm::Id, std::vector<std::vector<std::byte>>>> read(const utils::encapsulation::shm::ReadFilter filter = utils::encapsulation::shm::ReadFilter::All);
-        std::optional<std::vector<std::vector<std::byte>>> read(const utils::encapsulation::shm::Id& id);
-        bool readable(const utils::encapsulation::shm::ReadFilter filter = utils::encapsulation::shm::ReadFilter::All) const;
+        _nodiscard std::optional<std::unordered_map<utils::encapsulation::shm::Id, std::vector<std::vector<std::byte>>>> read(const utils::encapsulation::shm::ReadFilter filter = utils::encapsulation::shm::ReadFilter::All);
+        _nodiscard std::optional<std::vector<std::vector<std::byte>>> read(const utils::encapsulation::shm::Id& id);
+        _nodiscard bool readable(const utils::encapsulation::shm::ReadFilter filter = utils::encapsulation::shm::ReadFilter::All) const;
         void join(bool last = false) const; // wait for anything to be readed (or any last to be readed)
         void join(const utils::encapsulation::shm::Id& id, bool last = false) const; // for a specifc id to be readed (wait until the last awnser or just any)
 

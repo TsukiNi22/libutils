@@ -31,8 +31,8 @@ namespace utils::iomanip { // namespace start
 /* PROTOTYPE */
 
 /* function */
-std::string set_style(std::initializer_list<utils::iomanip::Style> styles);
-std::string reset_style(std::initializer_list<utils::iomanip::ResetStyle> styles);
+_nodiscard std::string set_style(std::initializer_list<utils::iomanip::Style> styles);
+_nodiscard std::string reset_style(std::initializer_list<utils::iomanip::ResetStyle> styles);
 bool enable_ansi(void); // Windows: enable the virtual terminal mode of the console (ANSI sequences), Unix: nothing to do (true)
 
 /* internal */
@@ -175,9 +175,9 @@ struct AdvancedMouseEvent {
 /* PROTOTYPE */
 
 /* reports */
-std::pair<int, int> read_cursor_position(void);
-utils::iomanip::MouseEvent read_mouse_event(void);
-utils::iomanip::AdvancedMouseEvent read_advanced_mouse_event(void);
+_nodiscard std::pair<int, int> read_cursor_position(void);
+_nodiscard utils::iomanip::MouseEvent read_mouse_event(void);
+_nodiscard utils::iomanip::AdvancedMouseEvent read_advanced_mouse_event(void);
 
 } // namespace end
 

@@ -24,14 +24,15 @@ File Description:
     /* INCLUDE */
 
     /* type */
-    #include <string>   // std::string
+    #include "../../attribute/Attribute.hpp"   // _nodiscard
+    #include <string>                          // std::string
 
 namespace utils::smanip { // namespace start
 //----------------------------------------------------------------//
 /* PROTOTYPE */
 
 /* format */
-std::string format(const std::string& s);
+_nodiscard std::string format(const std::string& s);
 
 //----------------------------------------------------------------//
 /* DESCRIPTION */

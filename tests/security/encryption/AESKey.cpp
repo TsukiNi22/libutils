@@ -44,7 +44,7 @@ TEST_P(AESKeyTest, Encryption) {
 TEST_P(AESKeyTest, Decryption) {
     std::string s = GetParam();
     try {
-        this->_key.decrypt(s, this->_AES);
+        (void)this->_key.decrypt(s, this->_AES);
         FAIL() << "Expected decryption to throw";
     } catch (const utils::exception::IException& e) {
         EXPECT_EQ(e.getType(), utils::exception::Type::Error);

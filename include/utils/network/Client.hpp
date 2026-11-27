@@ -70,7 +70,7 @@ class Client: private utils::security::observer::Observer<"Client"> {
         void kill(void); // terminate the client (can't be restarted)
 
         // Allways return the same reference and clean between each call
-        const utils::network::Payloads& listen(void);
+        _nodiscard const utils::network::Payloads& listen(void);
         void join(void); // Await until the next listen event
 
         void flush(void); // send all the stack
