@@ -145,11 +145,11 @@ class ArgParser: private utils::security::observer::Observer<"ArgParser"> {
         _cold inline void setDescription(const std::string& description) {this->_description = description;};
 
         /* getter */
-        _cold _nodiscard inline const std::string& getBinary(void) const      {return this->_binary;};
-        _cold _nodiscard inline const std::string& getDescription(void) const {return this->_description;};
-        _cold _nodiscard inline const std::unordered_map<std::string, utils::arguments::Usage>& getUsages(void) const   {return this->_usages;};
-        _cold _nodiscard inline const std::unordered_map<std::string, utils::arguments::Option>& getOptions(void) const {return this->_options;};
-        _cold _nodiscard inline const std::unordered_map<std::string, utils::arguments::Flag>& getFlags(void) const     {return this->_flags;};
+        _cold _nodiscard inline const std::string& getBinary(void) const _lifetimebound      {return this->_binary;};
+        _cold _nodiscard inline const std::string& getDescription(void) const _lifetimebound {return this->_description;};
+        _cold _nodiscard inline const std::unordered_map<std::string, utils::arguments::Usage>& getUsages(void) const _lifetimebound   {return this->_usages;};
+        _cold _nodiscard inline const std::unordered_map<std::string, utils::arguments::Option>& getOptions(void) const _lifetimebound {return this->_options;};
+        _cold _nodiscard inline const std::unordered_map<std::string, utils::arguments::Flag>& getFlags(void) const _lifetimebound     {return this->_flags;};
 
         // ------------ Operator ---------- //
         ArgParser& operator=(const ArgParser& other) = delete;

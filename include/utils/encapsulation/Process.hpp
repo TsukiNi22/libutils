@@ -77,10 +77,10 @@ class Process: private utils::security::observer::Observer<"Process"> {
         _hot inline void dup(std::vector<utils::encapsulation::Dup>& dups)    {this->_dups.insert(this->_dups.end(), std::make_move_iterator(dups.begin()), std::make_move_iterator(dups.end())); dups.clear();};
 
         /* getter */
-        _cold _nodiscard inline std::vector<utils::encapsulation::Pipe>& getPipes(void)             {return this->_pipes;};
-        _cold _nodiscard inline std::vector<utils::encapsulation::Dup>& getDups(void)               {return this->_dups;};
-        _cold _nodiscard inline const std::vector<utils::encapsulation::Pipe>& getPipes(void) const {return this->_pipes;};
-        _cold _nodiscard inline const std::vector<utils::encapsulation::Dup>& getDups(void) const   {return this->_dups;};
+        _cold _nodiscard inline std::vector<utils::encapsulation::Pipe>& getPipes(void)             _lifetimebound {return this->_pipes;};
+        _cold _nodiscard inline std::vector<utils::encapsulation::Dup>& getDups(void)               _lifetimebound {return this->_dups;};
+        _cold _nodiscard inline const std::vector<utils::encapsulation::Pipe>& getPipes(void) const _lifetimebound {return this->_pipes;};
+        _cold _nodiscard inline const std::vector<utils::encapsulation::Dup>& getDups(void) const _lifetimebound   {return this->_dups;};
         _cold _nodiscard inline bool isChild(void) const  {return (this->_pid == 0);};
         _cold _nodiscard inline bool isParent(void) const {return (this->_pid != 0);};
         _cold _nodiscard inline pid_t getPid(void) const  {return this->_pid;};

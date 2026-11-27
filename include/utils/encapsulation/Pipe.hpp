@@ -52,9 +52,9 @@ class Pipe: private utils::security::observer::Observer<"Pipe"> {
         _cold inline void clear(void)               {this->_fds[0] = -1; this->_fds[1] = -1;};
 
         /* getter */
-        _cold _nodiscard inline const std::array<int, 2>& getFds(void) const {return this->_fds;};
-        _cold _nodiscard inline int getRead(void) const                      {return this->_fds[0];};
-        _cold _nodiscard inline int getWrite(void) const                     {return this->_fds[1];};
+        _cold _nodiscard inline const std::array<int, 2>& getFds(void) const _lifetimebound {return this->_fds;};
+        _cold _nodiscard inline int getRead(void) const                                     {return this->_fds[0];};
+        _cold _nodiscard inline int getWrite(void) const                                    {return this->_fds[1];};
 
         /* setter */
         _cold inline void setFds(const std::array<int, 2>& fds) {this->_fds = fds;};
