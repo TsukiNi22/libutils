@@ -8,7 +8,7 @@
 </p>
 
 > [!TIP]
-> Documentation [tsukini22.github.io/libutils](https://tsukini22.github.io/libutils/docs/) (v5.0.0, EN / FR), [wiki](https://github.com/TsukiNi22/libutils/wiki), [project graph](https://tsukini22.github.io/libutils/docs/graph.html).
+> Documentation [tsukini22.github.io/libutils](https://tsukini22.github.io/libutils/docs/) (v5.1.0-pre, EN / FR), [wiki](https://github.com/TsukiNi22/libutils/wiki), [project graph](https://tsukini22.github.io/libutils/docs/graph.html).
 
 C++20 utility library (`utils::`): exceptions, verbose, CLI, arguments, network, IPC, GPU memory, encryption, types.
 Also callable from C (`<utils.h>`), on Unix and on Windows (MinGW-w64).

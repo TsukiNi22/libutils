@@ -18,8 +18,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [pre-release]
+## [pre-release] (empty)
+
+## [v5.1.0-pre] - 2026-11-27
 ### Changed
+- **[MAJOR]** The declarations of the C API carry `_nodiscard` on every function that returns (not `utils_fail`, `utils_exception_set` and the logs of the verbose): a status, a handle or a value not read is a compiler warning (`(void)call(...)` to ignore it on purpose)
+- The C API is `_nothrow` (declarations and definitions: clang wants the same exception specification on both)
+- The buffers of the C API are checked by gcc: `_write_only` (the `_r` functions and the outputs), `_read_only` (the data / bytes given with their size), `_read_write` (the carrier of `utils_sos_embed_*`); the strings are `_null_terminated_string_arg`, the file descriptors of the platform `_fd_arg` / `_fd_arg_read` / `_fd_arg_write`, `_restrict` on `readlink`, `accept`, `getsockname`, `getpeername` and `getaddrinfo` (like glibc), `_const` on the math functions
+- `utils::platform` is annotated like its C API (descriptors, buffers, strings, `_restrict`)
+- The error paths of the library are `_unlikely` (128 `throw`, the error of the emulated `epoll_ctl` on Windows)
+- The getters returning a reference to a member are `_lifetimebound` (`ArgParser`, `Pipe`, `Process`)
+- The C headers include `utils/attribute/Attribute.hpp` themselves (`math` and `platform` didn't get the macros)
+- Missing attributes added: `_format` of the internal `vformat` of the verbose C API, `_cold` of `~Cli` and `gai_strerrorA`, `_unused` of the Winsock session
 - A push that only changes `docs/` no longer runs `Dispatch (CI/CD)` (`Docs - Pages (CD)` publishes it)
 - The ccache keys of the workflows include the exception configs (`cmake/config/exceptions/**/*.json`)
 
@@ -30,6 +40,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The install hint of the pre-commit hook ran the `setup.sh` of ai-utils (xstyle is installed by its own `setup.sh`)
 
 ### Added
+- New attributes in every C / C++ version (empty when the compiler doesn't support them): `_nothrow`, `_warning(msg)` / `_error(msg)` (a call warns / fails the compilation), `_fd_arg(i)`, `_fd_arg_read(i)`, `_fd_arg_write(i)` (gcc 13+), `_null_terminated_string_arg(i)` (gcc 14+), `_assume_aligned(n)`, `_read_write(ptr, size)`, `_lifetimebound` (clang)
+- Documentation: the new attributes (Attribute reference), the attributes of the C API (C API guide) and the compiler warnings they give (Warnings page)
 - `Lint (CI)`: `shellcheck`, `actionlint` and `xstyle` (a `major` issue fails) on every push of `main`
 - The unit tests also run with the AddressSanitizer in the CI
 - `Release - GitHub (CD)`: the GitHub release of a `v*` tag, its notes = the section of the tag in the `CHANGELOG.md`, the packages attached
@@ -426,7 +438,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial version of the utils library with multiple tools (see [README-1.0.0](https://github.com/TsukiNi22/libutils/blob/v1.0.0/README.md) for more details)
 
-[pre-release]: https://github.com/TsukiNi22/libutils/compare/v5.0.0...HEAD
+[pre-release]: https://github.com/TsukiNi22/libutils/compare/v5.1.0-pre...HEAD
+[v5.1.0-pre]: https://github.com/TsukiNi22/libutils/compare/v5.0.0...v5.1.0-pre
 [v5.0.0]: https://github.com/TsukiNi22/libutils/compare/v4.3.1-pre...v5.0.0
 [v4.3.1-pre]: https://github.com/TsukiNi22/libutils/compare/v4.3.0-pre...v4.3.1-pre
 [v4.3.0-pre]: https://github.com/TsukiNi22/libutils/compare/v4.2.0...v4.3.0-pre

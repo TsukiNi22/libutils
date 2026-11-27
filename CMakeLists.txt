@@ -3,7 +3,7 @@ set(TARGET utils)
 if(NOT CMAKE_TOOLCHAIN_FILE AND NOT DEFINED CMAKE_CXX_COMPILER)
     set(CMAKE_CXX_COMPILER clang++)
 endif()
-project(${TARGET} VERSION 5.0.0 LANGUAGES CXX)
+project(${TARGET} VERSION 5.1.0 LANGUAGES CXX)
 
 # =========================
 # Options
