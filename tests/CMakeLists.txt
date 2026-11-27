@@ -167,10 +167,7 @@ if(CMAKE_CROSSCOMPILING)
         DISCOVERY_TIMEOUT 120 # first start of wine
     )
 else()
-    # Asan: the leaks made on purpose by the leak detection tests are suppressed
-    gtest_discover_tests(${TARGET}
-        PROPERTIES ENVIRONMENT "LSAN_OPTIONS=suppressions=${CMAKE_CURRENT_SOURCE_DIR}/lsan.supp"
-    )
+    gtest_discover_tests(${TARGET})
 endif()
 
 # =========================

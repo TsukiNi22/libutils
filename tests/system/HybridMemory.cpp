@@ -17,6 +17,7 @@ File Description:
 ##  Unit tests of the HybridMemory (ram, custom gpu handler, real gpu backends when present)
 \**************************************************************/
 
+#include "tools/Sanitizer.hpp"
 #include "utils.hpp"
 #include <gtest/gtest.h>
 #include <algorithm>
@@ -24,15 +25,6 @@ File Description:
 #include <numeric>
 #include <vector>
 #include <string>
-
-// AddressSanitizer build (Asan mode): __SANITIZE_ADDRESS__ with gcc, __has_feature with clang
-#if defined(__SANITIZE_ADDRESS__)
-    #define TESTS_ASAN
-#elif defined(__has_feature)
-    #if __has_feature(address_sanitizer)
-        #define TESTS_ASAN
-    #endif
-#endif
 
 // Run fn and expect the exception code
 template<typename Fn>

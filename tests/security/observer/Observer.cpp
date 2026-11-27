@@ -19,6 +19,7 @@ File Description:
 \**************************************************************/
 
 #include "utils/security/observer/INotifier.hpp"
+#include "tools/Sanitizer.hpp"
 #include "utils/security/observer/Observer.hpp"
 #include "utils.hpp"
 #include <gtest/gtest.h>
@@ -42,7 +43,8 @@ TEST_P(ObserverTest, DetectsLeak) {
     ASSERT_GT(utils::security::observer::instances::notifiers().size(), 0) << "See test: MemoryLeakNotifer::GlobalNotifiersArrayEmplacement";
     testing::internal::CaptureStderr();
 
-    // generate the things to observe
+    // generate the things to observe (leaked on purpose: not reported by LeakSanitizer)
+    tests::tools::ScopedLeak leak;
     testCase.generateLeak();
 
     // Trigger & Reset MemoryLeakNotifer instances
