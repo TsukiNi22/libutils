@@ -52,6 +52,20 @@ jobs:
           ctest --output-on-failure --timeout 30 --parallel $(nproc)
         timeout-minutes: 3
 
+      # Same tests with the AddressSanitizer (memory errors, leaks): ./unit_tests is replaced by the Asan one
+      - name: Build unit-tests (Asan)
+        run: |
+          set -e
+          cmake -S . -B build-asan -DCMAKE_BUILD_TYPE=Asan -DBUILD_TESTS=ON
+          cmake --build build-asan --parallel $(nproc)
+        timeout-minutes: 8
+
+      - name: Run unit-tests (Asan)
+        working-directory: build-asan
+        run: |
+          ctest --output-on-failure --timeout 60 --parallel $(nproc)
+        timeout-minutes: 4
+
   build-unit-tests-windows:
     runs-on: ${{ vars.RUNNER }}
     defaults:
