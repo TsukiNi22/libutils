@@ -23,7 +23,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: /github/home/.cache/ccache
-          key: ccache-${{ runner.os }}-${{ hashFiles('**/*.cpp', '**/*.hpp', 'CMakeLists.txt') }}
+          key: ccache-${{ runner.os }}-${{ hashFiles('**/*.cpp', '**/*.hpp', 'cmake/config/exceptions/**/*.json', 'CMakeLists.txt') }}
           restore-keys: |
             ccache-${{ runner.os }}-
 
@@ -41,7 +41,7 @@ jobs:
         run: |
           set -euo pipefail
           if [ ! -f "./unit_tests" ]; then
-            echo "::error title=Missing binary, unit_tests binary not found at repo root"
+            echo "::error title=Missing binary::unit_tests binary not found at repo root"
             exit 1
           fi
           echo "✓ unit_tests binary found"
@@ -88,7 +88,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: /github/home/.cache/ccache
-          key: ccache-mingw64-tests-${{ hashFiles('**/*.cpp', '**/*.hpp', 'CMakeLists.txt') }}
+          key: ccache-mingw64-tests-${{ hashFiles('**/*.cpp', '**/*.hpp', 'cmake/config/exceptions/**/*.json', 'CMakeLists.txt') }}
           restore-keys: |
             ccache-mingw64-tests-
 

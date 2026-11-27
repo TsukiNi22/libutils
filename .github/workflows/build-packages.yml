@@ -52,7 +52,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: /github/home/.cache/ccache
-          key: ccache-${{ runner.os }}-${{ hashFiles('**/*.cpp', '**/*.hpp', 'CMakeLists.txt') }}
+          key: ccache-${{ runner.os }}-${{ hashFiles('**/*.cpp', '**/*.hpp', 'cmake/config/exceptions/**/*.json', 'CMakeLists.txt') }}
           restore-keys: |
             ccache-${{ runner.os }}-
 
@@ -71,7 +71,7 @@ jobs:
           set -euo pipefail
           for library in $LIBRARIES; do
             if [ ! -f "./build/$library" ]; then
-              echo "::error title=Missing library, file=$library::Library '$library' not found"
+              echo "::error title=Missing library,file=build/$library::Library '$library' not found"
               exit 1
             fi
             echo "✓ Library '$library' ok"
@@ -159,7 +159,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: /github/home/.cache/ccache
-          key: ccache-mingw64-${{ hashFiles('**/*.cpp', '**/*.hpp', 'CMakeLists.txt') }}
+          key: ccache-mingw64-${{ hashFiles('**/*.cpp', '**/*.hpp', 'cmake/config/exceptions/**/*.json', 'CMakeLists.txt') }}
           restore-keys: |
             ccache-mingw64-
 
@@ -394,4 +394,13 @@ jobs:
             exit 0
           fi
           git commit -m "chore: sync packages from main (${{ github.sha }})"
-          git push origin gh-pages
+          # gh-pages can move meanwhile (docs, packages or manual push): rebase on it and retry
+          for attempt in 1 2 3 4 5; do
+            if git push origin gh-pages; then
+              exit 0
+            fi
+            echo "Push refused: rebase on the new gh-pages and retry ($attempt/5)..."
+            git pull --rebase origin gh-pages
+          done
+          echo "::error title=Push::gh-pages not pushed after 5 attempts"
+          exit 1

@@ -144,6 +144,7 @@ jobs:
     steps:
       - name: Trigger docker-image (repository_dispatch)
         run: |
+          set -euo pipefail
           curl -sf -X POST \
             -H "Authorization: Bearer ${{ secrets.DOCKER_IMAGE_REPO_TOKEN }}" \
             -H "Accept: application/vnd.github+json" \
